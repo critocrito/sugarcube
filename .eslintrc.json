@@ -1,0 +1,14 @@
+{
+    "extends": [
+        "@sugarcube/eslint-config-sugarcube"
+    ],
+    "parser": "babel-eslint",
+    "rules": {
+	"import/no-extraneous-dependencies": [
+	    "error",
+	    {
+		"devDependencies": ["packages/**/test/**/*.js"]
+	    }
+	]
+    }
+}

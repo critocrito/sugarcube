@@ -1,0 +1,25 @@
+{
+  "name": "@sugarcube/core",
+  "version": "0.0.0",
+  "description": "Monoidal data sequences.",
+  "main": "_dist/index.js",
+  "repository": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/core",
+  "bugs": "https://gitlab.com/sugarcube/sugarcube/issues",
+  "homepage": "https://gitlab.com/sugarcube/sugarcube",
+  "author": "Christo <christo@cryptodrunks.net>",
+  "license": "GPL-3.0",
+  "keywords": [
+    "sugarcube",
+    "data",
+    "transformation"
+  ],
+  "dependencies": {
+    "baconjs": "^0.7.89",
+    "bluebird": "^3.4.7",
+    "glob": "^7.1.2",
+    "lodash": "^4.17.4",
+    "moment": "^2.17.1",
+    "shortid": "^2.2.6",
+    "jsverify": "^0.7.4"
+  }
+}

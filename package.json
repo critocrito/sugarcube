@@ -1,0 +1,34 @@
+{
+  "private": true,
+  "version": "0.0.0",
+  "config": {
+    "benchDir": "bench"
+  },
+  "scripts": {
+    "test": "mocha -c --reporter progress --compilers js:babel-register --require test/helpers.js packages/**/test/*.spec.js",
+    "check": "eslint --print-config .eslintrc.json | eslint-config-prettier-check",
+    "lint": "eslint --cache packages/**/*.js",
+    "fix": "npm run lint -- --fix",
+    "clean": "rimraf packages/**/_dist",
+    "precompile": "npm run clean",
+    "compile": "for i in packages/*; do babel -d $i/lib $i/_dist; done",
+    "build": "npm run lint && npm run test && npm run compile"
+  },
+  "author": "Christo <christo@cryptodrunks.net>",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "@sugarcube/eslint-config-sugarcube": "^0.2.0",
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^7.2.3",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "eslint": "^4.6.1",
+    "lerna": "^2.1.2",
+    "mocha": "^3.5.2",
+    "prettier": "^1.7.0",
+    "rimraf": "^2.6.2",
+    "sinon": "^3.2.1"
+  }
+}
