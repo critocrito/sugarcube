@@ -1,0 +1,29 @@
+{
+  "name": "@sugarcube/plugin-google",
+  "version": "0.0.0",
+  "description": "A plugin for SugarCube to interact with some google services.",
+  "main": "_dist/index.js",
+  "repository": "https://gitlab.com/sugarcube/sugarcube/tree/master/plugin-google",
+  "author": "Christo <christo@cryptodrunks.net>",
+  "license": "GPL-3.0",
+  "bugs": "https://gitlab.com/sugarcube/sugarcube/issues",
+  "homepage": "https://gitlab.com/sugarcube/sugarcube",
+  "keywords": [
+    "sugarcube",
+    "sugarcube-plugin",
+    "data",
+    "transformation",
+    "google",
+    "search"
+  ],
+  "dependencies": {
+    "babel-polyfill": "^6.23.0",
+    "bluebird": "^3.5.0",
+    "cheerio": "^1.0.0-rc.1",
+    "@sugarcube/core": "^0.0.0",
+    "lodash": "^4.17.4",
+    "moment": "^2.18.1",
+    "nightmare": "^2.10.0",
+    "nightmare-upload": "^0.1.1"
+  }
+}

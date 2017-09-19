@@ -1,0 +1,26 @@
+{
+  "name": "@sugarcube/plugin-guardian",
+  "version": "0.0.0",
+  "description": "Fetch content from the Guardian.",
+  "main": "_dist/index.js",
+  "repository": "https://gitlab.com/sugarcube/sugarcube/tree/master/plugin-guardian",
+  "keywords": [
+    "sugarcube",
+    "sugarcube-plugin",
+    "data",
+    "transformation",
+    "guardian",
+    "news"
+  ],
+  "author": "Christo <christo@cryptodrunks.net>",
+  "license": "GPL-3.0",
+  "bugs": "https://gitlab.com/sugarcube/sugarcube/issues",
+  "homepage": "https://gitlab.com/sugarcube/sugarcube",
+  "dependencies": {
+    "bluebird": "^3.4.7",
+    "@sugarcube/core": "^0.0.0",
+    "lodash": "^4.17.4",
+    "moment": "^2.18.1",
+    "request": "^2.81.0"
+  }
+}

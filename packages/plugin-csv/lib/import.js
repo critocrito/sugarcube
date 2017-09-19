@@ -2,7 +2,7 @@ import {flow, map, concat, merge, get} from 'lodash/fp';
 import Promise from 'bluebird';
 import parse from 'csv-parse';
 import fs from 'fs';
-import {envelope as env, data as d, plugin as p, utils} from 'littlefork-core';
+import {envelope as env, data as d, plugin as p, utils} from '@sugarcube/core';
 
 import {assertIdFields} from './assertions';
 

@@ -1,4 +1,4 @@
-import {utils} from 'littlefork-core';
+import {utils} from '@sugarcube/core';
 
 const {assertCfg} = utils.assertions;
 

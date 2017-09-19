@@ -4,7 +4,7 @@ import {curry, flow, size, merge, concat, get,
 import fs from 'fs';
 import Promise from 'bluebird';
 import stringify from 'csv-stringify';
-import {plugin as p} from 'littlefork-core';
+import {plugin as p} from '@sugarcube/core';
 
 import {assertFilename} from './assertions';
 
