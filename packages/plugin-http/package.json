@@ -1,0 +1,25 @@
+{
+  "name": "@sugarcube/plugin-http",
+  "version": "0.0.0",
+  "description": "HTTP related plugins for sugarcube.",
+  "main": "_dist/index.js",
+  "repository": "https://gitlab.com/sugarcube/sugarcube/tree/master/plugin-http",
+  "author": "Christo <Christo@cryptodrunks.net>",
+  "license": "GPL-3.0",
+  "bugs": "https://gitlab.com/sugarcube/sugarcube/issues",
+  "homepage": "https://gitlab.com/sugarcube/sugarcube",
+    "keywords": [
+    "sugarcube",
+    "sugarcube-plugin",
+    "data",
+    "transformation",
+    "http"
+  ],
+  "dependencies": {
+    "bluebird": "^3.4.7",
+    "child-process-promise": "^2.2.0",
+    "@sugarcube/core": "0.0.0",
+    "lodash": "^4.17.4",
+    "request": "^2.81.0"
+  }
+}

@@ -1,20 +1,22 @@
 import {forEach, merge, values} from "lodash/fp";
-import printf from "./printf";
-import writef from "./writef";
+
+import getPlugin from "./plugins/get";
+import wgetPlugin from "./plugins/wget";
 
 const plugins = {
-  tap_printf: printf,
-  tap_writef: writef,
+  http_get: getPlugin,
+  http_wget: wgetPlugin,
 };
 
 forEach(p => {
   // eslint-disable-next-line no-param-reassign
   p.argv = merge(
     {
-      "tap.limit": {
-        type: "number",
+      "http.download_dir": {
+        type: "string",
         nargs: 1,
-        desc: "Limit the output to <n> data units.",
+        default: "downloads",
+        desc: "The path to the download directory.",
       },
     },
     p.argv
