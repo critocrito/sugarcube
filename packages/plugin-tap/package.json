@@ -1,0 +1,19 @@
+{
+  "name": "@sugarcub/plugin-tap",
+  "version": "0.0.0",
+  "description": "A K-combinator for sugarcube.",
+  "main": "_dist/index.js",
+  "keywords": [
+    "sugarcube",
+    "sugarcube-plugin",
+    "data",
+    "transformation"
+  ],
+  "repository": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-tap",
+  "author": "Christo <christo@cryptodrunks.net>",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "bluebird": "^3.4.0",
+    "lodash": "^4.13.1"
+  }
+}

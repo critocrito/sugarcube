@@ -1,0 +1,25 @@
+{
+  "name": "@sugarcube/plugin-csv",
+  "version": "0.0.0",
+  "description": "CSV based input and output for sugarcube.",
+  "main": "_dist/index.js",
+  "repository": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-csv",
+  "bugs": "https://gitlab.com/sugarcube/sugarcube/issues",
+  "homepage": "https://gitlab.com/sugarcube/sugarcube",
+  "author": "Christo <christo@cryptodrunks.net>",
+  "license": "GPL-3.0",
+  "keywords": [
+    "sugarcube",
+    "sugarcube-plugin",
+    "data",
+    "transformation",
+    "csv"
+  ],
+  "dependencies": {
+    "bluebird": "^3.4.6",
+    "csv-parse": "^1.2.0",
+    "csv-stringify": "^1.0.4",
+    "sugarcube-core": "1.0.0-rc.1",
+    "lodash": "^4.16.3"
+  }
+}
