@@ -4,24 +4,27 @@ import {
   map,
   forEach,
   concat,
+  join,
   split,
   omit,
   keys,
   pickBy,
   has,
   first,
+  difference,
   zipObject,
   isArray,
   isString,
+  isEmpty,
 } from "lodash/fp";
 import dotenv from "dotenv";
-import {runner, utils} from "@sugarcube/core";
+import {runner} from "@sugarcube/core";
 
 import {mapFiles, parseConfigFile, parseConfigFileWithExtends} from "./";
 import {info, error, debug} from "./logger";
+import {list, load} from "./plugins";
 
 const forEachObj = forEach.convert({cap: false});
-const {plugins} = utils;
 
 const haltAndCough = curry((d, e) => {
   error(e.message);
@@ -31,8 +34,7 @@ const haltAndCough = curry((d, e) => {
   process.exit(1);
 });
 
-const pluginOptions = flow([plugins.list, plugins.load, first]);
-
+// Make sure we have all requested plugins.
 // <type>:<term>,... -> [{type: "<type>", term: "<term>"}, ...]
 const cliQueries = flow([
   split(","),
@@ -93,14 +95,16 @@ const yargs = require("yargs")
   .version();
 
 // Load all plugin functionalities and finalize the argument parsing.
+const [plugins, missing] = flow([list, load])();
+console.log(plugins, missing);
+
 // eslint-disable-next-line lodash-fp/no-unused-result
 flow([
-  pluginOptions,
   pickBy(has("argv")),
   forEachObj((p, name) =>
     yargs.group(keys(p.argv), `${name}: ${p.desc}`).options(p.argv)
   ),
-])();
+])(plugins);
 
 const {argv} = yargs;
 
@@ -110,12 +114,24 @@ const config = omit(argvOmit, argv);
 // We can collect queries from a file as well as the command line.
 const queries = concat(argv.q ? argv.q : [], argv.Q ? argv.Q : []);
 
+// Make sure all requested plugins are available.
+if (!isEmpty(missing)) {
+  const msg = `Missing the following modules: ${join(", ", missing)}`;
+  haltAndCough(argv.debug, new Error(msg));
+}
+
+const missingPlugins = flow([keys, difference(argv.plugins)])(plugins);
+if (!isEmpty(missingPlugins)) {
+  const msg = `Missing the following plugins: ${join(", ", missingPlugins)}`;
+  haltAndCough(argv.debug, new Error(msg));
+}
+
 // Now we have our queries and config, we can create a sugarcube run, and
 // execute it. We also wire the logging to the stream messages.
 let run;
 
 try {
-  run = runner(config, queries);
+  run = runner(plugins, config, queries);
 } catch (e) {
   haltAndCough(argv.debug, e);
 }

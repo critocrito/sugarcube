@@ -17,7 +17,6 @@ import {liftManyA2} from "./data/plugin";
 import {envelopeQueries, fmapData} from "./data/envelope";
 import ds from "./data/data";
 import {now} from "./utils";
-import {list, load} from "./utils/plugins";
 import {reduceP} from "./utils/combinators";
 
 // The following functions provide funtionalities that should be run every
@@ -93,23 +92,9 @@ const source = curry((name, envelope) =>
  *
  * run();
  */
-const runner = curry((cfg, queries) => {
-  const [plugins, missing] = flow([list, load])();
+const runner = curry((plugins, cfg, queries) => {
   const stream = Bacon.Bus();
   const marker = shortId();
-
-  // Check that all dependencies are installed.
-  if (!isEmpty(missing)) {
-    const msg = `Missing the following modules: ${join(", ", missing)}`;
-    throw new Error(msg);
-  }
-
-  // Make sure we have all requested plugins.
-  const missingPlugins = flow([keys, difference(cfg.plugins)])(plugins);
-  if (!isEmpty(missingPlugins)) {
-    const msg = `Missing the following plugins: ${join(", ", missingPlugins)}`;
-    throw new Error(msg);
-  }
 
   // The pipeline is a list of tuples, where the first element of the tuple
   // is a string indicating the name of the plugin, and the second element
