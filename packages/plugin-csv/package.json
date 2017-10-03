@@ -1,5 +1,6 @@
 {
   "name": "@sugarcube/plugin-csv",
+  "private": true,
   "version": "0.0.0",
   "description": "CSV based input and output for SugarCube.",
   "main": "_dist/index.js",

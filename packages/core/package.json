@@ -1,5 +1,6 @@
 {
   "name": "@sugarcube/core",
+  "private": true,
   "version": "0.0.0",
   "description": "Monoidal data sequences.",
   "main": "_dist/index.js",

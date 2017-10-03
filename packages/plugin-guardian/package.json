@@ -1,5 +1,6 @@
 {
   "name": "@sugarcube/plugin-guardian",
+  "private": true,
   "version": "0.0.0",
   "description": "Fetch content from the Guardian.",
   "main": "_dist/index.js",
