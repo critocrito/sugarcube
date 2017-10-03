@@ -18,10 +18,10 @@
     "search"
   ],
   "dependencies": {
+    "@sugarcube/core": "^0.0.0",
     "babel-polyfill": "^6.23.0",
     "bluebird": "^3.5.0",
     "cheerio": "^1.0.0-rc.1",
-    "@sugarcube/core": "^0.0.0",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
     "nightmare": "^2.10.0",
