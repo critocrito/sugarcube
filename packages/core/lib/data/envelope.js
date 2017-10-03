@@ -250,7 +250,7 @@ export const queriesByType = curry((type, e) => {
 
 export const flatMapQueriesAsync = curry((f, source, e) =>
   mapP(
-    q => f(q.term).then(ds.fmap(ds.concatOne({_lf_queries: [q]}))),
+    q => f(q.term).then(ds.fmap(ds.concatOne({_sc_queries: [q]}))),
     filterQueries(({type}) => type === source, e).queries
   ).then(d => concatData(flatMap(identity, d), e))
 );

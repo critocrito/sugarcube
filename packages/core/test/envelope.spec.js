@@ -140,7 +140,7 @@ describe("envelope interface", () => {
       assertForall(envelopeArb, dict(string), (a, x) => {
         const f = merge(x);
         const b = fmapDataDownloads(f, a);
-        return flow([flatMap(property("_lf_downloads")), every(isMatch(x))])(
+        return flow([flatMap(property("_sc_downloads")), every(isMatch(x))])(
           b.data
         );
       }));

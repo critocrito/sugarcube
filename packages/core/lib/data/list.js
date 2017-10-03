@@ -15,7 +15,7 @@ import {mapP} from "../utils/combinators";
 
 const hashListId = hashKeys(["type", "term"]);
 
-const listId = l => l._lf_id_hash || hashListId(l);
+const listId = l => l._sc_id_hash || hashListId(l);
 
 // A single List
 // Setoid
@@ -48,7 +48,7 @@ const filter = loFilter;
 const uniq = uniqBy(listId);
 
 // Hashing
-const hashOne = h => concatOne(h, {_lf_id_hash: listId(h)});
+const hashOne = h => concatOne(h, {_sc_id_hash: listId(h)});
 const hash = fmap(hashOne);
 
 export default {

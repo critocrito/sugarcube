@@ -21,40 +21,40 @@ export const reverseImageSearchFromFile = curry((headless, term) =>
 export const entity = curry((source, unit) =>
   // TODO: Replace with mergeWith to merge arrays properly.
   merge(unit, {
-    _lf_source: source,
-    _lf_id_fields: ["href"],
-    _lf_content_fields: ["title"],
-    _lf_links: [{type: "url", term: unit.href}],
-    _lf_relations: [{type: "url", term: unit.href}],
-    _lf_downloads: [{type: "url", term: unit.href}],
+    _sc_source: source,
+    _sc_id_fields: ["href"],
+    _sc_content_fields: ["title"],
+    _sc_links: [{type: "url", term: unit.href}],
+    _sc_relations: [{type: "url", term: unit.href}],
+    _sc_downloads: [{type: "url", term: unit.href}],
   })
 );
 
 export const searchEntity = curry((term, unit) =>
   merge(unit, {
-    _lf_pubdates: {source: unit.date},
-    _lf_queries: [{type: "google_search", term}],
-    _lf_content_fields: ["title", "description"],
+    _sc_pubdates: {source: unit.date},
+    _sc_queries: [{type: "google_search", term}],
+    _sc_content_fields: ["title", "description"],
   })
 );
 
 export const imagesEntity = curry((term, unit) =>
   merge(unit, {
-    _lf_content_fields: [unit.imgHref],
-    _lf_queries: [{type: "google_images", term}],
-    _lf_links: [
+    _sc_content_fields: [unit.imgHref],
+    _sc_queries: [{type: "google_images", term}],
+    _sc_links: [
       {type: "url", term: unit.href},
       {type: "url", term: unit.imgHref},
     ],
-    _lf_relations: [
+    _sc_relations: [
       {type: "url", term: unit.href},
       {type: "url", term: unit.imgHref},
     ],
-    _lf_downloads: [
+    _sc_downloads: [
       {type: "image", term: unit.href},
       {type: "url", term: unit.imgHref},
     ],
-    _lf_media: [{type: "image", term: unit.href}],
+    _sc_media: [{type: "image", term: unit.href}],
   })
 );
 

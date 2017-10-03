@@ -209,16 +209,16 @@ describe("data interface", () => {
     it("naps a function over a list on units of data", () =>
       assertForall(dataArb, dict(string), (xs, y) => {
         const f = ls.concatOne(y);
-        const ys = ds.fmapList("_lf_downloads", f, xs);
-        return every(isMatch(y), ys._lf_downloads);
+        const ys = ds.fmapList("_sc_downloads", f, xs);
+        return every(isMatch(y), ys._sc_downloads);
       }));
 
     it("produces the same results synchronously and asynchronously", () =>
       assertForall(dataArb, dict(string), (xs, y) => {
         const f = ls.concatOne(y);
         return Promise.all([
-          Promise.resolve(ds.fmapList("_lf_downloads", f, xs)),
-          ds.fmapListAsync("_lf_downloads", f, xs),
+          Promise.resolve(ds.fmapList("_sc_downloads", f, xs)),
+          ds.fmapListAsync("_sc_downloads", f, xs),
         ]).spread(ds.equals);
       }));
   });
@@ -233,13 +233,13 @@ describe("new implementations", () => {
 
 describe("data hashing", () => {
   it("hashes a single unit", () =>
-    assertForall(unitArb, u => has("_lf_id_hash", ds.hashOne(u))));
+    assertForall(unitArb, u => has("_sc_id_hash", ds.hashOne(u))));
 
   it("hashes many homonyms", () =>
     assertForall(dataArb, xs => {
       const hs = ds.hash(xs);
       return (
-        every(has("_lf_id_hash"), hs) && every(has("_lf_content_hash"), hs)
+        every(has("_sc_id_hash"), hs) && every(has("_sc_content_hash"), hs)
       );
     }));
 });

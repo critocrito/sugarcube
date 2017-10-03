@@ -320,7 +320,7 @@ for more information.
 
 The Telegram packages has one plugin, which can send units of data to a chat
 channel. It will construct a string out of the fields listed in
-`_lf_content_fields`. Using it is quite simple:
+`_sc_content_fields`. Using it is quite simple:
 
 ```
 $  $(npm bin)/sugarcube -Q twitter_user:@jairbolsonaro \
@@ -396,9 +396,9 @@ would be such keys, and the values are the actual tweet, and the time when the
 tweet occurred.
 
 There is a series of extra fields that are added to every unit by
-SugarCube. Their keys usually start with `_lf`. These extra fields often
+SugarCube. Their keys usually start with `_sc`. These extra fields often
 convey an additional semantic meaning in a plugin independent manner. It
-allows plugins to operate on data in an independent manner, e.g. `_lf_links`
+allows plugins to operate on data in an independent manner, e.g. `_sc_links`
 holds all links, that a data unit might contain. Now any plugin that wants to
 operate on links (such as `http_get` or `http_wget`) don't need to know
 anything about the specific plugin that generate the data in the first place.
@@ -407,37 +407,37 @@ This is an example, how such a unit of data looks like.
 
 ```
 {
-	"_lf_links" : [{
+	"_sc_links" : [{
 	  "type" : "url",
       "href" : "https://www.theguardian.com/us-news/2016/aug/14/third-party-candidates-johnson-stein-mcmullin-debate-polling-percentage",
-      "_lf_id_hash" : "3e4ec721a206f46c1b1d30c958be6355e8f3665fe26ec51302dad565c5449096"
+      "_sc_id_hash" : "3e4ec721a206f46c1b1d30c958be6355e8f3665fe26ec51302dad565c5449096"
 	}, {
       "type" : "self",
       "href" : "https://content.guardianapis.com/us-news/2016/aug/14/third-party-candidates-johnson-stein-mcmullin-debate-polling-percentage",
-      "_lf_id_hash" : "5779a75ec7b430a5ebdf4402324067d1be03f25ade0506453e1082c335a1df01"
+      "_sc_id_hash" : "5779a75ec7b430a5ebdf4402324067d1be03f25ade0506453e1082c335a1df01"
 	}],
-	"_lf_media" : [ ],
-	"_lf_pubdates" : {
+	"_sc_media" : [ ],
+	"_sc_pubdates" : {
 		"fetch" : "2017-03-21T23:22:35.426Z",
 		"source" : "2016-08-14T12:00:35Z)
 	},
-	"_lf_relations" : [{
+	"_sc_relations" : [{
 	  "type" : "url",
       "term" : "https://www.theguardian.com/us-news/2016/aug/14/third-party-candidates-johnson-stein-mcmullin-debate-polling-percentage",
-      "_lf_id_hash" : "ed7a6bc7c6694fa4879e4e1f956db03d61fb327ab1a70a9dbe1c5020f8291245"
+      "_sc_id_hash" : "ed7a6bc7c6694fa4879e4e1f956db03d61fb327ab1a70a9dbe1c5020f8291245"
     }, {
       "type" : "url",
       "term" : "https://content.guardianapis.com/us-news/2016/aug/14/third-party-candidates-johnson-stein-mcmullin-debate-polling-percentage",
-      "_lf_id_hash" : "e3895a0e1ce5a3d44f23fc759d34c9da96e859604b30713817c40bb99314d6f1"
+      "_sc_id_hash" : "e3895a0e1ce5a3d44f23fc759d34c9da96e859604b30713817c40bb99314d6f1"
 	}],
-	"_lf_downloads" : [{
+	"_sc_downloads" : [{
 	  "type" : "url",
       "term" : "https://www.theguardian.com/us-news/2016/aug/14/third-party-candidates-johnson-stein-mcmullin-debate-polling-percentage",
-      "_lf_id_hash" : "172f6d9f96f85f976267f4ceeebd48e9049ee1427ca4b1a7d80026b40ce04211"
+      "_sc_id_hash" : "172f6d9f96f85f976267f4ceeebd48e9049ee1427ca4b1a7d80026b40ce04211"
     }, {
 	  "type" : "json",
       "term" : "https://content.guardianapis.com/us-news/2016/aug/14/third-party-candidates-johnson-stein-mcmullin-debate-polling-percentage",
-      "_lf_id_hash" : "eda10207ffe39ce48c4883c2cd982c98275fafa6bddcdd2aa0fb4e9f37baa254"
+      "_sc_id_hash" : "eda10207ffe39ce48c4883c2cd982c98275fafa6bddcdd2aa0fb4e9f37baa254"
     }],
 	"id" : "us-news/2016/aug/14/third-party-candidates-johnson-stein-mcmullin-debate-polling-percentage",
 	"type" : "article",
@@ -448,24 +448,24 @@ This is an example, how such a unit of data looks like.
 	"webUrl" : "https://www.theguardian.com/us-news/2016/aug/14/third-party-candidates-johnson-stein-mcmullin-debate-polling-percentage",
 	"apiUrl" : "https://content.guardianapis.com/us-news/2016/aug/14/third-party-candidates-johnson-stein-mcmullin-debate-polling-percentage",
 	"isHosted" : false,
-	"_lf_id_fields" : ["id"],
-	"_lf_content_fields" : ["webTitle"],
-	"_lf_id_hash" : "7c4e094182ad5369dec90910463c587a50e2c5125b1685c784488c05b2a3f2c8",
-	"_lf_content_hash" : "1306025b72901b844a134a9bd7eb9f76d4d4aa3909fddccbb7b131260da71367",
-	"_lf_markers" : ["B1QarNJ2x", "S1l0B41nx"]
+	"_sc_id_fields" : ["id"],
+	"_sc_content_fields" : ["webTitle"],
+	"_sc_id_hash" : "7c4e094182ad5369dec90910463c587a50e2c5125b1685c784488c05b2a3f2c8",
+	"_sc_content_hash" : "1306025b72901b844a134a9bd7eb9f76d4d4aa3909fddccbb7b131260da71367",
+	"_sc_markers" : ["B1QarNJ2x", "S1l0B41nx"]
 }
 
 ```
 
-The `_lf_id_hash` is the unique identifier of that unit of data. It is a
+The `_sc_id_hash` is the unique identifier of that unit of data. It is a
 SHA256 hash sum of the identifying fields of the unit. If SugarCube fetches a
-unit of data, it calculates the `_lf_id_hash` and can so determine if a unit
+unit of data, it calculates the `_sc_id_hash` and can so determine if a unit
 is new or already known.
 
-Similar the `_lf_content_hash` is a hash sum of the content of a unit of
+Similar the `_sc_content_hash` is a hash sum of the content of a unit of
 data. This can be the actual tweet, or the contents of an article. If a unit
-is already know to SugarCube (same `_lf_id_hash`) but the content changed
-(different `_lf_content_hash`), then we have a revision of a unit of data.
+is already know to SugarCube (same `_sc_id_hash`) but the content changed
+(different `_sc_content_hash`), then we have a revision of a unit of data.
 
 Units can form relations. If two separate articles link to the same image,
 then that image becomes a relation. If two tweets use the same hashtag, then

@@ -37,7 +37,7 @@ const end = curry((stream, name, envelope) => {
 });
 
 const mark = curry((marker, envelope) =>
-  fmapData(ds.concatOne({_lf_markers: [marker]}), envelope)
+  fmapData(ds.concatOne({_sc_markers: [marker]}), envelope)
 );
 
 const unitDefaults = fmapData(ds.concatOne(ds.emptyOne()));
@@ -45,7 +45,7 @@ const unitDefaults = fmapData(ds.concatOne(ds.emptyOne()));
 const hashData = fmapData(ds.hashOne);
 
 const source = curry((name, envelope) =>
-  fmapData(ds.concatOne({_lf_source: name}), envelope)
+  fmapData(ds.concatOne({_sc_source: name}), envelope)
 );
 
 /**

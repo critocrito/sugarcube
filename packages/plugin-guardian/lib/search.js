@@ -31,19 +31,19 @@ const content = (envelope, {log, cfg}) => {
           concat(memo),
           map(r => {
             const unit = {
-              _lf_source: "guardian_content",
-              _lf_id_fields: ["id"],
-              _lf_content_fields: ["webTitle", "webUrl"],
-              _lf_pubdates: {source: moment.utc(r.webPublicationDate).toDate()},
-              _lf_links: [
+              _sc_source: "guardian_content",
+              _sc_id_fields: ["id"],
+              _sc_content_fields: ["webTitle", "webUrl"],
+              _sc_pubdates: {source: moment.utc(r.webPublicationDate).toDate()},
+              _sc_links: [
                 {type: "url", href: r.webUrl},
                 {type: "self", href: r.apiUrl},
               ],
-              _lf_relations: [
+              _sc_relations: [
                 {type: "url", term: r.webUrl},
                 {type: "url", term: r.apiUrl},
               ],
-              _lf_downloads: [
+              _sc_downloads: [
                 {type: "url", term: r.webUrl},
                 {type: "json", term: r.apiUrl},
               ],

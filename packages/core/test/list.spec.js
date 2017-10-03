@@ -99,8 +99,8 @@ describe("lists interface", () => {
 
 describe("lists hashing", () => {
   it("hashes a single list", () =>
-    assertForall(listArb, h => has("_lf_id_hash", list.hashOne(h))));
+    assertForall(listArb, h => has("_sc_id_hash", list.hashOne(h))));
 
   it("hashes many lists", () =>
-    assertForall(listsArb, xs => every(has("_lf_id_hash"), list.hash(xs))));
+    assertForall(listsArb, xs => every(has("_sc_id_hash"), list.hash(xs))));
 });

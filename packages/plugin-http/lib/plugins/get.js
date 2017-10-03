@@ -8,11 +8,11 @@ const getTypes = ["image", "file", "pdf", "video"];
 
 const curlGet = (envelope, {log, cfg}) =>
   env.fmapDataDownloadsAsync(d => {
-    const {type, term, _lf_id_hash} = d;
+    const {type, term, _sc_id_hash} = d;
     if (!includes(type, getTypes)) {
       return d;
     }
-    const dir = join(cfg.http.download_dir, type, _lf_id_hash);
+    const dir = join(cfg.http.download_dir, type, _sc_id_hash);
 
     return download(dir, d).tap(() => log.info(`Fetched ${term} to ${dir}.`));
   }, envelope);

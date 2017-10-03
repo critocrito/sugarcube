@@ -18,7 +18,7 @@ const importPlugin = (envelope, {log, cfg}) => {
   const idFields = get("csv.id_fields", cfg).split(",");
 
   const entity = merge(d.emptyOne(), {
-    _lf_id_fields: idFields,
+    _sc_id_fields: idFields,
   });
 
   return reduceP(

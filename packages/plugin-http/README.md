@@ -6,7 +6,7 @@ Plugins based on HTTP requests.
 
 ### `http_get`
 
-Fetch images, files, pdf's and videos from `_lf_downloads`.
+Fetch images, files, pdf's and videos from `_sc_downloads`.
 
 **Configuration Options**:
 
@@ -16,7 +16,7 @@ Fetch images, files, pdf's and videos from `_lf_downloads`.
 
 ### `http_wget`
 
-Fetch whole web pages from `_lf_downloads`.
+Fetch whole web pages from `_sc_downloads`.
 
 **Configuration Options**:
 

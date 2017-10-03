@@ -8,11 +8,11 @@ const wgetTypes = ["url"];
 
 const fetchPage = (envelope, {cfg, log}) =>
   env.fmapDataDownloadsAsync(d => {
-    const {type, term, _lf_id_hash} = d;
+    const {type, term, _sc_id_hash} = d;
     if (!includes(type, wgetTypes)) {
       return d;
     }
-    const dir = join(cfg.http.download_dir, type, _lf_id_hash);
+    const dir = join(cfg.http.download_dir, type, _sc_id_hash);
     const cmd = cfg.http.wget_cmd;
 
     return wget(cmd, dir, d)

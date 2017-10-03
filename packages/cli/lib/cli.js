@@ -96,7 +96,6 @@ const yargs = require("yargs")
 
 // Load all plugin functionalities and finalize the argument parsing.
 const [plugins, missing] = flow([list, load])();
-console.log(plugins, missing);
 
 // eslint-disable-next-line lodash-fp/no-unused-result
 flow([

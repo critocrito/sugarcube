@@ -34,7 +34,7 @@ const randomSpec = () => {
       return {[nestring.generator(2)]: string};
     }
     default: {
-      return {_lf_id_hash: nestring};
+      return {_sc_id_hash: nestring};
     }
   }
 };
@@ -83,13 +83,13 @@ export const queries = size => generate(queriesArb, size);
 const dataUnitSpec = {
   field1: nestring,
   field2: nestring,
-  _lf_id_fields: constant(["field1", "field2"]),
-  _lf_links: listsArb,
-  _lf_media: listsArb,
-  _lf_relations: listsArb,
-  _lf_downloads: listsArb,
-  _lf_queries: listsArb,
-  _lf_markers: array(string),
+  _sc_id_fields: constant(["field1", "field2"]),
+  _sc_links: listsArb,
+  _sc_media: listsArb,
+  _sc_relations: listsArb,
+  _sc_downloads: listsArb,
+  _sc_queries: listsArb,
+  _sc_markers: array(string),
 };
 
 /**

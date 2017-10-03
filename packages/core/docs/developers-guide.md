@@ -87,48 +87,48 @@ unit with whatever field they want. Certain fields gold meaning across the
 whole of SugarCube, and plugins should not change their meaning. Some fields
 are understood only by a few plugins.
 
-- `_lf_id_hash` - A unique identifier for this data unit. It is usually a
-  SHA256 hash. If the `_lf_id_fields` field is set, the SugarCube core
-  automatically calculates the `_lf_id_hash` for every unit. This is the
+- `_sc_id_hash` - A unique identifier for this data unit. It is usually a
+  SHA256 hash. If the `_sc_id_fields` field is set, the SugarCube core
+  automatically calculates the `_sc_id_hash` for every unit. This is the
   recommended way. Otherwise the plugin has to provide the hash by itself.
 
-- `_lf_id_fields` - A list of field names, that specify the significant fields
+- `_sc_id_fields` - A list of field names, that specify the significant fields
   to form an identifier for this unit. SugarCube will take the values for
   those fields to calculate a unique identifier.
 
-  `_lf_id_fields: ['tweet_id']`
+  `_sc_id_fields: ['tweet_id']`
 
-- `_lf_content_hash` - A SHA256 hash of the content of the data
+- `_sc_content_hash` - A SHA256 hash of the content of the data
   unit. SugarCube uses this field to see if a particular piece of data
-  changed. If the `_lf_content_fields` field is et, the SugarCube core
-  automatically calculates the `_lf_content_hash` for every unit. This is the
+  changed. If the `_sc_content_fields` field is et, the SugarCube core
+  automatically calculates the `_sc_content_hash` for every unit. This is the
   recommended way. Otherwise the plugin has to provide the hash by
   itself.
 
-- `_lf_content_fields` - A list of field names, that specify the significant
+- `_sc_content_fields` - A list of field names, that specify the significant
   fields to form the content for this unit. SugarCube will take the values
   for those fields to calculate content integrity.
 
-  `_lf_content_fields: ['tweet']`
+  `_sc_content_fields: ['tweet']`
 
-- `_lf_pubdates` - An object, that contains various dates around this
+- `_sc_pubdates` - An object, that contains various dates around this
   unit. Possible date types are `fetch`, the date and time when the unit was
   fetched, and `source`, the date and time that the unit was created. In the
   future more types of dates can be added. The dates should be JavaScript
   `Date` objects.
 
   ```
-  _lf_pubdates: {
+  _sc_pubdates: {
     fetch: Date("2017-03-21T23:22:35.426Z"),
     source: Date("2016-08-14T12:00:35Z")
   }
   ```
 
-- `_lf_links`
-- `_lf_media`
-- `_lf_relations`
-- `_lf_downloads`
-_ `_lf_markers`
+- `_sc_links`
+- `_sc_media`
+- `_sc_relations`
+- `_sc_downloads`
+_ `_sc_markers`
 
 ### Queries
 

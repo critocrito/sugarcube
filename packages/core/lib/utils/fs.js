@@ -61,8 +61,8 @@ export const unfold = pattern =>
       location,
       sha256,
       md5,
-      _lf_id_fields: ["location"],
-      _lf_content_fields: ["sha256", "md5"],
+      _sc_id_fields: ["location"],
+      _sc_content_fields: ["sha256", "md5"],
     }))
   );
 
