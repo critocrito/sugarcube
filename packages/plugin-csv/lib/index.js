@@ -1,6 +1,7 @@
 import {merge, values, forEach} from "lodash/fp";
 import exportPlugin from "./plugins/export";
 import importPlugin from "./plugins/import";
+import {parse, parseMany} from "./parse";
 
 const plugins = {
   csv_export: exportPlugin,
@@ -22,8 +23,5 @@ forEach(p => {
   );
 }, values(plugins));
 
-export {plugins};
-
-export default {
-  plugins,
-};
+export {plugins, parse, parseMany};
+export default {plugins, parse, parseMany};

@@ -1,17 +1,15 @@
-import {flow, map, concat, merge, get} from "lodash/fp";
-import Promise from "bluebird";
-import parse from "csv-parse";
-import fs from "fs";
-import {flow as flowP, fold as foldP} from "combinators-p";
+import {map, merge, get} from "lodash/fp";
+import {flow as flowP, flatmap} from "combinators-p";
 import {envelope as env, data as d, plugin as p, utils} from "@sugarcube/core";
 
+import {parseMany} from "../parse";
 import {assertIdFields} from "../assertions";
 
 const {unfold} = utils.fs;
 
 const querySource = "glob_pattern";
 
-const importPlugin = (envelope, {log, cfg}) => {
+const importPlugin = (envelope, {cfg}) => {
   const patterns = env.queriesByType(querySource, envelope);
   const delimiter = get("csv.delimiter", cfg);
   // FIXME: Split the string as part of the command parsing coercion
@@ -23,40 +21,11 @@ const importPlugin = (envelope, {log, cfg}) => {
 
   return flowP(
     [
-      foldP(
-        (memo, pattern) =>
-          unfold(pattern).then(
-            flow([
-              // The order of the merge matters, otherwise the id_fields are merged
-              // ssbadly.
-              map(u => merge(u, entity)),
-              concat(memo),
-            ])
-          ),
-        []
+      flatmap(pattern =>
+        // The order of the merge matters, otherwise the id_fields are merged badly.
+        unfold(pattern).then(map(u => merge(u, entity)))
       ),
-      foldP((memo, unit) => {
-        const records = [];
-        const parser = parse({delimiter, columns: true});
-        const input = fs.createReadStream(unit.location);
-
-        // eslint-disable-next-line promise/avoid-new
-        return new Promise((resolve, reject) => {
-          parser.on("error", reject);
-          parser.on("finish", () => {
-            log.info(`Finished parsing ${unit.location}`);
-            resolve(records);
-          });
-          parser.on("readable", () => {
-            let record;
-            // eslint-disable-next-line no-cond-assign
-            while ((record = parser.read())) {
-              records.push(merge(unit, record));
-            }
-          });
-          input.pipe(parser);
-        }).then(concat(memo));
-      }, []),
+      parseMany(delimiter),
       xs => env.concatData(xs, envelope),
     ],
     patterns
