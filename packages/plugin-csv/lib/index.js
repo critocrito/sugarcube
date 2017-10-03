@@ -1,6 +1,6 @@
 import {merge, values, forEach} from "lodash/fp";
-import exportPlugin from "./export";
-import importPlugin from "./import";
+import exportPlugin from "./plugins/export";
+import importPlugin from "./plugins/import";
 
 const plugins = {
   csv_export: exportPlugin,

@@ -4,7 +4,7 @@ import parse from "csv-parse";
 import fs from "fs";
 import {envelope as env, data as d, plugin as p, utils} from "@sugarcube/core";
 
-import {assertIdFields} from "./assertions";
+import {assertIdFields} from "../assertions";
 
 const {unfold} = utils.fs;
 const {reduceP} = utils.combinators;

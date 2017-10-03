@@ -20,7 +20,7 @@ import Promise from "bluebird";
 import stringify from "csv-stringify";
 import {plugin as p} from "@sugarcube/core";
 
-import {assertFilename} from "./assertions";
+import {assertFilename} from "../assertions";
 
 Promise.promisifyAll(fs);
 
