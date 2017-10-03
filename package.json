@@ -10,6 +10,7 @@
     "lint": "eslint --cache packages/**/lib/**/*.js",
     "fix": "npm run lint -- --fix",
     "clean": "rimraf packages/**/_dist",
+    "clean-mods": "for i in packages/*; do rimraf $i/node_modules; done; rimraf node_modules",
     "precompile": "npm run clean",
     "compile": "for i in packages/*; do babel -d $i/_dist $i/lib; done",
     "build": "npm run lint && npm run test && npm run compile"
