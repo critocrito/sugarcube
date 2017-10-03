@@ -24,7 +24,7 @@ export const parse = curry((delimiter, unit) => {
 });
 
 export const parseMany = curry((delimiter, units) =>
-  foldP((memo, unit) => parse(delimiter, unit).then(concat(memo)), [], units));
+  foldP((memo, unit) => parse(delimiter, unit).then(concat(memo)), [], units)
+);
 
 export default {parse, parseMany};
-

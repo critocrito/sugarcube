@@ -7,7 +7,7 @@
   "scripts": {
     "test": "mocha -c --reporter progress --compilers js:babel-register --require test/helpers.js packages/**/test/*.spec.js",
     "check": "eslint --print-config .eslintrc.json | eslint-config-prettier-check",
-    "lint": "eslint --cache packages/**/lib/**/*.js",
+    "lint": "eslint **/lib/**/*.js",
     "fix": "npm run lint -- --fix",
     "clean": "rimraf packages/**/_dist",
     "clean-mods": "for i in packages/*; do rimraf $i/node_modules; done; rimraf node_modules",

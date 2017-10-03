@@ -11,9 +11,9 @@ const plugins = {
 };
 
 forEach(p => {
+  // eslint-disable-next-line no-param-reassign
   p.argv = merge(
     {
-      // eslint-disable-line no-param-reassign
       "google.headless": {
         default: true,
         type: "boolean",

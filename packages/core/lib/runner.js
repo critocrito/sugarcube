@@ -1,15 +1,4 @@
-import {
-  flow,
-  curry,
-  map,
-  zip,
-  merge,
-  join,
-  keys,
-  size,
-  difference,
-  isEmpty,
-} from "lodash/fp";
+import {flow, curry, map, zip, merge, size} from "lodash/fp";
 import Bacon from "baconjs";
 import {generate as shortId} from "shortid";
 

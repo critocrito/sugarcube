@@ -1,19 +1,19 @@
-import {forEach, merge, values} from 'lodash/fp';
+import {forEach, merge, values} from "lodash/fp";
 
-import db from './db';
+import db from "./db";
 // FIXME: I disabled the specific store plugins. The semantic has to be better
 //        figured out.
 // import existsPlugin from './plugins/exists';
 // import storeDataPlugin from './plugins/store-data';
 // import storeRelationsPlugin from './plugins/store-relations';
 // import storeRevisionsPlugin from './plugins/store-revisions';
-import storePlugin from './plugins/store';
-import fetchUnitsPlugin from './plugins/fetch-units';
-import fetchRelationsPlugin from './plugins/fetch-relations';
-import fetchRevisionsPlugin from './plugins/fetch-revisions';
-import queryUnitsPlugin from './plugins/query-units';
-import complementPlugin from './plugins/complement';
-import complementLeftPlugin from './plugins/complement-left';
+import storePlugin from "./plugins/store";
+import fetchUnitsPlugin from "./plugins/fetch-units";
+import fetchRelationsPlugin from "./plugins/fetch-relations";
+import fetchRevisionsPlugin from "./plugins/fetch-revisions";
+import queryUnitsPlugin from "./plugins/query-units";
+import complementPlugin from "./plugins/complement";
+import complementLeftPlugin from "./plugins/complement-left";
 
 const plugins = {
   // mongodb_exists: existsPlugin,
@@ -31,15 +31,18 @@ const plugins = {
 
 forEach(p => {
   // eslint-disable-next-line no-param-reassign
-  p.argv = merge({
-    'mongodb.uri': {
-      type: 'string',
-      nargs: 1,
-      desc: 'The MongoDB connection string',
-      default: 'mongodb://localhost/sugarcube',
+  p.argv = merge(
+    {
+      "mongodb.uri": {
+        type: "string",
+        nargs: 1,
+        desc: "The MongoDB connection string",
+        default: "mongodb://localhost/sugarcube",
+      },
     },
-  }, p.argv);
+    p.argv
+  );
 }, values(plugins));
 
-export { plugins, db };
-export default { plugins, db };
+export {plugins, db};
+export default {plugins, db};
