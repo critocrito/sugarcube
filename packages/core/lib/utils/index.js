@@ -4,12 +4,14 @@ import {
   map,
   concat,
   merge,
+  pickBy,
   cloneDeep,
   partialRight,
   keyBy,
   keys,
   intersection,
   xor,
+  has,
   isEqualWith,
   isString,
   isArray,
@@ -60,6 +62,13 @@ export const equalsManyWith = curry((cmp, xs, ys) => {
   return isEqualWith(cmp, xs, ys);
 });
 
+/**
+ * Return all available options for the given plugins.
+ *
+ * @returns {Object} options The available options.
+ */
+export const pluginOptions = pickBy(has("argv"));
+
 // TODO: Deprecated.
 export const deepConcatWith = concatManyWith;
 
@@ -71,6 +80,7 @@ export default {
   arrayify,
   concatManyWith,
   equalsManyWith,
+  pluginOptions,
   // TODO: Deprecated.
   deepConcatWith,
 };

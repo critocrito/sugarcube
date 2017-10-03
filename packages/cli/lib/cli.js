@@ -2,15 +2,12 @@ import {
   flow,
   curry,
   map,
-  forEach,
+  reduce,
   concat,
   join,
   split,
   omit,
   keys,
-  pickBy,
-  has,
-  first,
   difference,
   zipObject,
   isArray,
@@ -18,13 +15,14 @@ import {
   isEmpty,
 } from "lodash/fp";
 import dotenv from "dotenv";
-import {runner} from "@sugarcube/core";
+import {runner, utils} from "@sugarcube/core";
 
 import {mapFiles, parseConfigFile, parseConfigFileWithExtends} from "./";
 import {info, error, debug} from "./logger";
-import {list, load} from "./plugins";
+import {loadModules} from "./plugins";
 
-const forEachObj = forEach.convert({cap: false});
+const reduceObj = reduce.convert({cap: false});
+const {pluginOptions} = utils;
 
 const haltAndCough = curry((d, e) => {
   error(e.message);
@@ -94,36 +92,31 @@ const yargs = require("yargs")
   .alias("h", "help")
   .version();
 
-// Load all plugin functionalities and finalize the argument parsing.
-const [plugins, missing] = flow([list, load])();
+// Load all available plugins.
+const plugins = loadModules();
 
-// eslint-disable-next-line lodash-fp/no-unused-result
-flow([
-  pickBy(has("argv")),
-  forEachObj((p, name) =>
-    yargs.group(keys(p.argv), `${name}: ${p.desc}`).options(p.argv)
+// Finalize the argument parsing for every plugin.
+const {argv} = flow([
+  pluginOptions,
+  reduceObj(
+    (memo, p, name) =>
+      memo.group(keys(p.argv), `${name}: ${p.desc}`).options(p.argv),
+    yargs
   ),
 ])(plugins);
 
-const {argv} = yargs;
-
-const argvOmit = ["_", "h", "help", "q", "Q", "d", "debug", "c", "p", "$0"];
-const config = omit(argvOmit, argv);
-
-// We can collect queries from a file as well as the command line.
-const queries = concat(argv.q ? argv.q : [], argv.Q ? argv.Q : []);
-
-// Make sure all requested plugins are available.
-if (!isEmpty(missing)) {
-  const msg = `Missing the following modules: ${join(", ", missing)}`;
-  haltAndCough(argv.debug, new Error(msg));
-}
-
+// Halt if a plugin in the pipeline is not available.
 const missingPlugins = flow([keys, difference(argv.plugins)])(plugins);
 if (!isEmpty(missingPlugins)) {
   const msg = `Missing the following plugins: ${join(", ", missingPlugins)}`;
   haltAndCough(argv.debug, new Error(msg));
 }
+
+// We can collect queries from a file as well as the command line.
+const queries = concat(argv.q ? argv.q : [], argv.Q ? argv.Q : []);
+
+const argvOmit = ["_", "h", "help", "q", "Q", "d", "debug", "c", "p", "$0"];
+const config = omit(argvOmit, argv);
 
 // Now we have our queries and config, we can create a sugarcube run, and
 // execute it. We also wire the logging to the stream messages.

@@ -4,58 +4,60 @@ import {
   filter,
   reduce,
   merge,
-  concat,
   keys,
-  compact,
   property,
-  first,
   startsWith,
 } from "lodash/fp";
 import path from "path";
 import {readdirSync} from "fs";
 
+export const loadModule = name =>
+  // eslint-disable-next-line global-require, import/no-dynamic-require
+  require(name).plugins || {};
+
+export const loadModulePath = name =>
+  loadModule(path.join(process.cwd(), name));
+
+export const load = f => reduce((memo, name) => merge(memo, f(name)), {});
+
 /**
- * List all sugarcube plugins found in the `node_modules` directory.
- * @returns {Array.<string>} dependencies A list of plugin names.
+ * Load all sugarcube plugins from the local package.json. Each package has to
+ * start with `sugarcube-plugin` as name.
+ * @returns {Object} dependencies A list of plugin names.
  */
-export const listNodeModules = flow([
-  () => readdirSync(`${path.join(process.cwd(), "node_modules/@sugarcube")}`),
-  filter(startsWith("plugin")),
+export const loadPackageJson = flow([
+  // eslint-disable-next-line import/no-dynamic-require, global-require
+  () => require(`${path.join(process.cwd(), "package")}`),
+  property("dependencies"),
+  keys,
+  filter(startsWith("sugarcube-plugin")),
+  map(m => path.join("node_modules", m)),
+  load(loadModulePath),
 ]);
 
 /**
- * The default listing of plugins. Basically if it's in node_modules, it is
- * available.
- * @returns {Array.<string>} dependencies A list of plugin names.
+ * Load all builtin sugarcube plugins found in the `node_modules/@sugarcube`
+ * directory.
+ * @returns {Object} dependencies A list of plugins.
  */
-export const list = listNodeModules;
+export const loadBuiltinModules = () => {
+  const builtinPath = "node_modules/@sugarcube";
+  return flow([
+    () => readdirSync(`${path.join(process.cwd(), builtinPath)}`),
+    filter(startsWith("plugin")),
+    map(m => path.join(builtinPath, m)),
+    load(loadModulePath),
+  ])();
+};
 
 /**
- * Load all plugins available for this sugarcube installation.
+ * Load all plugins available for this sugarcube installation. This looks up
+ * builtin plugins (in `node_modules/@sugarcube`) and any custom plugin
+ * defined in the `package.json` with a name starting with `sugarcube-plugin`.
  *
- * @param {Array.<string>} deps A list of names of plugins to load.
- * @throws If any dependency in `package.json` isn't installed or a plugin in
- * the config isn't available.
- * @returns {Array<Array.<Object>, Array.<string>>} The plugins object and a
- * list of modules that could not be loaded.
+ * @returns {Object} An object with the plugin name as key, and the plugin
+ * function as value.
  * @example
- * const [plugins, missing] = load(list());
+ * const plugins = load();
  */
-export const load = deps =>
-  reduce(
-    ([ts, ms], name) => {
-      const moduleName = `${process.cwd()}/node_modules/@sugarcube/${name}`;
-      let module = {};
-
-      try {
-        // eslint-disable-next-line global-require, import/no-dynamic-require
-        module = require(moduleName);
-      } catch (e) {
-        return [ts, concat(ms, [name])];
-      }
-
-      return [merge(ts, module.plugins || {}), ms];
-    },
-    [{}, []],
-    deps
-  );
+export const loadModules = () => merge(loadBuiltinModules(), loadPackageJson());
