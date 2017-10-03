@@ -1,0 +1,21 @@
+{
+  "name": "@sugarcube/plugin-",
+  "private": true,
+  "version": "0.0.0",
+  "description": "",
+  "main": "_dist/index.js",
+  "license": "GPL-3.0",
+  "repository": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-",
+  "author": "Christo <christo@cryptodrunks.net>",
+  "keywords": [
+    "sugarcube",
+    "sugarcube-plugin",
+    "data",
+    "transformation"
+  ],
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "@sugarcube/core": "0.0.0",
+    "lodash": "^4.17.4"
+  }
+}
