@@ -1,4 +1,4 @@
-# Sugarcube Plugin Google Sheets
+# SugarCube Plugin Google Sheets
 
 A plugin to handle operations based around adding or updating unit data in google sheets
 
