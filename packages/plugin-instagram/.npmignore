@@ -1,0 +1,5 @@
+test/
+lib/
+npm-*.log
+yarn-*.log
+.npmrc
