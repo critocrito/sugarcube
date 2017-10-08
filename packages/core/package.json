@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/core",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Monoidal data sequences.",
   "main": "_dist/index.js",
   "repository": "https://gitlab.com/sugarcube/sugarcube",
@@ -24,9 +24,9 @@
     "baconjs": "^0.7.89",
     "bluebird": "^3.4.7",
     "glob": "^7.1.2",
+    "jsverify": "^0.7.4",
     "lodash": "^4.17.4",
     "moment": "^2.17.1",
-    "shortid": "^2.2.6",
-    "jsverify": "^0.7.4"
+    "shortid": "^2.2.6"
   }
 }

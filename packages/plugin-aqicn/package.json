@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/plugin-aqicn",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Scrape air pollution measurements from aqicn.org.",
   "main": "_dist/index.js",
   "repository": "https://gitlab.com/sugarcube/sugarcube",
@@ -17,10 +17,10 @@
     "air pollution"
   ],
   "dependencies": {
+    "@sugarcube/core": "^0.1.0",
     "bluebird": "^3.5.0",
     "cheerio": "^1.0.0-rc.2",
     "combinators-p": "^0.5.0",
-    "@sugarcube/core": "^0.0.0",
     "lodash": "^4.17.4",
     "request": "^2.83.0",
     "request-promise": "^4.2.2"

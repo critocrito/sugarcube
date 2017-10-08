@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/plugin-google",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "A plugin for SugarCube to interact with some google services.",
   "main": "_dist/index.js",
   "repository": "https://gitlab.com/sugarcube/sugarcube",
@@ -23,7 +23,7 @@
     "jsverify": "^0.8.3"
   },
   "dependencies": {
-    "@sugarcube/core": "^0.0.0",
+    "@sugarcube/core": "^0.1.0",
     "babel-polyfill": "^6.23.0",
     "bluebird": "^3.5.0",
     "cheerio": "^1.0.0-rc.1",

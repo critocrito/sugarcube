@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/plugin-facebook",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Fetch data from facebook for sugarcube.",
   "main": "_dist/index.js",
   "repository": "https://gitlab.com/sugarcube/sugarcube",
@@ -17,8 +17,8 @@
     "facebook"
   ],
   "dependencies": {
+    "@sugarcube/core": "^0.1.0",
     "combinators-p": "^0.5.0",
-    "@sugarcube/core": "^0.0.0",
     "lodash": "^4.17.4",
     "request": "^2.82.0",
     "request-promise": "^4.2.1"
