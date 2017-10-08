@@ -1,3 +1,3 @@
-const chai = require('chai');
+const chai = require("chai");
 
 chai.should();
