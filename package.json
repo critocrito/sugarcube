@@ -36,10 +36,6 @@
     "prettier": "^1.7.0",
     "rimraf": "^2.6.2",
     "sinon": "^3.2.1",
-    "standard-version": "^4.2.0",
     "validate-commit-msg": "^2.14.0"
-  },
-  "dependencies": {
-    "combinators-p": "^0.4.0"
   }
 }
