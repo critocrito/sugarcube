@@ -10,6 +10,8 @@
   "repository": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/cli",
   "keywords": [
     "sugarcube",
+    "sugarcube ui",
+    "sugarcube interface",
     "data",
     "transformation",
     "cli"

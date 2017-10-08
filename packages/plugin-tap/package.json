@@ -6,6 +6,7 @@
   "main": "_dist/index.js",
   "keywords": [
     "sugarcube",
+    "sugarcube plugin",
     "sugarcube-plugin",
     "data",
     "transformation"
