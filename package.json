@@ -13,7 +13,7 @@
     "precompile": "npm run clean",
     "compile": "for i in packages/*; do babel -d $i/_dist $i/lib; done",
     "build": "npm run lint && npm run test && npm run compile",
-    "release": "lerna publish --conventional-commits -m \"chore(release): Bumped to version %s.\""
+    "release": "npm run build && lerna publish --conventional-commits -m \"chore(release): Bumped to version %s.\""
   },
   "author": "Christo <christo@cryptodrunks.net>",
   "license": "GPL-3.0",
