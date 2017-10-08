@@ -1,4 +1,4 @@
-# sugarcube-plugin-mongodb
+# @sugarcube/plugin-mongodb
 
 This is a plugin for [sugarcube](https://gitlab.com/sugarcube/sugarcube).
 

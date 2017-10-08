@@ -65,7 +65,7 @@ Next on we install `sugarcube` command line interface, the DuckDuckGo
 plugin and the tap plugin.
 
 ```
-$ npm install -S sugarcube-cli sugarcube-plugin-ddg sugarcube-plugin-tap
+$ npm install -S sugarcube-cli @sugarcube/plugin-ddg @sugarcube/plugin-tap
 ```
 
 If all went fine, you should have a folder named `node_modules`, which
@@ -206,7 +206,7 @@ like this:
 ```
 
 ```
-$ npm install -S sugarcube-plugin-csv
+$ npm install -S @sugarcube/plugin-csv
 $ $(npm bin)/sugarcube -Q ddg_search:Keith\ Johnstone -c searches.json
 ```
 
@@ -223,12 +223,12 @@ To see other configuration options, run `$(npm bin)/sugarcube -h`.
 
 The `guardian_content` plugin allows to search the archive of the Guardian. In
 order to use this plugin, you have to obtain an API key. Find
-instructions [here](https://gitlab.com/sugarcube/sugarcube-plugin-guardian).
+instructions [here](https://gitlab.com/sugarcube/@sugarcube/plugin-guardian).
 
 Install the guardian plugin into your project.
 
 ```
-$ npm install -S sugarcube-plugin-guardian
+$ npm install -S @sugarcube/plugin-guardian
 ```
 
 Lets do a quick search:
@@ -242,7 +242,7 @@ $ $(npm bin)/sugarcube -Q guardian_search:Aleppo \
 ### Download videos from Youtube
 
 ```
-$ npm install -S sugarcube-plugin-youtube
+$ npm install -S @sugarcube/plugin-youtube
 ```
 
 This plugin requires an API key.
@@ -277,9 +277,9 @@ In this example we will use the plugin for twitter, the HTTP plugin to
 download images and the media plugin to extract EXIF data.
 
 ```
-$ npm install -S sugarcube-plugin-twitter \
-                 sugarcube-plugin-http \
-                 sugarcube-plugin-media
+$ npm install -S @sugarcube/plugin-twitter \
+                 @sugarcube/plugin-http \
+                 @sugarcube/plugin-media
 ```
 
 ```
@@ -311,11 +311,11 @@ Or use a config file:
 Start off by installing the Telegram plugin:
 
 ```
-$ npm install -S sugarcube-plugin-telegram
+$ npm install -S @sugarcube/plugin-telegram
 ```
 
 We will need a bot key and channel ID to use the Telegram
-plugin. See [here](https://gitlab.com/sugarcube/sugarcube-plugin-telegram)
+plugin. See [here](https://gitlab.com/sugarcube/@sugarcube/plugin-telegram)
 for more information.
 
 The Telegram packages has one plugin, which can send units of data to a chat
@@ -346,7 +346,7 @@ There is a `tor_check` plugin, that allows to test if requests are made over
 TOR.
 
 ```
-npm install -S sugarcube-plugin-tor
+npm install -S @sugarcube/plugin-tor
 ```
 
 ```

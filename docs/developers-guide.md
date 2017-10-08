@@ -19,7 +19,7 @@ packages:
   A RESTful HTTP API, that wraps the core. It allows to control SugarCube
   using HTTP requests.
 
-- [`sugarcube-plugin-*`](https://www.npmjs.org/browse/keyword/sugarcube-plugin)
+- [`@sugarcube/plugin-*`](https://www.npmjs.org/browse/keyword/@sugarcube/plugin)
 
   All the functionality that SugarCube provides is encapsulated in plugins.
 
@@ -159,14 +159,14 @@ inside the plugin there is a minimal SugarCube project, that can be used to
 test the module itself.
 
 ```
-git clone https://gitlab.com/sugarcube/sugarcube-boilerplate-plugin sugarcube-plugin-fs
-cd sugarcube-plugin-fs
+git clone https://gitlab.com/sugarcube/sugarcube-boilerplate-plugin @sugarcube/plugin-fs
+cd @sugarcube/plugin-fs
 sed -i -e 's/boilerplate-plugin/plugin-fs/g' package.json
 sed -i -e 's/\(^[ ]*"description": "\).*\(",$\)/\1Provide file system related plugins for SugarCube.\2/g' package.json
 rm -rf .git && git init && git add -A && git commit -m "Initial commit."
 npm link
 cd project
-npm link sugarcube-plugin-fs
+npm link @sugarcube/plugin-fs
 ```
 
 You might wanna edit the `package.json` and change other fields as well:
