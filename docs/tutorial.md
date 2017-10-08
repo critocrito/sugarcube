@@ -65,7 +65,7 @@ Next on we install `sugarcube` command line interface, the DuckDuckGo
 plugin and the tap plugin.
 
 ```
-$ npm install -S sugarcube-cli @sugarcube/plugin-ddg @sugarcube/plugin-tap
+$ npm install -S @sugarcube/cli @sugarcube/plugin-ddg @sugarcube/plugin-tap
 ```
 
 If all went fine, you should have a folder named `node_modules`, which
