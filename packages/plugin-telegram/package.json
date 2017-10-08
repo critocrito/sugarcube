@@ -1,0 +1,25 @@
+{
+  "name": "@sugarcube/plugin-telegram",
+  "version": "0.0.0",
+  "description": "Plugins to utilize the Telegram API.",
+  "main": "_dist/index.js",
+  "repository": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-telegram",
+  "bugs": "https://gitlab.com/sugarcube/sugarcube/issues",
+  "homepage": "https://gitlab.com/sugarcube/sugarcube",
+  "author": "Christo <christo@cryptodrunks.net>",
+  "license": "GPL-3.0",
+  "keywords": [
+    "sugarcube",
+    "sugarcube plugin",
+    "sugarcube-plugin",
+    "data",
+    "transformation",
+    "telegram"
+  ],
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "@sugarcube/core": "^0.0.0",
+    "lodash": "^4.17.4",
+    "telegraf": "^3.6.7"
+  }
+}
