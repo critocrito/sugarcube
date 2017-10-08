@@ -1,4 +1,2 @@
-lib/
 test/
-.babelrc
-.eslintrc.json
+lib/

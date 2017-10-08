@@ -1,6 +1,0 @@
-node_modules
-npm-*.log
-yarn-*.log
-_dist
-.npmrc
-.eslintcache

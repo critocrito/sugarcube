@@ -1,11 +1,12 @@
 {
   "name": "@sugarcube/plugin-mongodb",
-  "private": true,
   "version": "0.0.0",
   "description": "Persist data in MongoDB.",
   "main": "_dist/index.js",
   "license": "GPL-3.0",
-  "repository": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-mongodb",
+  "repository": "https://gitlab.com/sugarcube/sugarcube",
+  "bugs": "https://gitlab.com/sugarcube/sugarcube/issues",
+  "homepage": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-mongodb",
   "author": "Christo <christo@cryptodrunks.net>",
   "keywords": [
     "sugarcube",

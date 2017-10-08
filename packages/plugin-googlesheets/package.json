@@ -1,10 +1,11 @@
 {
   "name": "@sugarcube/plugin-googlesheets",
-  "private": true,
   "version": "0.0.0",
   "description": "Import and Export units from google sheets",
   "main": "_dist/index.js",
-  "repository": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-googlesheets",
+  "repository": "https://gitlab.com/sugarcube/sugarcube",
+  "bugs": "https://gitlab.com/sugarcube/sugarcube/issues",
+  "homepage": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-googlesheets",
   "keywords": [
     "sugarcube",
     "sugarcube plugin",

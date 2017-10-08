@@ -1,8 +1,7 @@
 {
   "name": "@sugarcube/plugin-tap",
-  "private": true,
   "version": "0.0.0",
-  "description": "A K-combinator for sugarcube.",
+  "description": "K-combinators for sugarcube.",
   "main": "_dist/index.js",
   "keywords": [
     "sugarcube",
@@ -11,7 +10,9 @@
     "data",
     "transformation"
   ],
-  "repository": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-tap",
+  "repository": "https://gitlab.com/sugarcube/sugarcube",
+  "bugs": "https://gitlab.com/sugarcube/sugarcube/issues",
+  "homepage": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-tap",
   "author": "Christo <christo@cryptodrunks.net>",
   "license": "GPL-3.0",
   "dependencies": {

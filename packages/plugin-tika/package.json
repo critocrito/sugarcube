@@ -1,11 +1,11 @@
 {
-  "name": "sugarcube-plugin-tika",
+  "name": "@sugarcube/plugin-tika",
   "version": "0.0.0",
   "description": "Parse files and metadata using Tika.",
   "main": "_dist/index.js",
-  "repository": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-tika",
+  "repository": "https://gitlab.com/sugarcube/sugarcube",
   "bugs": "https://gitlab.com/sugarcube/sugarcube/issues",
-  "homepage": "https://gitlab.com/sugarcube/sugarcube",
+  "homepage": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-tika",
   "author": "Christo <christo@cryptodrunks.net>",
   "license": "GPL-3.0",
   "keywords": [

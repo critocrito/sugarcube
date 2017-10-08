@@ -1,10 +1,9 @@
 {
   "name": "@sugarcube/plugin-guardian",
-  "private": true,
   "version": "0.0.0",
   "description": "Fetch content from the Guardian.",
   "main": "_dist/index.js",
-  "repository": "https://gitlab.com/sugarcube/sugarcube/tree/master/plugin-guardian",
+  "repository": "https://gitlab.com/sugarcube/sugarcube",
   "keywords": [
     "sugarcube",
     "sugarcube plugin",
@@ -17,7 +16,7 @@
   "author": "Christo <christo@cryptodrunks.net>",
   "license": "GPL-3.0",
   "bugs": "https://gitlab.com/sugarcube/sugarcube/issues",
-  "homepage": "https://gitlab.com/sugarcube/sugarcube",
+  "homepage": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-guardian",
   "dependencies": {
     "bluebird": "^3.4.7",
     "@sugarcube/core": "^0.0.0",

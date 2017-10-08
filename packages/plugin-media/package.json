@@ -1,12 +1,11 @@
 {
   "name": "@sugarcube/plugin-media",
-  "private": true,
   "version": "0.0.0",
   "description": "Media related plugins.",
   "main": "_dist/index.js",
-  "repository": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-media",
+  "repository": "https://gitlab.com/sugarcube/sugarcube",
   "bugs": "https://gitlab.com/sugarcube/sugarcube/issues",
-  "homepage": "https://gitlab.com/sugarcube/sugarcube",
+  "homepage": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-media",
   "author": "Christo <christo@cryptodrunks.net>",
   "license": "GPL-3.0",
   "keywords": [
@@ -23,7 +22,7 @@
   "dependencies": {
     "bluebird": "^3.4.7",
     "gm": "^1.23.0",
-    "@sugarcube/core": "0.0.0",
+    "@sugarcube/core": "^0.0.0",
     "lodash": "^4.17.4",
     "request": "^2.81.0"
   }

@@ -1,5 +1,2 @@
 test/
-_dist/
-npm-*.log
-yarn-*.log
-.npmrc
+lib/

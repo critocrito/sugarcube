@@ -1,14 +1,13 @@
 {
   "name": "@sugarcube/plugin-google",
-  "private": true,
   "version": "0.0.0",
   "description": "A plugin for SugarCube to interact with some google services.",
   "main": "_dist/index.js",
-  "repository": "https://gitlab.com/sugarcube/sugarcube/tree/master/plugin-google",
+  "repository": "https://gitlab.com/sugarcube/sugarcube",
   "author": "Christo <christo@cryptodrunks.net>",
   "license": "GPL-3.0",
   "bugs": "https://gitlab.com/sugarcube/sugarcube/issues",
-  "homepage": "https://gitlab.com/sugarcube/sugarcube",
+  "homepage": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-google",
   "keywords": [
     "sugarcube",
     "sugarcube plugin",
