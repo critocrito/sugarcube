@@ -16,8 +16,8 @@ import {
   keys,
 } from "lodash/fp";
 import {foldP} from "combinators-p";
+import pify from "pify";
 import Twitter from "twitter";
-import Promise from "bluebird";
 import moment from "moment";
 
 const mapObj = map.convert({cap: false});
@@ -27,15 +27,19 @@ export const paramsString = flow([mapObj((k, v) => `${k}=${v}`), join("&")]);
 export const twitterDate = ds =>
   moment(ds, "ddd MMM D HH:mm:ss Z YYYY").toDate();
 
-const client = curry((consumerKey, consumerSecret, accessToken, accessSecret) =>
-  Promise.promisifyAll(
-    new Twitter({
+const client = curry(
+  (consumerKey, consumerSecret, accessToken, accessSecret) => {
+    const t = new Twitter({
       consumer_key: consumerKey,
       consumer_secret: consumerSecret,
       access_token_key: accessToken,
       access_token_secret: accessSecret,
-    })
-  )
+    });
+
+    return {
+      getAsync: pify(t.get),
+    };
+  }
 );
 
 export const request = curry((cfg, baseUrl, params) =>
