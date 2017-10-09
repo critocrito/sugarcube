@@ -1,13 +1,13 @@
 import {curry, merge, property, size} from "lodash/fp";
 import {flowP, flatmapP, collectP, tapP} from "combinators-p";
-import Promise from "bluebird";
 import request from "request";
+import pify from "pify";
 import moment from "moment";
 import {envelope as env, plugin as p} from "@sugarcube/core";
 
 import {assertKey} from "./utils";
 
-Promise.promisifyAll(request);
+const getAsync = pify(request.get);
 
 const searchGuardian = curry((key, term) => {
   const opts = {
@@ -16,7 +16,7 @@ const searchGuardian = curry((key, term) => {
     json: true,
   };
 
-  return request.getAsync(opts).then(property("body.response.results"));
+  return getAsync(opts).then(property("body.response.results"));
 });
 
 const content = (envelope, {log, cfg}) => {
