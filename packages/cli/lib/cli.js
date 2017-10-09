@@ -105,6 +105,8 @@ const {argv} = flow([
   ),
 ])(plugins);
 
+process.on("unhandledRejection", haltAndCough(argv.debug));
+
 // Halt if a plugin in the pipeline is not available.
 const missingPlugins = flow([keys, difference(argv.plugins)])(plugins);
 if (!isEmpty(missingPlugins)) {
