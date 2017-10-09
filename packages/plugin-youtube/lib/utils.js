@@ -1,8 +1,8 @@
 import {spawn} from "child-process-promise";
 import {utils} from "@sugarcube/core";
+import {retry} from "combinators-p";
 
 const {assertCfg} = utils.assertions;
-const {retry} = utils.combinators;
 
 export const assertCredentials = assertCfg(["youtube.api_key"]);
 

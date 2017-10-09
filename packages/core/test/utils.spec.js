@@ -1,57 +1,17 @@
-import {
-  take,
-  sum,
-  concat,
-  uniqWith,
-  sortBy,
-  size,
-  every,
-  isEqual,
-} from "lodash/fp";
-import Promise from "bluebird";
-import {assertForall, array, dict, fun, nat, string} from "jsverify";
+import {take, concat, uniqWith, sortBy, isEqual} from "lodash/fp";
 
-import {asyncFn} from "./arbitraries";
+import {assertForall, array, dict, string} from "jsverify";
+
 import {utils} from "../lib";
 import d from "../lib/data/data";
 
 import {dataArb} from "../lib/test/generators";
 
 const {concatManyWith, equalsManyWith} = utils;
-const {composeP, flowP, mapP, reduceP, promisify} = utils.combinators;
 
 const {dataId, concatOne} = d;
 const unique = uniqWith(isEqual);
 const sort = sortBy(JSON.stringify);
-
-describe("Promise combinators", () => {
-  it("can promisify ordinary functions", () =>
-    assertForall(fun(nat), f => typeof promisify(f)(0).then === "function"));
-
-  it("compose", () =>
-    assertForall(asyncFn, asyncFn, (f, g) =>
-      Promise.all([composeP(f, g, 0), composeP(f, g, Promise.resolve(0))]).then(
-        every(isEqual(2))
-      )
-    ));
-
-  it("can compose functions returning a promise", () =>
-    assertForall(array(asyncFn), fs =>
-      flowP(fs)(0).then(r => isEqual(r, size(fs)))
-    ));
-
-  it("can map a list of values or promises", () =>
-    assertForall(array(asyncFn), fs =>
-      mapP(f => f(0), fs).then(
-        rs => isEqual(size(rs), size(fs)) && isEqual(sum(rs), size(fs))
-      )
-    ));
-
-  it("can reduce a list of values or promises", () =>
-    assertForall(array(asyncFn), fs =>
-      reduceP((memo, f) => f(memo), 0, fs).then(isEqual(size(fs)))
-    ));
-});
 
 describe("deep concatenation", () => {
   it("eliminates duplicates to the right", () =>

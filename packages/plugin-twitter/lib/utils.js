@@ -15,6 +15,7 @@ import {
   flatten,
   keys,
 } from "lodash/fp";
+import {foldP} from "combinators-p";
 import Twitter from "twitter";
 import Promise from "bluebird";
 import moment from "moment";
@@ -92,8 +93,7 @@ export const recurse = curry((maxDepth, key, fn) => {
   const iter = (params, depth, recurseFrom = null) =>
     fn(params).then(results => {
       if (depth < maxDepth) {
-        return Promise.reduce(
-          results,
+        return foldP(
           (memo, result) => {
             const nextDepth = depth + 1;
             const target = result[key];
@@ -116,7 +116,8 @@ export const recurse = curry((maxDepth, key, fn) => {
               )
             );
           },
-          []
+          [],
+          results
         );
       }
       return results;

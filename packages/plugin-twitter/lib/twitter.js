@@ -10,7 +10,7 @@ import {
   property,
   isNaN,
 } from "lodash/fp";
-import {utils} from "@sugarcube/core";
+import {foldP} from "combinators-p";
 
 import {request, throttle, cursorify, recurse} from "./utils";
 import {
@@ -19,8 +19,6 @@ import {
   friendsTransform,
   searchTransform,
 } from "./entities";
-
-const {reduceP} = utils.combinators;
 
 // The requests within a 15 minutes window in milliseconds.
 const rateLimit = requests => 15 * 60 / requests * 1000;
@@ -32,7 +30,7 @@ export const feed = (cfg, log, users) => {
   const delay = rateLimit(1500);
   const op = throttle(delay, request(cfg, "statuses/user_timeline.json"));
 
-  return reduceP(
+  return foldP(
     (memo, user) => {
       const params = merge(
         {
@@ -64,7 +62,7 @@ export const followers = (cfg, log, users) => {
     cursorify(throttle(delay, request(cfg, "followers/list.json")))
   );
 
-  return reduceP(
+  return foldP(
     (memo, user) => {
       const params = {
         screen_name: user,
@@ -89,7 +87,7 @@ export const friends = (cfg, log, users) => {
     cursorify(throttle(delay, request(cfg, "friends/list.json")))
   );
 
-  return reduceP(
+  return foldP(
     (memo, user) => {
       const params = {
         screen_name: user,
@@ -109,7 +107,7 @@ export const search = (cfg, log, queries) => {
   const delay = rateLimit(180);
   const op = throttle(delay, request(cfg, "search/tweets.json"));
 
-  return reduceP(
+  return foldP(
     (memo, query) => {
       const q = flow([split(" "), map(encodeURIComponent), join("+")])(query);
       const params = {count: 100, q};

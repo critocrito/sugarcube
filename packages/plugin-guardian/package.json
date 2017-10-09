@@ -20,6 +20,7 @@
   "dependencies": {
     "@sugarcube/core": "^0.1.0",
     "bluebird": "^3.4.7",
+    "combinators-p": "^0.5.1",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
     "request": "^2.81.0"

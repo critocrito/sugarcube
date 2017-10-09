@@ -1,44 +1,38 @@
-import {flow, map, merge, concat, size, get} from "lodash/fp";
-import {envelope as env, data as d, utils} from "@sugarcube/core";
+import {merge, size, get} from "lodash/fp";
+import {flowP, collectP, flatmapP, mapP, tapP} from "combinators-p";
+import {envelope as env, utils} from "@sugarcube/core";
 import path from "path";
 
 import {reverseImageSearchFromFile, entity} from "./google";
 
 const {unfold} = utils.fs;
-const {reduceP} = utils.combinators;
 
 const querySource = "glob_pattern";
 
 const plugin = (envelope, {log, cfg}) => {
-  const patterns = env.queriesByType(querySource, envelope);
+  const queries = env.queriesByType(querySource, envelope);
   const headless = !get("google.headless", cfg);
 
-  log.info("Calling the plugin");
+  const search = term =>
+    flowP(
+      [
+        unfold,
+        tapP(rs => log.info(`Searching for ${size(rs)} files in ${term}.`)),
+        collectP(unit =>
+          flowP([
+            reverseImageSearchFromFile(headless, path.resolve(unit.location)),
+            merge(unit),
+            entity("google_reverse_image"),
+          ])()
+        ),
+      ],
+      term
+    );
 
-  return reduceP(
-    (memo, pattern) =>
-      unfold(pattern).then(flow([map(merge(d.emptyOne())), concat(memo)])),
-    [],
-    patterns
-  )
-    .tap(files =>
-      log.info(
-        `Making a reverse image Google search for ${size(files)} images.`
-      )
-    )
-    .reduce((memo, file) => {
-      const location = path.resolve(file.location);
-
-      log.info(`Searching for ${location}.`);
-
-      return reverseImageSearchFromFile(headless, location).then(
-        flow([
-          map(flow([merge(file), entity("google_reverse_image")])),
-          concat(memo),
-        ])
-      );
-    }, [])
-    .then(xs => env.concatData(xs, envelope));
+  return flowP(
+    [flatmapP(search), mapP(rs => env.concatData(rs, envelope))],
+    queries
+  );
 };
 
 plugin.desc = "Make a Google reverse image search.";

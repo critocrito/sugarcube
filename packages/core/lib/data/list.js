@@ -8,10 +8,10 @@ import {
   uniqBy,
   isEqual,
 } from "lodash/fp";
+import {collectP} from "combinators-p";
 
 import {arrayify, concatManyWith, equalsManyWith} from "../utils";
 import {hashKeys} from "../utils/hasher";
-import {mapP} from "../utils/combinators";
 
 const hashListId = hashKeys(["type", "term"]);
 
@@ -37,7 +37,7 @@ const concat = concatManyWith(listId, equalsOne, concatOne);
 
 // Functor
 const fmap = map;
-const fmapAsync = mapP;
+const fmapAsync = collectP;
 
 // Applicative
 const pure = arrayify;

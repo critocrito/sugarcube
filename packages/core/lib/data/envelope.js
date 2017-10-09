@@ -7,10 +7,10 @@ import {
   identity,
   isEqual,
 } from "lodash/fp";
+import {spreadP, collectP} from "combinators-p";
 
 import ls from "./list";
 import ds from "./data";
-import {joinP2, mapP} from "../utils/combinators";
 
 /**
  * Queries are a list of questions.
@@ -173,11 +173,10 @@ export const fmapQueries = curry((f, e) =>
  * mapped over `e.data` and `g` mapped over `e.queries`.
  */
 export const fmapAsync = curry((f, g, e) =>
-  joinP2(
-    envelope,
+  Promise.all([
     ds.fmapAsync(f, e.data || ds.empty()),
-    ls.fmapAsync(g, e.queries || ls.empty())
-  )
+    ls.fmapAsync(g, e.queries || ls.empty()),
+  ]).then(spreadP(envelope))
 );
 /**
  * Similar to `fmapAsync`, but only with a single function to map over `data`.
@@ -249,7 +248,7 @@ export const queriesByType = curry((type, e) => {
 });
 
 export const flatMapQueriesAsync = curry((f, source, e) =>
-  mapP(
+  collectP(
     q => f(q.term).then(ds.fmap(ds.concatOne({_sc_queries: [q]}))),
     filterQueries(({type}) => type === source, e).queries
   ).then(d => concatData(flatMap(identity, d), e))

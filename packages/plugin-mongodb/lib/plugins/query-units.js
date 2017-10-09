@@ -1,26 +1,32 @@
-import {concat, size} from "lodash/fp";
-import {envelope as env, plugin as p, utils} from "@sugarcube/core";
+import {size} from "lodash/fp";
+import {flowP, flatmapP, tapP} from "combinators-p";
+import {envelope as env, plugin as p} from "@sugarcube/core";
 
 import db from "../db";
 import {assertDb} from "../utils";
-
-const {reduceP} = utils.combinators;
 
 const querySource = "mongodb_query_units";
 
 const queryDb = (envelope, {log}) => {
   const queries = env.queriesByType(querySource, envelope);
-  return reduceP(
-    (memo, q) =>
-      db
-        .findMany(db.unitsC, q, {})
-        .tap(rs =>
-          log.info(`Queried ${size(rs)} units for ${JSON.stringify(q)}.`)
+
+  return flowP(
+    [
+      flatmapP(q =>
+        flowP(
+          [
+            db.findMany(db.unitsC, q, {}),
+            tapP(rs =>
+              log.info(`Queried ${size(rs)} units for ${JSON.stringify(q)}.`)
+            ),
+          ],
+          q
         )
-        .then(concat(memo)),
-    [],
+      ),
+      rs => env.concatData(rs, envelope),
+    ],
     queries
-  ).then(rs => env.concatData(rs, envelope));
+  );
 };
 
 const plugin = p.liftManyA2([assertDb, queryDb]);

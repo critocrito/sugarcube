@@ -1,12 +1,12 @@
 import {flow, curry, map, zip, merge, size} from "lodash/fp";
 import Bacon from "baconjs";
+import {flowP, caughtP, tapP, foldP} from "combinators-p";
 import {generate as shortId} from "shortid";
 
 import {liftManyA2} from "./data/plugin";
 import {envelopeQueries, fmapData} from "./data/envelope";
 import ds from "./data/data";
 import {now} from "./utils";
-import {reduceP} from "./utils/combinators";
 
 // The following functions provide funtionalities that should be run every
 // time a plugin is run. The plugin runner composes them with the plugin.
@@ -98,28 +98,31 @@ const runner = curry((plugins, cfg, queries) => {
   };
 
   const run = () =>
-    // Iterate over the pipeline and run each transformation in sequence.
-    reduceP(
-      (envelope, [name, plugin]) =>
-        liftManyA2(
-          [
-            start(stream, name),
-            plugin,
-            unitDefaults,
-            hashData,
-            source(name),
-            mark(marker),
-            stats(stream, name),
-            end(stream, name),
-          ],
-          envelope,
-          {log, cfg: merge({marker}, cfg)}
+    flowP(
+      [
+        foldP(
+          (envelope, [name, plugin]) =>
+            liftManyA2(
+              [
+                start(stream, name),
+                plugin,
+                unitDefaults,
+                hashData,
+                source(name),
+                mark(marker),
+                stats(stream, name),
+                end(stream, name),
+              ],
+              envelope,
+              {log, cfg: merge({marker}, cfg)}
+            ),
+          envelopeQueries(queries)
         ),
-      envelopeQueries(queries),
+        caughtP(e => stream.error(e)),
+        tapP(() => stream.end()),
+      ],
       pipeline
-    )
-      .catch(e => stream.error(e))
-      .tap(() => stream.end());
+    );
 
   run.marker = marker;
   run.stream = stream;

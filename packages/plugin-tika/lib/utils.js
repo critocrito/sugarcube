@@ -1,4 +1,4 @@
-import {reduce, mergeAll, concat, has, identity} from "lodash/fp";
+import {curry, reduce, mergeAll, concat, has, identity} from "lodash/fp";
 import Promise from "bluebird";
 import tika from "tika";
 import moment from "moment";
@@ -10,18 +10,16 @@ const contentTypes = {
   "application/pdf": ct.applicationPdf,
 };
 
-export const extract = path =>
-  new Promise((
-    resolve,
-    reject // eslint-disable-line promise/avoid-new
-  ) =>
-    tika.extract(path, (err, text, meta) => {
-      if (err) reject(err);
-      resolve([text, meta]);
+export const extract = unit =>
+  // eslint-disable-next-line promise/avoid-new
+  new Promise((resolve, reject) =>
+    tika.extract(unit.path, (err, text, meta) => {
+      if (err) return reject(err);
+      return resolve([text, meta]);
     })
   );
 
-export const entity = (unit, text, meta) => {
+export const entity = curry((unit, text, meta) => {
   const created = moment(meta.date)
     .utc()
     .toDate();
@@ -64,7 +62,7 @@ export const entity = (unit, text, meta) => {
       },
     ])
   );
-};
+});
 
 export default {
   extract,

@@ -17,11 +17,10 @@ import {
 } from "lodash/fp";
 import Promise from "bluebird";
 import mongodb from "mongodb";
-import {data as d, utils} from "@sugarcube/core";
+import {data as d} from "@sugarcube/core";
+import {flowP, collectP} from "combinators-p";
 
 Promise.promisifyAll(mongodb);
-
-const {mapP, flowP} = utils.combinators;
 
 let connectionUri;
 
@@ -154,7 +153,7 @@ const storeRelations = flow([
   map(u => map(merge({unit: u._sc_id_hash}), u._sc_relations)),
   flatten,
   map(pick(["unit", "type", "term", "_sc_id_hash"])),
-  mapP(storeRelation),
+  collectP(storeRelation),
 ]);
 
 const storeRevision = r => {
@@ -175,7 +174,7 @@ const storeRevisions = ({data}) => {
 
   return matchRevisions(hashes).then(results => {
     const revs = filter(u => includes(u._sc_id_hash, results), data);
-    return mapP(storeRevision, revs);
+    return collectP(storeRevision, revs);
   });
 };
 
@@ -198,7 +197,7 @@ const updateUnit = unit => {
   ])(_sc_id_hash);
 };
 
-const updateData = flow([property("data"), mapP(updateUnit)]);
+const updateData = flow([property("data"), collectP(updateUnit)]);
 const complementData = flow([property("data"), map("_sc_id_hash"), fetchData]);
 
 export default {

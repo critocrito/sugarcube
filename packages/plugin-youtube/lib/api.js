@@ -12,13 +12,11 @@ import {
 import Promise from "bluebird";
 import request from "request";
 import {parse, format} from "url";
-import {utils} from "@sugarcube/core";
+import {collectP} from "combinators-p";
 
 import {video, playlistVideo} from "./entities";
 
 Promise.promisifyAll(request);
-
-const {mapP} = utils.combinators;
 
 const urlify = curry((resource, params) => {
   const endpoint = "https://www.googleapis.com/youtube/v3";
@@ -103,7 +101,7 @@ export const videoChannel = (key, range, id) =>
     .then(rs => {
       const ids = map(property("id.videoId"), rs);
       // There is a limit on how many video ids can be queried at once.
-      return mapP(videosList(key), chunk(50, ids));
+      return collectP(videosList(key), chunk(50, ids));
     })
     .then(flatten);
 
