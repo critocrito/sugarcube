@@ -11,7 +11,7 @@
     "clean": "rimraf packages/**/_dist",
     "clean-mods": "for i in packages/*; do rimraf $i/node_modules; done; rimraf node_modules",
     "precompile": "npm run clean",
-    "compile": "for i in packages/*; do babel -d $i/_dist $i/lib; done",
+    "compile": "make compile",
     "build": "npm run lint && npm run test && npm run compile",
     "release": "npm run build && lerna publish --conventional-commits -m \"chore(release): Bumped to version %s.\""
   },
