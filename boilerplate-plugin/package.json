@@ -1,7 +1,7 @@
 {
   "name": "@sugarcube/plugin-",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "",
   "main": "_dist/index.js",
   "license": "GPL-3.0",
@@ -15,7 +15,7 @@
   ],
   "dependencies": {
     "bluebird": "^3.5.0",
-    "@sugarcube/core": "0.0.0",
+    "@sugarcube/core": "0.1.0",
     "lodash": "^4.17.4"
   },
   "devDependencies": {
