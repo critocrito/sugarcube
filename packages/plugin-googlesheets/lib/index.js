@@ -1,11 +1,21 @@
 import {forEach, merge, values} from "lodash/fp";
+import {plugin} from "@sugarcube/core";
 
 import exportPlugin from "./export";
 import importPlugin from "./import";
+import {assertCredentials, assertSpreadsheet} from "./assertions";
 
 const plugins = {
-  sheets_export: exportPlugin,
-  sheets_import: importPlugin,
+  sheets_export: plugin.liftManyA2([
+    assertCredentials,
+    assertSpreadsheet,
+    exportPlugin,
+  ]),
+  sheets_import: plugin.liftManyA2([
+    assertCredentials,
+    assertSpreadsheet,
+    importPlugin,
+  ]),
 };
 
 forEach(p => {
