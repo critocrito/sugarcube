@@ -1,0 +1,37 @@
+{
+  "name": "@sugarcube/sugarcube",
+  "private": true,
+  "version": "0.1.0",
+  "description": "The SugarCube distribution.",
+  "main": "_dist/index.js",
+  "license": "GPL-3.0",
+  "repository": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/sugarcube",
+  "author": "Christo <christo@cryptodrunks.net>",
+  "keywords": [
+    "sugarcube",
+    "data",
+    "transformation"
+  ],
+  "dependencies": {
+    "@sugarcube/core": "0.1.0",
+    "@sugarcube/cli": "0.1.0",
+    "@sugarcube/plugin-aqicn": "0.1.0",
+    "@sugarcube/plugin-csv": "0.1.0",
+    "@sugarcube/plugin-ddg": "0.1.0",
+    "@sugarcube/plugin-facebook": "0.1.0",
+    "@sugarcube/plugin-google": "0.1.0",
+    "@sugarcube/plugin-googlesheets": "0.1.0",
+    "@sugarcube/plugin-guardian": "0.1.0",
+    "@sugarcube/plugin-http": "0.1.0",
+    "@sugarcube/plugin-instagram": "0.1.0",
+    "@sugarcube/plugin-media": "0.1.0",
+    "@sugarcube/plugin-mongodb": "0.1.0",
+    "@sugarcube/plugin-tap": "0.1.0",
+    "@sugarcube/plugin-telegram": "0.1.0",
+    "@sugarcube/plugin-tika": "0.1.0",
+    "@sugarcube/plugin-tor": "0.1.0",
+    "@sugarcube/plugin-twitter": "0.1.0",
+    "@sugarcube/plugin-youtube": "0.1.0",
+    "lodash": "^4.17.4"
+  }
+}
