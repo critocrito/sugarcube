@@ -1,6 +1,5 @@
 {
   "name": "@sugarcube/sugarcube",
-  "private": true,
   "version": "0.1.0",
   "description": "The SugarCube distribution.",
   "main": "_dist/index.js",
