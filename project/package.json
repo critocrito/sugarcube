@@ -1,0 +1,16 @@
+{
+  "name": "project",
+  "version": "0.0.0",
+  "description": "An example project to help development.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Christo <christo@cryptodrunks.net> (https://cryptodrunks.net/~christo)",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "@sugarcube/cli": "file:../packages/cli",
+    "@sugarcube/plugin-googlesheets": "file:../packages/plugin-googlesheets"
+  }
+}
