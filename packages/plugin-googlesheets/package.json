@@ -17,6 +17,7 @@
   "dependencies": {
     "@sugarcube/core": "^0.1.0",
     "bluebird": "^3.5.0",
+    "combinators-p": "^0.5.1",
     "google-auth-library": "^0.10.0",
     "googleapis": "^19.0.0",
     "lodash": "^4.17.4"

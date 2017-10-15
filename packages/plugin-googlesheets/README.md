@@ -69,7 +69,7 @@ browser and note the authorization token. Add this token to your configuration.
 - `google.project_id`
 - `google.token`
 
-### `google_export`
+### `sheets_export`
 
 Export data to a Google spreadsheet.
 
@@ -77,9 +77,17 @@ Export data to a Google spreadsheet.
 - `google.sheet_fields`: A list of field names, which get exported to the
   spreadsheet.
 
-### `google_import`
+### `sheets_import`
 
 Import data from a Google Spreadsheet.
 
 - `google.spreadsheet_id`: The ID of the spreadsheet to import from.
 - `google.sheet`: The name of the sheet to use as import source.
+
+### `sheets_queries`
+
+Fetch queries from a Google spreadsheet. The first column is the query type,
+and the second column is the query term. The plugin looks up the
+`sheets_query` query type to determine the sheet in which to look.
+
+- `google.spreadsheet_id`: The ID of the spreadsheet to fetch from.
