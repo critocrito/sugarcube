@@ -8,6 +8,6 @@ export const assertCredentials = assertCfg([
   "google.client_secret",
 ]);
 
-export const assertSpreadsheet = assertCfg(["google_spreadsheet_id"]);
+export const assertSpreadsheet = assertCfg(["google.spreadsheet_id"]);
 
 export default {assertCredentials, assertSpreadsheet};
