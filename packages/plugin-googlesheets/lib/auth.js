@@ -8,11 +8,11 @@ const GoogleAuth = googleAuth;
 // TODO: refactor this file ince an authentication workflow is decided on.
 // should it stop the runner if authentication isnt finished?
 
-const client = cfg => ({
+const client = (clientId, clientSecret, projectId) => ({
   installed: {
-    client_id: cfg.google.client_id,
-    project_id: cfg.google.project_id,
-    client_secret: cfg.google.client_secret,
+    client_id: clientId,
+    client_secret: clientSecret,
+    project_id: projectId,
     redirect_uris: ["urn:ietf:wg:oauth:2.0:oob", "http://localhost"],
     auth_uri: "https://accounts.google.com/o/oauth2/auth",
     token_uri: "https://accounts.google.com/o/oauth2/token",
@@ -48,15 +48,14 @@ const checkIfFile = file =>
       })
   );
 
-const authenticate = (log, cfg) => {
+const authenticate = (clientId, clientSecret, projectId, token) => {
+  const c = client(clientId, clientSecret, projectId);
   const auth = new GoogleAuth();
-
-  const c = client(cfg);
-  const clientSecret = c.installed.client_secret;
-  const clientId = c.installed.client_id;
-  const redirectUrl = c.installed.redirect_uris[0];
-
-  const oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUrl);
+  const oauth2Client = new auth.OAuth2(
+    c.installed.client_id,
+    c.installed.client_secret,
+    c.installed.redirect_uris[0]
+  );
 
   return checkIfFile("google-sheets-token.json").then(exists => {
     if (exists) {
@@ -66,9 +65,9 @@ const authenticate = (log, cfg) => {
       });
     }
 
-    if ("token" in cfg.google) {
+    if (token) {
       return new Promise((resolve, reject) => {
-        oauth2Client.getToken(cfg.google.token, (err, token) => {
+        oauth2Client.getToken(token, (err, t) => {
           if (err) {
             requestToken(oauth2Client);
             reject(err);
@@ -80,7 +79,7 @@ const authenticate = (log, cfg) => {
                   JSON.stringify(token)
                 )
                 .then(() => {
-                  oauth2Client.credentials = token;
+                  oauth2Client.credentials = t;
                   return oauth2Client;
                 })
             );

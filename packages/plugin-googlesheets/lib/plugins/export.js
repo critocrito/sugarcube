@@ -6,17 +6,20 @@ import {addSheet, addValues, copyVF} from "../sheets";
 import {unitsToValues} from "../utils";
 
 const plugin = (envelope, {log, cfg}) => {
-  log.info("Exporting data to google sheets");
-
-  const spreadsheetId = cfg.google.spreadsheet_id;
-
-  const data = unitsToValues(envelope.data, get("google.sheet_fields", cfg));
-
+  const clientId = get("google.client_id", cfg);
+  const clientSecret = get("google.client_secret", cfg);
+  const projectId = get("google.project_id", cfg);
+  const token = get("google.token", cfg);
+  const spreadsheetId = get("google.spreadsheet_id", cfg);
+  const sheetFields = get("google.sheet_fields", cfg);
+  const copyFromSheet = get("google.copy_formatting_from", cfg);
   const sheetName = cfg.marker;
 
-  const copyFromSheet = cfg.google.copy_formatting_from;
+  const data = unitsToValues(envelope.data, sheetFields);
 
-  return authenticate(log, cfg)
+  log.info("Exporting data to google sheets");
+
+  return authenticate(clientId, clientSecret, projectId, token)
     .then(auth => {
       const copy = copyVF(auth, spreadsheetId);
       const addV = addValues(auth, spreadsheetId);

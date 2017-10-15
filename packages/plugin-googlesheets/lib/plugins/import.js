@@ -10,13 +10,16 @@ import authenticate from "../auth";
 // possibly rename this one update_from_sheet
 
 const plugin = (envelope, {log, cfg}) => {
+  const clientId = get("google.client_id", cfg);
+  const clientSecret = get("google.client_secret", cfg);
+  const projectId = get("google.project_id", cfg);
+  const token = get("google.token", cfg);
+  const spreadsheetId = get("google.spreadsheet_id", cfg);
+  const sheet = get("google.sheet", cfg);
+
   log.info("Importing data from google sheets");
 
-  const spreadsheetId = cfg.google.spreadsheet_id;
-
-  const sheet = get("google.sheet")(cfg);
-
-  return authenticate(log, cfg)
+  return authenticate(clientId, clientSecret, projectId, token)
     .then(auth =>
       getValues(auth, spreadsheetId, sheet)
         .then(response => valuesToUnits(response.values))
@@ -27,12 +30,7 @@ const plugin = (envelope, {log, cfg}) => {
     )
     .then(units => {
       log.info("Spreadsheet retrieved");
-      log.info(`Updating ${size(units)} units from sheet`); // try concatData from lf data
-      // const nu = merge(                                 // TODO: better way to do this....
-      //   keyBy('_sc_id_hash')(envelope.data),            // there must be a LF util for this
-      //   keyBy('_sc_id_hash')(units)                     // does lf automatically do this actually?
-      // );
-      // return set('data', values(nu))(envelope);
+      log.info(`Updating ${size(units)} units from sheet`);
       return env.concatData(units, envelope);
     })
     .catch(e => {
