@@ -7,6 +7,8 @@ ARG=$(filter-out $@,$(MAKECMDGOALS))
 
 setup :
 	@npm install
+	# TODO: I'm not sure I need to run npm install in every package.
+	@lerna exec npm install
 	@lerna bootstrap
 
 compile :

@@ -13,7 +13,7 @@
     "compile": "make compile",
     "build": "npm run clean && npm run lint && npm run test && npm run compile",
     "release": "npm run build && lerna publish --conventional-commits -m \"chore(release): Bumped to version %s.\"",
-    "setup": "npm run clean && npm run clean-mods && make setup && npm run build"
+    "setup": "npm run clean-mods && make setup && npm run compile"
   },
   "author": "Christo <christo@cryptodrunks.net>",
   "license": "GPL-3.0",
