@@ -10,10 +10,10 @@
     "fix": "npm run lint -- --fix",
     "clean": "rimraf packages/**/_dist",
     "clean-mods": "for i in packages/*; do rimraf $i/node_modules; done; rimraf node_modules",
-    "precompile": "npm run clean",
     "compile": "make compile",
-    "build": "npm run lint && npm run test && npm run compile",
-    "release": "npm run build && lerna publish --conventional-commits -m \"chore(release): Bumped to version %s.\""
+    "build": "npm run clean && npm run lint && npm run test && npm run compile",
+    "release": "npm run build && lerna publish --conventional-commits -m \"chore(release): Bumped to version %s.\"",
+    "setup": "npm run clean && npm run clean-mods && make setup && npm run build"
   },
   "author": "Christo <christo@cryptodrunks.net>",
   "license": "GPL-3.0",
