@@ -1,10 +1,10 @@
 import {size, get} from "lodash/fp";
 import {envelope as env} from "@sugarcube/core";
 
-import {valuesToUnits} from "./utils";
+import {valuesToUnits} from "../utils";
 
-import {getValues} from "./sheets";
-import authenticate from "./auth";
+import {getValues} from "../sheets";
+import authenticate from "../auth";
 
 // TODO: case for then no _sc_id_hash exists
 // possibly rename this one update_from_sheet

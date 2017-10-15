@@ -1,9 +1,9 @@
 import {get} from "lodash/fp";
 
-import authenticate from "./auth";
-import {addSheet, addValues, copyVF} from "./sheets";
+import authenticate from "../auth";
+import {addSheet, addValues, copyVF} from "../sheets";
 
-import {unitsToValues} from "./utils";
+import {unitsToValues} from "../utils";
 
 const plugin = (envelope, {log, cfg}) => {
   log.info("Exporting data to google sheets");

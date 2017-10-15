@@ -1,8 +1,8 @@
 import {forEach, merge, values} from "lodash/fp";
 import {plugin} from "@sugarcube/core";
 
-import exportPlugin from "./export";
-import importPlugin from "./import";
+import exportPlugin from "./plugins/export";
+import importPlugin from "./plugins/import";
 import {assertCredentials, assertSpreadsheet} from "./assertions";
 
 const plugins = {
