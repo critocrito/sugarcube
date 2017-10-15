@@ -11,6 +11,8 @@
   "license": "GPL-3.0",
   "dependencies": {
     "@sugarcube/cli": "file:../packages/cli",
-    "@sugarcube/plugin-googlesheets": "file:../packages/plugin-googlesheets"
+    "@sugarcube/plugin-google": "file:../packages/plugin-google",
+    "@sugarcube/plugin-googlesheets": "file:../packages/plugin-googlesheets",
+    "@sugarcube/plugin-tap": "file:../packages/plugin-tap"
   }
 }
