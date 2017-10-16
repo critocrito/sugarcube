@@ -1,5 +1,4 @@
 import {curry, reduce, mergeAll, concat, has, identity} from "lodash/fp";
-import Promise from "bluebird";
 import tika from "tika";
 import moment from "moment";
 
