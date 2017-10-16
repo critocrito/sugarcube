@@ -18,3 +18,17 @@ sugarcube -Q glob_pattern:files/**/*.pdf -p tika_parse
 This plugin iterates over all links in `_sc_links` and fetches the text and
 meta data for this link. This plugin ignores any errors that the fetch might
 throw.
+
+### `tika_location`
+
+This plugin parses any location specified with the `tika.location_field`
+configuration options. This allows to fetch, e.g. a url inside of the unit.
+
+```
+sugarcube -Q google_search:Keith\ Johnstone -p google_search,tika_location --tika.location_field href
+```
+
+**Configuration Options**:
+
+- `tika.location_field`: Specify the field name to look for the location of
+  the URI or file to parse. Defaults to `location`.
