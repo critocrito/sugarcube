@@ -1,6 +1,5 @@
 before_script:
-  - npm install
-  - npm run compile
+  - npm run setup
 
 test:7:
   image: node:7.5
