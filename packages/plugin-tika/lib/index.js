@@ -1,4 +1,4 @@
-import parsePlugin from "./parse";
+import parsePlugin from "./plugins/parse";
 import linksPlugin from "./plugins/links";
 
 const plugins = {

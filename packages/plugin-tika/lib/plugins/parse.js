@@ -2,7 +2,7 @@ import {property, size} from "lodash/fp";
 import {flowP, collectP, spreadP, flatmapP} from "combinators-p";
 import {envelope as env, utils} from "@sugarcube/core";
 
-import {extract, entity} from "./utils";
+import {extract, entity} from "../utils";
 
 const {unfold} = utils.fs;
 
