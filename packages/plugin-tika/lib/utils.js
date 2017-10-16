@@ -9,10 +9,10 @@ const contentTypes = {
   "application/pdf": ct.applicationPdf,
 };
 
-export const extract = unit =>
+export const extract = location =>
   // eslint-disable-next-line promise/avoid-new
   new Promise((resolve, reject) =>
-    tika.extract(unit.path, (err, text, meta) => {
+    tika.extract(location, (err, text, meta) => {
       if (err) return reject(err);
       return resolve([text, meta]);
     })

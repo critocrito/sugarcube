@@ -1,4 +1,4 @@
-import {size} from "lodash/fp";
+import {property, size} from "lodash/fp";
 import {flowP, collectP, spreadP, flatmapP} from "combinators-p";
 import {envelope as env, utils} from "@sugarcube/core";
 
@@ -15,7 +15,9 @@ const parseFiles = (envelope, {log}) => {
 
   return flowP([
     flatmapP(unfold),
-    collectP(f => flowP([extract, spreadP(entity(f))], f)),
+    collectP(unit =>
+      flowP([property("location"), extract, spreadP(entity(unit))], unit)
+    ),
     xs => env.concatData(xs, envelope),
   ])(patterns);
 };
