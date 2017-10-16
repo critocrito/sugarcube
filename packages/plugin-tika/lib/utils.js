@@ -18,6 +18,11 @@ export const extract = location =>
     })
   );
 
+// safeExtract is useful for fetching links, that might otherwise throw silly
+// errors. E.g. LinkedIn return error 999 and extract throws up on that.
+export const safeExtract = location =>
+  extract(location).catch(() => [null, null]);
+
 export const entity = curry((unit, text, meta) => {
   const created = moment(meta.date)
     .utc()
@@ -62,8 +67,3 @@ export const entity = curry((unit, text, meta) => {
     ])
   );
 });
-
-export default {
-  extract,
-  entity,
-};
