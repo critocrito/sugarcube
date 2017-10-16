@@ -1,6 +1,7 @@
 .PHONY: lint compile
 
 BINDIR=node_modules/.bin
+LERNA=$(BINDIR)/lerna
 BABEL=$(BINDIR)/babel
 
 ARG=$(filter-out $@,$(MAKECMDGOALS))
@@ -8,8 +9,8 @@ ARG=$(filter-out $@,$(MAKECMDGOALS))
 setup :
 	@npm install
 	# TODO: I'm not sure I need to run npm install in every package.
-	@lerna exec npm install
-	@lerna bootstrap
+	@$(LERNA) exec npm install
+	@$(LERNA) bootstrap
 
 compile :
 	@if [ "$(ARG)" = "" ]; then \
