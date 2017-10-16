@@ -1,0 +1,15 @@
+before_script:
+  - npm install
+  - npm run compile
+
+test:7:
+  image: node:7.5
+  script:
+    - npm run lint
+    - npm run test
+
+test:latest:
+  image: node:latest
+  script:
+    - npm run lint
+    - npm run test
