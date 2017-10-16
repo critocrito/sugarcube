@@ -1,5 +1,5 @@
 import {flow, get} from "lodash/fp";
-import {flowP, flatmapP, collectP, mapP, tapP} from "combinators-p";
+import {flowP, flatmapP, collectP, tapP} from "combinators-p";
 import {envelope as env} from "@sugarcube/core";
 
 import {googleSearch, entity, searchEntity} from "./google";
@@ -20,10 +20,7 @@ const plugin = (envelope, {log, cfg}) => {
       term
     );
 
-  return flowP(
-    [flatmapP(search), mapP(rs => env.concatData(rs, envelope))],
-    queries
-  );
+  return flowP([flatmapP(search), rs => env.concatData(rs, envelope)], queries);
 };
 
 plugin.desc = "Conduct a search on google.com.";
