@@ -49,23 +49,23 @@ forEach(p => {
     {
       "google.token": {
         type: "text",
-        desc: "Google oauth token",
+        desc: "Google oauth token.",
       },
       "google.client_id": {
         type: "text",
-        desc: "google Oauth client id",
+        desc: "google Oauth client id.",
       },
       "google.project_id": {
         type: "text",
-        desc: "Google Oauth project id",
+        desc: "Google Oauth project id.",
       },
       "google.client_secret": {
         type: "text",
-        desc: "Google Oauth client secret",
+        desc: "Google Oauth client secret.",
       },
       "google.spreadsheet_id": {
         type: "text",
-        desc: "Google Spreadsheet ID to use",
+        desc: "Google Spreadsheet ID to use.",
       },
     },
     p.argv
@@ -78,7 +78,7 @@ forEach(p => {
     {
       "google.sheet": {
         type: "text",
-        desc: "Google Spreadsheet ID to use",
+        desc: "The name of the sheet to use.",
       },
     },
     p.argv
@@ -91,7 +91,7 @@ forEach(p => {
     {
       "google.sheet_fields": {
         type: "text",
-        desc: "Fields of sugarcube units to export and import",
+        desc: "Fields of SugarCube units to export and import.",
       },
     },
     p.argv
