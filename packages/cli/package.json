@@ -21,11 +21,11 @@
   "homepage": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/cli",
   "dependencies": {
     "@sugarcube/core": "^0.1.0",
-    "bluebird": "^3.5.0",
+    "bluebird": "^3.5.1",
     "dotenv": "^4.0.0",
     "lodash": "^4.17.4",
     "strip-json-comments": "^2.0.1",
     "winston": "^2.3.1",
-    "yargs": "^8.0.1"
+    "yargs": "^9.0.1"
   }
 }

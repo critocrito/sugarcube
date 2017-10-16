@@ -18,7 +18,7 @@
   ],
   "dependencies": {
     "@sugarcube/core": "^0.1.0",
-    "bluebird": "^3.4.7",
+    "bluebird": "^3.5.1",
     "child-process-promise": "^2.2.0",
     "lodash": "^4.17.4",
     "request": "^2.81.0"

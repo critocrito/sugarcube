@@ -18,9 +18,9 @@
   ],
   "dependencies": {
     "@sugarcube/core": "^0.1.0",
-    "combinators-p": "^0.5.1",
+    "combinators-p": "^0.6.0",
     "lodash": "^4.17.4",
-    "moment": "^2.18.1",
+    "moment": "^2.19.1",
     "pify": "^3.0.0",
     "twitter": "^1.7.1"
   }

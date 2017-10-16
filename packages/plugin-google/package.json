@@ -25,11 +25,11 @@
   "dependencies": {
     "@sugarcube/core": "^0.1.0",
     "babel-polyfill": "^6.23.0",
-    "bluebird": "^3.5.0",
-    "cheerio": "^1.0.0-rc.1",
-    "combinators-p": "^0.5.1",
+    "bluebird": "^3.5.1",
+    "cheerio": "^1.0.0-rc.2",
+    "combinators-p": "^0.6.0",
     "lodash": "^4.17.4",
-    "moment": "^2.18.1",
+    "moment": "^2.19.1",
     "nightmare": "^2.10.0",
     "nightmare-upload": "^0.1.1"
   }

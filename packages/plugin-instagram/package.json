@@ -18,7 +18,7 @@
   ],
   "dependencies": {
     "@sugarcube/core": "^0.1.0",
-    "combinators-p": "^0.5.1",
+    "combinators-p": "^0.6.0",
     "lodash": "^4.17.4",
     "request": "^2.81.0",
     "request-promise": "^4.2.1"

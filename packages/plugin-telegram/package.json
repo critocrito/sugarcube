@@ -18,8 +18,8 @@
   ],
   "dependencies": {
     "@sugarcube/core": "^0.1.0",
-    "bluebird": "^3.5.0",
+    "bluebird": "^3.5.1",
     "lodash": "^4.17.4",
-    "telegraf": "^3.6.7"
+    "telegraf": "^3.14.0"
   }
 }
