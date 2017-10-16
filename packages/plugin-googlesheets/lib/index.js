@@ -33,7 +33,7 @@ const authPlugins = flow([
 
 const sheetPlugins = flow([
   keys,
-  intersection(["sheets_queries"]),
+  intersection(["sheet_import", "sheets_queries"]),
   pick(plugins),
 ])(plugins);
 
@@ -48,23 +48,23 @@ forEach(p => {
   p.argv = merge(
     {
       "google.token": {
-        type: "text",
+        type: "string",
         desc: "Google oauth token.",
       },
       "google.client_id": {
-        type: "text",
+        type: "string",
         desc: "google Oauth client id.",
       },
       "google.project_id": {
-        type: "text",
+        type: "string",
         desc: "Google Oauth project id.",
       },
       "google.client_secret": {
-        type: "text",
+        type: "string",
         desc: "Google Oauth client secret.",
       },
       "google.spreadsheet_id": {
-        type: "text",
+        type: "string",
         desc: "Google Spreadsheet ID to use.",
       },
     },
@@ -77,7 +77,7 @@ forEach(p => {
   p.argv = merge(
     {
       "google.sheet": {
-        type: "text",
+        type: "string",
         desc: "The name of the sheet to use.",
       },
     },
@@ -90,7 +90,7 @@ forEach(p => {
   p.argv = merge(
     {
       "google.sheet_fields": {
-        type: "text",
+        type: "string",
         desc: "Fields of SugarCube units to export and import.",
       },
     },
