@@ -23,7 +23,7 @@
   "dependencies": {
     "baconjs": "^0.7.89",
     "bluebird": "^3.5.1",
-    "combinators-p": "^0.7.0",
+    "combinators-p": "^0.8.0",
     "glob": "^7.1.2",
     "jsverify": "^0.8.3",
     "lodash": "^4.17.4",

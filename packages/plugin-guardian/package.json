@@ -19,7 +19,7 @@
   "homepage": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-guardian",
   "dependencies": {
     "@sugarcube/core": "^0.1.0",
-    "combinators-p": "^0.7.0",
+    "combinators-p": "^0.8.0",
     "lodash": "^4.17.4",
     "moment": "^2.19.1",
     "pify": "^3.0.0",

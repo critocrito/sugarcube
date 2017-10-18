@@ -27,7 +27,7 @@
     "babel-polyfill": "^6.23.0",
     "bluebird": "^3.5.1",
     "cheerio": "^1.0.0-rc.2",
-    "combinators-p": "^0.7.0",
+    "combinators-p": "^0.8.0",
     "lodash": "^4.17.4",
     "moment": "^2.19.1",
     "nightmare": "^2.10.0",
