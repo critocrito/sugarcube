@@ -19,7 +19,7 @@
   "dependencies": {
     "@sugarcube/core": "^0.1.0",
     "bluebird": "^3.5.1",
-    "combinators-p": "^0.6.0",
+    "combinators-p": "^0.7.0",
     "csv-parse": "^1.2.4",
     "csv-stringify": "^1.0.4",
     "lodash": "^4.17.4"
