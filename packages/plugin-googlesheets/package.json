@@ -16,10 +16,10 @@
   "license": "GPL-3.0",
   "dependencies": {
     "@sugarcube/core": "^0.1.0",
-    "bluebird": "^3.5.1",
     "combinators-p": "^0.8.0",
     "google-auth-library": "^0.11.0",
     "googleapis": "^22.2.0",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "pify": "^3.0.0"
   }
 }

@@ -75,10 +75,7 @@ const copyRequest = curry(
 );
 
 export const copyFormattingRequest = copyRequest("PASTE_FORMAT");
-
 export const copyValidationRequest = copyRequest("PASTE_DATA_VALIDATION");
-
-// /////////////////////////////////////////////////////////
 
 export default {
   getValuesRequest,

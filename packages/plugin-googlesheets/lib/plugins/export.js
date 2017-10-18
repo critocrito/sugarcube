@@ -1,4 +1,4 @@
-import {get} from "lodash/fp";
+import {get, getOr} from "lodash/fp";
 
 import authenticate from "../auth";
 import {addSheet, addValues, copyVF} from "../sheets";
@@ -11,11 +11,11 @@ const plugin = (envelope, {log, cfg}) => {
   const projectId = get("google.project_id", cfg);
   const token = get("google.token", cfg);
   const spreadsheetId = get("google.spreadsheet_id", cfg);
-  const sheetFields = get("google.sheet_fields", cfg);
+  const sheetFields = getOr([], "google.sheet_fields", cfg);
   const copyFromSheet = get("google.copy_formatting_from", cfg);
   const sheetName = cfg.marker;
 
-  const data = unitsToValues(envelope.data, sheetFields);
+  const data = unitsToValues(sheetFields, envelope.data);
 
   log.info("Exporting data to google sheets");
 

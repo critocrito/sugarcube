@@ -1,9 +1,11 @@
 import fs from "fs";
-import Promise from "bluebird";
-
+import pify from "pify";
 import googleAuth from "google-auth-library";
 
 const GoogleAuth = googleAuth;
+const statAsync = pify(fs.stat);
+const readFileAsync = pify(fs.readFile);
+const writeFileAsync = pify(fs.writeFile);
 
 // TODO: refactor this file ince an authentication workflow is decided on.
 // should it stop the runner if authentication isnt finished?
@@ -20,8 +22,6 @@ const client = (clientId, clientSecret, projectId) => ({
   },
 });
 
-Promise.promisifyAll(fs);
-
 const requestToken = oauth2Client => {
   const authUrl = oauth2Client.generateAuthUrl({
     access_type: "offline",
@@ -33,8 +33,7 @@ const requestToken = oauth2Client => {
 
 const checkIfFile = file =>
   new Promise((resolve, reject) =>
-    fs
-      .statAsync(file)
+    statAsync(file)
       .then(stats => {
         resolve(stats.isFile());
         return "";
@@ -59,7 +58,7 @@ const authenticate = (clientId, clientSecret, projectId, token) => {
 
   return checkIfFile("google-sheets-token.json").then(exists => {
     if (exists) {
-      return fs.readFileAsync("google-sheets-token.json").then(f => {
+      return readFileAsync("google-sheets-token.json").then(f => {
         oauth2Client.credentials = JSON.parse(f);
         return oauth2Client;
       });
@@ -73,15 +72,13 @@ const authenticate = (clientId, clientSecret, projectId, token) => {
             reject(err);
           } else {
             resolve(
-              fs
-                .writeFileAsync(
-                  "google-sheets-token.json",
-                  JSON.stringify(token)
-                )
-                .then(() => {
-                  oauth2Client.credentials = t;
-                  return oauth2Client;
-                })
+              writeFileAsync(
+                "google-sheets-token.json",
+                JSON.stringify(token)
+              ).then(() => {
+                oauth2Client.credentials = t;
+                return oauth2Client;
+              })
             );
           }
         });

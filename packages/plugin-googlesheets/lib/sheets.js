@@ -1,5 +1,6 @@
-import Promise from "bluebird";
 import {curry} from "lodash/fp";
+import {flowP3, flowP4} from "combinators-p";
+import pify from "pify";
 import google from "googleapis";
 
 import {
@@ -11,68 +12,20 @@ import {
 } from "./requests";
 
 const sheets = google.sheets("v4");
+const update = pify(sheets.spreadsheets.values.update);
+const batchUpdate = pify(sheets.spreadsheets.batchUpdate);
+const get = pify(sheets.spreadsheets.values.get);
 
-// turn google sheets functions into promises
+// the basket of exportables
+export const addSheet = flowP3([addSheetRequest, batchUpdate]);
 
-const update = req =>
-  new Promise((resolve, reject) => {
-    sheets.spreadsheets.values.update(req, (err, response) => {
-      if (err) {
-        reject(err);
-      }
-      resolve(response);
-    });
-  });
+export const getValues = flowP3([getValuesRequest, get]);
 
-const batchUpdate = req =>
-  new Promise((resolve, reject) => {
-    sheets.spreadsheets.batchUpdate(req, (err, response) => {
-      if (err) {
-        reject(err);
-      }
-      resolve(response);
-    });
-  });
+export const copyFormatting = flowP4([copyFormattingRequest, batchUpdate]);
 
-const get = req =>
-  new Promise((resolve, reject) => {
-    sheets.spreadsheets.values.get(req, (err, response) => {
-      if (err) {
-        reject(err);
-      }
-      resolve(response);
-    });
-  });
+export const copyValidation = flowP4([copyValidationRequest, batchUpdate]);
 
-// the basket of exportables ///////////////////////
-
-export const addSheet = curry(
-  // TODO: any way to reduce this code?
-  (auth, spreadsheetId, name) =>
-    batchUpdate(addSheetRequest(auth, spreadsheetId, name))
-);
-
-export const copyFormatting = curry(
-  (auth, spreadsheetId, fromSheetId, toSheetId) =>
-    batchUpdate(
-      copyFormattingRequest(auth, spreadsheetId, fromSheetId, toSheetId)
-    )
-);
-
-export const copyValidation = curry(
-  (auth, spreadsheetId, fromSheetId, toSheetId) =>
-    batchUpdate(
-      copyValidationRequest(auth, spreadsheetId, fromSheetId, toSheetId)
-    )
-);
-
-export const addValues = curry((auth, spreadsheetId, sheet, values) =>
-  update(addValuesRequest(auth, spreadsheetId, sheet, values))
-);
-
-export const getValues = curry((auth, spreadsheetId, sheet) =>
-  get(getValuesRequest(auth, spreadsheetId, sheet))
-);
+export const addValues = flowP4([addValuesRequest, update]);
 
 export const copyVF = curry((auth, spreadsheetId, fromSheetId, toSheetId) =>
   copyFormatting(auth, spreadsheetId, fromSheetId, toSheetId).then(() =>
