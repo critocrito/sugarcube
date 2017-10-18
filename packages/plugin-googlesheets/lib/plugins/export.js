@@ -13,7 +13,7 @@ const plugin = (envelope, {log, cfg}) => {
   const spreadsheetId = get("google.spreadsheet_id", cfg);
   const sheetFields = getOr([], "google.sheet_fields", cfg);
   const copyFromSheet = get("google.copy_formatting_from", cfg);
-  const sheetName = cfg.marker;
+  const sheetName = getOr(cfg.marker, "google.sheet", cfg);
 
   const data = unitsToValues(sheetFields, envelope.data);
 
