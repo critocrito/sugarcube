@@ -39,7 +39,7 @@ const sheetPlugins = flow([
 
 const fieldPlugins = flow([
   keys,
-  intersection(["sheets_export"]),
+  intersection(["sheets_export", "sheets_import"]),
   pick(plugins),
 ])(plugins);
 
