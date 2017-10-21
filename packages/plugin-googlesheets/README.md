@@ -73,6 +73,10 @@ Export data to a Google spreadsheet.
 - `google.spreadsheet_id`: The ID of the spreadsheet to export to.
 - `google.sheet_fields`: A list of field names, which get exported to the
   spreadsheet.
+- `google.copy_from_spreadsheet`: Specify the spreadsheet ID to copy the
+  template from. Requires `google.copy_from_sheet` as well.
+- `google.copy_from_sheet`: Specify a sheet name to copy the template
+  from. Requires `google.copy_from_spreadsheet` as well.
 
 ### `sheets_import`
 
