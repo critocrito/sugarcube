@@ -16,7 +16,7 @@ const plugin = async (envelope, {log, cfg}) => {
 
   const units = await withSession(
     async ({getValues}) => {
-      const {values} = await getValues(id, sheet);
+      const values = await getValues(id, sheet);
       return valuesToUnits(sheetFields, values);
     },
     {client, secret, project, token}

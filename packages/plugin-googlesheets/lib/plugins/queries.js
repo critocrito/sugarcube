@@ -19,7 +19,7 @@ const plugin = (envelope, {log, cfg}) => {
   const querySheet = query =>
     withSession(
       async ({getValues}) => {
-        const {values} = await getValues(id, query);
+        const values = await getValues(id, query);
         const expanded = valuesToQueries(values);
         log.info(`Expanded ${id}/${query} to ${size(expanded)} queries.`);
         return expanded;

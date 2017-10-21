@@ -1,4 +1,4 @@
-import {curry, find, getOr} from "lodash/fp";
+import {curry, find, getOr, property} from "lodash/fp";
 import {flowP, flowP2, flowP3, flowP4} from "combinators-p";
 import pify from "pify";
 import google from "googleapis";
@@ -57,7 +57,7 @@ const duplicateSheet = curry(async (auth, id, from, to, title) => {
   return getSheet(auth, to, title);
 });
 
-const getValues = flowP3([getValuesRequest, get]);
+const getValues = flowP3([getValuesRequest, get, property("values")]);
 const createValues = flowP4([createValuesRequest, update]);
 
 // This function provides a context within which to run a series of
