@@ -4,7 +4,6 @@ const {assertCfg} = utils.assertions;
 
 export const assertCredentials = assertCfg([
   "google.client_id",
-  "google.project_id",
   "google.client_secret",
 ]);
 
