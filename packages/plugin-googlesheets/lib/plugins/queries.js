@@ -2,7 +2,7 @@ import {get, size} from "lodash/fp";
 import {flowP, flatmapP, tapP} from "combinators-p";
 import {envelope as e} from "@sugarcube/core";
 import withSession from "../sheets";
-import {valuesToQueries} from "../utils";
+import {rowsToQueries} from "../utils";
 
 const querySource = "sheets_query";
 
@@ -18,8 +18,8 @@ const plugin = (envelope, {log, cfg}) => {
   const querySheet = query =>
     withSession(
       async ({getValues}) => {
-        const values = await getValues(id, query);
-        const expanded = valuesToQueries(values);
+        const rows = await getValues(id, query);
+        const expanded = rowsToQueries(rows);
         log.info(`Expanded ${id}/${query} to ${size(expanded)} queries.`);
         return expanded;
       },

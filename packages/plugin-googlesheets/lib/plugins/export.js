@@ -2,10 +2,10 @@ import {curry, flow, get, getOr, size} from "lodash/fp";
 import {retryP} from "combinators-p";
 import {envelope as env} from "@sugarcube/core";
 import withSession from "../sheets";
-import {header, unitsToValues, valuesToUnits} from "../utils";
+import {header, unitsToRows, rowsToUnits} from "../utils";
 
-const mergeUnitsAndValues = curry((units, values) => {
-  const data = valuesToUnits(header(values), values);
+const mergeUnitsAndRows = curry((units, rows) => {
+  const data = rowsToUnits(header(rows), rows);
   return env.concat(env.envelopeData(data), env.envelopeData(units)).data;
 });
 
@@ -41,21 +41,21 @@ const plugin = async (envelope, {log, cfg}) => {
       const url = `https://docs.google.com/spreadsheets/d/${id}/edit#gid=${sheetId}`;
       log.info(`Units exported to ${url}`);
 
-      const values = await getValues(id, sheetName);
+      const rows = await getValues(id, sheetName);
 
       log.info(
-        `Merging ${size(envelope.data)} new units and ${size(values)}` +
-          ` existing values.`
+        `Merging ${size(envelope.data)} new units and ${size(rows)}` +
+          ` existing rows.`
       );
 
       const mergeEnvelope = flow([
-        mergeUnitsAndValues(envelope.data),
-        unitsToValues(fields),
+        mergeUnitsAndRows(envelope.data),
+        unitsToRows(fields),
       ]);
       // TODO: If clear succeeds, but create not, I lost all my data. retryP
       // is just a crutch here.
       await clearValues(id, sheetName);
-      await retryP(createValues(id, sheetName, mergeEnvelope(values)));
+      await retryP(createValues(id, sheetName, mergeEnvelope(rows)));
     },
     {client, secret, refreshToken}
   );

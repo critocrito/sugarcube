@@ -1,7 +1,7 @@
 import {size, get, getOr} from "lodash/fp";
 import {envelope as env} from "@sugarcube/core";
 import withSession from "../sheets";
-import {valuesToUnits} from "../utils";
+import {rowsToUnits} from "../utils";
 
 // TODO: case for then no _sc_id_hash exists
 // possibly rename this one update_from_sheet
@@ -15,8 +15,8 @@ const plugin = async (envelope, {log, cfg}) => {
 
   const units = await withSession(
     async ({getValues}) => {
-      const values = await getValues(id, sheet);
-      return valuesToUnits(sheetFields, values);
+      const rows = await getValues(id, sheet);
+      return rowsToUnits(sheetFields, rows);
     },
     {client, secret, refreshToken}
   );

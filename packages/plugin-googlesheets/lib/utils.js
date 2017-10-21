@@ -20,26 +20,24 @@ const queryFields = ["type", "term"];
 export const header = flow([head, map(toLower)]);
 
 const keys = flow([concat(requiredFields), uniq]);
-const zipValues = curry((fields, values) =>
+const zipRows = curry((fields, rows) =>
   flow([
-    tail,
-    reject(isEmpty),
-    map(zipObject(header(values))),
-    map(pick(fields)),
-  ])(values)
+    tail, // The body of the spreadsheet, without the header.
+    reject(isEmpty), // Drop empty rows.
+    map(zipObject(header(rows))), // Create a list of objects.
+    map(pick(fields)), // Only select the wanted fields.
+  ])(rows)
 );
 
-// Map SugarCube units to google spreadheet values.
-export const unitsToValues = curry((fields, units) =>
+// Map SugarCube units to google spreadheet rows.
+export const unitsToRows = curry((fields, units) =>
   concat([keys(fields)], map(at(keys(fields)), units))
 );
 
-// Map google spreadsheet values to SugarCube units.
-export const valuesToUnits = curry((fields, values) =>
-  zipValues(keys(fields), values)
-);
+// Map google spreadsheet rows to SugarCube units.
+export const rowsToUnits = curry((fields, rows) => zipRows(keys(fields), rows));
 
-// Map google spreadsheet values to SugarCube queries.
-export const valuesToQueries = zipValues(queryFields);
+// Map google spreadsheet rows to SugarCube queries.
+export const rowsToQueries = zipRows(queryFields);
 
-export default {unitsToValues, valuesToUnits, valuesToQueries};
+export default {unitsToRows, rowsToUnits, rowsToQueries};
