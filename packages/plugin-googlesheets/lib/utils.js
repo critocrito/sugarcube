@@ -9,23 +9,29 @@ import {
   zipObject,
   concat,
   uniq,
+  toLower,
 } from "lodash/fp";
 
 const requiredFields = ["_sc_id_hash", "_sc_content_hash"];
+const queryFields = ["type", "term"];
 
-// map sugarcube units to google spreadheet values
-export const unitsToValues = curry((fields, units) => {
-  const keys = uniq(concat(requiredFields, fields));
-  // TODO: test for types, only allow strings, ints, or bools. Recast to those
-  // values. e.g 'TRUE' -> true
-  return concat([keys], map(at(keys), units));
-});
+const keys = flow([concat(requiredFields), uniq]);
+const header = flow([head, map(toLower)]);
+const zipValues = curry((fields, values) =>
+  flow([map(zipObject(header(values))), map(pick(fields))])(tail(values))
+);
 
-// map google spreadsheet values to sugarcube units
-export const valuesToUnits = curry((fields, values) => {
-  const keys = uniq(concat(requiredFields, fields));
-  console.log(fields, keys);
-  return flow([map(zipObject(head(values))), map(pick(keys))])(tail(values));
-});
+// Map SugarCube units to google spreadheet values.
+export const unitsToValues = curry((fields, units) =>
+  concat([keys(fields)], map(at(keys(fields)), units))
+);
 
-export default {unitsToValues, valuesToUnits};
+// Map google spreadsheet values to SugarCube units.
+export const valuesToUnits = curry((fields, values) =>
+  zipValues(keys(fields), values)
+);
+
+// Map google spreadsheet values to SugarCube queries.
+export const valuesToQueries = zipValues(queryFields);
+
+export default {unitsToValues, valuesToUnits, valuesToQueries};

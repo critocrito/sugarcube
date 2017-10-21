@@ -1,7 +1,8 @@
 import {get, size} from "lodash/fp";
-import {flowP, collectP, flatmapP, tapP} from "combinators-p";
+import {flowP, flatmapP, tapP} from "combinators-p";
 import {envelope as e} from "@sugarcube/core";
 import withSession from "../sheets";
+import {valuesToQueries} from "../utils";
 
 const querySource = "sheets_query";
 
@@ -19,8 +20,9 @@ const plugin = (envelope, {log, cfg}) => {
     withSession(
       async ({getValues}) => {
         const {values} = await getValues(id, query);
-        log.info(`Fetched ${size(values)} queries from ${id}/${query}`);
-        return values;
+        const expanded = valuesToQueries(values);
+        log.info(`Expanded ${id}/${query} to ${size(expanded)} queries.`);
+        return expanded;
       },
       {client, secret, project, token}
     );
@@ -28,7 +30,6 @@ const plugin = (envelope, {log, cfg}) => {
   return flowP(
     [
       flatmapP(querySheet),
-      collectP(([type, term]) => ({type, term})),
       tapP(rs =>
         log.info(`Fetched ${size(rs)} quer${size(rs) > 1 ? "ies" : "y"}.`)
       ),
