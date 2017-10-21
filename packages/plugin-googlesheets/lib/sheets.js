@@ -1,43 +1,79 @@
-import {curry} from "lodash/fp";
-import {flowP3, flowP4} from "combinators-p";
+import {curry, find, getOr} from "lodash/fp";
+import {flowP, flowP2, flowP3, flowP4} from "combinators-p";
 import pify from "pify";
 import google from "googleapis";
 
+import authenticate from "./auth";
 import {
+  createSpreadsheetRequest,
+  getSpreadsheetRequest,
+  createSheetRequest,
+  updateSheetRequest,
+  copySheetRequest,
   getValuesRequest,
-  addValuesRequest,
-  addSheetRequest,
-  copyFormattingRequest,
-  copyValidationRequest,
+  createValuesRequest,
 } from "./requests";
 
 const sheets = google.sheets("v4");
+
+// API promisified
+const spreadsheetCreate = pify(sheets.spreadsheets.create);
+const spreadsheetGet = pify(sheets.spreadsheets.get);
+const sheetCopy = pify(sheets.spreadsheets.sheets.copyTo);
 const update = pify(sheets.spreadsheets.values.update);
 const batchUpdate = pify(sheets.spreadsheets.batchUpdate);
 const get = pify(sheets.spreadsheets.values.get);
 
-// the basket of exportables
-export const addSheet = flowP3([addSheetRequest, batchUpdate]);
+// Actions
+const createSpreadsheet = flowP([createSpreadsheetRequest, spreadsheetCreate]);
+const getSpreadsheet = flowP2([getSpreadsheetRequest, spreadsheetGet]);
 
-export const getValues = flowP3([getValuesRequest, get]);
+const getSheet = curry(async (auth, id, name) => {
+  const spreadsheet = await getSpreadsheet(auth, id);
+  const sheet = find(["properties.title", name], spreadsheet.sheets);
+  return getOr(null, "properties", sheet);
+});
+const createSheet = flowP3([createSheetRequest, batchUpdate]);
+const copySheet = flowP4([copySheetRequest, sheetCopy]);
+const getOrCreateSheet = curry(async (auth, id, name) => {
+  const sheet = await getSheet(auth, id, name);
+  if (!sheet) {
+    await createSheet(auth, id, name);
+    return getSheet(auth, id, name);
+  }
+  return sheet;
+});
+const updateSheet = flowP4([updateSheetRequest, batchUpdate]);
+const duplicateSheet = curry(async (auth, id, from, to, title) => {
+  // In case the target already exists
+  const target = await getSheet(auth, to, title);
+  if (target) return target;
+  const source = await getSheet(auth, id, from);
+  if (!source) {
+    throw new Error("Source Spreadsheet doesn't exist.");
+  }
+  const {sheetId} = await copySheet(auth, id, source.sheetId, to);
+  await updateSheet(auth, to, sheetId, {title});
+  return getSheet(auth, to, title);
+});
 
-export const copyFormatting = flowP4([copyFormattingRequest, batchUpdate]);
+const getValues = flowP3([getValuesRequest, get]);
+const createValues = flowP4([createValuesRequest, update]);
 
-export const copyValidation = flowP4([copyValidationRequest, batchUpdate]);
-
-export const addValues = flowP4([addValuesRequest, update]);
-
-export const copyVF = curry((auth, spreadsheetId, fromSheetId, toSheetId) =>
-  copyFormatting(auth, spreadsheetId, fromSheetId, toSheetId).then(() =>
-    copyValidation(auth, spreadsheetId, fromSheetId, toSheetId)
-  )
-);
-
-export default {
-  addSheet,
-  copyFormatting,
-  copyValidation,
-  copyVF,
-  addValues,
-  getValues,
-};
+// This function provides a context within which to run a series of
+// interactions with the Google spreadsheet API.
+export default curry(async (f, {client, secret, project, token}) => {
+  const auth = await authenticate(client, secret, project, token);
+  const api = {
+    createSpreadsheet: createSpreadsheet(auth),
+    getSpreadsheet: getSpreadsheet(auth),
+    createSheet: createSheet(auth),
+    getSheet: getSheet(auth),
+    getOrCreateSheet: getOrCreateSheet(auth),
+    updateSheet: updateSheet(auth),
+    duplicateSheet: duplicateSheet(auth),
+    createValues: createValues(auth),
+    getValues: getValues(auth),
+  };
+  return f(api);
+});

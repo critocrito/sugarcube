@@ -1,30 +1,29 @@
 import {get, size} from "lodash/fp";
 import {flowP, collectP, flatmapP, tapP} from "combinators-p";
 import {envelope as e} from "@sugarcube/core";
-
-import {getValues} from "../sheets";
-import authenticate from "../auth";
+import withSession from "../sheets";
 
 const querySource = "sheets_query";
 
 const plugin = (envelope, {log, cfg}) => {
-  const clientId = get("google.client_id", cfg);
-  const clientSecret = get("google.client_secret", cfg);
-  const projectId = get("google.project_id", cfg);
+  const client = get("google.client_id", cfg);
+  const secret = get("google.client_secret", cfg);
+  const project = get("google.project_id", cfg);
   const token = get("google.token", cfg);
-  const spreadsheetId = get("google.spreadsheet_id", cfg);
+  const id = get("google.spreadsheet_id", cfg);
   const queries = e.queriesByType(querySource, envelope);
 
   log.info(`Fetching ${size(queries)} sheet${size(queries) > 1 ? "s" : ""}`);
 
-  const querySheet = async query => {
-    const auth = await authenticate(clientId, clientSecret, projectId, token);
-    const sheet = await getValues(auth, spreadsheetId, query);
-    log.info(
-      `Fetched ${size(sheet.values)} queries from ${spreadsheetId}/${query}`
+  const querySheet = query =>
+    withSession(
+      async ({getValues}) => {
+        const {values} = await getValues(id, query);
+        log.info(`Fetched ${size(values)} queries from ${id}/${query}`);
+        return values;
+      },
+      {client, secret, project, token}
     );
-    return sheet.values;
-  };
 
   return flowP(
     [

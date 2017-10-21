@@ -1,6 +1,13 @@
-import {curry} from "lodash/fp";
+import {curry, merge} from "lodash/fp";
 
-// weird google request formats hidden away in this nice file
+export const createSpreadsheetRequest = auth => ({
+  auth,
+});
+
+export const getSpreadsheetRequest = curry((auth, spreadsheetId) => ({
+  auth,
+  spreadsheetId,
+}));
 
 export const getValuesRequest = curry((auth, spreadsheetId, sheet) => ({
   auth,
@@ -10,15 +17,28 @@ export const getValuesRequest = curry((auth, spreadsheetId, sheet) => ({
   range: sheet,
 }));
 
-export const addValuesRequest = curry((auth, spreadsheetId, sheet, values) => ({
-  auth,
-  resource: {values},
-  valueInputOption: "USER_ENTERED",
-  spreadsheetId,
-  range: `${sheet}!A1`,
-}));
+export const createValuesRequest = curry(
+  (auth, spreadsheetId, sheet, values) => ({
+    auth,
+    resource: {values},
+    valueInputOption: "USER_ENTERED",
+    spreadsheetId,
+    range: `${sheet}!A1`,
+  })
+);
 
-export const addSheetRequest = curry((auth, spreadsheetId, marker) => ({
+export const copySheetRequest = curry(
+  (auth, spreadsheetId, sheetId, targetId) => ({
+    auth,
+    spreadsheetId,
+    sheetId,
+    resource: {
+      destinationSpreadsheetId: `${targetId}`,
+    },
+  })
+);
+
+export const createSheetRequest = curry((auth, spreadsheetId, title) => ({
   auth,
   spreadsheetId,
   resource: {
@@ -26,7 +46,7 @@ export const addSheetRequest = curry((auth, spreadsheetId, marker) => ({
       {
         addSheet: {
           properties: {
-            title: marker,
+            title,
             gridProperties: {
               rowCount: 20,
               columnCount: 12,
@@ -43,44 +63,20 @@ export const addSheetRequest = curry((auth, spreadsheetId, marker) => ({
   },
 }));
 
-const copyRequest = curry(
-  (pasteType, auth, spreadsheetId, fromSheetId, toSheetId) => ({
+export const updateSheetRequest = curry(
+  (auth, spreadsheetId, sheetId, props) => ({
     auth,
     spreadsheetId,
     resource: {
       requests: [
         {
-          copyPaste: {
-            source: {
-              sheetId: fromSheetId,
-              startRowIndex: 0,
-              endRowIndex: 1000,
-              startColumnIndex: 0,
-              endColumnIndex: 1000,
-            },
-            destination: {
-              sheetId: toSheetId,
-              startRowIndex: 0,
-              endRowIndex: 1000,
-              startColumnIndex: 0,
-              endColumnIndex: 1000,
-            },
-            pasteType,
-            pasteOrientation: "NORMAL",
+          updateSheetProperties: {
+            properties: merge(props, {sheetId}),
+            // TODO: This fails to create the fields for nested objects.
+            fields: Object.keys(props).join(","),
           },
         },
       ],
     },
   })
 );
-
-export const copyFormattingRequest = copyRequest("PASTE_FORMAT");
-export const copyValidationRequest = copyRequest("PASTE_DATA_VALIDATION");
-
-export default {
-  getValuesRequest,
-  addValuesRequest,
-  addSheetRequest,
-  copyFormattingRequest,
-  copyValidationRequest,
-};

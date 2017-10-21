@@ -1,61 +1,52 @@
 import {get, getOr} from "lodash/fp";
-
-import authenticate from "../auth";
-import {addSheet, addValues, copyVF} from "../sheets";
-
+import withSession from "../sheets";
 import {unitsToValues} from "../utils";
 
-const plugin = (envelope, {log, cfg}) => {
-  const clientId = get("google.client_id", cfg);
-  const clientSecret = get("google.client_secret", cfg);
-  const projectId = get("google.project_id", cfg);
+const plugin = async (envelope, {log, cfg}) => {
+  const client = get("google.client_id", cfg);
+  const secret = get("google.client_secret", cfg);
+  const project = get("google.project_id", cfg);
   const token = get("google.token", cfg);
-  const spreadsheetId = get("google.spreadsheet_id", cfg);
-  const sheetFields = getOr([], "google.sheet_fields", cfg);
-  const copyFromSheet = get("google.copy_formatting_from", cfg);
+  const id = get("google.spreadsheet_id", cfg);
+  const fields = getOr([], "google.sheet_fields", cfg);
+  const copyFromSheet = get("google.copy_from_sheet", cfg);
+  const copyFromSpreadsheet = getOr(id, "google.copy_from_spreadsheet", cfg);
   const sheetName = getOr(cfg.marker, "google.sheet", cfg);
 
-  const data = unitsToValues(sheetFields, envelope.data);
+  if (copyFromSheet && !copyFromSpreadsheet) {
+    throw new Error("Missing configuration: google.copy_from_spreadsheet");
+  }
+  if (copyFromSpreadsheet && !copyFromSheet) {
+    throw new Error("Missing configuration: google.copy_from_sheet");
+  }
 
-  log.info("Exporting data to google sheets");
+  const url = await withSession(
+    async ({getOrCreateSheet, duplicateSheet, createValues}) => {
+      const {sheetId} = await (copyFromSheet
+        ? duplicateSheet(copyFromSpreadsheet, copyFromSheet, id, sheetName)
+        : getOrCreateSheet(id, sheetName));
+      await createValues(id, sheetName, unitsToValues(fields, envelope.data));
+      return `https://docs.google.com/spreadsheets/d/${id}/edit#gid=${sheetId}`;
+    },
+    {client, secret, project, token}
+  );
 
-  return authenticate(clientId, clientSecret, projectId, token)
-    .then(auth => {
-      const copy = copyVF(auth, spreadsheetId);
-      const addV = addValues(auth, spreadsheetId);
+  log.info(`Units exported to ${url}`);
 
-      return addSheet(auth, spreadsheetId, sheetName).then(r => {
-        const id = r.replies[0].addSheet.properties.sheetId;
-        const name = r.replies[0].addSheet.properties.title;
-
-        if (!copyFromSheet) {
-          return addV(name, data);
-        }
-        return copy(copyFromSheet, id).then(() => addV(name, data));
-      });
-    })
-    .then(response => {
-      log.info(
-        `Spreadsheet updated at: https://docs.google.com/spreadsheets/d/${response.spreadsheetId}/edit`
-      );
-      log.info(
-        `Updated Sheet ${response.updatedRange}, ${response.updatedRows} rows`
-      );
-      return envelope;
-    })
-    .catch(e => {
-      log.error(`The Google Sheets API returned an error: ${e}`);
-      return envelope;
-    });
+  return envelope;
 };
 
-plugin.desc = "Export SugarCube data to a google spreadsheet";
+plugin.desc = "Export SugarCube data to a google spreadsheet.";
 
 plugin.argv = {
-  "google.copy_formatting_from": {
+  "google.copy_from_sheet": {
+    type: "text",
+    desc: "Duplicate this sheet before exporting to the copy.",
+  },
+  "google.copy_from_spreadsheet": {
     type: "text",
     desc:
-      "Copy Data Validation and Formatting from this sheet to the exported (sheet id, not name)",
+      "Duplicate a sheet from this spreadsheet ID. Default: current spreadsheet ID.",
   },
 };
 
