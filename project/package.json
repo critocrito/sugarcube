@@ -13,6 +13,8 @@
     "@sugarcube/cli": "file:../packages/cli",
     "@sugarcube/plugin-google": "file:../packages/plugin-google",
     "@sugarcube/plugin-googlesheets": "file:../packages/plugin-googlesheets",
-    "@sugarcube/plugin-tap": "file:../packages/plugin-tap"
+    "@sugarcube/plugin-tap": "file:../packages/plugin-tap",
+    "@sugarcube/plugin-sec": "file:../packages/plugin-sec",
+    "@sugarcube/plugin-regex": "file:../packages/plugin-regex"
   }
 }
