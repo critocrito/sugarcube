@@ -1,14 +1,16 @@
 import {
+  curry,
   flow,
   forEach,
   nth,
+  get,
   compact,
   chunk,
   size,
   replace,
   split,
 } from "lodash/fp";
-import {flowP, collectP4, flatmapP, tapP} from "combinators-p";
+import {flowP, collectP2, flatmapP2, tapP, retryP} from "combinators-p";
 import {envelope as env} from "@sugarcube/core";
 import request from "request-promise";
 import {URL} from "url";
@@ -17,30 +19,38 @@ import moment from "moment";
 
 const forEachObj = forEach.convert({cap: false});
 
-const url = "https://searchwww.sec.gov/EDGARFSClient/jsp/EDGAR_MainAccess.jsp";
+const url = "http://searchwww.sec.gov/EDGARFSClient/jsp/EDGAR_MainAccess.jsp";
 
 const querySource = "sec_search";
 
-const search = term => {
-  const params = {
-    sort: "Date",
-    formType: "FormSD",
-    isAdv: "true",
-    stemming: "true",
-    numResults: "100",
-  };
-  const requestUrl = new URL(url);
+const search = curry((numResults, count, term) =>
+  collectP2(
+    i => {
+      const params = {
+        sort: "Date",
+        formType: "FormSD",
+        isAdv: "true",
+        stemming: "true",
+        startDoc: i === 0 ? 0 : i * numResults + 1,
+        numResults,
+      };
 
-  forEachObj((v, k) => requestUrl.searchParams.append(k, v), params);
-  requestUrl.searchParams.append("search_text", term.replace(" ", "+"));
-  return request(requestUrl.toString());
-};
+      const requestUrl = new URL(url);
+
+      forEachObj((v, k) => requestUrl.searchParams.append(k, v), params);
+      requestUrl.searchParams.append("search_text", term.replace(" ", "+"));
+
+      return request(requestUrl.toString());
+    },
+    [...Array(Math.ceil(count / numResults)).keys()]
+  )
+);
 
 const scrape = html => {
   const $ = cheerio.load(html);
   const results = $("#ifrm2 table:nth-child(2) tr:not(:first-child)").toArray();
 
-  return collectP4(async ([first, second]) => {
+  return collectP2(async ([first, second]) => {
     const dateFiled = moment
       .utc($("td:first-child i", first).text(), "DD/MM/YYYY")
       .toDate();
@@ -57,7 +67,7 @@ const scrape = html => {
     const cik = $("#cikSearch", second).text();
     const sic = $("#sicSearch", second).text();
 
-    const $filing = cheerio.load(await request(filingLink));
+    const $filing = cheerio.load(await retryP(request(filingLink)));
 
     return {
       date_filed: dateFiled,
@@ -74,16 +84,20 @@ const scrape = html => {
   }, chunk(4, results));
 };
 
-const plugin = (envelope, {log}) => {
+const plugin = (envelope, {log, cfg}) => {
+  const pageCount = 100;
+  const total = get("sec.results", cfg);
   const queries = env.queriesByType(querySource, envelope);
 
   const doSearch = flowP([
     tapP(term => log.info(`Searching the SEC for '${term}'`)),
-    flowP([search, scrape]),
+    flowP([search(pageCount, total), flatmapP2(scrape)]),
     tapP(r => log.info(`Fetched ${size(r)} results.`)),
   ]);
 
-  return flatmapP(doSearch, queries).then(rs => env.concatData(rs, envelope));
+  return flatmapP2(q => retryP(doSearch(q)), queries).then(rs =>
+    env.concatData(rs, envelope)
+  );
 };
 
 plugin.desc = "Search the SEC for EDGAR filings.";
@@ -92,7 +106,7 @@ plugin.argv = {
   "sec.results": {
     nargs: 1,
     desc: "The number of results to fetch.",
-    default: 100,
+    default: 500,
   },
 };
 
