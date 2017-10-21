@@ -8,8 +8,7 @@ import {valuesToUnits} from "../utils";
 const plugin = async (envelope, {log, cfg}) => {
   const client = get("google.client_id", cfg);
   const secret = get("google.client_secret", cfg);
-  const project = get("google.project_id", cfg);
-  const token = get("google.token", cfg);
+  const refreshToken = get("google.refresh_token", cfg);
   const id = get("google.spreadsheet_id", cfg);
   const sheet = get("google.sheet", cfg);
   const sheetFields = getOr([], "google.sheet_fields", cfg);
@@ -19,7 +18,7 @@ const plugin = async (envelope, {log, cfg}) => {
       const values = await getValues(id, sheet);
       return valuesToUnits(sheetFields, values);
     },
-    {client, secret, project, token}
+    {client, secret, refreshToken}
   );
 
   log.info("Spreadsheet retrieved");

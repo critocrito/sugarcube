@@ -7,87 +7,57 @@ const statAsync = pify(fs.stat);
 const readFileAsync = pify(fs.readFile);
 const writeFileAsync = pify(fs.writeFile);
 
-// TODO: refactor this file ince an authentication workflow is decided on.
-// should it stop the runner if authentication isnt finished?
+const TOKEN_FILE = "google-sheets-token.json";
 
-const client = (clientId, clientSecret, projectId) => ({
-  installed: {
-    client_id: clientId,
-    client_secret: clientSecret,
-    project_id: projectId,
-    redirect_uris: ["urn:ietf:wg:oauth:2.0:oob", "http://localhost"],
-    auth_uri: "https://accounts.google.com/o/oauth2/auth",
-    token_uri: "https://accounts.google.com/o/oauth2/token",
-    auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
-  },
-});
+const authClient = (client, secret) => {
+  const auth = new GoogleAuth();
+  return new auth.OAuth2(client, secret, "urn:ietf:wg:oauth:2.0:oob");
+};
 
 const requestToken = oauth2Client => {
   const authUrl = oauth2Client.generateAuthUrl({
     access_type: "offline",
     scope: ["https://www.googleapis.com/auth/spreadsheets"],
   });
-  console.log("Authorize this app by visiting this url: ", authUrl);
-  return authUrl;
+  throw new Error(`Authorize this app by visiting this url: ${authUrl}`);
 };
 
-const checkIfFile = file =>
-  new Promise((resolve, reject) =>
-    statAsync(file)
-      .then(stats => {
-        resolve(stats.isFile());
-        return "";
-      })
-      .catch(err => {
-        if (err.code === "ENOENT") {
-          resolve(false);
-        } else {
-          reject(err);
-        }
-      })
-  );
+const isFile = async file => {
+  let stats;
+  try {
+    stats = await statAsync(file);
+  } catch (e) {
+    if (e.code === "ENOENT") return false;
+    throw e;
+  }
+  return stats.isFile();
+};
 
-const authenticate = (clientId, clientSecret, projectId, token) => {
-  const c = client(clientId, clientSecret, projectId);
-  const auth = new GoogleAuth();
-  const oauth2Client = new auth.OAuth2(
-    c.installed.client_id,
-    c.installed.client_secret,
-    c.installed.redirect_uris[0]
-  );
+const credsFromFile = file => readFileAsync(file).then(JSON.parse);
+const credsToFile = (file, credentials) =>
+  writeFileAsync(file, JSON.stringify(credentials));
 
-  return checkIfFile("google-sheets-token.json").then(exists => {
-    if (exists) {
-      return readFileAsync("google-sheets-token.json").then(f => {
-        oauth2Client.credentials = JSON.parse(f);
-        return oauth2Client;
-      });
-    }
+const authenticate = async (client, secret, refreshToken) => {
+  const auth = authClient(client, secret);
+  let credentials;
 
-    if (token) {
-      return new Promise((resolve, reject) => {
-        oauth2Client.getToken(token, (err, t) => {
-          if (err) {
-            requestToken(oauth2Client);
-            reject(err);
-          } else {
-            resolve(
-              writeFileAsync(
-                "google-sheets-token.json",
-                JSON.stringify(token)
-              ).then(() => {
-                oauth2Client.credentials = t;
-                return oauth2Client;
-              })
-            );
-          }
-        });
-      });
-    }
+  if (await isFile("google-sheets-token.json")) {
+    credentials = await credsFromFile(TOKEN_FILE);
+    auth.credentials = credentials;
+    return auth;
+  }
 
-    requestToken(oauth2Client);
-    throw new Error();
-  });
+  if (refreshToken) {
+    try {
+      credentials = await pify(auth.getToken)(refreshToken);
+      await credsToFile(TOKEN_FILE, credentials);
+      auth.credentials = credentials;
+      return auth;
+      // eslint-disable-next-line no-empty
+    } catch (e) {}
+  }
+
+  return requestToken(auth);
 };
 
 export default authenticate;

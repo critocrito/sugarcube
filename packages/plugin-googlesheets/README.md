@@ -18,11 +18,11 @@ In order to use this plugin you need the following:
 - A [Google account](https://gmail.com).
 - A spreadsheet ID. Logged in as your user, create a new spreadsheet, and copy
   the spreadsheet ID from the URL.
-- A client ID, a client secret, a project ID and a token.
+- A client ID, a client secret and a token.
 
   - Go to the [Developers Console](https://console.developers.google.com) and
     login with your account.
-  - Create a new project. Note the project ID mentioned
+  - Create a new project.
   - Enable the Google Sheets API.
   - Under the "Credentials" page (click on the left bar):
 
@@ -38,7 +38,6 @@ Your current config looks like this:
   "google": {
     "client_id": "<CLIENT ID>",
     "client_secret": "<CLIENT SECRET>",
-    "project_id": "<PROJECT ID>",
     "spreadsheet_id": "<SPREADSHEET ID>"
   }
 }
@@ -53,7 +52,6 @@ browser and note the authorization token. Add this token to your configuration.
   "google": {
     "client_id": "<CLIENT ID>",
     "client_secret": "<CLIENT SECRET>",
-    "project_id": "<PROJECT ID>",
     "spreadsheet_id": "<SPREADSHEET ID>",
     "token": "<TOKEN>"
   }
@@ -64,10 +62,9 @@ browser and note the authorization token. Add this token to your configuration.
 
 **Configuration Options**:
 
-- `google.client_id`
-- `google.client_secret`
-- `google.project_id`
-- `google.token`
+- `google.client_id`: The identifier for this client.
+- `google.client_secret`: A secret that is used by this client.
+- `google.token`: The refresh token, that will be used to request an access token.
 
 ### `sheets_export`
 

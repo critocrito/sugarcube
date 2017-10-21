@@ -5,8 +5,7 @@ import {unitsToValues} from "../utils";
 const plugin = async (envelope, {log, cfg}) => {
   const client = get("google.client_id", cfg);
   const secret = get("google.client_secret", cfg);
-  const project = get("google.project_id", cfg);
-  const token = get("google.token", cfg);
+  const refreshToken = get("google.refresh_token", cfg);
   const id = get("google.spreadsheet_id", cfg);
   const fields = getOr([], "google.sheet_fields", cfg);
   const copyFromSheet = get("google.copy_from_sheet", cfg);
@@ -28,7 +27,7 @@ const plugin = async (envelope, {log, cfg}) => {
       await createValues(id, sheetName, unitsToValues(fields, envelope.data));
       return `https://docs.google.com/spreadsheets/d/${id}/edit#gid=${sheetId}`;
     },
-    {client, secret, project, token}
+    {client, secret, refreshToken}
   );
 
   log.info(`Units exported to ${url}`);
@@ -45,8 +44,7 @@ plugin.argv = {
   },
   "google.copy_from_spreadsheet": {
     type: "text",
-    desc:
-      "Duplicate a sheet from this spreadsheet ID. Default: current spreadsheet ID.",
+    desc: "Duplicate a sheet from this spreadsheet ID.",
   },
 };
 

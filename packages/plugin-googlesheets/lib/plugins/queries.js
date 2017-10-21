@@ -9,8 +9,7 @@ const querySource = "sheets_query";
 const plugin = (envelope, {log, cfg}) => {
   const client = get("google.client_id", cfg);
   const secret = get("google.client_secret", cfg);
-  const project = get("google.project_id", cfg);
-  const token = get("google.token", cfg);
+  const refreshToken = get("google.refresh_token", cfg);
   const id = get("google.spreadsheet_id", cfg);
   const queries = e.queriesByType(querySource, envelope);
 
@@ -24,7 +23,7 @@ const plugin = (envelope, {log, cfg}) => {
         log.info(`Expanded ${id}/${query} to ${size(expanded)} queries.`);
         return expanded;
       },
-      {client, secret, project, token}
+      {client, secret, refreshToken}
     );
 
   return flowP(

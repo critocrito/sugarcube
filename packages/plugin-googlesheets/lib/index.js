@@ -47,25 +47,21 @@ forEach(p => {
   // eslint-disable-next-line no-param-reassign
   p.argv = merge(
     {
-      "google.token": {
+      "google.refresh_token": {
         type: "string",
-        desc: "Google oauth token.",
+        desc: "Google OAuth refresh token.",
       },
       "google.client_id": {
         type: "string",
-        desc: "google Oauth client id.",
-      },
-      "google.project_id": {
-        type: "string",
-        desc: "Google Oauth project id.",
+        desc: "google OAuth client ID.",
       },
       "google.client_secret": {
         type: "string",
-        desc: "Google Oauth client secret.",
+        desc: "Google OAuth client secret.",
       },
       "google.spreadsheet_id": {
         type: "string",
-        desc: "Google Spreadsheet ID to use.",
+        desc: "Google spreadsheet ID to use.",
       },
     },
     p.argv

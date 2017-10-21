@@ -62,8 +62,8 @@ const createValues = flowP4([createValuesRequest, update]);
 
 // This function provides a context within which to run a series of
 // interactions with the Google spreadsheet API.
-export default curry(async (f, {client, secret, project, token}) => {
-  const auth = await authenticate(client, secret, project, token);
+export default curry(async (f, {client, secret, refreshToken}) => {
+  const auth = await authenticate(client, secret, refreshToken);
   const api = {
     createSpreadsheet: createSpreadsheet(auth),
     getSpreadsheet: getSpreadsheet(auth),
