@@ -16,7 +16,7 @@ const plugin = async (envelope, {log, cfg}) => {
   const id = get("google.spreadsheet_id", cfg);
   const fields = getOr([], "google.sheet_fields", cfg);
   const copyFromSheet = get("google.copy_from_sheet", cfg);
-  const copyFromSpreadsheet = getOr(id, "google.copy_from_spreadsheet", cfg);
+  const copyFromSpreadsheet = get("google.copy_from_spreadsheet", cfg);
   const sheetName = getOr(cfg.marker, "google.sheet", cfg);
 
   if (copyFromSheet && !copyFromSpreadsheet) {
