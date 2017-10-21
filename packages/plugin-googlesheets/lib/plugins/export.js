@@ -1,6 +1,13 @@
-import {get, getOr} from "lodash/fp";
+import {curry, flow, get, getOr, size} from "lodash/fp";
+import {retryP} from "combinators-p";
+import {envelope as env} from "@sugarcube/core";
 import withSession from "../sheets";
-import {unitsToValues} from "../utils";
+import {header, unitsToValues, valuesToUnits} from "../utils";
+
+const mergeUnitsAndValues = curry((units, values) => {
+  const data = valuesToUnits(header(values), values);
+  return env.concat(env.envelopeData(data), env.envelopeData(units)).data;
+});
 
 const plugin = async (envelope, {log, cfg}) => {
   const client = get("google.client_id", cfg);
@@ -19,18 +26,39 @@ const plugin = async (envelope, {log, cfg}) => {
     throw new Error("Missing configuration: google.copy_from_sheet");
   }
 
-  const url = await withSession(
-    async ({getOrCreateSheet, duplicateSheet, createValues}) => {
+  await withSession(
+    async ({
+      getOrCreateSheet,
+      duplicateSheet,
+      createValues,
+      getValues,
+      clearValues,
+    }) => {
       const {sheetId} = await (copyFromSheet
         ? duplicateSheet(copyFromSpreadsheet, copyFromSheet, id, sheetName)
         : getOrCreateSheet(id, sheetName));
-      await createValues(id, sheetName, unitsToValues(fields, envelope.data));
-      return `https://docs.google.com/spreadsheets/d/${id}/edit#gid=${sheetId}`;
+
+      const url = `https://docs.google.com/spreadsheets/d/${id}/edit#gid=${sheetId}`;
+      log.info(`Units exported to ${url}`);
+
+      const values = await getValues(id, sheetName);
+
+      log.info(
+        `Merging ${size(envelope.data)} new units and ${size(values)}` +
+          ` existing values.`
+      );
+
+      const mergeEnvelope = flow([
+        mergeUnitsAndValues(envelope.data),
+        unitsToValues(fields),
+      ]);
+      // TODO: If clear succeeds, but create not, I lost all my data. retryP
+      // is just a crutch here.
+      await clearValues(id, sheetName);
+      await retryP(createValues(id, sheetName, mergeEnvelope(values)));
     },
     {client, secret, refreshToken}
   );
-
-  log.info(`Units exported to ${url}`);
 
   return envelope;
 };

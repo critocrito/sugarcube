@@ -2,6 +2,7 @@ import {
   curry,
   flow,
   map,
+  reject,
   pick,
   at,
   tail,
@@ -10,15 +11,22 @@ import {
   concat,
   uniq,
   toLower,
+  isEmpty,
 } from "lodash/fp";
 
 const requiredFields = ["_sc_id_hash", "_sc_content_hash"];
 const queryFields = ["type", "term"];
 
+export const header = flow([head, map(toLower)]);
+
 const keys = flow([concat(requiredFields), uniq]);
-const header = flow([head, map(toLower)]);
 const zipValues = curry((fields, values) =>
-  flow([map(zipObject(header(values))), map(pick(fields))])(tail(values))
+  flow([
+    tail,
+    reject(isEmpty),
+    map(zipObject(header(values))),
+    map(pick(fields)),
+  ])(values)
 );
 
 // Map SugarCube units to google spreadheet values.

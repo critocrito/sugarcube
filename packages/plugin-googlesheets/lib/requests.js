@@ -80,3 +80,9 @@ export const updateSheetRequest = curry(
     },
   })
 );
+
+export const clearValuesRequest = curry((auth, spreadsheetId, sheet) => ({
+  auth,
+  spreadsheetId,
+  range: sheet,
+}));
