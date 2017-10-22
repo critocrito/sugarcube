@@ -6,6 +6,9 @@
   "license": "GPL-3.0",
   "repository": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-sec",
   "author": "Christo <christo@cryptodrunks.net>",
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "sugarcube",
     "sugarcube-plugin",

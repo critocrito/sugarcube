@@ -6,6 +6,9 @@
   "repository": "https://gitlab.com/sugarcube/sugarcube",
   "bugs": "https://gitlab.com/sugarcube/sugarcube/issues",
   "homepage": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-googlesheets",
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "sugarcube",
     "sugarcube plugin",

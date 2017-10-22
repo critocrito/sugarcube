@@ -6,6 +6,9 @@
   "license": "GPL-3.0",
   "repository": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-fs",
   "author": "Christo <christo@cryptodrunks.net>",
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "sugarcube",
     "sugarcube-plugin",

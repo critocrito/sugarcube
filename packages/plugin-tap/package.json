@@ -3,6 +3,9 @@
   "version": "0.2.0",
   "description": "K-combinators for sugarcube.",
   "main": "_dist/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "sugarcube",
     "sugarcube plugin",

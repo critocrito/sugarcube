@@ -8,6 +8,9 @@
   "bugs": "https://gitlab.com/sugarcube/sugarcube/issues",
   "homepage": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-youtube",
   "author": "Christo <christo@cryptodrunks.net>",
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "sugarcube",
     "sugarcube plugin",
