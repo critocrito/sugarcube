@@ -4,6 +4,7 @@ import {
   forEach,
   nth,
   get,
+  merge,
   compact,
   chunk,
   size,
@@ -89,11 +90,19 @@ const plugin = (envelope, {log, cfg}) => {
   const total = get("sec.results", cfg);
   const queries = env.queriesByType(querySource, envelope);
 
-  const doSearch = flowP([
-    tapP(term => log.info(`Searching the SEC for '${term}'`)),
-    flowP([search(pageCount, total), flatmapP2(scrape)]),
-    tapP(r => log.info(`Fetched ${size(r)} results.`)),
-  ]);
+  const doSearch = term => {
+    log.info(`Searching the SEC for '${term}'`);
+    return flowP(
+      [
+        flowP([search(pageCount, total), flatmapP2(scrape)]),
+        tapP(rs => log.info(`Fetched ${size(rs)} results.`)),
+        collectP2(unit =>
+          merge(unit, {_sc_queries: [{type: "sec_search", term}]})
+        ),
+      ],
+      term
+    );
+  };
 
   return flatmapP2(q => retryP(doSearch(q)), queries).then(rs =>
     env.concatData(rs, envelope)

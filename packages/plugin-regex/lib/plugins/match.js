@@ -18,7 +18,9 @@ const plugin = (envelope, {log, cfg}) => {
   log.info(`Matching: ${query}`);
 
   return env.fmapData(unit => {
-    const matches = unit[field].match(query);
+    if (!unit[field]) return unit;
+
+    const matches = (unit[field] || "").match(query);
 
     const scRegex = {
       _sc_regex: {
