@@ -6,9 +6,6 @@
   "license": "GPL-3.0",
   "repository": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/sugarcube",
   "author": "Christo <christo@cryptodrunks.net>",
-  "publishConfig": {
-    "access": "public"
-  },
   "keywords": [
     "sugarcube",
     "data",

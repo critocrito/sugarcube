@@ -8,9 +8,6 @@
   "license": "GPL-3.0",
   "bugs": "https://gitlab.com/sugarcube/sugarcube/issues",
   "homepage": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-google",
-  "publishConfig": {
-    "access": "public"
-  },
   "keywords": [
     "sugarcube",
     "sugarcube plugin",

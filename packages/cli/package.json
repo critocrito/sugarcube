@@ -7,9 +7,6 @@
     "sugarcube": "bin/sugarcube"
   },
   "repository": "https://gitlab.com/sugarcube/sugarcube",
-  "publishConfig": {
-    "access": "public"
-  },
   "keywords": [
     "sugarcube",
     "sugarcube ui",

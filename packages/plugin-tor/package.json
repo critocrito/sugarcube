@@ -8,9 +8,6 @@
   "homepage": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-tor",
   "author": "Christo <christo@cryptodrunks.net>",
   "license": "GPL-3.0",
-  "publishConfig": {
-    "access": "public"
-  },
   "keywords": [
     "sugarcube",
     "sugarcube plugin",
