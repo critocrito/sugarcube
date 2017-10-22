@@ -1,6 +1,5 @@
 {
   "name": "@sugarcube/plugin-regex",
-  "private": true,
   "version": "0.1.0",
   "description": "",
   "main": "_dist/index.js",
