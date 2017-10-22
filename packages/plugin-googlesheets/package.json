@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/plugin-googlesheets",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Import and Export units from google sheets",
   "main": "_dist/index.js",
   "repository": "https://gitlab.com/sugarcube/sugarcube",
@@ -18,7 +18,7 @@
   "author": "niko <niko@niko.io>",
   "license": "GPL-3.0",
   "dependencies": {
-    "@sugarcube/core": "^0.2.0",
+    "@sugarcube/core": "^0.2.1",
     "combinators-p": "^0.8.0",
     "google-auth-library": "^0.11.0",
     "googleapis": "^22.2.0",

@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/plugin-http",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "HTTP related plugins for sugarcube.",
   "main": "_dist/index.js",
   "repository": "https://gitlab.com/sugarcube/sugarcube",
@@ -20,7 +20,7 @@
     "http"
   ],
   "dependencies": {
-    "@sugarcube/core": "^0.2.0",
+    "@sugarcube/core": "^0.2.1",
     "bluebird": "^3.5.1",
     "child-process-promise": "^2.2.0",
     "lodash": "^4.17.4",
