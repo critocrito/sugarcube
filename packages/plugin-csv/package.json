@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/plugin-csv",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "CSV based input and output for SugarCube.",
   "main": "_dist/index.js",
   "repository": "https://gitlab.com/sugarcube/sugarcube",
@@ -17,7 +17,7 @@
     "csv"
   ],
   "dependencies": {
-    "@sugarcube/core": "^0.1.0",
+    "@sugarcube/core": "^0.2.0",
     "bluebird": "^3.5.1",
     "combinators-p": "^0.8.0",
     "csv-parse": "^1.2.4",

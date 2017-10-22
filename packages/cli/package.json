@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/cli",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A CLI to operate SugarCube data processes.",
   "main": "_dist/index.js",
   "bin": {
@@ -20,7 +20,7 @@
   "bugs": "https://gitlab.com/sugarcube/sugarcube/issues",
   "homepage": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/cli",
   "dependencies": {
-    "@sugarcube/core": "^0.1.0",
+    "@sugarcube/core": "^0.2.0",
     "bluebird": "^3.5.1",
     "dotenv": "^4.0.0",
     "lodash": "^4.17.4",

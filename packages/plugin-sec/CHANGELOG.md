@@ -1,0 +1,13 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+<a name="0.2.0"></a>
+# [0.2.0](https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-sec/compare/v0.1.0...v0.2.0) (2017-10-22)
+
+
+### Features
+
+* **plugin-sec:** Imported initial version. ([820b7e9](https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-sec/commit/820b7e9))
+* **plugin-sec:** Paginate search requests. ([a0053cb](https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-sec/commit/a0053cb))

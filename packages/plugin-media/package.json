@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/plugin-media",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Media related plugins.",
   "main": "_dist/index.js",
   "repository": "https://gitlab.com/sugarcube/sugarcube",
@@ -20,7 +20,7 @@
     "media"
   ],
   "dependencies": {
-    "@sugarcube/core": "^0.1.0",
+    "@sugarcube/core": "^0.2.0",
     "bluebird": "^3.5.1",
     "gm": "^1.23.0",
     "lodash": "^4.17.4",

@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/plugin-tika",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Parse files and metadata using Tika.",
   "main": "_dist/index.js",
   "repository": "https://gitlab.com/sugarcube/sugarcube",
@@ -20,7 +20,7 @@
     "pdf extraction"
   ],
   "dependencies": {
-    "@sugarcube/core": "^0.1.0",
+    "@sugarcube/core": "^0.2.0",
     "combinators-p": "^0.8.0",
     "lodash": "^4.17.4",
     "moment": "^2.19.1",
