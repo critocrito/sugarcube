@@ -1,7 +1,7 @@
 {
   "name": "@sugarcube/plugin-sec",
   "version": "0.2.0",
-  "description": "",
+  "description": "Query the company filings of the U.S. SEC.",
   "main": "_dist/index.js",
   "license": "GPL-3.0",
   "repository": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-sec",

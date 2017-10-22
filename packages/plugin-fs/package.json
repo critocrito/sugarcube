@@ -1,7 +1,7 @@
 {
   "name": "@sugarcube/plugin-fs",
   "version": "0.2.0",
-  "description": "",
+  "description": "Operate on the file system.",
   "main": "_dist/index.js",
   "license": "GPL-3.0",
   "repository": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-fs",
