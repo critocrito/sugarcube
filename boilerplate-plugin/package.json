@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/plugin-",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "description": "",
   "main": "_dist/index.js",
   "license": "GPL-3.0",
@@ -13,8 +13,8 @@
     "transformation"
   ],
   "dependencies": {
-    "bluebird": "^3.5.0",
-    "@sugarcube/core": "0.1.0",
+    "@sugarcube/core": "0.2.1",
+    "combinators-p": "^0.8.0",
     "lodash": "^4.17.4"
   },
   "devDependencies": {
