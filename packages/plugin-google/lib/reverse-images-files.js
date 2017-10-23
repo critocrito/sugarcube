@@ -1,11 +1,10 @@
 import {merge, size, get} from "lodash/fp";
 import {flowP, collectP, flatmapP, mapP, tapP} from "combinators-p";
-import {envelope as env, utils} from "@sugarcube/core";
+import {envelope as env} from "@sugarcube/core";
+import {unfold} from "@sugarcube/plugin-fs";
 import path from "path";
 
 import {reverseImageSearchFromFile, entity} from "./google";
-
-const {unfold} = utils.fs;
 
 const querySource = "glob_pattern";
 

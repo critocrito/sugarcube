@@ -18,6 +18,7 @@
   ],
   "dependencies": {
     "@sugarcube/core": "^0.2.1",
+    "@sugarcube/plugin-fs": "^0.2.1",
     "bluebird": "^3.5.1",
     "child-process-promise": "^2.2.0",
     "combinators-p": "^0.8.0",

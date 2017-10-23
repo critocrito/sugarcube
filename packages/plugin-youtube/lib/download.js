@@ -2,12 +2,12 @@ import {merge, includes, size, filter, get} from "lodash/fp";
 import Promise from "bluebird";
 import {join} from "path";
 import fs from "fs";
-import {envelope as env, plugin as p, utils} from "@sugarcube/core";
+import {envelope as env, plugin as p} from "@sugarcube/core";
+import {mkdirP, sha256sum, md5sum} from "@sugarcube/plugin-fs";
 
 import {Counter, assertCredentials, youtubeDl} from "./utils";
 
 Promise.promisifyAll(fs);
-const {mkdirP, sha256sum, md5sum} = utils.fs;
 
 const downloadTypes = ["youtube_video"];
 

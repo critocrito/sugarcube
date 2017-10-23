@@ -1,11 +1,10 @@
 import {map, merge, get} from "lodash/fp";
 import {flow as flowP, flatmap} from "combinators-p";
-import {envelope as env, data as d, plugin as p, utils} from "@sugarcube/core";
+import {envelope as env, data as d, plugin as p} from "@sugarcube/core";
+import {unfold} from "@sugarcube/plugin-fs";
 
 import {parseMany} from "../parse";
 import {assertIdFields} from "../assertions";
-
-const {unfold} = utils.fs;
 
 const querySource = "glob_pattern";
 

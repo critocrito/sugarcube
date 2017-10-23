@@ -5,11 +5,9 @@ import {join, basename} from "path";
 import url from "url";
 import fs from "fs";
 import {spawn} from "child-process-promise";
-import {utils} from "@sugarcube/core";
+import {mkdirP, sha256sum} from "@sugarcube/plugin-fs";
 
 Promise.promisifyAll(fs);
-
-const {mkdirP, sha256sum} = utils.fs;
 
 export const assertDir = (envelope, {cfg}) => {
   const dir = cfg.http.download_dir;

@@ -1,10 +1,9 @@
 import {property, size} from "lodash/fp";
 import {flowP, collectP, spreadP, flatmapP} from "combinators-p";
-import {envelope as env, utils} from "@sugarcube/core";
+import {envelope as env} from "@sugarcube/core";
+import {unfold} from "@sugarcube/plugin-fs";
 
 import {extract, entity} from "../utils";
-
-const {unfold} = utils.fs;
 
 const querySource = "glob_pattern";
 
