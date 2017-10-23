@@ -4,3 +4,4 @@ lerna-*.log
 _dist
 .npmrc
 .eslintcache
+package-lock.json
