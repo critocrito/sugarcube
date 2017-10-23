@@ -11,10 +11,27 @@
   "license": "GPL-3.0",
   "dependencies": {
     "@sugarcube/cli": "file:../packages/cli",
+    "@sugarcube/core": "file:../packages/core",
+    "@sugarcube/plugin-aqicn": "file:../packages/plugin-aqicn",
+    "@sugarcube/plugin-csv": "file:../packages/plugin-csv",
+    "@sugarcube/plugin-ddg": "file:../packages/plugin-ddg",
+    "@sugarcube/plugin-facebook": "file:../packages/plugin-facebook",
+    "@sugarcube/plugin-fs": "file:../packages/plugin-fs",
     "@sugarcube/plugin-google": "file:../packages/plugin-google",
     "@sugarcube/plugin-googlesheets": "file:../packages/plugin-googlesheets",
-    "@sugarcube/plugin-tap": "file:../packages/plugin-tap",
+    "@sugarcube/plugin-guardian": "file:../packages/plugin-guardian",
+    "@sugarcube/plugin-http": "file:../packages/plugin-http",
+    "@sugarcube/plugin-instagram": "file:../packages/plugin-instagram",
+    "@sugarcube/plugin-media": "file:../packages/plugin-media",
+    "@sugarcube/plugin-mongodb": "file:../packages/plugin-mongodb",
+    "@sugarcube/plugin-regex": "file:../packages/plugin-regex",
     "@sugarcube/plugin-sec": "file:../packages/plugin-sec",
-    "@sugarcube/plugin-regex": "file:../packages/plugin-regex"
+    "@sugarcube/plugin-tap": "file:../packages/plugin-tap",
+    "@sugarcube/plugin-telegram": "file:../packages/plugin-telegram",
+    "@sugarcube/plugin-tika": "file:../packages/plugin-tika",
+    "@sugarcube/plugin-tor": "file:../packages/plugin-tor",
+    "@sugarcube/plugin-twitter": "file:../packages/plugin-twitter",
+    "@sugarcube/plugin-youtube": "file:../packages/plugin-youtube",
+    "@sugarcube/sugarcube": "file:../packages/sugarcube"
   }
 }
