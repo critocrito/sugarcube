@@ -1,0 +1,20 @@
+{
+  "name": "@sugarcube/test",
+  "version": "0.2.1",
+  "description": "Test helpers and strategies for SugarCube.",
+  "main": "_dist/index.js",
+  "license": "GPL-3.0",
+  "repository": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/test",
+  "author": "Christo <christo@cryptodrunks.net>",
+  "keywords": [
+    "sugarcube",
+    "data",
+    "transformation",
+    "testing"
+  ],
+  "dependencies": {
+    "@sugarcube/core": "0.2.1",
+    "jsverify": "^0.8.3",
+    "lodash": "^4.17.4"
+  }
+}
