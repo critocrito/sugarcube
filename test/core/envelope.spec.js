@@ -13,7 +13,10 @@ import {
 import Promise from "bluebird";
 import {assertForall, dict, string} from "jsverify";
 
-import {
+import {envelope} from "../../packages/core";
+import {envelopeArb} from "../../packages/test";
+
+const {
   equals,
   empty,
   concat,
@@ -25,8 +28,7 @@ import {
   fmapQueriesAsync,
   fmapDataDownloads,
   fmapDataDownloadsAsync,
-} from "../lib/data/envelope";
-import {envelopeArb} from "../lib/test/generators";
+} = envelope;
 
 const isTrue = isEqual(true);
 

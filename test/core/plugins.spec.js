@@ -1,7 +1,10 @@
 import {size, isEqual} from "lodash/fp";
 import {assertForall, array} from "jsverify";
-import {liftManyA2} from "../lib/data/plugin";
+import {plugin} from "../../packages/core";
+
 import {asyncFn2} from "./arbitraries";
+
+const {liftManyA2} = plugin;
 
 describe("SugarCube plugin", () => {
   it("lifts many binary functions to actions", () =>

@@ -2,10 +2,8 @@ import {take, concat, uniqWith, sortBy, isEqual} from "lodash/fp";
 
 import {assertForall, array, dict, string} from "jsverify";
 
-import {utils} from "../lib";
-import d from "../lib/data/data";
-
-import {dataArb} from "../lib/test/generators";
+import {data as d, utils} from "../../packages/core";
+import {dataArb} from "../../packages/test";
 
 const {concatManyWith, equalsManyWith} = utils;
 

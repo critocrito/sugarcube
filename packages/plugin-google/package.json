@@ -17,11 +17,6 @@
     "google",
     "search"
   ],
-  "devDependencies": {
-    "chai": "^4.1.2",
-    "chai-as-promised": "^7.1.1",
-    "jsverify": "^0.8.3"
-  },
   "dependencies": {
     "@sugarcube/core": "^0.2.1",
     "@sugarcube/plugin-fs": "^0.2.1",

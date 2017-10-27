@@ -14,6 +14,7 @@
   "dependencies": {
     "@sugarcube/cli": "^0.2.1",
     "@sugarcube/core": "^0.2.1",
+    "@sugarcube/test": "^0.2.1",
     "@sugarcube/plugin-aqicn": "^0.2.1",
     "@sugarcube/plugin-csv": "^0.2.1",
     "@sugarcube/plugin-ddg": "^0.2.1",

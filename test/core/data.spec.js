@@ -15,9 +15,8 @@ import {
 import Promise from "bluebird";
 import {assertForall, dict, string} from "jsverify";
 
-import {unitArb, dataArb} from "../lib/test/generators";
-import ls from "../lib/data/list";
-import ds from "../lib/data/data";
+import {data as ds, queries as ls} from "../../packages/core";
+import {unitArb, dataArb} from "../../packages/test";
 
 const isTrue = isEqual(true);
 const sort = sortBy(JSON.stringify);

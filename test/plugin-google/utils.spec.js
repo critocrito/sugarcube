@@ -1,7 +1,7 @@
 import {isEqual, isNil} from "lodash/fp";
 import jsc, {property} from "jsverify";
 import moment from "moment";
-import {maybeDate} from "../lib/utils";
+import {maybeDate} from "../../packages/plugin-google/lib/utils";
 
 const date = jsc.datetime.smap(d => {
   d.setUTCHours(0, 0, 0, 0);

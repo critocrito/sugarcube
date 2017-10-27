@@ -18,12 +18,5 @@
     "glob": "^7.1.2",
     "lodash": "^4.17.4",
     "pify": "^3.0.0"
-  },
-  "devDependencies": {
-    "chai": "^4.1.2",
-    "chai-as-promised": "^7.1.1",
-    "jsverify": "^0.8.3",
-    "sinon": "^4.0.1",
-    "source-map-support": "^0.5.0"
   }
 }

@@ -8,8 +8,8 @@ import {
 } from "lodash/fp";
 import {assertForall, dict, string} from "jsverify";
 
-import {listArb, listsArb} from "../lib/test/generators";
-import list from "../lib/data/list";
+import {queries as list} from "../../packages/core";
+import {listArb, listsArb} from "../../packages/test";
 
 const isTrue = isEqual(true);
 
