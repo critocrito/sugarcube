@@ -5,13 +5,13 @@ import {
   identity,
   cloneDeep as clone,
   merge,
-  property,
+  property as loProperty,
   concat as loConcat,
   isMatch,
   isEqual,
 } from "lodash/fp";
-import Promise from "bluebird";
-import {assertForall, dict, string} from "jsverify";
+import {of} from "combinators-p";
+import jsc, {property} from "jsverify";
 
 import {envelope} from "../../packages/core";
 import {envelopeArb} from "../../packages/test";
@@ -33,127 +33,168 @@ const {
 const isTrue = isEqual(true);
 
 describe("envelope interface", () => {
-  it("holds for the reflexivity of identity equality", () =>
-    assertForall(envelopeArb, a => isTrue(equals(a, clone(a)))));
+  property("reflexivity of identity equality", envelopeArb, a =>
+    isTrue(equals(a, clone(a)))
+  );
 
-  it("holds for the symmetry of identical equality", () =>
-    assertForall(envelopeArb, a => {
-      const b = clone(a);
-      return equals(a, b) && equals(b, a);
-    }));
+  property(
+    "symmetry of identical equality",
+    envelopeArb,
+    a => equals(a, clone(a)) && equals(clone(a), a)
+  );
 
-  it("holds for the transitivity of identity equality", () =>
-    assertForall(envelopeArb, a => {
-      const b = clone(a);
-      const c = clone(a);
-      return equals(a, b) && equals(b, c) && equals(a, c);
-    }));
+  property("transitivity of identity equality", envelopeArb, a => {
+    const b = clone(a);
+    const c = clone(a);
+    return equals(a, b) && equals(b, c) && equals(a, c);
+  });
 
-  it("holds for the assocativity of a Monoid", () =>
-    assertForall(envelopeArb, envelopeArb, envelopeArb, (a, b, c) => {
+  property(
+    "assocativity of a Monoid",
+    envelopeArb,
+    envelopeArb,
+    envelopeArb,
+    (a, b, c) => {
       const lhs = concat(concat(a, b), c);
       const rhs = concat(a, concat(b, c));
       return equals(lhs, rhs);
-    }));
+    }
+  );
 
-  it("holds for the right identity of a Monoid", () =>
-    assertForall(envelopeArb, a => equals(concat(a, empty()), a)));
+  property("right identity of a Monoid", envelopeArb, a =>
+    equals(concat(a, empty()), a)
+  );
 
-  it("holds for the left identity of a Monoid", () =>
-    assertForall(envelopeArb, a => equals(a, concat(a, empty()))));
+  property("left identity of a Monoid", envelopeArb, a =>
+    equals(a, concat(a, empty()))
+  );
 
-  it("holds for the identity of a Functor", () =>
-    assertForall(envelopeArb, a => equals(fmap(identity, identity, a), a)));
+  property("identity of a Functor", envelopeArb, a =>
+    equals(fmap(identity, identity, a), a)
+  );
 
-  it("holds for the identity of a Functor asynchronously", () =>
-    assertForall(envelopeArb, a =>
-      fmapAsync(identity, identity, a).then(equals(a))
-    ));
+  property("identity of a Functor asynchronously", envelopeArb, a =>
+    fmapAsync(identity, identity, a).then(equals(a))
+  );
 
-  it("holds for the composition of a Functor", () =>
-    assertForall(envelopeArb, dict(string), dict(string), (a, x, y) => {
+  property(
+    "composition of a Functor",
+    envelopeArb,
+    jsc.dict(jsc.string),
+    jsc.dict(jsc.string),
+    (a, x, y) => {
       const f = merge(x);
       const g = merge(y);
-      const lhs = fmap(z => f(g(z)), z => f(g(z)), a);
-      const rhs = fmap(f, f, fmap(g, g, a));
-      return equals(lhs, rhs);
-    }));
+      return equals(
+        fmap(z => f(g(z)), z => f(g(z)), a),
+        fmap(f, f, fmap(g, g, a))
+      );
+    }
+  );
 
-  it("holds for the composition of a Functor asynchronously", () =>
-    assertForall(envelopeArb, dict(string), dict(string), (a, x, y) => {
+  property(
+    "composition of a Functor asynchronously",
+    envelopeArb,
+    jsc.dict(jsc.string),
+    jsc.dict(jsc.string),
+    async (a, x, y) => {
       const f = merge(x);
       const g = merge(y);
-      const lhs = fmapAsync(z => f(g(z)), z => f(g(z)), a);
-      const rhs = fmapAsync(f, f, fmap(g, g, a));
-      return Promise.all([lhs, rhs]).spread(equals);
-    }));
+      return equals(
+        await fmapAsync(z => f(g(z)), z => f(g(z)), a),
+        await fmapAsync(f, f, fmap(g, g, a))
+      );
+    }
+  );
 
   describe("fmap and fmapAsync", () => {
-    it("maps a function over a list of units", () =>
-      assertForall(envelopeArb, dict(string), (a, x) => {
+    property(
+      "maps a function over a list of units",
+      envelopeArb,
+      jsc.dict(jsc.string),
+      (a, x) => {
         const f = merge(x);
         const b = fmap(f, f, a);
         return every(isMatch(x), loConcat(b.data, b.queries));
-      }));
+      }
+    );
 
-    it("overloaded fmapAsync to allow two type signatures", () =>
-      assertForall(envelopeArb, dict(string), (a, x) => {
+    property(
+      "overloaded fmapAsync to allow two type signatures",
+      envelopeArb,
+      jsc.dict(jsc.string),
+      async (a, x) => {
         const f = merge(x);
-        const p = flow([f, Promise.resolve]);
-        return Promise.all([fmapAsync(f, f, a), fmapAsync(p, p, a)]).spread(
-          equals
-        );
-      }));
+        const p = flow([f, of]);
+        return equals(await fmapAsync(f, f, a), await fmapAsync(p, p, a));
+      }
+    );
 
-    it("produces the same results synchronously and asynchronously", () =>
-      assertForall(envelopeArb, dict(string), (a, x) => {
+    property(
+      "produces the same results synchronously and asynchronously",
+      envelopeArb,
+      jsc.dict(jsc.string),
+      async (a, x) => {
         const f = merge(x);
-        return Promise.all([
-          Promise.resolve(fmap(f, f, a)),
-          fmapAsync(f, f, a),
-        ]).spread(equals);
-      }));
+        return equals(await of(fmap(f, f, a)), await fmapAsync(f, f, a));
+      }
+    );
 
-    it("has a specialized version for data", () =>
-      assertForall(envelopeArb, dict(string), (a, x) => {
+    property(
+      "has a specialized version for data",
+      envelopeArb,
+      jsc.dict(jsc.string),
+      async (a, x) => {
         const f = merge(x);
         const b = fmap(f, identity, a);
 
-        return Promise.all([
-          Promise.resolve(fmapData(f, a)),
-          fmapDataAsync(f, a),
-        ]).then(every(equals(b)));
-      }));
+        return every(equals(b), [
+          await of(fmapData(f, a)),
+          await fmapDataAsync(f, a),
+        ]);
+      }
+    );
 
-    it("has a specialized version for queries", () =>
-      assertForall(envelopeArb, dict(string), (a, x) => {
+    property(
+      "has a specialized version for queries",
+      envelopeArb,
+      jsc.dict(jsc.string),
+      async (a, x) => {
         const f = merge(x);
         const b = fmap(identity, f, a);
-
-        return Promise.all([
-          Promise.resolve(fmapQueries(f, a)),
-          fmapQueriesAsync(f, a),
-        ]).then(every(equals(b)));
-      }));
+        return every(equals(b), [
+          await of(fmapQueries(f, a)),
+          await fmapQueriesAsync(f, a),
+        ]);
+      }
+    );
   });
 
   describe("fmapDataList and fmapDataListAsync", () => {
-    it("can map over sub lists of units of data", () =>
-      assertForall(envelopeArb, dict(string), (a, x) => {
-        const f = merge(x);
-        const b = fmapDataDownloads(f, a);
-        return flow([flatMap(property("_sc_downloads")), every(isMatch(x))])(
-          b.data
-        );
-      }));
+    property(
+      "can map over sub lists of units of data",
+      envelopeArb,
+      jsc.dict(jsc.string),
+      (a, x) =>
+        flow([
+          fmapDataDownloads(merge(x)),
+          loProperty("data"),
+          flatMap(loProperty("_sc_downloads")),
+          every(isMatch(x)),
+        ])(a)
+    );
 
-    it("produces the same results synchronously and asynchronously", () =>
-      assertForall(envelopeArb, dict(string), (a, x) => {
+    property(
+      "produces the same results synchronously and asynchronously",
+      envelopeArb,
+      jsc.dict(jsc.string),
+      async (a, x) => {
         const f = merge(x);
-        return Promise.all([
-          Promise.resolve(fmapDataDownloads(f, a)),
-          fmapDataDownloadsAsync(f, a),
-        ]).spread(equals);
-      }));
+        return equals(
+          await of(fmapDataDownloads(f, a)),
+          await fmapDataDownloadsAsync(f, a)
+        );
+      }
+    );
   });
 });

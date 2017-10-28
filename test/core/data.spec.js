@@ -1,244 +1,253 @@
 import {
   flow,
-  curry,
   cloneDeep as clone,
   every,
   identity,
-  zip,
   merge,
-  sortBy,
-  size,
   has,
   isMatch,
   isEqual,
 } from "lodash/fp";
-import Promise from "bluebird";
-import {assertForall, dict, string} from "jsverify";
+import {of} from "combinators-p";
+import jsc, {property} from "jsverify";
 
-import {data as ds, queries as ls} from "../../packages/core";
+import {data, queries as list} from "../../packages/core";
 import {unitArb, dataArb} from "../../packages/test";
 
-const isTrue = isEqual(true);
-const sort = sortBy(JSON.stringify);
+const {
+  emptyOne,
+  equalsOne,
+  identicalOne,
+  concatOne,
+  empty,
+  equals,
+  identical,
+  concat,
+  fmap,
+  fmapAsync,
+  fmapList,
+  fmapListAsync,
+  uniq,
+  hashOne,
+  hash,
+} = data;
 
-const legacyEquals = curry((xs, ys) => {
-  const elems = zip(sortBy(ds.dataId, xs), sortBy(ds.dataId, ys));
-  return (
-    isEqual(size(xs), size(ys)) && every(([x, y]) => ds.equalsOne(x, y), elems)
+const isTrue = isEqual(true);
+
+describe("data unit interface", () => {
+  property("reflexivity of identity equality", unitArb, u =>
+    isTrue(equalsOne(u, clone(u)))
+  );
+
+  property("symmetry of identity equality", unitArb, u =>
+    isEqual(equalsOne(u, clone(u)), equalsOne(clone(u), u))
+  );
+
+  property("transitivity of identity equality", unitArb, u => {
+    const j = clone(u);
+    const k = clone(u);
+    return equalsOne(u, j) && equalsOne(j, k) && equalsOne(u, k);
+  });
+
+  property("reflexivity of value equality", unitArb, u =>
+    isTrue(identicalOne(u, clone(u)))
+  );
+
+  property("symmetry of value equality", unitArb, u =>
+    isEqual(identicalOne(u, clone(u)), identicalOne(clone(u), u))
+  );
+
+  property("transitivity of value equality", unitArb, u => {
+    const j = clone(u);
+    const k = clone(u);
+    return identicalOne(u, j) && identicalOne(j, k) && identicalOne(u, k);
+  });
+
+  property("associativity of a monoid", unitArb, unitArb, unitArb, (u, j, k) =>
+    equalsOne(concatOne(concatOne(u, j), k), concatOne(u, concatOne(j, k)))
+  );
+
+  property("right identity of a Monoid", unitArb, u =>
+    equalsOne(concatOne(u, emptyOne()), u)
+  );
+
+  property("left identity of a Monoid", unitArb, u =>
+    equalsOne(concatOne(emptyOne(), u), u)
   );
 });
 
-describe("data unit interface", () => {
-  it("holds for the reflecxivity of identity equality", () =>
-    assertForall(unitArb, u => isTrue(ds.equalsOne(u, clone(u)))));
-
-  it("holds for the symmetry of identity equality", () =>
-    assertForall(unitArb, u => {
-      const j = clone(u);
-      return isEqual(ds.equalsOne(u, j), ds.equalsOne(j, u));
-    }));
-
-  it("holds for the transitivity of identity equality", () =>
-    assertForall(unitArb, u => {
-      const j = clone(u);
-      const k = clone(u);
-      return ds.equalsOne(u, j) && ds.equalsOne(j, k) && ds.equalsOne(u, k);
-    }));
-
-  it("holds for the reflecxivity of value equality", () =>
-    assertForall(unitArb, u => isTrue(ds.identicalOne(u, clone(u)))));
-
-  it("holds for the symmetry of value equality", () =>
-    assertForall(unitArb, u => {
-      const j = clone(u);
-      return isEqual(ds.identicalOne(u, j), ds.identicalOne(j, u));
-    }));
-
-  it("holds for the transitivity of value equality", () =>
-    assertForall(unitArb, u => {
-      const j = clone(u);
-      const k = clone(u);
-      return (
-        ds.identicalOne(u, j) && ds.identicalOne(j, k) && ds.identicalOne(u, k)
-      );
-    }));
-
-  // FIXME: This test takes unusually long, not sure why.
-  it("holds for the associativity of a monoid", () =>
-    assertForall(unitArb, unitArb, unitArb, (u, j, k) => {
-      const lhs = ds.concatOne(ds.concatOne(u, j), k);
-      const rhs = ds.concatOne(u, ds.concatOne(j, k));
-      return ds.equalsOne(lhs, rhs);
-    })).timeout(4000);
-
-  it("holds for the right identity of a Monoid", () =>
-    assertForall(unitArb, u =>
-      ds.equalsOne(ds.concatOne(u, ds.emptyOne()), u)
-    ));
-
-  it("holds for the left identity of a Monoid", () =>
-    assertForall(unitArb, u =>
-      ds.equalsOne(ds.concatOne(ds.emptyOne(), u), u)
-    ));
-});
-
 describe("data interface", () => {
-  it("holds for the reflexivity of identity equality", () =>
-    assertForall(dataArb, xs => isTrue(ds.equals(xs, clone(xs)))));
+  property("reflexivity of identity equality", dataArb, xs =>
+    isTrue(equals(xs, clone(xs)))
+  );
 
-  it("holds for the symmetry of identical equality", () =>
-    assertForall(dataArb, xs => {
-      const ys = clone(xs);
-      return isEqual(ds.equals(xs, ys), ds.equals(ys, xs));
-    }));
+  property("symmetry of identical equality", dataArb, xs =>
+    isEqual(equals(xs, clone(xs)), equals(clone(xs), xs))
+  );
 
-  it("holds for the transitivity of identity equality", () =>
-    assertForall(dataArb, xs => {
-      const ys = clone(xs);
-      const zs = clone(xs);
-      return ds.equals(xs, ys) && ds.equals(ys, zs) && ds.equals(xs, zs);
-    }));
+  property("transitivity of identity equality", dataArb, xs => {
+    const ys = clone(xs);
+    const zs = clone(xs);
+    return equals(xs, ys) && equals(ys, zs) && equals(xs, zs);
+  });
 
-  it("holds for the reflexivity of value equality", () =>
-    assertForall(dataArb, xs => isTrue(ds.identical(xs, clone(xs)))));
+  property("reflexivity of value equality", dataArb, xs =>
+    isTrue(identical(xs, clone(xs)))
+  );
 
-  it("holds for the symmetry of value equality", () =>
-    assertForall(dataArb, xs => {
-      const ys = clone(xs);
-      return isEqual(ds.identical(xs, ys), ds.identical(ys, xs));
-    }));
+  property("symmetry of value equality", dataArb, xs =>
+    isEqual(identical(xs, clone(xs)), identical(clone(xs), xs))
+  );
 
-  it("holds for the transitivity of value equality", () =>
-    assertForall(dataArb, xs => {
-      const ys = clone(xs);
-      const zs = clone(xs);
-      return (
-        ds.identical(xs, ys) && ds.identical(ys, zs) && ds.identical(xs, zs)
-      );
-    }));
+  property("transitivity of value equality", dataArb, xs => {
+    const ys = clone(xs);
+    const zs = clone(xs);
+    return identical(xs, ys) && identical(ys, zs) && identical(xs, zs);
+  });
 
-  it("holds for the associativity of a semigroup", () =>
-    assertForall(dataArb, dataArb, dataArb, (xs, ys, zs) => {
-      const lhs = ds.concat(ds.concat(xs, ys), zs);
-      const rhs = ds.concat(xs, ds.concat(ys, zs));
-      return ds.equals(lhs, rhs);
-    }));
+  property(
+    "associativity of a semigroup",
+    dataArb,
+    dataArb,
+    dataArb,
+    (xs, ys, zs) =>
+      equals(concat(concat(xs, ys), zs), concat(xs, concat(ys, zs)))
+  );
 
-  it("holds for the right identity of a Monoid", () =>
-    assertForall(dataArb, xs =>
-      ds.equals(ds.concat(xs, ds.empty()), ds.uniq(xs))
-    ));
+  property("right identity of a Monoid", dataArb, xs =>
+    equals(concat(xs, empty()), uniq(xs))
+  );
 
-  it("holds for the left identity of a Monoid", () =>
-    assertForall(dataArb, xs =>
-      ds.equals(ds.concat(ds.empty(), xs), ds.uniq(xs))
-    ));
+  property("left identity of a Monoid", dataArb, xs =>
+    equals(concat(empty(), xs), uniq(xs))
+  );
 
-  it("holds for the identity of a Functor", () =>
-    assertForall(dataArb, xs => ds.equals(ds.fmap(identity, xs), xs)));
+  property("identity of a Functor", dataArb, xs =>
+    equals(fmap(identity, xs), xs)
+  );
 
-  it("holds for the composition of a Functor", () =>
-    assertForall(dataArb, dict(string), dict(string), (xs, x, y) => {
+  property(
+    "composition of a Functor",
+    dataArb,
+    jsc.dict(jsc.string),
+    jsc.dict(jsc.string),
+    (xs, x, y) => {
       const f = merge(x);
       const g = merge(y);
-      const lhs = ds.fmap(z => f(g(z)), xs);
-      const rhs = ds.fmap(f, ds.fmap(g, xs));
-      return ds.equals(lhs, rhs);
-    }));
+      return equals(fmap(z => f(g(z)), xs), fmap(f, fmap(g, xs)));
+    }
+  );
 
-  it("holds for the identity of an Applicative", () =>
-    assertForall(dataArb, xs =>
-      ds.equals(ds.apply(ds.pure(identity), xs), xs)
-    ));
+  property("identity of an Applicative", dataArb, xs =>
+    equals(data.apply(data.pure(identity), xs), xs)
+  );
 
-  it("holds for the homomorphism of an Applicative", () =>
-    assertForall(dict(string), dict(string), (x, y) => {
+  property(
+    "homomorphism of an Applicative",
+    jsc.dict(jsc.string),
+    jsc.dict(jsc.string),
+    (x, y) => {
       const f = merge(y);
-      const lhs = ds.apply(ds.pure(f), ds.pure(x));
-      const rhs = ds.pure(f(x));
-      return ds.equals(lhs, rhs);
-    }));
+      const lhs = data.apply(data.pure(f), data.pure(x));
+      const rhs = data.pure(f(x));
+      return equals(lhs, rhs);
+    }
+  );
 
-  it("holds for the interchange of an Applicative", () =>
-    assertForall(dict(string), dict(string), (x, y) => {
-      const u = ds.pure(merge(y));
-      const lhs = ds.apply(u, ds.pure(x));
-      const rhs = ds.apply(ds.pure(f => f(x)), u);
-      return ds.equals(lhs, rhs);
-    }));
+  property(
+    "interchange of an Applicative",
+    jsc.dict(jsc.string),
+    jsc.dict(jsc.string),
+    (x, y) => {
+      const u = data.pure(merge(y));
+      const lhs = data.apply(u, data.pure(x));
+      const rhs = data.apply(data.pure(f => f(x)), u);
+      return equals(lhs, rhs);
+    }
+  );
 
-  it("holds for the composition of an Applicative", () =>
-    assertForall(dataArb, dict(string), dict(string), (xs, x, y) => {
+  property(
+    "composition of an Applicative",
+    dataArb,
+    jsc.dict(jsc.string),
+    jsc.dict(jsc.string),
+    (xs, x, y) => {
       const comp = f => g => z => f(g(z));
-      const u = ds.pure(merge(x));
-      const v = ds.pure(merge(y));
-      const lhs = ds.apply(ds.apply(ds.apply(ds.pure(comp), u), v), xs);
-      const rhs = ds.apply(u, ds.apply(v, xs));
-      return ds.equals(lhs, rhs);
-    }));
+      const u = data.pure(merge(x));
+      const v = data.pure(merge(y));
+      const lhs = data.apply(data.apply(data.apply(data.pure(comp), u), v), xs);
+      const rhs = data.apply(u, data.apply(v, xs));
+      return equals(lhs, rhs);
+    }
+  );
 
   describe("fmap and fmapAsync", () => {
-    it("maps a function over a list of unit", () =>
-      assertForall(dataArb, dict(string), (xs, y) => {
-        const f = ds.concatOne(y);
-        const ys = ds.fmap(f, xs);
-        return every(isMatch(y), ys);
-      }));
+    property(
+      "maps a function over a list of unit",
+      dataArb,
+      jsc.dict(jsc.string),
+      (xs, y) => {
+        const f = concatOne(y);
+        return every(isMatch(y), fmap(f, xs));
+      }
+    );
 
-    it("overloaded fmapAsync to allow two type signatures", () =>
-      assertForall(dataArb, dict(string), (xs, y) => {
-        const f = ds.concatOne(y);
-        const p = flow([f, Promise.resolve]);
-        return Promise.all([ds.fmapAsync(f, xs), ds.fmapAsync(p, xs)]).spread(
-          ds.equals
-        );
-      }));
+    property(
+      "overloaded fmapAsync to allow two type signatures",
+      dataArb,
+      jsc.dict(jsc.string),
+      async (xs, y) => {
+        const f = concatOne(y);
+        const p = flow([f, of]);
+        return equals(await fmapAsync(f, xs), await fmapAsync(p, xs));
+      }
+    );
 
-    it("produces the same results synchronously and asynchronously", () =>
-      assertForall(dataArb, dict(string), (xs, y) => {
-        const f = ds.concatOne(y);
-        return Promise.all([
-          Promise.resolve(ds.fmap(f, xs)),
-          ds.fmapAsync(f, xs),
-        ]).spread(ds.equals);
-      }));
+    property(
+      "produces the same results synchronously and asynchronously",
+      dataArb,
+      jsc.dict(jsc.string),
+      async (xs, y) => {
+        const f = concatOne(y);
+        return equals(fmap(f, xs), await fmapAsync(f, xs));
+      }
+    );
   });
 
   describe("fmapList and fmapListAsync", () => {
-    it("naps a function over a list on units of data", () =>
-      assertForall(dataArb, dict(string), (xs, y) => {
-        const f = ls.concatOne(y);
-        const ys = ds.fmapList("_sc_downloads", f, xs);
+    property(
+      "maps a function over a list on units of data",
+      dataArb,
+      jsc.dict(jsc.string),
+      (xs, y) => {
+        const f = list.concatOne(y);
+        const ys = fmapList("_sc_downloads", f, xs);
         return every(isMatch(y), ys._sc_downloads);
-      }));
+      }
+    );
 
-    it("produces the same results synchronously and asynchronously", () =>
-      assertForall(dataArb, dict(string), (xs, y) => {
-        const f = ls.concatOne(y);
-        return Promise.all([
-          Promise.resolve(ds.fmapList("_sc_downloads", f, xs)),
-          ds.fmapListAsync("_sc_downloads", f, xs),
-        ]).spread(ds.equals);
-      }));
+    property(
+      "produces the same results synchronously and asynchronously",
+      dataArb,
+      jsc.dict(jsc.string),
+      async (xs, y) => {
+        const f = list.concatOne(y);
+        return equals(
+          fmapList("_sc_downloads", f, xs),
+          await fmapListAsync("_sc_downloads", f, xs)
+        );
+      }
+    );
   });
 });
 
-describe("new implementations", () => {
-  it("of ds.equals with the same semantics", () =>
-    assertForall(dataArb, dataArb, (xs, ys) =>
-      isEqual(sort(ds.equals(xs, ys)), sort(legacyEquals(xs, ys)))
-    ));
-});
-
 describe("data hashing", () => {
-  it("hashes a single unit", () =>
-    assertForall(unitArb, u => has("_sc_id_hash", ds.hashOne(u))));
+  property("hashes a single unit", unitArb, u =>
+    has("_sc_id_hash", hashOne(u))
+  );
 
-  it("hashes many homonyms", () =>
-    assertForall(dataArb, xs => {
-      const hs = ds.hash(xs);
-      return (
-        every(has("_sc_id_hash"), hs) && every(has("_sc_content_hash"), hs)
-      );
-    }));
+  property("hashes many homonyms", dataArb, xs => {
+    const hs = hash(xs);
+    return every(has("_sc_id_hash"), hs) && every(has("_sc_content_hash"), hs);
+  });
 });

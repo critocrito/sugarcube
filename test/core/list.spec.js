@@ -6,101 +6,110 @@ import {
   has,
   isEqual,
 } from "lodash/fp";
-import {assertForall, dict, string} from "jsverify";
+import jsc, {property} from "jsverify";
 
-import {queries as list} from "../../packages/core";
+import list from "../../packages/core/lib/data/list";
 import {listArb, listsArb} from "../../packages/test";
+
+const {
+  emptyOne,
+  equalsOne,
+  identicalOne,
+  concatOne,
+  empty,
+  equals,
+  concat,
+  fmap,
+  uniq,
+  hashOne,
+  hash,
+} = list;
 
 const isTrue = isEqual(true);
 
 describe("list interface", () => {
-  it("holds for the reflecxivity of equality", () =>
-    assertForall(listArb, h => isTrue(list.equalsOne(h, clone(h)))));
+  property("reflexivity of equality", listArb, h =>
+    isTrue(equalsOne(h, clone(h)))
+  );
 
-  it("holds for the symmetry of equality", () =>
-    assertForall(listArb, h => {
-      const j = clone(h);
-      return isEqual(list.equalsOne(h, j), list.equalsOne(j, h));
-    }));
+  property("symmetry of equality", listArb, h =>
+    isEqual(equalsOne(h, clone(h)), equalsOne(clone(h), h))
+  );
 
-  it("holds for the transitivity of equality", () =>
-    assertForall(listArb, h => {
-      const j = clone(h);
-      const k = clone(h);
-      return (
-        list.equalsOne(h, j) && list.equalsOne(j, k) && list.equalsOne(h, k)
-      );
-    }));
+  property("transitivity of equality", listArb, h => {
+    const j = clone(h);
+    const k = clone(h);
+    return equalsOne(h, j) && equalsOne(j, k) && equalsOne(h, k);
+  });
 
-  it("holds for the associativity of a monoid", () =>
-    assertForall(listArb, listArb, listArb, (h, j, k) => {
-      const lhs = list.concatOne(list.concatOne(h, j), k);
-      const rhs = list.concatOne(h, list.concatOne(j, k));
-      return list.equalsOne(lhs, rhs);
-    }));
+  property("associativity of a monoid", listArb, listArb, listArb, (h, j, k) =>
+    equalsOne(concatOne(concatOne(h, j), k), concatOne(h, concatOne(j, k)))
+  );
 
-  it("holds for the right identity of a Monoid", () =>
-    assertForall(listArb, h =>
-      list.identicalOne(list.concatOne(h, list.emptyOne()), h)
-    ));
+  property("right identity of a Monoid", listArb, h =>
+    identicalOne(concatOne(h, emptyOne()), h)
+  );
 
-  it("holds for the left identity of a Monoid", () =>
-    assertForall(listArb, h =>
-      list.equalsOne(list.concatOne(list.emptyOne(), h), h)
-    ));
+  property("left identity of a Monoid", listArb, h =>
+    equalsOne(concatOne(emptyOne(), h), h)
+  );
 });
 
 describe("lists interface", () => {
-  it("holds for the reflexivity of equality", () =>
-    assertForall(listsArb, xs => isTrue(list.equals(xs, clone(xs)))));
+  property("reflexivity of equality", listsArb, xs =>
+    isTrue(equals(xs, clone(xs)))
+  );
 
-  it("holds for the symmetry of equality", () =>
-    assertForall(listsArb, xs => {
-      const ys = clone(xs);
-      return isEqual(list.equals(xs, ys), list.equals(ys, xs));
-    }));
+  property("symmetry of equality", listsArb, xs =>
+    isEqual(equals(xs, clone(xs)), equals(clone(xs), xs))
+  );
 
-  it("holds for the transitivity of equality", () =>
-    assertForall(listsArb, xs => {
-      const ys = clone(xs);
-      const zs = clone(xs);
-      return list.equals(xs, ys) && list.equals(ys, zs) && list.equals(xs, zs);
-    }));
+  property("transitivity of equality", listsArb, xs => {
+    const ys = clone(xs);
+    const zs = clone(xs);
+    return equals(xs, ys) && equals(ys, zs) && equals(xs, zs);
+  });
 
-  it("holds for the associativity of a semigroup", () =>
-    assertForall(listsArb, listsArb, listsArb, (xs, ys, zs) => {
-      const lhs = list.concat(list.concat(xs, ys), zs);
-      const rhs = list.concat(xs, list.concat(ys, zs));
-      return list.equals(lhs, rhs);
-    }));
+  property(
+    "associativity of a semigroup",
+    listsArb,
+    listsArb,
+    listsArb,
+    (xs, ys, zs) =>
+      equals(concat(concat(xs, ys), zs), concat(xs, concat(ys, zs)))
+  );
 
-  it("holds for the right identity of a Monoid", () =>
-    assertForall(listsArb, xs =>
-      list.equals(list.concat(xs, list.empty()), list.uniq(xs))
-    ));
+  property("right identity of a Monoid", listsArb, xs =>
+    equals(concat(xs, empty()), uniq(xs))
+  );
 
-  it("holds for the left identity of a Monoid", () =>
-    assertForall(listsArb, xs =>
-      list.equals(list.concat(list.empty(), xs), list.uniq(xs))
-    ));
+  property("left identity of a Monoid", listsArb, xs =>
+    equals(concat(empty(), xs), uniq(xs))
+  );
 
-  it("holds for the identity of a Functor", () =>
-    assertForall(listsArb, xs => list.equals(list.fmap(identity, xs), xs)));
+  property("identity of a Functor", listsArb, xs =>
+    equals(fmap(identity, xs), xs)
+  );
 
-  it("holds for the composition of a Functor", () =>
-    assertForall(listsArb, dict(string), dict(string), (xs, a, b) => {
+  property(
+    "composition of a Functor",
+    listsArb,
+    jsc.dict(jsc.string),
+    jsc.dict(jsc.string),
+    (xs, a, b) => {
       const f = merge(a);
       const g = merge(b);
-      const lhs = list.fmap(z => f(g(z)), xs);
-      const rhs = list.fmap(f, list.fmap(g, xs));
-      return list.equals(lhs, rhs);
-    }));
+      return equals(fmap(z => f(g(z)), xs), fmap(f, fmap(g, xs)));
+    }
+  );
 });
 
 describe("lists hashing", () => {
-  it("hashes a single list", () =>
-    assertForall(listArb, h => has("_sc_id_hash", list.hashOne(h))));
+  property("hashes a single list", listArb, h =>
+    has("_sc_id_hash", hashOne(h))
+  );
 
-  it("hashes many lists", () =>
-    assertForall(listsArb, xs => every(has("_sc_id_hash"), list.hash(xs))));
+  property("hashes many lists", listsArb, xs =>
+    every(has("_sc_id_hash"), hash(xs))
+  );
 });

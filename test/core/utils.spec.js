@@ -1,63 +1,44 @@
-import {take, concat, uniqWith, sortBy, isEqual} from "lodash/fp";
+import {concat, uniqWith, sortBy, isEqual} from "lodash/fp";
 
-import {assertForall, array, dict, string} from "jsverify";
+import jsc, {property} from "jsverify";
 
-import {data as d, utils} from "../../packages/core";
+import {data, utils} from "../../packages/core";
 import {dataArb} from "../../packages/test";
 
 const {concatManyWith, equalsManyWith} = utils;
 
-const {dataId, concatOne} = d;
+const {dataId, concatOne} = data;
 const unique = uniqWith(isEqual);
 const sort = sortBy(JSON.stringify);
 
 describe("deep concatenation", () => {
-  it("eliminates duplicates to the right", () =>
-    assertForall(dataArb, xs => {
-      const ys = take(1, xs);
-      const lhs = concatManyWith(dataId, isEqual, concatOne, xs, ys);
-      const rhs = unique(concat(xs, ys));
-      return isEqual(sort(lhs), sort(rhs));
-    }));
+  property("eliminates duplicates", dataArb, xs =>
+    isEqual(
+      sort(concatManyWith(dataId, isEqual, concatOne, xs, xs)),
+      sort(unique(concat(xs, xs)))
+    )
+  );
 
-  it("eliminates duplicates to the left", () =>
-    assertForall(dataArb, xs => {
-      const ys = take(1, xs);
-      const lhs = concatManyWith(dataId, isEqual, concatOne, ys, xs);
-      const rhs = unique(concat(ys, xs));
-      return isEqual(sort(lhs), sort(rhs));
-    }));
+  property("from left to right and right to left", dataArb, dataArb, (xs, ys) =>
+    isEqual(
+      sort(concatManyWith(dataId, isEqual, concatOne, xs, ys)),
+      sort(concatManyWith(dataId, isEqual, concatOne, ys, xs))
+    )
+  );
 
-  it("from left to right and right to left", () =>
-    assertForall(dataArb, dataArb, (xs, ys) => {
-      const lhs = concatManyWith(dataId, isEqual, concatOne, xs, ys);
-      const rhs = concatManyWith(dataId, isEqual, concatOne, ys, xs);
-      return isEqual(sort(lhs), sort(rhs));
-    }));
-
-  it("on equal data", () =>
-    assertForall(dataArb, xs =>
-      isEqual(
-        sort(concatManyWith(dataId, isEqual, concatOne, xs, xs)),
-        sort(unique(xs))
-      )
-    ));
-
-  it("treats duplicates correctly", () =>
-    assertForall(dataArb, xs => {
-      const ys = concat(xs, xs);
-      return isEqual(
-        sort(concatManyWith(dataId, isEqual, concatOne, ys, ys)),
-        sort(unique(xs))
-      );
-    }));
+  property("on equal data", dataArb, xs =>
+    isEqual(
+      sort(concatManyWith(dataId, isEqual, concatOne, xs, xs)),
+      sort(unique(xs))
+    )
+  );
 });
 
 describe("equality testing", () => {
-  it("is equivalent to a fold over two lists", () =>
-    assertForall(array(dict(string)), array(dict(string)), (xs, ys) => {
-      const lhs = isEqual(xs, ys);
-      const rhs = equalsManyWith(isEqual, xs, ys);
-      return isEqual(sort(lhs), sort(rhs));
-    }));
+  property(
+    "is equivalent to a fold over two lists",
+    jsc.array(jsc.dict(jsc.string)),
+    jsc.array(jsc.dict(jsc.string)),
+    (xs, ys) => isEqual(isEqual(xs, ys), equalsManyWith(isEqual, xs, ys))
+  );
 });

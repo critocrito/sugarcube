@@ -1,14 +1,18 @@
-import {size, isEqual} from "lodash/fp";
-import {assertForall, array} from "jsverify";
+import {curry, size, isEqual} from "lodash/fp";
+import {of} from "combinators-p";
+import jsc, {property} from "jsverify";
 import {plugin} from "../../packages/core";
-
-import {asyncFn2} from "./arbitraries";
 
 const {liftManyA2} = plugin;
 
+const fnArb = jsc.bless({
+  generator: () => curry((x, y) => of(x + y)),
+});
+
 describe("SugarCube plugin", () => {
-  it("lifts many binary functions to actions", () =>
-    assertForall(array(asyncFn2), fs =>
-      liftManyA2(fs, 0, 1).then(r => isEqual(r, size(fs)))
-    ));
+  property(
+    "lifts many binary functions to actions",
+    jsc.array(fnArb),
+    async fs => isEqual(await liftManyA2(fs, 0, 1), size(fs))
+  );
 });
