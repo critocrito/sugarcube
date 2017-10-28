@@ -8,12 +8,10 @@ import plugin from "./data/plugin";
 import u from "./utils";
 import hasher from "./utils/hasher";
 import assertions from "./utils/assertions";
-import generators from "./test/generators";
 
 const utils = merge(u, {hasher, assertions});
-const test = {generators};
 
-export {runner, queries, data, envelope, plugin, utils, test};
+export {runner, queries, data, envelope, plugin, utils};
 
 export default {
   runner,
@@ -22,5 +20,4 @@ export default {
   envelope,
   plugin,
   utils,
-  test,
 };
