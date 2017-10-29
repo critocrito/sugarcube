@@ -2,7 +2,7 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "precommit": "lint-staged",
+    "precommit": "! git rev-parse --abbrev-ref HEAD | grep -q master || lint-staged",
     "commitmsg": "! git rev-parse --abbrev-ref HEAD | grep -q master || validate-commit-msg",
     "test": "mocha -c -R progress -r babel-register -r test/helpers.js test/**/*.spec.js",
     "check": "eslint --print-config .eslintrc.json | eslint-config-prettier-check",
