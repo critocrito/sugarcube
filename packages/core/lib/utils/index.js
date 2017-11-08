@@ -16,10 +16,9 @@ import {
   isString,
   isArray,
 } from "lodash/fp";
-import moment from "moment";
 import {inspect} from "util";
 
-export const now = () => moment.utc().toDate();
+export const now = () => new Date();
 
 export const tap = curry((f, x) => {
   f(cloneDeep(x));
