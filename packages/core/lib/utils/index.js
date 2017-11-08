@@ -68,9 +68,6 @@ export const equalsManyWith = curry((cmp, xs, ys) => {
  */
 export const pluginOptions = pickBy(has("argv"));
 
-// TODO: Deprecated.
-export const deepConcatWith = concatManyWith;
-
 export default {
   now,
   tap,
@@ -80,6 +77,4 @@ export default {
   concatManyWith,
   equalsManyWith,
   pluginOptions,
-  // TODO: Deprecated.
-  deepConcatWith,
 };
