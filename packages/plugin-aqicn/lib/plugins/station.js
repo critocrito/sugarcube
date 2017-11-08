@@ -1,5 +1,5 @@
 import {size} from "lodash/fp";
-import {mapP, collectP} from "combinators-p";
+import {mapP, collectP} from "dashp";
 import {envelope as e} from "@sugarcube/core";
 
 import {station} from "../aqicn";

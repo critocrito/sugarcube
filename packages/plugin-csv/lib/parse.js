@@ -1,5 +1,5 @@
 import {curry, concat, merge} from "lodash/fp";
-import {fold as foldP} from "combinators-p";
+import {fold as foldP} from "dashp";
 import csvParse from "csv-parse";
 import fs from "fs";
 

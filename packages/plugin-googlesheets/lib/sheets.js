@@ -1,5 +1,5 @@
 import {curry, find, getOr} from "lodash/fp";
-import {flowP, flowP2, flowP3, flowP4} from "combinators-p";
+import {flowP, flowP2, flowP3, flowP4} from "dashp";
 import pify from "pify";
 import google from "googleapis";
 

@@ -1,5 +1,5 @@
 import {get, size} from "lodash/fp";
-import {Future as F, flow, flatmap, tap} from "combinators-p";
+import {Future as F, flow, flatmap, tap} from "dashp";
 import {envelope as e} from "@sugarcube/core";
 
 import {feed} from "./instagram";

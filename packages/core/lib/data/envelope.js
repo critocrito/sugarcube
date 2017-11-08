@@ -7,7 +7,7 @@ import {
   identity,
   isEqual,
 } from "lodash/fp";
-import {spreadP, collectP} from "combinators-p";
+import {spreadP, collectP} from "dashp";
 
 import ls from "./list";
 import ds from "./data";

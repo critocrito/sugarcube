@@ -1,5 +1,5 @@
 import {property, size} from "lodash/fp";
-import {flowP, collectP, spreadP, flatmapP} from "combinators-p";
+import {flowP, collectP, spreadP, flatmapP} from "dashp";
 import {envelope as env} from "@sugarcube/core";
 import {unfold} from "@sugarcube/plugin-fs";
 

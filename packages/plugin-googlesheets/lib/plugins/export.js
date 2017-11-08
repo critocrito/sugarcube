@@ -1,5 +1,5 @@
 import {curry, flow, get, getOr, size} from "lodash/fp";
-import {retryP} from "combinators-p";
+import {retryP} from "dashp";
 import {envelope as env} from "@sugarcube/core";
 import withSession from "../sheets";
 import {header, unitsToRows, rowsToUnits} from "../utils";

@@ -1,5 +1,5 @@
 import {curry, merge, property, size} from "lodash/fp";
-import {flowP, flatmapP, collectP, tapP} from "combinators-p";
+import {flowP, flatmapP, collectP, tapP} from "dashp";
 import request from "request";
 import pify from "pify";
 import moment from "moment";

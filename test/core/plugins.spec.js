@@ -1,5 +1,5 @@
 import {curry, size, isEqual} from "lodash/fp";
-import {of} from "combinators-p";
+import {of} from "dashp";
 import jsc, {property} from "jsverify";
 import {plugin} from "../../packages/core";
 

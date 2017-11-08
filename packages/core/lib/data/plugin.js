@@ -1,5 +1,5 @@
 import {curry} from "lodash/fp";
-import {foldP, liftP2} from "combinators-p";
+import {foldP, liftP2} from "dashp";
 
 /**
  * Lift many binary functions over two Applicatives.

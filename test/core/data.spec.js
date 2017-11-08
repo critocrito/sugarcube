@@ -8,7 +8,7 @@ import {
   isMatch,
   isEqual,
 } from "lodash/fp";
-import {of} from "combinators-p";
+import {of} from "dashp";
 import jsc, {property} from "jsverify";
 
 import {data, queries as list} from "../../packages/core";

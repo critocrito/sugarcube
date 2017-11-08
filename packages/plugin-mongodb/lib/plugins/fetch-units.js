@@ -1,5 +1,5 @@
 import {size} from "lodash/fp";
-import {flowP, tapP} from "combinators-p";
+import {flowP, tapP} from "dashp";
 import {envelope as env, plugin as p} from "@sugarcube/core";
 
 import db from "../db";

@@ -1,5 +1,5 @@
 import {get, size} from "lodash/fp";
-import {flowP, flatmapP, tapP} from "combinators-p";
+import {flowP, flatmapP, tapP} from "dashp";
 import {envelope as e} from "@sugarcube/core";
 import withSession from "../sheets";
 import {rowsToQueries} from "../utils";

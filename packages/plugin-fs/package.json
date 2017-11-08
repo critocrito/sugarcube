@@ -14,7 +14,7 @@
   ],
   "dependencies": {
     "@sugarcube/core": "^0.2.1",
-    "combinators-p": "^0.8.0",
+    "dashp": "^0.8.1",
     "glob": "^7.1.2",
     "lodash": "^4.17.4",
     "pify": "^3.0.0"

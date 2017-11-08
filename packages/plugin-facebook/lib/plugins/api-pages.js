@@ -1,5 +1,5 @@
 import {size, get} from "lodash/fp";
-import {mapP, flowP, flatmapP} from "combinators-p";
+import {mapP, flowP, flatmapP} from "dashp";
 import {envelope as e, plugin as p} from "@sugarcube/core";
 
 import {fetchByAppToken, page} from "../api";

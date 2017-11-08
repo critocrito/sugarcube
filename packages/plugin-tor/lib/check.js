@@ -1,4 +1,4 @@
-import {flowP, tapP} from "combinators-p";
+import {flowP, tapP} from "dashp";
 import pify from "pify";
 import request from "request";
 import cheerio from "cheerio";

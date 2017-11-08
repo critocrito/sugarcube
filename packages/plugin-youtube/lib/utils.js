@@ -1,6 +1,6 @@
 import {spawn} from "child-process-promise";
 import {utils} from "@sugarcube/core";
-import {retry} from "combinators-p";
+import {retry} from "dashp";
 
 const {assertCfg} = utils.assertions;
 

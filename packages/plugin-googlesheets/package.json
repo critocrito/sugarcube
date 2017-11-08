@@ -16,7 +16,7 @@
   "license": "GPL-3.0",
   "dependencies": {
     "@sugarcube/core": "^0.2.1",
-    "combinators-p": "^0.8.0",
+    "dashp": "^0.8.1",
     "google-auth-library": "^0.11.0",
     "googleapis": "^22.2.0",
     "lodash": "^4.17.4",

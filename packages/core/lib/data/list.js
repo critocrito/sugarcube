@@ -8,7 +8,7 @@ import {
   uniqBy,
   isEqual,
 } from "lodash/fp";
-import {collectP} from "combinators-p";
+import {collectP} from "dashp";
 
 import {arrayify, concatManyWith, equalsManyWith} from "../utils";
 import {hashKeys} from "../utils/hasher";

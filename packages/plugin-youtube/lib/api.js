@@ -12,7 +12,7 @@ import {
 import Promise from "bluebird";
 import request from "request";
 import {parse, format} from "url";
-import {collectP} from "combinators-p";
+import {collectP} from "dashp";
 
 import {video, playlistVideo} from "./entities";
 

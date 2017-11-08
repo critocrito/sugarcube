@@ -1,5 +1,5 @@
 import {flow, get} from "lodash/fp";
-import {flowP, flatmapP, collectP, tapP} from "combinators-p";
+import {flowP, flatmapP, collectP, tapP} from "dashp";
 import {envelope as env} from "@sugarcube/core";
 
 import {googleSearch, entity, searchEntity} from "./google";

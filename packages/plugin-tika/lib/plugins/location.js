@@ -1,5 +1,5 @@
 import {property, merge, get} from "lodash/fp";
-import {flowP} from "combinators-p";
+import {flowP} from "dashp";
 import {envelope as env} from "@sugarcube/core";
 
 import {safeExtract} from "../utils";

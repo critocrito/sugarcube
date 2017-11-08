@@ -15,7 +15,7 @@ import {
   flatten,
   keys,
 } from "lodash/fp";
-import {foldP} from "combinators-p";
+import {foldP} from "dashp";
 import pify from "pify";
 import Twitter from "twitter";
 import moment from "moment";

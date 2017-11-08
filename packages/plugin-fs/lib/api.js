@@ -1,5 +1,5 @@
 import {curry} from "lodash/fp";
-import {flowP, collectP} from "combinators-p";
+import {flowP, collectP} from "dashp";
 import pify from "pify";
 import crypto from "crypto";
 import {dirname} from "path";

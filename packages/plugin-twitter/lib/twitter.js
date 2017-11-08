@@ -10,7 +10,7 @@ import {
   property,
   isNaN,
 } from "lodash/fp";
-import {foldP} from "combinators-p";
+import {foldP} from "dashp";
 
 import {request, throttle, cursorify, recurse} from "./utils";
 import {

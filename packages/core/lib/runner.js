@@ -1,6 +1,6 @@
 import {flow, curry, map, zip, merge, size} from "lodash/fp";
 import Bacon from "baconjs";
-import {flowP, caughtP, tapP, foldP} from "combinators-p";
+import {flowP, caughtP, tapP, foldP} from "dashp";
 import {generate as shortId} from "shortid";
 
 import {liftManyA2} from "./data/plugin";

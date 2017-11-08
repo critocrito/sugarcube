@@ -10,7 +10,7 @@ import {
   get,
   getOr,
 } from "lodash/fp";
-import {fold} from "combinators-p";
+import {fold} from "dashp";
 import {postEntity} from "./entities";
 // FIXME: Using import throws an error.
 // import rp from "request-promise";

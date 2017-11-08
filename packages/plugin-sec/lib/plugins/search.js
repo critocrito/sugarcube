@@ -11,7 +11,7 @@ import {
   replace,
   split,
 } from "lodash/fp";
-import {flowP, collectP2, flatmapP2, tapP, retryP} from "combinators-p";
+import {flowP, collectP2, flatmapP2, tapP, retryP} from "dashp";
 import {envelope as env} from "@sugarcube/core";
 import request from "request-promise";
 import {URL} from "url";

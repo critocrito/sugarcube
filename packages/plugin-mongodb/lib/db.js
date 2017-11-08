@@ -18,7 +18,7 @@ import {
 import Promise from "bluebird";
 import mongodb from "mongodb";
 import {data as d} from "@sugarcube/core";
-import {flowP, collectP} from "combinators-p";
+import {flowP, collectP} from "dashp";
 
 Promise.promisifyAll(mongodb);
 
