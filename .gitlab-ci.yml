@@ -1,4 +1,5 @@
 before_script:
+  - apt-get -qq update && apt-get -qq install -y default-jdk
   - npm install
   - npm run setup
 
