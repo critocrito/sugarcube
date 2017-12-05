@@ -1,4 +1,5 @@
 import {size} from "lodash/fp";
+import {flowP, tapP} from "dashp";
 import {envelope as env, plugin as p} from "@sugarcube/core";
 import {search} from "./twitter";
 
@@ -11,9 +12,14 @@ const searchPlugin = (envelope, {log, cfg}) => {
 
   log.debug(`Searching for ${queries.join(", ")}.`);
 
-  return search(cfg, log, queries)
-    .tap(rs => log.info(`Fetched ${size(rs)} search results.`))
-    .then(rs => env.concatData(rs, envelope));
+  return flowP(
+    [
+      search(cfg, log),
+      tapP(rs => log.info(`Fetched ${size(rs)} search results.`)),
+      rs => env.concatData(rs, envelope),
+    ],
+    queries
+  );
 };
 
 const plugin = p.liftManyA2([assertCredentials, searchPlugin]);

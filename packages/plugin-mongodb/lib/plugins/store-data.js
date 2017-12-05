@@ -1,5 +1,4 @@
 import {size} from "lodash/fp";
-import Promise from "bluebird";
 import {envelope as env, plugin as p} from "@sugarcube/core";
 
 import db from "../db";
@@ -10,11 +9,12 @@ const storeData = (envelope, {log}) =>
     db.updateData(env.filterData(unitExists, envelope)),
     db.storeData(env.filterData(unitExistsNot, envelope)),
   ])
-    .spread((updated, created) => {
+    // eslint-disable-next-line promise/always-return
+    .then(([updated, created]) => {
       log.info(`Updating ${size(updated)} units.`);
       log.info(`Storing ${size(created)} units.`);
     })
-    .return(envelope);
+    .then(() => envelope);
 
 const plugin = p.liftManyA2([assertDb, storeData]);
 

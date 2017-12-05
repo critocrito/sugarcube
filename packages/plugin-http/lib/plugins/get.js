@@ -1,4 +1,5 @@
 import {includes} from "lodash/fp";
+import {flowP, tapP} from "dashp";
 import {join} from "path";
 import {envelope as env, plugin as p} from "@sugarcube/core";
 
@@ -14,7 +15,10 @@ const curlGet = (envelope, {log, cfg}) =>
     }
     const dir = join(cfg.http.download_dir, type, _sc_id_hash);
 
-    return download(dir, d).tap(() => log.info(`Fetched ${term} to ${dir}.`));
+    return flowP(
+      [download(dir), tapP(() => log.info(`Fetched ${term} to ${dir}.`))],
+      d
+    );
   }, envelope);
 
 const plugin = p.liftManyA2([assertDir, curlGet]);

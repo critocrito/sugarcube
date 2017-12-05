@@ -1,4 +1,5 @@
 import {size, get, pickBy, identity, filter} from "lodash/fp";
+import {flowP, tapP} from "dashp";
 import {plugin as p, envelope as env} from "@sugarcube/core";
 import moment from "moment";
 
@@ -30,12 +31,18 @@ const listChannel = (envelope, {cfg, log}) => {
   };
 
   const f = q =>
-    videoChannelPlaylist(key, q).tap(ds =>
-      log.info(
-        `Received ${size(
-          ds
-        )} videos for ${q}. (${counter.count()}/${counter.total})`
-      )
+    flowP(
+      [
+        videoChannelPlaylist(key),
+        tapP(ds =>
+          log.info(
+            `Received ${size(
+              ds
+            )} videos for ${q}. (${counter.count()}/${counter.total})`
+          )
+        ),
+      ],
+      q
     );
 
   if (range.publishedBefore || range.publishedAfter) {
@@ -43,12 +50,18 @@ const listChannel = (envelope, {cfg, log}) => {
     log.info(`Fetching videos after ${range.publishedAfter}`);
 
     const fe = q =>
-      videoChannel(key, pickBy(identity, range), q).tap(ds =>
-        log.info(
-          `Received ${size(
-            ds
-          )} videos for ${q}. (${counter.count()}/${counter.total})`
-        )
+      flowP(
+        [
+          videoChannel(key, pickBy(identity, range)),
+          tapP(ds =>
+            log.info(
+              `Received ${size(
+                ds
+              )} videos for ${q}. (${counter.count()}/${counter.total})`
+            )
+          ),
+        ],
+        q
       );
 
     return env.flatMapQueriesAsync(fe, querySource, envelope);

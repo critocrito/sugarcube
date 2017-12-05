@@ -1,5 +1,4 @@
 import {reduce, merge} from "lodash/fp";
-import Promise from "bluebird";
 import request from "request";
 import gm from "gm";
 import {envelope as env} from "@sugarcube/core";

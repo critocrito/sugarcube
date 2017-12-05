@@ -9,14 +9,14 @@ import {
   property,
   chunk,
 } from "lodash/fp";
-import Promise from "bluebird";
+import pify from "pify";
 import request from "request";
 import {parse, format} from "url";
 import {collectP} from "dashp";
 
 import {video, playlistVideo} from "./entities";
 
-Promise.promisifyAll(request);
+const getAsync = pify(request.get);
 
 const urlify = curry((resource, params) => {
   const endpoint = "https://www.googleapis.com/youtube/v3";
@@ -25,7 +25,7 @@ const urlify = curry((resource, params) => {
   return format(u);
 });
 
-const getJson = url => request.getAsync(url).then(r => JSON.parse(r.body));
+const getJson = url => getAsync(url).then(r => JSON.parse(r.body));
 
 const page = (action, params, results = []) =>
   action(params).then(r => {
@@ -96,19 +96,21 @@ export const videosList = curry((key, ids) => {
   return page(videos, params).then(map(video));
 });
 
-export const videoChannel = (key, range, id) =>
+export const videoChannel = curry((key, range, id) =>
   channelSearch(key, range, id)
     .then(rs => {
       const ids = map(property("id.videoId"), rs);
       // There is a limit on how many video ids can be queried at once.
       return collectP(videosList(key), chunk(50, ids));
     })
-    .then(flatten);
+    .then(flatten)
+);
 
-export const videoChannelPlaylist = (key, id) =>
+export const videoChannelPlaylist = curry((key, id) =>
   channelToPlaylist(key, id)
     .then(playlistVideos(key))
-    .then(flatten);
+    .then(flatten)
+);
 
 export default {
   channelSearch,

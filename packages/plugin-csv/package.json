@@ -19,7 +19,6 @@
   "dependencies": {
     "@sugarcube/core": "^0.2.1",
     "@sugarcube/plugin-fs": "^0.2.1",
-    "bluebird": "^3.5.1",
     "dashp": "^0.8.1",
     "csv-parse": "^1.2.4",
     "csv-stringify": "^1.0.4",

@@ -1,5 +1,4 @@
 import {curry, trimCharsEnd} from "lodash/fp";
-import Promise from "bluebird";
 import Nightmare from "nightmare";
 import moment from "moment";
 import {URL} from "url";
@@ -13,9 +12,7 @@ export const urlify = curry((params, url) => {
   return u.toString();
 });
 
-export const bluebirdify = Promise.resolve;
-
-export const promisify = curry((f, p) => bluebirdify(p).then(f));
+export const promisify = curry((f, p) => Promise.resolve(p).then(f));
 
 export const browse = curry((show, url) => {
   const nightmare = Nightmare({show});
@@ -65,7 +62,6 @@ export const maybeDate = string => {
 
 export default {
   urlify,
-  bluebirdify,
   browse,
   html,
   htmlP,

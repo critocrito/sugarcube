@@ -1,8 +1,8 @@
 var _ = require('lodash'),
-    Promise = require('bluebird'),
+    pify = require("pify"),
     cheerio = require('cheerio'),
     envelope = require('@sugarcube/core').envelope,
-    request = Promise.promisifyAll(require('request')),
+    getAsync = pify(require('request').get),
     url = require('url');
 
 var sharedFields = ['href', 'type', 'content', 'title', 'order' ];
@@ -16,8 +16,7 @@ var goGoDuck = function(searchQuery) {
 
   var uri = 'https://duckduckgo.com/html/?q=' + encodeURIComponent(searchQuery);
 
-  return request
-    .getAsync(uri)
+  return getAsync(uri)
     .then( function(response) {
       if (response.statusCode !== 200) {
         throw new Error("DuckDuckGo return " + response.statusCode);

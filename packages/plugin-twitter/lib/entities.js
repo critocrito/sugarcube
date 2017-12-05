@@ -74,24 +74,31 @@ const mentionEntities = map(mention =>
   )
 );
 
-const pubDates = unit => merge({}, {source: twitterDate(unit.created_at)});
+const pubDates = unit => {
+  const createdAt = twitterDate(unit.created_at);
+  return createdAt.isValid() ? {source: createdAt.toDate()} : {};
+};
 
 const userEntity = flow([
-  u =>
-    merge(u, {
+  u => {
+    const createdAt = twitterDate(u.created_at);
+    return merge(u, {
       user_id: u.id_str,
-      user_created_at: twitterDate(u.created_at),
-    }),
+      user_created_at: createdAt.isValid() ? createdAt.toDate() : null,
+    });
+  },
   pick(userFields),
 ]);
 
 const tweetEntity = flow([
-  t =>
-    merge(t, {
+  t => {
+    const createdAt = twitterDate(t.created_at);
+    return merge(t, {
       tweet_id: t.id_str,
       tweet: t.text,
-      tweet_time: twitterDate(t.created_at),
-    }),
+      tweet_time: createdAt.isValid() ? createdAt.toDate() : null,
+    });
+  },
   pick(tweetFields),
 ]);
 

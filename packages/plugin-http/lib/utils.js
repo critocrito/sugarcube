@@ -1,5 +1,4 @@
-import {merge} from "lodash/fp";
-import Promise from "bluebird";
+import {curry, merge} from "lodash/fp";
 import request from "request";
 import {join, basename} from "path";
 import url from "url";
@@ -7,14 +6,12 @@ import fs from "fs";
 import {spawn} from "child-process-promise";
 import {mkdirP, sha256sum} from "@sugarcube/plugin-fs";
 
-Promise.promisifyAll(fs);
-
 export const assertDir = (envelope, {cfg}) => {
   const dir = cfg.http.download_dir;
-  return mkdirP(dir).return(envelope);
+  return mkdirP(dir).then(() => envelope);
 };
 
-export const download = (dir, d) => {
+export const download = curry((dir, d) => {
   if (!d.term) return Promise.resolve(d);
 
   const fileName = basename(url.parse(d.term).pathname);
@@ -36,9 +33,9 @@ export const download = (dir, d) => {
       throw e;
     })
     .then(sha256 => merge(d, {location, sha256}));
-};
+});
 
-export const wget = (cmd, target, {term}) => {
+export const wget = curry((cmd, target, {term}) => {
   const args = [
     "-q",
     "--no-check-certificate",
@@ -60,7 +57,7 @@ export const wget = (cmd, target, {term}) => {
   childProcess.stderr.on("data", d => d.toString());
 
   return Promise.resolve(p);
-};
+});
 
 export default {
   assertDir,

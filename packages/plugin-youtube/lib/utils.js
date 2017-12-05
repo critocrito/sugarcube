@@ -1,3 +1,4 @@
+import {curry} from "lodash/fp";
 import {spawn} from "child-process-promise";
 import {utils} from "@sugarcube/core";
 import {retry} from "dashp";
@@ -6,7 +7,7 @@ const {assertCfg} = utils.assertions;
 
 export const assertCredentials = assertCfg(["youtube.api_key"]);
 
-export const youtubeDl = (cmd, videoFormat, href, target) => {
+export const youtubeDl = curry((cmd, videoFormat, href, target) => {
   const args = [
     href,
     "-f",
@@ -18,7 +19,7 @@ export const youtubeDl = (cmd, videoFormat, href, target) => {
   ];
 
   return retry(() => spawn(cmd, args));
-};
+});
 
 export function Counter(total) {
   this.beginning = 0;

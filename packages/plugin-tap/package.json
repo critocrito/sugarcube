@@ -16,7 +16,7 @@
   "author": "Christo <christo@cryptodrunks.net>",
   "license": "GPL-3.0",
   "dependencies": {
-    "bluebird": "^3.5.1",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "pify": "^3.0.0"
   }
 }

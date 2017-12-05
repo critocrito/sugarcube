@@ -1,5 +1,6 @@
 import {merge, includes, size, filter, get} from "lodash/fp";
-import Promise from "bluebird";
+import {flowP, tapP} from "dashp";
+import pify from "pify";
 import {join} from "path";
 import fs from "fs";
 import {envelope as env, plugin as p} from "@sugarcube/core";
@@ -7,12 +8,12 @@ import {mkdirP, sha256sum, md5sum} from "@sugarcube/plugin-fs";
 
 import {Counter, assertCredentials, youtubeDl} from "./utils";
 
-Promise.promisifyAll(fs);
+const accessAsync = pify(fs.access);
 
 const downloadTypes = ["youtube_video"];
 
 const downloadVideo = (envelope, {cfg, log}) => {
-  const {dir, cmd} = get("youtube", cfg);
+  const {download_dir, cmd} = get("youtube", cfg);
   const videoFormat = get("youtube.download_format", cfg);
 
   const counter = new Counter(
@@ -20,21 +21,21 @@ const downloadVideo = (envelope, {cfg, log}) => {
   );
 
   // ensure the download directory.
-  return mkdirP(dir).then(() =>
+  return mkdirP(download_dir).then(() =>
     env.fmapDataDownloadsAsync(d => {
       const {type, term, videoId, _sc_id_hash} = d;
       if (!includes(type, downloadTypes)) {
         return d;
       }
       const location = join(
-        dir,
+        download_dir,
         type,
         _sc_id_hash,
         `${videoId}.${videoFormat}`
       );
+
       // Download all videos.
-      return fs
-        .accessAsync(location) // eslint-disable-line promise/no-nesting
+      return accessAsync(location) // eslint-disable-line promise/no-nesting
         .then(() =>
           log.info(
             `Video ${videoId} exists at ${location}. (${counter.count()}/${counter.total})`
@@ -42,16 +43,22 @@ const downloadVideo = (envelope, {cfg, log}) => {
         )
         .catch(e => {
           if (e.code === "ENOENT") {
-            return youtubeDl(cmd, videoFormat, term, location).tap(() =>
-              log.info(
-                `Downloaded ${videoId} to ${location}. (${counter.count()}/${counter.total})`
-              )
+            return flowP(
+              [
+                youtubeDl(cmd, videoFormat, term),
+                tapP(() =>
+                  log.info(
+                    `Downloaded ${videoId} to ${location}. (${counter.count()}/${counter.total})`
+                  )
+                ),
+              ],
+              location
             );
           }
           throw e;
         })
         .then(() => Promise.all([md5sum(location), sha256sum(location)]))
-        .spread((md5, sha256) => merge(d, {location, md5, sha256}))
+        .then(([md5, sha256]) => merge(d, {location, md5, sha256}))
         .catch(() => {
           log.error(`Failed to download video ${videoId} to ${location}`);
           return merge(d, {failed: true});

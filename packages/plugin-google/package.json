@@ -21,7 +21,6 @@
     "@sugarcube/core": "^0.2.1",
     "@sugarcube/plugin-fs": "^0.2.1",
     "babel-polyfill": "^6.23.0",
-    "bluebird": "^3.5.1",
     "cheerio": "^1.0.0-rc.2",
     "dashp": "^0.8.1",
     "lodash": "^4.17.4",

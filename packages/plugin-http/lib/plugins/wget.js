@@ -1,4 +1,5 @@
 import {includes} from "lodash/fp";
+import {flowP, tapP, caughtP} from "dashp";
 import {join} from "path";
 import {envelope as env, plugin as p} from "@sugarcube/core";
 
@@ -15,13 +16,18 @@ const fetchPage = (envelope, {cfg, log}) =>
     const dir = join(cfg.http.download_dir, type, _sc_id_hash);
     const cmd = cfg.http.wget_cmd;
 
-    return wget(cmd, dir, d)
-      .tap(() => log.info(`Wget'ed ${term} to ${dir}.`))
-      .catch(e => {
-        // FIXME: Wget breaks a lot with error code 8.
-        log.error(`Wget on ${term} failed with ${e}`);
-        return d;
-      });
+    return flowP(
+      [
+        wget(cmd, dir),
+        caughtP(e => {
+          // FIXME: Wget breaks a lot with error code 8.
+          log.error(`Wget on ${term} failed with ${e}`);
+          return d;
+        }),
+        tapP(() => log.info(`Wget'ed ${term} to ${dir}.`)),
+      ],
+      d
+    );
   }, envelope);
 
 const plugin = p.liftManyA2([assertDir, fetchPage]);

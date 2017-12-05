@@ -8,7 +8,10 @@ import {assertDb, unitExists, unitExistsNot} from "../utils";
 const complement = (envelope, {log}) =>
   db
     .complementData(env.filterData(unitExists, envelope))
-    .tap(rs => log.info(`Complementing ${size(rs)} units.`))
+    .then(rs => {
+      log.info(`Complementing ${size(rs)} units.`);
+      return rs;
+    })
     .then(rs => env.concatData(rs, env.filterData(unitExistsNot, envelope)));
 
 const plugin = p.liftManyA2([assertDb, exists, complement]);

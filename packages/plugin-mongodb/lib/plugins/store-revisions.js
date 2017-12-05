@@ -7,8 +7,8 @@ import {assertDb, unitExists} from "../utils";
 const storeRevisions = (envelope, {log}) =>
   db
     .storeRevisions(env.filterData(unitExists, envelope))
-    .tap(revisions => log.info(`Storing ${size(revisions)} revisions.`))
-    .return(envelope);
+    .then(revisions => log.info(`Storing ${size(revisions)} revisions.`))
+    .then(() => envelope);
 
 const plugin = p.liftManyA2([assertDb, storeRevisions]);
 

@@ -1,4 +1,5 @@
 import {size} from "lodash/fp";
+import {flowP, tapP} from "dashp";
 import {envelope as env, plugin as p} from "@sugarcube/core";
 
 import {feed} from "./twitter";
@@ -11,9 +12,14 @@ const feedPlugin = (envelope, {log, cfg}) => {
 
   log.debug(`Fetching the tweets for ${users.join(", ")}`);
 
-  return feed(cfg, log, users)
-    .tap(rs => log.info(`Fetched ${size(rs)} tweets for all queries.`))
-    .then(rs => env.concatData(rs, envelope));
+  return flowP(
+    [
+      feed(cfg, log),
+      tapP(rs => log.info(`Fetched ${size(rs)} tweets for all queries.`)),
+      rs => env.concatData(rs, envelope),
+    ],
+    users
+  );
 };
 
 const plugin = p.liftManyA2([assertCredentials, feedPlugin]);

@@ -1,8 +1,7 @@
 import {curry, flow} from "lodash/fp";
-import Promise from "bluebird";
 import Nightmare from "nightmare";
 
-import {urlify, bluebirdify} from "./utils";
+import {urlify} from "./utils";
 
 require("nightmare-upload")(Nightmare);
 require("babel-polyfill");
@@ -40,7 +39,6 @@ export const search = curry((url, headless, term) =>
         .click("#_fZl")
         .wait("#rso"),
     html,
-    bluebirdify,
   ])(url)
 );
 
@@ -49,7 +47,6 @@ export const images = curry((url, scrollCount, headless, term) =>
     urlify({tbm: "isch", q: term}),
     browse(headless),
     scrolledHtml(scrollCount),
-    bluebirdify,
   ])(url)
 );
 
@@ -65,7 +62,6 @@ export const reverseImagesFromFile = curry((url, headless, path) =>
         .upload("#qbfile", path)
         .wait(5000), // TODO: Maybe there is a better wait condition.
     html,
-    bluebirdify,
   ])(url)
 );
 

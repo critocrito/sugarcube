@@ -16,13 +16,10 @@ import {
   isDate,
 } from "lodash/fp";
 import fs from "fs";
-import Promise from "bluebird";
 import stringify from "csv-stringify";
 import {plugin as p} from "@sugarcube/core";
 
 import {assertFilename} from "../assertions";
-
-Promise.promisifyAll(fs);
 
 // Prefix keys in a list of pairs with a string and return it as an object,
 // e.g.: prefixPairsToObj('xx', [[0, 'a'], [1, 'b']]) => {xx_0: 'a', xx_1; 'b'}
@@ -98,14 +95,15 @@ const exportPlugin = (val, {cfg, log}) => {
   const csv = stringify({header: true, quotedString: true, delimiter});
   csv.pipe(fs.createWriteStream(filename));
 
-  return Promise.fromCallback(cb => {
-    csv.on("error", cb);
-    csv.on("finish", cb);
+  // eslint-disable-next-line promise/avoid-new
+  return new Promise((resolve, reject) => {
+    csv.on("error", reject);
+    csv.on("finish", () => resolve(val));
 
     // Avoid lodash forEach to have eager evaluation.
     data.forEach(r => csv.write(merge(template, r)));
     csv.end();
-  }).return(val);
+  });
 };
 
 const plugin = p.liftManyA2([assertFilename, exportPlugin]);

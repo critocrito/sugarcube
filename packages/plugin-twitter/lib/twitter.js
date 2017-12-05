@@ -1,4 +1,5 @@
 import {
+  curry,
   flow,
   map,
   merge,
@@ -10,7 +11,7 @@ import {
   property,
   isNaN,
 } from "lodash/fp";
-import {foldP} from "dashp";
+import {foldP, flowP, tapP} from "dashp";
 
 import {request, throttle, cursorify, recurse} from "./utils";
 import {
@@ -23,7 +24,7 @@ import {
 // The requests within a 15 minutes window in milliseconds.
 const rateLimit = requests => 15 * 60 / requests * 1000;
 
-export const feed = (cfg, log, users) => {
+export const feed = curry((cfg, log, users) => {
   const count = cfg.twitter.tweet_count;
   const retweets = cfg.twitter.tweet_count;
 
@@ -42,16 +43,19 @@ export const feed = (cfg, log, users) => {
           : {user_id: user}
       );
 
-      return op(params)
-        .tap(results =>
-          log.info(`Fetched ${size(results)} tweets for ${user}.`)
-        )
-        .then(flow([tweetTransform, concat(memo)]));
+      return flowP(
+        [
+          op,
+          tapP(rs => log.info(`Fetched ${size(rs)} tweets for ${user}.`)),
+          flow([tweetTransform, concat(memo)]),
+        ],
+        params
+      );
     },
     [],
     users
   );
-};
+});
 
 export const followers = (cfg, log, users) => {
   const recurseDepth = cfg.twitter.recurse_depth;
@@ -69,9 +73,14 @@ export const followers = (cfg, log, users) => {
         count: 200,
         include_user_entities: true,
       };
-      return op(params)
-        .tap(rs => log.info(`Fetched ${size(rs)} followers of ${user}.`))
-        .then(flow([followersTransform, concat(memo)]));
+      return flowP(
+        [
+          op,
+          tapP(rs => log.info(`Fetched ${size(rs)} followers of ${user}.`)),
+          flow([followersTransform, concat(memo)]),
+        ],
+        params
+      );
     },
     [],
     users
@@ -94,16 +103,21 @@ export const friends = (cfg, log, users) => {
         count: 200,
         include_user_entities: true,
       };
-      return op(params)
-        .tap(rs => log.info(`Fetched ${size(rs)} friends of ${user}.`))
-        .then(flow([friendsTransform, concat(memo)]));
+      return flowP(
+        [
+          op,
+          tapP(rs => log.info(`Fetched ${size(rs)} friends of ${user}.`)),
+          flow([friendsTransform, concat(memo)]),
+        ],
+        params
+      );
     },
     [],
     users
   );
 };
 
-export const search = (cfg, log, queries) => {
+export const search = curry((cfg, log, queries) => {
   const delay = rateLimit(180);
   const op = throttle(delay, request(cfg, "search/tweets.json"));
 
@@ -112,24 +126,27 @@ export const search = (cfg, log, queries) => {
       const q = flow([split(" "), map(encodeURIComponent), join("+")])(query);
       const params = {count: 100, q};
 
-      return op(params)
-        .tap(result =>
-          log.info(
-            `Fetched ${size(result.statuses)} tweets for the term ${query}`
-          )
-        )
-        .then(
+      return flowP(
+        [
+          op,
+          tapP(rs =>
+            log.info(
+              `Fetched ${size(rs.statuses)} tweets for the term ${query}`
+            )
+          ),
           flow([
             property("statuses"),
             searchTransform,
             map(merge({query})),
             concat(memo),
-          ])
-        );
+          ]),
+        ],
+        params
+      );
     },
     [],
     queries
   );
-};
+});
 
 export default {feed, followers, friends, search};

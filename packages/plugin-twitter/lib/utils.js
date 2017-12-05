@@ -15,7 +15,7 @@ import {
   flatten,
   keys,
 } from "lodash/fp";
-import {foldP} from "dashp";
+import {foldP, delay} from "dashp";
 import pify from "pify";
 import Twitter from "twitter";
 import moment from "moment";
@@ -24,8 +24,7 @@ const mapObj = map.convert({cap: false});
 
 export const paramsString = flow([mapObj((k, v) => `${k}=${v}`), join("&")]);
 
-export const twitterDate = ds =>
-  moment(ds, "ddd MMM D HH:mm:ss Z YYYY").toDate();
+export const twitterDate = ds => moment(ds, "ddd MMM D HH:mm:ss Z YYYY");
 
 const client = curry(
   (consumerKey, consumerSecret, accessToken, accessSecret) => {
@@ -36,9 +35,7 @@ const client = curry(
       access_token_secret: accessSecret,
     });
 
-    return {
-      getAsync: pify(t.get),
-    };
+    return {getAsync: pify(t.get).bind(t)};
   }
 );
 
@@ -83,15 +80,7 @@ export const cursorify = fn => {
   return params => iter(params, cursor);
 };
 
-export const throttle = curry((ms, fn) => {
-  let queue = Promise.resolve();
-
-  return params => {
-    const res = queue.then(() => fn(params));
-    queue = Promise.join(res, queue.delay(ms)).return();
-    return res;
-  };
-});
+export const throttle = curry((ms, fn) => args => fn(args).then(delay(ms)));
 
 export const recurse = curry((maxDepth, key, fn) => {
   const iter = (params, depth, recurseFrom = null) =>
@@ -102,6 +91,7 @@ export const recurse = curry((maxDepth, key, fn) => {
             const nextDepth = depth + 1;
             const target = result[key];
 
+            // eslint-disable-next-line promise/avoid-new
             return iter(
               merge(params, {[key]: target}),
               nextDepth,

@@ -21,7 +21,6 @@
   ],
   "dependencies": {
     "@sugarcube/core": "^0.2.1",
-    "bluebird": "^3.5.1",
     "gm": "^1.23.0",
     "lodash": "^4.17.4",
     "request": "^2.81.0"

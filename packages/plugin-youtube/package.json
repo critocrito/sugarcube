@@ -19,11 +19,11 @@
   "dependencies": {
     "@sugarcube/core": "^0.2.1",
     "@sugarcube/plugin-fs": "^0.2.1",
-    "bluebird": "^3.5.1",
     "child-process-promise": "^2.2.0",
     "dashp": "^0.8.1",
     "lodash": "^4.17.4",
     "moment": "^2.19.1",
+    "pify": "^3.0.0",
     "request": "^2.78.0"
   }
 }

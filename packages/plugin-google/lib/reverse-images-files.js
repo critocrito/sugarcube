@@ -18,11 +18,14 @@ const plugin = (envelope, {log, cfg}) => {
         unfold,
         tapP(rs => log.info(`Searching for ${size(rs)} files in ${term}.`)),
         collectP(unit =>
-          flowP([
-            reverseImageSearchFromFile(headless, path.resolve(unit.location)),
-            merge(unit),
-            entity("google_reverse_image"),
-          ])()
+          flowP(
+            [
+              reverseImageSearchFromFile(headless),
+              merge(unit),
+              entity("google_reverse_image"),
+            ],
+            path.resolve(unit.location)
+          )
         ),
       ],
       term
