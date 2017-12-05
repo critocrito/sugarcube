@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/plugin-ddg",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Search on DuckDuckGo.",
   "main": "lib/index.js",
   "repository": "https://gitlab.com/sugarcube/sugarcube",
@@ -17,7 +17,7 @@
     "duckduckgo"
   ],
   "dependencies": {
-    "@sugarcube/core": "^0.2.1",
+    "@sugarcube/core": "^0.3.0",
     "cheerio": "^1.0.0-rc.2",
     "lodash": "^4.17.4",
     "pify": "^3.0.0",
