@@ -1,0 +1,16 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "debian/jessie64"
+  config.vm.network "forwarded_port", guest: 27017, host: 27007
+  config.vm.provision "shell", inline: <<-SHELL
+    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0C49F3730359A14518585931BC711F9BA15703C6
+    echo "deb http://repo.mongodb.org/apt/debian jessie/mongodb-org/3.4 main" | tee /etc/apt/sources.list.d/mongodb-org-3.4.list
+    apt-get update
+    DEBIAN_FRONTEND=noninteractive apt-get install -y mongodb-org
+    sed -i 's/^  bindIp: 127.0.0.1/  bindIp: 0.0.0.0/g' /etc/mongod.conf
+    systemctl enable mongod.service
+    systemctl restart mongod.service
+  SHELL
+end
