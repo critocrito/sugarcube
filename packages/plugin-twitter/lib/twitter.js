@@ -50,7 +50,13 @@ export const feed = curry((cfg, log, users) => {
           flow([tweetTransform, concat(memo)]),
         ],
         params
-      );
+      ).catch(e => {
+        if (/401/.test(e.message)) {
+          log.warn(`Failed to fetch ${user}: ${e.message}`);
+          return [];
+        }
+        throw e;
+      });
     },
     [],
     users
@@ -80,7 +86,13 @@ export const followers = (cfg, log, users) => {
           flow([followersTransform, concat(memo)]),
         ],
         params
-      );
+      ).catch(e => {
+        if (/401/.test(e.message)) {
+          log.warn(`Failed to fetch ${user}: ${e.message}`);
+          return [];
+        }
+        throw e;
+      });
     },
     [],
     users
@@ -110,7 +122,13 @@ export const friends = (cfg, log, users) => {
           flow([friendsTransform, concat(memo)]),
         ],
         params
-      );
+      ).catch(e => {
+        if (/401/.test(e.message)) {
+          log.warn(`Failed to fetch ${user}: ${e.message}`);
+          return [];
+        }
+        throw e;
+      });
     },
     [],
     users
