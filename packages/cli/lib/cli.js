@@ -18,7 +18,7 @@ import dotenv from "dotenv";
 import {runner, utils} from "@sugarcube/core";
 
 import {mapFiles, parseConfigFile, parseConfigFileWithExtends} from "./";
-import {info, error, debug} from "./logger";
+import {info, warn, error, debug} from "./logger";
 import {loadModules} from "./plugins";
 
 const reduceObj = reduce.convert({cap: false});
@@ -134,6 +134,9 @@ run.stream.onValue(msg => {
   switch (msg.type) {
     case "log_info":
       info(msg.msg);
+      break;
+    case "log_warn":
+      warn(msg.msg);
       break;
     case "log_error":
       error(msg.msg);

@@ -93,6 +93,7 @@ const runner = curry((plugins, cfg, queries) => {
 
   const log = {
     info: msg => stream.push({type: "log_info", msg}),
+    warn: msg => stream.push({type: "log_warn", msg}),
     error: msg => stream.push({type: "log_error", msg}),
     debug: msg => stream.push({type: "log_debug", msg}),
   };
