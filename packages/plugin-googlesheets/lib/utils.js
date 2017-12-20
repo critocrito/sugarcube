@@ -7,7 +7,7 @@ import {
   at,
   tail,
   head,
-  zipObject,
+  zipObjectDeep,
   concat,
   uniq,
   toLower,
@@ -24,7 +24,7 @@ const zipRows = curry((fields, rows) =>
   flow([
     tail, // The body of the spreadsheet, without the header.
     reject(isEmpty), // Drop empty rows.
-    map(zipObject(header(rows))), // Create a list of objects.
+    map(zipObjectDeep(header(rows))), // Create a list of objects.
     map(pick(fields)), // Only select the wanted fields.
   ])(rows)
 );
