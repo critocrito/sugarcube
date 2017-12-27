@@ -15,7 +15,7 @@ const queryDb = (envelope, {log}) => {
       flatmapP(q =>
         flowP(
           [
-            db.findMany(db.unitsC, q, {}),
+            () => db.findMany(db.unitsC, q, {}),
             tapP(rs =>
               log.info(`Queried ${size(rs)} units for ${JSON.stringify(q)}.`)
             ),
