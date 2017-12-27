@@ -40,3 +40,13 @@ the project root. In the end my `.npmrc` looks somthing like that:
     //registry.npmjs.org/:_authToken=<YOUR AUTH TOKEN>
 
 To actually release a new version, simply run `npm run release`.
+
+To develop the following host dependencies are required when running `npm run setup`.
+
+- Java JDK (7 or 8) for `plugin-tika`.
+
+To install those dependencies run:
+
+- On Archlinux: `pacman -S jdk8-openjdk`
+- On Debian: `apt install openjdk-7-jdk`
+- Using Homebrew: `brew cask install java`
