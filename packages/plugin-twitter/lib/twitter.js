@@ -24,6 +24,18 @@ import {
 // The requests within a 15 minutes window in milliseconds.
 const rateLimit = requests => 15 * 60 / requests * 1000;
 
+// FIXME: Refactor to uncouple everything from the logger.
+const apiErrors = curry((log, user, e) => {
+  if (/401/.test(e.message)) {
+    log.warn(`Failed to fetch ${user}: ${e.message}`);
+    return [];
+  } else if(e[0] && e[0].code === 34) {
+    log.warn(`Failed to fetch ${user}: ${e[0].message}`);
+    return [];
+  }
+  throw e;
+});
+
 export const feed = curry((cfg, log, users) => {
   const count = cfg.twitter.tweet_count;
   const retweets = cfg.twitter.tweet_count;
@@ -50,13 +62,7 @@ export const feed = curry((cfg, log, users) => {
           flow([tweetTransform, concat(memo)]),
         ],
         params
-      ).catch(e => {
-        if (/401/.test(e.message)) {
-          log.warn(`Failed to fetch ${user}: ${e.message}`);
-          return [];
-        }
-        throw e;
-      });
+      ).catch(apiErrors(log, user));
     },
     [],
     users
@@ -86,13 +92,7 @@ export const followers = (cfg, log, users) => {
           flow([followersTransform, concat(memo)]),
         ],
         params
-      ).catch(e => {
-        if (/401/.test(e.message)) {
-          log.warn(`Failed to fetch ${user}: ${e.message}`);
-          return [];
-        }
-        throw e;
-      });
+      ).catch(apiErrors(log, user));
     },
     [],
     users
@@ -122,13 +122,7 @@ export const friends = (cfg, log, users) => {
           flow([friendsTransform, concat(memo)]),
         ],
         params
-      ).catch(e => {
-        if (/401/.test(e.message)) {
-          log.warn(`Failed to fetch ${user}: ${e.message}`);
-          return [];
-        }
-        throw e;
-      });
+      ).catch(apiErrors(log, user));
     },
     [],
     users
