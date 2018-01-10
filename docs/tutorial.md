@@ -33,7 +33,7 @@ you only have to type `node --version`.
 To run `sugarcube` you have to install [NodeJS](https://nodejs.org/en/). The
 easiest way to do this, is to use [nvm](https://github.com/creationix/nvm). Node Version Manager (nvm) is a script written to manage multiple active NodeJS versions. 
 SugarCube works with the latest version of NodeJS (at the time of this
-writing 7.7.4) and was tested with version 6.9.0 as well.
+writing 7.7.4) and was tested with version 6.9.0.
 
 Follow the
 [installation instructions](https://github.com/creationix/nvm#install-script) to install nvm. Check in your terminal that 'node' has been installed by entering in the following command:
@@ -52,17 +52,36 @@ $ npm --version
 ## Simply SugarCube
 
 We start by creating a new SugarCube project. This is nothing more than a
-directory with some files.
+directory with some files. Through the terminal you will create a new directory, in this example we have called it 'sugarcubetest', enter into that directory and add a file to it. 
+
+Firtly create a new folder by typing in 'mkdir', shorthand for 'make directories', and your chosen name for this directory:
 
 ```
-$ mkdir eti
-$ cd eti
+$ mkdir sugarcubetest
+```
+
+Next enter into that directory by typing in 'cd', shorthand for change directory, into your terminal:
+```
+$ cd sugarcubetest
+```
+
+Lastly add a file to your new directory by asking your newly installed node package manager to get your node packages started through the 'init' command. Enter in the following:
+```
 $ npm init -y
 ```
 
-You should end up with a single file in the `eti` directory named
+You should end up with a single file in the `sguarcubetest` directory named
 `package.json`. This file is used by to manage versions and dependencies of
-SugarCube.
+SugarCube. Test that this file is there by typing:
+
+```
+$ ls 
+```
+This lists all the files in your directory. If your terminal window shows you this response then you are on the right track:
+
+```
+$ package.json
+```
 
 Next on we install `sugarcube` command line interface, the DuckDuckGo
 plugin and the tap plugin.
