@@ -83,16 +83,25 @@ This lists all the files in your directory. If your terminal window shows you th
 $ package.json
 ```
 
-Next on we install `sugarcube` command line interface, the DuckDuckGo
-plugin and the tap plugin.
+Next on we install the `sugarcube` command line interface, the DuckDuckGo search
+plugin and the tap plugin.  The `ddg_search` plugin queries the search engine DuckDuckGo and the `tap_printf` plugin prints the results, queries and
+configuration to the screen. Type in the following command:
+
 
 ```
 $ npm install -S @sugarcube/cli @sugarcube/plugin-ddg @sugarcube/plugin-tap
 ```
 
-If all went fine, you should have a folder named `node_modules`, which
-contains `sugarcube` and all it's dependencies. Make sure we have the
-`sugarcube` command as well:
+If all went fine, you should have a folder named `node_modules`, within your 'sugarcubetest' directory. This 'node_modules' folder should contain `sugarcube` and all it's dependencies. 
+
+To check that node_modules is installed, type in the command 'ls' to list the contents of the directory. 
+
+Install the 'sugarcube' command by typing into your terminal:
+
+```
+$ $(npm bin)/sugarcube -h
+```
+Note that you will be entering in the dollar symbol ($) for this command. You should see the following in your terminal window: 
 
 ```
 $ $(npm bin)/sugarcube -h
@@ -120,9 +129,9 @@ $ $(npm bin)/sugarcube -Q ddg_search:Keith\ Johnstone -p ddg_search,tap_printf
 
 This prints up to 30 search results on the screen.
 
-Using the `-Q` option, we specified a query, and the `-p` defines which
-plugins should be run. The order of the plugins matter. You can't print
-results to the screen, if you haven't fetched yet any. We run two plugins,
+Using the `-Q` option, we specified a query, the `-p` defines which
+plugins should be run. The order of the plugins matters. You can't print
+results to the screen, if you haven't fetched any results yet. We run two plugins,
 first the `ddg_search` plugin, which queries the search engine, and after that
 we run the `tap_printf` plugin, which prints the results, queries and
 configuration to the screen.
@@ -130,7 +139,7 @@ configuration to the screen.
 There is not much more to SugarCube than that.
 
 Some plugins offer configuration options, that allow to control aspects of
-their behavior. If you look at the output of `$(npm bin)/sugarcube -h`, you
+their behaviour. If you look at the output of `$(npm bin)/sugarcube -h`, you
 will see the `--tap.limit` argument. We can use it to print less results on
 the screen.
 
