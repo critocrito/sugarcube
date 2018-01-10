@@ -70,7 +70,7 @@ Lastly add a file to your new directory by asking your newly installed node pack
 $ npm init -y
 ```
 
-You should end up with a single file in the `sguarcubetest` directory named
+You should end up with a single file in the `sugarcubetest` directory named
 `package.json`. This file is used by to manage versions and dependencies of
 SugarCube. Test that this file is there by typing:
 
