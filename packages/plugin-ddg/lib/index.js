@@ -1,9 +1,14 @@
 var _ = require('lodash'),
     pify = require("pify"),
     cheerio = require('cheerio'),
+    dashp = require('dashp'),
     envelope = require('@sugarcube/core').envelope,
     getAsync = pify(require('request').get),
     url = require('url');
+
+var tapP = dashp.tap;
+var collectP = dashp.collect;
+var flowP = dashp.flow;
 
 var sharedFields = ['href', 'type', 'content', 'title', 'order' ];
 
@@ -50,48 +55,39 @@ var goGoDuck = function(searchQuery) {
 var mightyDucky = function(val, {log}) {
   var ddgTerms = envelope.queriesByType('ddg_search', val);
 
-  return Promise.map(ddgTerms, goGoDuck)
-                .then ( function(results) {
-                  return _.reduce(results, function(flattened, other) {
-                    return flattened.concat(other);
-                  }, []);
-                })
-                .tap( function(aggregated) {
-                  log.debug("Fetched " + _.size(aggregated) + " results for " +
-                            _.size(ddgTerms) + " search terms.");
-                })
-                .tap( function(aggregated)  {
-                  _.each(aggregated, function(lo)  {
-                    var finalized = _.pick(lo, sharedFields);
-                    finalized._sc_source = 'ddg_search';
-                    finalized._sc_id_fields = ['href'];
-                    finalized._sc_content_fields = ['content'];
-                    finalized._sc_title = 'title';
-                    finalized._sc_content = 'content';
-                    finalized._sc_links = [{
-                      'href': lo.href,
-                      'type': 'url'
-                    }, {
-                      'href': lo.query_url,
-                      'meta': {"q": lo.query },
-                      'method': 'GET',
-                      'type': 'self'
-                    }];
-                    finalized._sc_relations = [{type: 'url', term: lo.href}];
+  return flowP([
+    collectP(goGoDuck),
+    function(results) {
+      return _.reduce(results, function(flattened, other) {
+        return flattened.concat(other);
+      }, []);
+    },
+    tapP(function(aggregated) {
+      log.debug("Fetched " + _.size(aggregated) + " results for " +
+                _.size(ddgTerms) + " search terms.");
+      _.each(aggregated, function(lo)  {
+        var finalized = _.pick(lo, sharedFields);
+        finalized._sc_source = 'ddg_search';
+        finalized._sc_id_fields = ['href'];
+        finalized._sc_content_fields = ['content'];
+        finalized._sc_title = 'title';
+        finalized._sc_content = 'content';
+        finalized._sc_links = [{
+          'href': lo.href,
+          'type': 'url'
+        }, {
+          'href': lo.query_url,
+          'meta': {"q": lo.query },
+          'method': 'GET',
+          'type': 'self'
+        }];
+        finalized._sc_relations = [{type: 'url', term: lo.href}];
 
-                    val.data.push(finalized);
-                  });
-                })
-  /* .tap( function(aggregated)  {
-   *     // TODO move mail in a library
-   *    mail.appendMailInfo(val, {
-   *        'source': 'DuckDuckGo',
-   *        'info': [ 'From', _.size(ddgTerms),
-   *                  'terms, retrieved', _.size(aggregated),
-   *                  'results' ]
-   *    });
-   * })*/
-                .return(val);
+        val.data.push(finalized);
+      })
+    }),
+    function () { return val; },
+  ], ddgTerms);
 };
 
 mightyDucky.desc = 'Fetch search results from DuckDuckGo.';
