@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/plugin-guardian",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Fetch content from the Guardian.",
   "main": "_dist/index.js",
   "repository": "https://gitlab.com/sugarcube/sugarcube",
@@ -18,7 +18,7 @@
   "bugs": "https://gitlab.com/sugarcube/sugarcube/issues",
   "homepage": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-guardian",
   "dependencies": {
-    "@sugarcube/core": "^0.3.0",
+    "@sugarcube/core": "^0.4.0",
     "dashp": "^0.8.1",
     "lodash": "^4.17.4",
     "moment": "^2.19.1",
