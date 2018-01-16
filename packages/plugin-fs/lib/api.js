@@ -49,7 +49,7 @@ export const md5sum = hashFile("md5");
  * location, sha256 and md5 sums.
  */
 export const unfold = flowP([
-  pify(glob),
+  pattern => pify(glob)(...[pattern, {nodir: true}]),
   collectP(location =>
     Promise.all([
       sha256sum(location),
