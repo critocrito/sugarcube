@@ -68,7 +68,7 @@ const clearValues = flowP3([clearValuesRequest, clear]);
 export default curry(async (f, {client, secret, refreshToken}) => {
   const auth = await authenticate(client, secret, refreshToken);
   const api = {
-    createSpreadsheet: createSpreadsheet(auth),
+    createSpreadsheet: () => createSpreadsheet(auth),
     getSpreadsheet: getSpreadsheet(auth),
     createSheet: createSheet(auth),
     getSheet: getSheet(auth),
