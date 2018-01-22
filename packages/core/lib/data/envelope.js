@@ -3,6 +3,8 @@ import {
   curry,
   map,
   flatMap,
+  differenceWith,
+  intersectionWith,
   property,
   identity,
   isEqual,
@@ -83,7 +85,7 @@ export const empty = () => ({data: ds.empty(), queries: ls.empty()});
 /**
  * Concatenate two envelopes. This concatenates `data` and `queries` of each
  * envelope separately. This provides the binary associative operation under a
- * monoid.
+ * monoid. This is equivalent to an union under set theory.
  *
  * `concat :: (Monoid m, Env a) => m a -> m a -> m a`
  * @param {Envelope} a The source envelope to merge.
@@ -128,6 +130,60 @@ export const concatQueries = curry((queries, e) =>
 export const concatQueriesLeft = curry((queries, e) =>
   concatLeft(e, envelopeQueries(queries))
 );
+
+/**
+ * A union under set theory is defined as being the same as `concat`.
+ */
+export const union = concat;
+
+/**
+ * Intersects two envelopes under set theory and returns an envelope
+ * containing all data units and queries that exist in both envelopes.
+ *
+ * `intersection :: (Monoid m, Env a) => m a -> m a -> m a`
+ * @param {Envelope} a The source envelope to intersect.
+ * @param {Envelope} b The target envelope to intersect.
+ * @return {Envelope} The intersection of a and b.
+ */
+export const intersection = curry((e1, e2) => {
+  const data = intersectionWith(
+    (a, b) => ds.dataId(a) === ds.dataId(b),
+    e1.data,
+    e2.data
+  );
+  const queries = intersectionWith(
+    // FIXME: Replace once id hashing for queries is introduced.
+    (a, b) => a.type === b.type && a.term === b.term,
+    e1.queries,
+    e2.queries
+  );
+  return envelope(data, queries);
+});
+
+/**
+ * Complements (left) two envelopes under set theory and returns an envelope
+ * containing all data units and queries that are different between both
+ * envelopes.
+ *
+ * `difference :: (Monoid m, Env a) => m a -> m a -> m a`
+ * @param {Envelope} a The source envelope to complement.
+ * @param {Envelope} b The target envelope to complement.
+ * @return {Envelope} The left complement of a and b.
+ */
+export const difference = curry((e1, e2) => {
+  const data = differenceWith(
+    (a, b) => ds.dataId(a) === ds.dataId(b),
+    e1.data,
+    e2.data
+  );
+  const queries = differenceWith(
+    // FIXME: Replace once id hashing for queries is introduced.
+    (a, b) => a.type === b.type && a.term === b.term,
+    e1.queries,
+    e2.queries
+  );
+  return envelope(data, queries);
+});
 
 /**
  * Map a function over the data, and another one over queries of an envelope.
@@ -267,6 +323,10 @@ export default {
   concatDataLeft,
   concatQueries,
   concatQueriesLeft,
+
+  difference,
+  intersection,
+  union,
 
   fmap,
   fmapAsync,

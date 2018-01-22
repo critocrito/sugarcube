@@ -13,13 +13,17 @@ import {
 import {of} from "dashp";
 import jsc, {property} from "jsverify";
 
-import {envelope} from "../../packages/core";
+import {envelope as env, data} from "../../packages/core";
 import {envelopeArb} from "../../packages/test";
 
 const {
+  envelope,
   equals,
   empty,
   concat,
+  union,
+  intersection,
+  difference,
   fmap,
   fmapAsync,
   fmapData,
@@ -28,7 +32,8 @@ const {
   fmapQueriesAsync,
   fmapDataDownloads,
   fmapDataDownloadsAsync,
-} = envelope;
+} = env;
+const {dataId} = data;
 
 const isTrue = isEqual(true);
 
@@ -106,6 +111,205 @@ describe("envelope interface", () => {
       );
     }
   );
+
+  describe("set operations", () => {
+    property("produce unions", envelopeArb, envelopeArb, (a, b) =>
+      equals(union(a, b), concat(a, b))
+    );
+
+    property("produce intersections", envelopeArb, envelopeArb, (a, b) => {
+      const intersectionData = a.data.filter(u => {
+        if (b.data.find(v => dataId(u) === dataId(v))) return true;
+        return false;
+      });
+      const intersectionQueries = a.queries.filter(q => {
+        if (b.queries.find(v => q.type === v.type && q.term === v.term))
+          return true;
+        return false;
+      });
+      return equals(
+        intersection(a, b),
+        envelope(intersectionData, intersectionQueries)
+      );
+    });
+
+    property("produce left complements", envelopeArb, envelopeArb, (a, b) => {
+      const complementData = a.data.filter(u => {
+        if (b.data.find(v => dataId(u) === dataId(v))) return false;
+        return true;
+      });
+      const complementQueries = a.queries.filter(q => {
+        if (b.queries.find(v => q.type === v.type && q.term === v.term))
+          return false;
+        return true;
+      });
+      return equals(
+        difference(a, b),
+        envelope(complementData, complementQueries)
+      );
+    });
+
+    property("union identity", envelopeArb, a => equals(union(a, empty()), a));
+
+    property(
+      "is associative for unions",
+      envelopeArb,
+      envelopeArb,
+      envelopeArb,
+      (a, b, c) => equals(union(union(a, b), c), union(a, union(b, c)))
+    );
+
+    property(
+      "is associative for intersections",
+      envelopeArb,
+      envelopeArb,
+      envelopeArb,
+      (a, b, c) =>
+        equals(
+          intersection(intersection(a, b), c),
+          intersection(a, intersection(b, c))
+        )
+    );
+
+    property("is commutative for unions", envelopeArb, envelopeArb, (a, b) =>
+      equals(union(a, b), union(b, a))
+    );
+
+    property(
+      "is commutative for intersections",
+      envelopeArb,
+      envelopeArb,
+      (a, b) => equals(intersection(a, b), intersection(b, a))
+    );
+
+    property(
+      "first distributive law for unions and intersections",
+      envelopeArb,
+      envelopeArb,
+      envelopeArb,
+      (a, b, c) =>
+        equals(
+          union(a, intersection(b, c)),
+          intersection(union(a, b), union(a, c))
+        )
+    );
+
+    property(
+      "second distributive law for unions and intersections",
+      envelopeArb,
+      envelopeArb,
+      envelopeArb,
+      (a, b, c) =>
+        equals(
+          intersection(a, union(b, c)),
+          union(intersection(a, b), intersection(a, c))
+        )
+    );
+
+    property(
+      "disjoints on intersection are empty",
+      envelopeArb,
+      envelopeArb,
+      (a, b) => {
+        const x = difference(a, b);
+        const y = difference(b, a);
+        return equals(intersection(x, y), envelope([], []));
+      }
+    );
+
+    property("intersection domination", envelopeArb, a =>
+      equals(intersection(a, empty()), empty())
+    );
+
+    property("first absorption law", envelopeArb, envelopeArb, (a, b) =>
+      equals(union(a, intersection(a, b)), a)
+    );
+
+    property("first absorption law", envelopeArb, envelopeArb, (a, b) =>
+      equals(intersection(a, union(a, b)), a)
+    );
+
+    property(
+      "express intersection in terms of set difference",
+      envelopeArb,
+      envelopeArb,
+      (a, b) => equals(intersection(a, b), difference(a, difference(a, b)))
+    );
+
+    property(
+      "first notable identity of complements",
+      envelopeArb,
+      envelopeArb,
+      envelopeArb,
+      (a, b, c) =>
+        equals(
+          difference(c, intersection(a, b)),
+          union(difference(c, a), difference(c, b))
+        )
+    );
+
+    property(
+      "second notable identity of complements",
+      envelopeArb,
+      envelopeArb,
+      envelopeArb,
+      (a, b, c) =>
+        equals(
+          difference(c, union(a, b)),
+          intersection(difference(c, a), difference(c, b))
+        )
+    );
+
+    property(
+      "third notable identity of complements",
+      envelopeArb,
+      envelopeArb,
+      envelopeArb,
+      (a, b, c) =>
+        equals(
+          difference(c, difference(a, b)),
+          union(intersection(c, a), difference(c, b))
+        )
+    );
+
+    property(
+      "fourth notable identity of complements",
+      envelopeArb,
+      envelopeArb,
+      envelopeArb,
+      (a, b, c) => {
+        const x = intersection(difference(b, a), c);
+        const y = difference(intersection(b, c), a);
+        const z = intersection(b, difference(c, a));
+
+        return equals(x, y) && equals(x, z) && equals(y, z);
+      }
+    );
+
+    property(
+      "fifth notable identity of complements",
+      envelopeArb,
+      envelopeArb,
+      envelopeArb,
+      (a, b, c) =>
+        equals(
+          union(difference(b, a), c),
+          difference(union(b, c), difference(a, c))
+        )
+    );
+
+    property("sixth notable identity of complements", envelopeArb, a =>
+      equals(difference(a, a), empty())
+    );
+
+    property("seventh notable identity of complements", envelopeArb, a =>
+      equals(difference(empty(), a), empty())
+    );
+
+    property("eigth notable identity of complements", envelopeArb, a =>
+      equals(difference(a, empty()), a)
+    );
+  });
 
   describe("fmap and fmapAsync", () => {
     property(
