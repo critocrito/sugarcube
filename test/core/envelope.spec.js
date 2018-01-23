@@ -267,7 +267,7 @@ describe("envelope interface", () => {
       envelopeArb,
       (a, b, c) =>
         equals(
-          difference(c, difference(a, b)),
+          difference(c, difference(b, a)),
           union(intersection(c, a), difference(c, b))
         )
     );
@@ -311,24 +311,22 @@ describe("envelope interface", () => {
     );
   });
 
+  // I construct objects from symbols to avoid equality issues that arise from
+  // unicode in isMatch.
   describe("fmap and fmapAsync", () => {
-    property(
-      "maps a function over a list of units",
-      envelopeArb,
-      jsc.dict(jsc.string),
-      (a, x) => {
-        const f = merge(x);
-        const b = fmap(f, f, a);
-        return every(isMatch(x), loConcat(b.data, b.queries));
-      }
-    );
+    property("maps a function over a list of units", envelopeArb, a => {
+      const obj = {[Symbol("key")]: Symbol("value")};
+      const f = y => merge(y, obj);
+      const b = fmap(f, f, a);
+      return every(isMatch(obj), loConcat(b.data, b.queries));
+    });
 
     property(
       "overloaded fmapAsync to allow two type signatures",
       envelopeArb,
-      jsc.dict(jsc.string),
-      async (a, x) => {
-        const f = merge(x);
+      async a => {
+        const obj = {[Symbol("key")]: Symbol("value")};
+        const f = y => merge(y, obj);
         const p = flow([f, of]);
         return equals(await fmapAsync(f, f, a), await fmapAsync(p, p, a));
       }
@@ -337,65 +335,53 @@ describe("envelope interface", () => {
     property(
       "produces the same results synchronously and asynchronously",
       envelopeArb,
-      jsc.dict(jsc.string),
-      async (a, x) => {
-        const f = merge(x);
-        return equals(await of(fmap(f, f, a)), await fmapAsync(f, f, a));
+      async a => {
+        const obj = {[Symbol("key")]: Symbol("value")};
+        const f = y => merge(y, obj);
+        return equals(fmap(f, f, a), await fmapAsync(f, f, a));
       }
     );
 
-    property(
-      "has a specialized version for data",
-      envelopeArb,
-      jsc.dict(jsc.string),
-      async (a, x) => {
-        const f = merge(x);
-        const b = fmap(f, identity, a);
+    property("has a specialized version for data", envelopeArb, async a => {
+      const obj = {[Symbol("key")]: Symbol("value")};
+      const f = y => merge(y, obj);
+      const b = fmap(f, identity, a);
 
-        return every(equals(b), [
-          await of(fmapData(f, a)),
-          await fmapDataAsync(f, a),
-        ]);
-      }
-    );
+      return every(equals(b), [fmapData(f, a), await fmapDataAsync(f, a)]);
+    });
 
-    property(
-      "has a specialized version for queries",
-      envelopeArb,
-      jsc.dict(jsc.string),
-      async (a, x) => {
-        const f = merge(x);
-        const b = fmap(identity, f, a);
-        return every(equals(b), [
-          await of(fmapQueries(f, a)),
-          await fmapQueriesAsync(f, a),
-        ]);
-      }
-    );
+    property("has a specialized version for queries", envelopeArb, async a => {
+      const obj = {[Symbol("key")]: Symbol("value")};
+      const f = y => merge(y, obj);
+      const b = fmap(identity, f, a);
+      return every(equals(b), [
+        fmapQueries(f, a),
+        await fmapQueriesAsync(f, a),
+      ]);
+    });
   });
 
   describe("fmapDataList and fmapDataListAsync", () => {
-    property(
-      "can map over sub lists of units of data",
-      envelopeArb,
-      jsc.dict(jsc.string),
-      (a, x) =>
-        flow([
-          fmapDataDownloads(merge(x)),
-          loProperty("data"),
-          flatMap(loProperty("_sc_downloads")),
-          every(isMatch(x)),
-        ])(a)
-    );
+    property("can map over sub lists of units of data", envelopeArb, a => {
+      const obj = {[Symbol("key")]: Symbol("value")};
+      const f = flow([
+        fmapDataDownloads(y => merge(y, obj)),
+        loProperty("data"),
+        flatMap(loProperty("_sc_downloads")),
+        every(isMatch(obj)),
+      ]);
+
+      return f(a);
+    });
 
     property(
       "produces the same results synchronously and asynchronously",
       envelopeArb,
-      jsc.dict(jsc.string),
-      async (a, x) => {
-        const f = merge(x);
+      async a => {
+        const obj = {[Symbol("key")]: Symbol("value")};
+        const f = y => merge(y, obj);
         return equals(
-          await of(fmapDataDownloads(f, a)),
+          fmapDataDownloads(f, a),
           await fmapDataDownloadsAsync(f, a)
         );
       }

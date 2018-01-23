@@ -1,4 +1,4 @@
-import {take, concat, merge, identity} from "lodash/fp";
+import {map, take, concat, merge, identity} from "lodash/fp";
 import {
   constant,
   elements,
@@ -11,6 +11,8 @@ import {
 } from "jsverify";
 
 import {data as ds, queries as qs} from "@sugarcube/core";
+
+const trueOrFalse = () => random(0, 1) === 0;
 
 const generate = (arb, len) => {
   const l = len || random(0, 5);
@@ -29,11 +31,8 @@ const randomSpec = () => {
     case 1: {
       return {[nestring.generator(2)]: array(string)};
     }
-    case 2: {
-      return {[nestring.generator(2)]: string};
-    }
     default: {
-      return {_sc_id_hash: nestring};
+      return {[nestring.generator(2)]: string};
     }
   }
 };
@@ -107,7 +106,12 @@ export const unit = () => unitArb.generator(random(0, 5));
  * An arbitrary that can be used in `jsverify` based property tests.
  * It produces an array of objects, where each object is a unit of data.
  */
-export const dataArb = array(unitArb).smap(ds.uniq, identity);
+export const dataArb = array(unitArb)
+  .smap(ds.uniq, identity)
+  .smap(
+    map(x => (trueOrFalse() ? merge(x, {_sc_id_hash: ds.dataId(x)}) : x)),
+    identity
+  );
 
 /**
  * Randonly generate units of data..

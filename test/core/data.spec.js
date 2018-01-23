@@ -186,9 +186,9 @@ describe("data interface", () => {
       "maps a function over a list of unit",
       dataArb,
       jsc.dict(jsc.string),
-      (xs, y) => {
-        const f = concatOne(y);
-        return every(isMatch(y), fmap(f, xs));
+      (xs, x) => {
+        const f = y => concatOne(y, x);
+        return every(isMatch(x), fmap(f, xs));
       }
     );
 
@@ -196,8 +196,8 @@ describe("data interface", () => {
       "overloaded fmapAsync to allow two type signatures",
       dataArb,
       jsc.dict(jsc.string),
-      async (xs, y) => {
-        const f = concatOne(y);
+      async (xs, x) => {
+        const f = y => concatOne(y, x);
         const p = flow([f, of]);
         return equals(await fmapAsync(f, xs), await fmapAsync(p, xs));
       }
@@ -207,31 +207,27 @@ describe("data interface", () => {
       "produces the same results synchronously and asynchronously",
       dataArb,
       jsc.dict(jsc.string),
-      async (xs, y) => {
-        const f = concatOne(y);
+      async (xs, x) => {
+        const f = y => concatOne(y, x);
         return equals(fmap(f, xs), await fmapAsync(f, xs));
       }
     );
   });
 
   describe("fmapList and fmapListAsync", () => {
-    property(
-      "maps a function over a list on units of data",
-      dataArb,
-      jsc.dict(jsc.string),
-      (xs, y) => {
-        const f = list.concatOne(y);
-        const ys = fmapList("_sc_downloads", f, xs);
-        return every(isMatch(y), ys._sc_downloads);
-      }
-    );
+    property("maps a function over a list on units of data", dataArb, xs => {
+      const obj = {[Symbol("key")]: Symbol("value")};
+      const f = y => list.concatOne(y, obj);
+      const ys = fmapList("_sc_downloads", f, xs);
+      return every(isMatch(obj), ys._sc_downloads);
+    });
 
     property(
       "produces the same results synchronously and asynchronously",
       dataArb,
-      jsc.dict(jsc.string),
-      async (xs, y) => {
-        const f = list.concatOne(y);
+      async xs => {
+        const obj = {[Symbol("key")]: Symbol("value")};
+        const f = y => list.concatOne(y, obj);
         return equals(
           fmapList("_sc_downloads", f, xs),
           await fmapListAsync("_sc_downloads", f, xs)
