@@ -17,7 +17,6 @@
   "dependencies": {
     "baconjs": "^0.7.89",
     "dashp": "^0.8.1",
-    "lodash": "^4.17.4",
-    "shortid": "^2.2.6"
+    "lodash": "^4.17.4"
   }
 }

@@ -1,11 +1,11 @@
 import {flow, curry, map, zip, merge, size} from "lodash/fp";
 import Bacon from "baconjs";
 import {flowP, caughtP, tapP, foldP} from "dashp";
-import {generate as shortId} from "shortid";
 
 import {liftManyA2} from "./data/plugin";
 import {envelopeQueries, fmapData} from "./data/envelope";
 import ds from "./data/data";
+import {uid, generateSeed} from "./utils/hasher";
 import {now} from "./utils";
 
 // The following functions provide funtionalities that should be run every
@@ -82,8 +82,10 @@ const source = curry((name, envelope) =>
  * run();
  */
 const runner = curry((plugins, cfg, queries) => {
+  const seed = generateSeed(8);
+  const timestamp = now();
   const stream = Bacon.Bus();
-  const marker = shortId();
+  const marker = uid(seed, timestamp);
 
   // The pipeline is a list of tuples, where the first element of the tuple
   // is a string indicating the name of the plugin, and the second element

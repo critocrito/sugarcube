@@ -1,9 +1,12 @@
+import crypto from "crypto";
 import {concat, uniqWith, sortBy, isEqual} from "lodash/fp";
 
 import jsc, {property} from "jsverify";
+import sinon from "sinon";
 
 import {data, utils} from "../../packages/core";
 import {dataArb} from "../../packages/test";
+import {uid} from "../../packages/core/lib/utils/hasher";
 
 const {concatManyWith, equalsManyWith} = utils;
 
@@ -40,5 +43,46 @@ describe("equality testing", () => {
     jsc.array(jsc.dict(jsc.string)),
     jsc.array(jsc.dict(jsc.string)),
     (xs, ys) => isEqual(isEqual(xs, ys), equalsManyWith(isEqual, xs, ys))
+  );
+});
+
+describe("uid generation", () => {
+  let clock;
+
+  beforeEach(() => {
+    clock = sinon.useFakeTimers(Date.now());
+  });
+
+  afterEach(() => {
+    clock.restore();
+  });
+
+  const id = (seed, d) => {
+    const counter = crypto
+      .createHash("sha1")
+      .update(Math.floor(d / 1000).toString())
+      .digest("hex");
+    const random = crypto
+      .createHash("sha1")
+      .update(seed)
+      .digest("hex");
+    return crypto
+      .createHmac("sha1", random)
+      .update(counter)
+      .digest("hex");
+  };
+
+  property("pure version", jsc.nestring, seed => {
+    const d = Date.now();
+    return isEqual(id(seed, d), uid(seed, d));
+  });
+
+  property("uses now as counter if not specified", jsc.nestring, seed => {
+    const d = Date.now();
+    return isEqual(id(seed, d), uid(seed));
+  });
+
+  property("produces strings of 40 characters", jsc.unit, () =>
+    isEqual(40, uid().length)
   );
 });
