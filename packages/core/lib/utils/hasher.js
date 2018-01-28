@@ -6,12 +6,12 @@ import {stringify} from "./";
 const epoch = d => Math.floor(d / 1000);
 
 export const generateSeed = count => {
-  let out = "";
+  const out = [];
   for (let i = 0; i < count; i += 1) {
     // eslint-disable-next-line no-bitwise
-    out += (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+    out.push((((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1));
   }
-  return out;
+  return out.join("");
 };
 
 export const sha256 = s =>
