@@ -29,6 +29,10 @@ const mark = curry((marker, envelope) =>
   fmapData(ds.concatOne({_sc_markers: [marker]}), envelope)
 );
 
+const dates = curry((date, envelope) =>
+  fmapData(ds.concatOne({_sc_pubdates: {pipeline: date}}), envelope)
+);
+
 const unitDefaults = fmapData(ds.concatOne(ds.emptyOne()));
 
 const hashData = fmapData(ds.hashOne);
@@ -113,6 +117,7 @@ const runner = curry((plugins, cfg, queries) => {
                 hashData,
                 source(name),
                 mark(marker),
+                dates(timestamp),
                 stats(stream, name),
                 end(stream, name),
               ],
