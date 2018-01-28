@@ -10,7 +10,7 @@ import hasher from "./utils/hasher";
 import assertions from "./utils/assertions";
 
 const utils = merge(u, {hasher, assertions});
-const crypto = pick(["sha1", "sha256", "uid", "generateSeed"], hasher);
+const crypto = pick(["md5", "sha1", "sha256", "uid", "generateSeed"], hasher);
 
 export {runner, queries, data, envelope, plugin, utils, crypto};
 

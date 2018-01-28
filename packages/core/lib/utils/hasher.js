@@ -26,6 +26,12 @@ export const sha1 = s =>
     .update(s)
     .digest("hex");
 
+export const md5 = s =>
+  crypto
+    .createHash("md5")
+    .update(s)
+    .digest("hex");
+
 export const hashKeys = curry((keys, u) =>
   flow([pick(keys), values, stringify, sha256])(u)
 );
@@ -53,6 +59,7 @@ export default {
   generateSeed,
   sha256,
   sha1,
+  md5,
   hashKeys,
   hashWithField,
   uid,
