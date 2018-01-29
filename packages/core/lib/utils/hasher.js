@@ -43,9 +43,8 @@ export const hashWithField = curry((field, u) => hashKeys(u[field], u));
 // - `d` :: Use this time stamp as counter. If not provided use `Date.now()`.
 // Based on: http://antirez.com/news/99
 export const uid = (random, d) => {
-  const seconds = d ? epoch(d) : epoch(Date.now());
   const seed = sha1(random ? random.toString() : generateSeed(8));
-  const counter = sha1(seconds.toString());
+  const counter = sha1((d ? epoch(d) : epoch(Date.now())).toString());
 
   // Make it harder to predict uid's. The uid is a hmac with the seed as
   // secret and the counter as message. Return the hmac as hex.
