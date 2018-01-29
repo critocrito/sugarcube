@@ -120,7 +120,7 @@ const runner = curry((plugins, cfg, queries) => {
                 source(name),
                 mark(marker),
                 dates(timestamp),
-                pluginStats(stream, name),
+                pluginStats(stream, name, stats),
                 end(stream, name),
               ],
               envelope,
