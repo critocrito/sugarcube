@@ -1,5 +1,5 @@
 import {map, merge, get} from "lodash/fp";
-import {flow as flowP, flatmap} from "dashp";
+import {flowP, flatmapP, tapP} from "dashp";
 import {envelope as env, data as d, plugin as p} from "@sugarcube/core";
 import {unfold} from "@sugarcube/plugin-fs";
 
@@ -8,7 +8,7 @@ import {assertIdFields} from "../assertions";
 
 const querySource = "glob_pattern";
 
-const importPlugin = (envelope, {cfg}) => {
+const importPlugin = (envelope, {cfg, log}) => {
   const patterns = env.queriesByType(querySource, envelope);
   const delimiter = get("csv.delimiter", cfg);
   // FIXME: Split the string as part of the command parsing coercion
@@ -20,11 +20,11 @@ const importPlugin = (envelope, {cfg}) => {
 
   return flowP(
     [
-      flatmap(pattern =>
-        // The order of the merge matters, otherwise the id_fields are merged badly.
-        unfold(pattern).then(map(u => merge(u, entity)))
-      ),
+      // The order of the merge matters, otherwise the id_fields are merged badly.
+      flatmapP(pattern => unfold(pattern).then(map(u => merge(u, entity)))),
+      tapP(fs => log.info(`Parsing data from ${fs.length} files.`)),
       parseMany(delimiter),
+      tapP(xs => log.info(`Parsed ${xs.length} units.`)),
       xs => env.concatData(xs, envelope),
     ],
     patterns
@@ -34,13 +34,5 @@ const importPlugin = (envelope, {cfg}) => {
 const plugin = p.liftManyA2([assertIdFields, importPlugin]);
 
 plugin.desc = "Import data from csv files.";
-
-plugin.argv = {
-  "csv.id_fields": {
-    nargs: 1,
-    desc: "Specify the id fields separated by a comma.",
-    coerce: arg => arg.split(","),
-  },
-};
 
 export default plugin;
