@@ -1,16 +1,17 @@
 import {property, merge, get} from "lodash/fp";
-import {flowP} from "dashp";
+import {flowP, tapP} from "dashp";
 import {envelope as env} from "@sugarcube/core";
 
 import {safeExtract} from "../utils";
 
-const parseLocation = (envelope, {cfg}) => {
+const parseLocation = (envelope, {cfg, log}) => {
   const location = get("tika.location_field", cfg);
   return env.fmapDataAsync(
     unit =>
       flowP(
         [
           property(location),
+          tapP(url => log.debug(`Tika parses ${url}.`)),
           safeExtract,
           ([text, meta]) => merge(unit, {text, meta}),
         ],
