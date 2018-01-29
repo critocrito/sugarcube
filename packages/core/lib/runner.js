@@ -5,12 +5,13 @@ import {flowP, caughtP, tapP, foldP} from "dashp";
 import {liftManyA2} from "./data/plugin";
 import {envelopeQueries, fmapData} from "./data/envelope";
 import ds from "./data/data";
+import {state} from "./state";
 import {uid, generateSeed} from "./utils/hasher";
 import {now} from "./utils";
 
 // The following functions provide funtionalities that should be run every
 // time a plugin is run. The plugin runner composes them with the plugin.
-const stats = curry((stream, name, envelope) => {
+const pluginStats = curry((stream, name, stats, envelope) => {
   stream.push({type: "plugin_stats", plugin: name, size: size(envelope.data)});
   return envelope;
 });
@@ -86,6 +87,7 @@ const source = curry((name, envelope) =>
  * run();
  */
 const runner = curry((plugins, cfg, queries) => {
+  const stats = state({});
   const seed = generateSeed(8);
   const timestamp = now();
   const stream = Bacon.Bus();
@@ -118,15 +120,16 @@ const runner = curry((plugins, cfg, queries) => {
                 source(name),
                 mark(marker),
                 dates(timestamp),
-                stats(stream, name),
+                pluginStats(stream, name),
                 end(stream, name),
               ],
               envelope,
-              {log, cfg: merge({marker}, cfg)}
+              {stats, log, cfg: merge({marker}, cfg)}
             ),
           envelopeQueries(queries)
         ),
         caughtP(e => stream.error(e)),
+        tapP(() => stream.push({type: "stats", stats: stats.get()})),
         tapP(() => stream.end()),
       ],
       pipeline

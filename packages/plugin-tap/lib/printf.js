@@ -2,7 +2,7 @@
 import {getOr, take} from "lodash/fp";
 import {inspect} from "util";
 
-const printf = (envelope, {cfg}) => {
+const printf = (envelope, {stats, cfg}) => {
   const {data, queries} = envelope;
   const limit = getOr(null, "tap.limit", cfg);
   const opts = {colors: true, depth: null, maxArrayLength: null};
@@ -13,6 +13,8 @@ const printf = (envelope, {cfg}) => {
   console.log(inspect(queries, opts));
   console.log("\nConfig:");
   console.log(inspect(cfg, opts));
+  console.log("\nStats:");
+  console.log(inspect(stats.get(), opts));
 
   return envelope;
 };

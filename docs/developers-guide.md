@@ -144,6 +144,65 @@ fields:
 
 Plugins document which query types they expect.
 
+### Stats
+
+Plugins receive a `stats` object as part of it's arguments:
+
+```js
+const plugin = (envelope, {stats}) => {
+  // ...
+};
+```
+
+It is updated in place and can be used to collect stats that persist over the
+lifetime of a pipeline. To put and retrieve data into `stats` use `get` and
+`update`:
+
+```js
+const plugin = (envelops, {stats}) => {
+  stats.update(merge({a: 23}));
+  stats.update("b.c", {b: 42});
+  stats.get();
+  stats.get("b");
+};
+```
+
+Both `update`and `get` can be called with an optional path argument that
+specifies the path into the nested data. `update` additionally takes a
+transition function as a second argument. This function is called with the
+stats data, or just a nested structure specified by the path. If this path
+doesn't exist, always produce an empty object.
+
+```js
+const plugin = (envelope, {stats}) => {
+  stats.get(); // => {}  the empty object is the default state
+  stats.get("a.b.c"); // => {}  always produce an empty object
+
+  stats.update(merge({a: 23}));
+  stats.get(); // => {a: 23}
+
+  stats.update("a.b.c", merge({d: 42})); // Update nested.
+  stats.get(); // => {a: 23, b: {c: {d: 42}}}
+};
+```
+
+At the end on any pipeline the final stats are published by the runner on the
+stream under the `stats` type.
+
+```js
+const run = runner(plugins, config, queries);
+
+run.stream.onValue(msg => {
+  switch (msg.type) {
+    // ...
+    case "stats":
+      // msg.stats hold the final stats
+      break;
+    // ..
+  }
+})
+```
+
 ## Tutorial: Developing plugins
 
 We will develop an example plugin for SugarCube. The plugin will list files

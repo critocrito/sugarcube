@@ -131,6 +131,9 @@ try {
 }
 
 run.stream.onValue(msg => {
+  let statsNames;
+  let text;
+
   switch (msg.type) {
     case "log_info":
       info(msg.msg);
@@ -151,6 +154,11 @@ run.stream.onValue(msg => {
       break;
     case "plugin_end":
       info(`Finished the ${msg.plugin} plugin.`);
+      break;
+    case "stats":
+      statsNames = Object.keys(msg.stats);
+      text = isEmpty(statsNames) ? "none" : statsNames.join(", ");
+      info(`receiving stats for: ${text}`);
       break;
     default:
       break;
