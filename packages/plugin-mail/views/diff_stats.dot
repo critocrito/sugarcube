@@ -1,0 +1,16 @@
+These are the diff statistics for the "{{=it.meta.pipeline}}" pipeline.
+
+This email was send to:{{~it.recipients :recipient}}
+- {{=recipient}}{{~}}
+
+Units added ({{=it.added.count}}):{{~it.added.units :unit}}
+- {{=unit.name}}
+  {{=unit._sc_id_hash}}{{~}}
+
+
+Units removed ({{=it.added.count}}):{{~it.removed.units :unit}}
+- {{=unit.name}}
+  {{=unit._sc_id_hash}}{{~}}
+
+
+There were {{=it.shared.count}} units in common.

@@ -22,6 +22,7 @@
     "@sugarcube/plugin-guardian": "file:../packages/plugin-guardian",
     "@sugarcube/plugin-http": "file:../packages/plugin-http",
     "@sugarcube/plugin-instagram": "file:../packages/plugin-instagram",
+    "@sugarcube/plugin-mail": "file:../packages/plugin-mail",
     "@sugarcube/plugin-media": "file:../packages/plugin-media",
     "@sugarcube/plugin-mongodb": "file:../packages/plugin-mongodb",
     "@sugarcube/plugin-regex": "file:../packages/plugin-regex",

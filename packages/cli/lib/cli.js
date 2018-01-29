@@ -44,7 +44,7 @@ dotenv.config();
 
 // Basic arguments for the command line tool.
 const yargs = require("yargs")
-  .env("LF_")
+  .env("SUGARCUBE_")
   .nargs("p", 1)
   .alias("p", "plugins")
   .string("p")
