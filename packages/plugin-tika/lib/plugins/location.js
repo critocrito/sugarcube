@@ -13,7 +13,23 @@ const parseLocation = (envelope, {cfg, log}) => {
           property(location),
           tapP(url => log.debug(`Tika parses ${url}.`)),
           safeExtract,
-          ([text, meta]) => merge(unit, {text, meta}),
+          ([text, meta]) =>
+            merge(unit, {
+              text,
+              meta,
+              _sc_media: unit._sc_media.concat([
+                {
+                  type: "tika_location_text",
+                  term: text,
+                  field: location,
+                },
+                {
+                  type: "tika_location_meta",
+                  term: meta,
+                  field: location,
+                },
+              ]),
+            }),
         ],
         unit
       ),
