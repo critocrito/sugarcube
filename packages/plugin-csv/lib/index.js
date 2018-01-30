@@ -2,12 +2,14 @@ import {merge, values, forEach} from "lodash/fp";
 import exportPlugin from "./plugins/export";
 import importPlugin from "./plugins/import";
 import diffPlugin from "./plugins/diff";
+import diffExportPlugin from "./plugins/diff-export";
 import {parse, parseMany} from "./parse";
 
 const plugins = {
   csv_export: exportPlugin,
   csv_import: importPlugin,
   csv_diff: diffPlugin,
+  csv_diff_stats_export: diffExportPlugin,
 };
 
 const importPlugins = [importPlugin, diffPlugin];
