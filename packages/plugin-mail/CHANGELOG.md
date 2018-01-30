@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.5.1"></a>
+## [0.5.1](https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-mail/compare/v0.5.0...v0.5.1) (2018-01-30)
+
+
+### Bug Fixes
+
+* **plugin-mail:** Don't exclude all files in an attempt to include the mail stats template. ([ded4c96](https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-mail/commit/ded4c96))
+
+
+
+
 <a name="0.5.0"></a>
 # [0.5.0](https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-mail/compare/v0.4.0...v0.5.0) (2018-01-30)
 

@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/plugin-mail",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Send email notifications.",
   "main": "_dist/index.js",
   "license": "GPL-3.0",

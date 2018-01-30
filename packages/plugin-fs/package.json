@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/plugin-fs",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Operate on the file system.",
   "main": "_dist/index.js",
   "license": "GPL-3.0",
