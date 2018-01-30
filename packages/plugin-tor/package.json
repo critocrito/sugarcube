@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/plugin-tor",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Use SugarCube using the Tor project.",
   "main": "_dist/index.js",
   "repository": "https://gitlab.com/sugarcube/sugarcube",
@@ -17,7 +17,7 @@
     "tor"
   ],
   "dependencies": {
-    "@sugarcube/core": "^0.4.0",
+    "@sugarcube/core": "^0.5.0",
     "cheerio": "^1.0.0-rc.2",
     "dashp": "^0.8.1",
     "lodash": "^4.17.4",

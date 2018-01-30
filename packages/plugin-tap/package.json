@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/plugin-tap",
-  "version": "0.3.0",
+  "version": "0.5.0",
   "description": "K-combinators for sugarcube.",
   "main": "_dist/index.js",
   "keywords": [
