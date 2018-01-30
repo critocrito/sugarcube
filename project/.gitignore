@@ -1,2 +1,3 @@
 configs/*.json
 google-sheets-token.json
+data
