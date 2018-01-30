@@ -95,9 +95,9 @@ const mailDiffStats = (envelope, {cfg, log, stats}) => {
           }),
         ],
         recipient
-      ).then(() => envelope);
+      );
     })
-  );
+  ).then(() => envelope);
 };
 
 const plugin = p.liftManyA2([assertFrom, mailDiffStats]);
