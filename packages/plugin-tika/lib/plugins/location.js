@@ -1,53 +1,55 @@
-import {property, merge, get} from "lodash/fp";
-import {flowP, tapP} from "dashp";
+import {merge, get} from "lodash/fp";
+import {flowP, foldP, tapP} from "dashp";
 import {envelope as env} from "@sugarcube/core";
 
 import {safeExtract} from "../utils";
 
-const parseLocation = (envelope, {cfg, log}) => {
-  const location = get("tika.location_field", cfg);
+const querySource = "tika_location_field";
+
+const plugin = (envelope, {log}) => {
+  const fields = env.queriesByType(querySource, envelope);
+
   return env.fmapDataAsync(
     unit =>
-      flowP(
-        [
-          property(location),
-          tapP(url => log.debug(`Tika parses ${url}.`)),
-          safeExtract,
-          ([text, meta]) =>
-            merge(unit, {
-              text,
-              meta,
-              _sc_media: unit._sc_media.concat([
-                {
-                  type: "tika_location_text",
-                  term: text,
-                  field: location,
-                },
-                {
-                  type: "tika_location_meta",
-                  term: meta,
-                  field: location,
-                },
-              ]),
-            }),
-        ],
-        unit
+      foldP(
+        (memo, field) => {
+          const value = get(field, unit);
+          if (!value) {
+            log.debug(`There is no value for ${field} on the unit.`);
+            return memo;
+          }
+          return flowP(
+            [
+              tapP(url => log.debug(`Parse ${field}: ${url}.`)),
+              safeExtract,
+              ([text, meta]) =>
+                merge(memo, {
+                  [`${field}_text`]: text,
+                  [`${field}_meta`]: meta,
+                  _sc_media: unit._sc_media.concat([
+                    {
+                      type: "tika_location_text",
+                      term: text,
+                      field,
+                    },
+                    {
+                      type: "tika_location_meta",
+                      term: meta,
+                      field,
+                    },
+                  ]),
+                }),
+            ],
+            value
+          );
+        },
+        unit,
+        fields
       ),
     envelope
   );
 };
 
-const plugin = parseLocation;
-
 plugin.desc = "Extract the data and meta data from a given location.";
-
-plugin.argv = {
-  "tika.location_field": {
-    type: "string",
-    nargs: 1,
-    default: "location",
-    desc: "Specify the field name that points to the location.",
-  },
-};
 
 export default plugin;

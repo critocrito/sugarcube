@@ -21,17 +21,18 @@ throw.
 
 ### `tika_location` plugin
 
-This plugin parses any location specified with the `tika.location_field`
-configuration options. This allows to fetch, e.g. a url inside of the unit.
+This plugin parses any location specified using the `tika_location_field`
+query type. This fetches the text and meta data of e.g. a url inside the unit.
 
 ```
-sugarcube -Q google_search:Keith\ Johnstone -p google_search,tika_location --tika.location_field href
+sugarcube -Q google_search:Keith\ Johnstone \
+          -Q tika_location_field:href \
+          -p google_search,tika_location
 ```
 
-**Configuration Options**:
-
-- `tika.location_field`: Specify the field name to look for the location of
-  the URI or file to parse. Defaults to `location`.
+The text and meta data are added into the `_sc_media` collection and placed
+directly on the unit as well, e.g. if the location field is `href`, the
+`href_text` and `href_meta` fields are added to the unit.
 
 ### `tika_export` plugin
 
