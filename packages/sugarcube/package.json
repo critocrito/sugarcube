@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/sugarcube",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "The SugarCube distribution.",
   "main": "_dist/index.js",
   "license": "GPL-3.0",
@@ -24,7 +24,7 @@
     "@sugarcube/plugin-guardian": "^0.5.0",
     "@sugarcube/plugin-http": "^0.5.1",
     "@sugarcube/plugin-instagram": "^0.5.0",
-    "@sugarcube/plugin-media": "^0.6.0",
+    "@sugarcube/plugin-media": "^0.6.1",
     "@sugarcube/plugin-mongodb": "^0.5.0",
     "@sugarcube/plugin-regex": "^0.5.1",
     "@sugarcube/plugin-sec": "^0.5.1",

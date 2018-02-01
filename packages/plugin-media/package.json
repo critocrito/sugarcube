@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/plugin-media",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Media related plugins.",
   "main": "_dist/index.js",
   "repository": "https://gitlab.com/sugarcube/sugarcube",
