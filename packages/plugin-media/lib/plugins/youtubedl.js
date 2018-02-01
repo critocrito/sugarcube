@@ -15,7 +15,7 @@ const downloadTypes = ["video"];
 const plugin = (envelope, {cfg, log}) => {
   const dataDir = get("media.data_dir", cfg);
   const cmd = get("media.youtubedl_cmd", cfg);
-  const videoFormat = get("youtube.download_format", cfg);
+  const videoFormat = get("media.download_format", cfg);
 
   // ensure the download directory.
   return flowP(
