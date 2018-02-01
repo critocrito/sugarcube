@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.6.0"></a>
+# [0.6.0](https://gitlab.com/sugarcube/sugarcube/tree/master/packages/sugarcube/compare/v0.5.1...v0.6.0) (2018-02-01)
+
+
+
+
+**Note:** Version bump only for package @sugarcube/sugarcube
+
 <a name="0.5.1"></a>
 ## [0.5.1](https://gitlab.com/sugarcube/sugarcube/tree/master/packages/sugarcube/compare/v0.5.0...v0.5.1) (2018-01-30)
 

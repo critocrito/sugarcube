@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.6.0"></a>
+# [0.6.0](https://gitlab.com/sugarcube/sugarcube/compare/v0.5.1...v0.6.0) (2018-02-01)
+
+
+### Features
+
+* **plugin-tika:** Added the tika_export plugin. ([afe00b3](https://gitlab.com/sugarcube/sugarcube/commit/afe00b3))
+* **plugin-tika:** Allow the tika_location plugin to parse more than one field. ([f2205f6](https://gitlab.com/sugarcube/sugarcube/commit/f2205f6))
+
+
+
+
 <a name="0.5.1"></a>
 ## [0.5.1](https://gitlab.com/sugarcube/sugarcube/compare/v0.5.0...v0.5.1) (2018-01-30)
 

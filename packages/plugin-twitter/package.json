@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/plugin-twitter",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Query the Twitter API as a SugarCube plugin.",
   "main": "_dist/index.js",
   "license": "GPL-3.0",

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.6.0"></a>
+# [0.6.0](https://gitlab.com/sugarcube/sugarcube/compare/v0.5.1...v0.6.0) (2018-02-01)
+
+
+### Features
+
+* **plugin-twitter:** Scrape extended entities to include videos. ([dab1da7](https://gitlab.com/sugarcube/sugarcube/commit/dab1da7))
+
+
+
+
 <a name="0.5.0"></a>
 # [0.5.0](https://gitlab.com/sugarcube/sugarcube/compare/v0.4.0...v0.5.0) (2018-01-30)
 
