@@ -49,8 +49,8 @@ const mediaEntities = map(media =>
     {},
     {
       id: media.id_str,
-      type: "image",
-      term: `${media.media_url_https}:large`,
+      type: media.type === "photo" ? "image" : media.type,
+      term: media.expanded_url,
     }
   )
 );
@@ -110,14 +110,13 @@ const hashtagsToRelations = map(h => merge({}, {type: "hashtag", term: h.tag}));
 
 const linksToRelations = map(l => merge({}, {type: "url", term: l.term}));
 
-const mediaToDownloads = map(m => merge({}, {type: "image", term: m.term}));
-
-const linksToDownloads = map(l => merge({}, {type: "url", term: l.term}));
-
 const tweet = t => {
   const lfLinks = flow([getOr([], "entities.urls"), urlEntities("url")])(t);
-  const lfImages = flow([getOr([], "entities.media"), mediaEntities])(t);
+  const lfMedia = flow([getOr([], "extended_entities.media"), mediaEntities])(
+    t
+  );
   const lfHashtags = flow([getOr([], "entities.hashtags"), hashtagEntities])(t);
+
   const lfMentions = flow([
     getOr([], "entities.user_mentions"),
     mentionEntities,
@@ -129,20 +128,17 @@ const tweet = t => {
       _sc_content_fields: ["tweet"],
       _sc_pubdates: pubDates(t),
       _sc_links: lfLinks,
-      _sc_media: lfImages,
-      _sc_relations: flow([
-        concat(mentionsToRelations(lfMentions)),
-        concat(hashtagsToRelations(lfHashtags)),
-        concat(linksToRelations(lfLinks)),
-        concat(linksToRelations(lfImages)),
-      ])([]),
-      _sc_downloads: flow([
-        concat(mediaToDownloads(lfImages)),
-        concat(linksToDownloads(lfLinks)),
-      ])([]),
+      _sc_relations: flatten([
+        mentionsToRelations(lfMentions),
+        hashtagsToRelations(lfHashtags),
+        lfLinks,
+        lfMedia,
+      ]),
+      _sc_media: flatten([lfMedia, lfLinks]),
+      _sc_downloads: flatten([lfMedia, lfLinks]),
       user: userEntity(t.user),
-      urls: lfLinks,
-      medias: lfImages,
+      urls: getOr([], "entities.url", t),
+      medias: getOr([], "extended_entities.media", t),
       hashtags: lfHashtags,
       mentions: lfMentions,
     },
@@ -183,10 +179,7 @@ const user = curry((source, u) => {
         linksToRelations(lfLinks),
         linksToRelations(lfImages),
       ]),
-      _sc_downloads: flatten([
-        mediaToDownloads(lfImages),
-        linksToDownloads(lfLinks),
-      ]),
+      _sc_downloads: flatten([lfImages, lfLinks]),
       // TODO: This is broken, where does _sc_graph* from from?
       // _sc_graph: {from: u._sc_graph_from, depth: u._sc_graph_depth},
       urls,
