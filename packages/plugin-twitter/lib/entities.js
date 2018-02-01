@@ -135,7 +135,6 @@ const tweet = t => {
         lfMedia,
       ]),
       _sc_media: flatten([lfMedia, lfLinks]),
-      _sc_downloads: flatten([lfMedia, lfLinks]),
       user: userEntity(t.user),
       urls: getOr([], "entities.url", t),
       medias: getOr([], "extended_entities.media", t),
@@ -172,14 +171,13 @@ const user = curry((source, u) => {
       _sc_id_fields: ["user_id"],
       _sc_pubdates: pubDates(u),
       _sc_links: lfLinks,
-      _sc_media: lfImages,
       _sc_relations: flatten([
         hashtagsToRelations(lfHashtags),
         mentionsToRelations(lfMentions),
         linksToRelations(lfLinks),
         linksToRelations(lfImages),
       ]),
-      _sc_downloads: flatten([lfImages, lfLinks]),
+      _sc_media: flatten([lfImages, lfLinks]),
       // TODO: This is broken, where does _sc_graph* from from?
       // _sc_graph: {from: u._sc_graph_from, depth: u._sc_graph_depth},
       urls,
