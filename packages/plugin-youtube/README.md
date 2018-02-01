@@ -66,6 +66,9 @@ Setting any of these increases performance, but is capped at around 500 video re
 
 ### `youtube_download`
 
+NOTE: This plugin is about to deprecate. Use the `media_youtubedl` plugin as a
+replacement.
+
 This plugin downloads all videos of type 'youtube_video' that are found in the
 `_sc_downloads` field and calculates a sha256 hash sum of the downloaded
 file. It also downloads thumbnails and subtitle files if available. The plugin
