@@ -2,10 +2,12 @@ import {forEach, merge, values} from "lodash/fp";
 
 import getPlugin from "./plugins/get";
 import wgetPlugin from "./plugins/wget";
+import screenshotPlugin from "./plugins/screenshot";
 
 const plugins = {
   http_get: getPlugin,
   http_wget: wgetPlugin,
+  http_screenshot: screenshotPlugin,
 };
 
 forEach(p => {
