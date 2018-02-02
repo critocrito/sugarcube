@@ -1,39 +1,24 @@
-import {curry, merge} from "lodash/fp";
+import {curry} from "lodash/fp";
 import request from "request";
-import {join, basename} from "path";
-import url from "url";
 import fs from "fs";
 import {spawn} from "child-process-promise";
-import {mkdirP, sha256sum} from "@sugarcube/plugin-fs";
+import {mkdirP} from "@sugarcube/plugin-fs";
 
 export const assertDir = (envelope, {cfg}) => {
   const dir = cfg.http.data_dir;
   return mkdirP(dir).then(() => envelope);
 };
 
-export const download = curry((dir, d) => {
-  if (!d.term) return Promise.resolve(d);
-
-  const fileName = basename(url.parse(d.term).pathname);
-  const location = join(dir, fileName);
-
-  const fetchFile = (href, target) =>
+export const download = curry(
+  (from, to) =>
     // eslint-disable-next-line promise/avoid-new
     new Promise((resolve, reject) =>
-      request(href)
+      request(from)
         .on("end", resolve)
         .on("error", reject)
-        .on("response", res => res.pipe(fs.createWriteStream(target)))
-    ).then(() => sha256sum(target));
-
-  return mkdirP(dir)
-    .then(() => sha256sum(location))
-    .catch(e => {
-      if (e.code === "ENOENT") return fetchFile(d.term, location);
-      throw e;
-    })
-    .then(sha256 => merge(d, {location, sha256}));
-});
+        .on("response", res => res.pipe(fs.createWriteStream(to)))
+    )
+);
 
 export const wget = curry((cmd, target, term) => {
   const args = [
