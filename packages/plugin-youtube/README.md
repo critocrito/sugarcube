@@ -64,28 +64,13 @@ Other Possible config values are:
 
 Setting any of these increases performance, but is capped at around 500 video results.
 
-### `youtube_download`
-
-NOTE: This plugin is about to deprecate. Use the `media_youtubedl` plugin as a
-replacement.
-
-This plugin downloads all videos of type 'youtube_video' that are found in the
-`_sc_downloads` field and calculates a sha256 hash sum of the downloaded
-file. It also downloads thumbnails and subtitle files if available. The plugin
-uses the external `youtube-dl` program to actually download. It has the
-following configuration options:
-
-- `youtube.download_dir`: Download all videos into this directory. Defaults to
-  `downloads`.
-- `youtube.download_format`: Download videos in this video format. Defaults to
-  `mp4`.
-- `youtube.cmd`: The path to the `youtube-dl` command. Defaults to
-  `youtube-dl`, with no specific path supplied.
-
-## Example
+The following example fetches a Youtube channel and downloads all available
+videos. It uses the `media_youtubedl` plugin.
 
 ```
-$(npm bin)/sugarcube -q queries.json -c config.json -p youtube_channel,youtube_download
+$(npm bin)/sugarcube -c config.json \
+                     -q channels.json \
+                     -p youtube_channel,media_youtubedl
 ```
 
 ## License
