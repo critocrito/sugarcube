@@ -18,7 +18,7 @@ const fetchPage = (envelope, {cfg, log}) => {
 
         const {type, term} = media;
         const idHash = media._sc_id_hash;
-        const location = join(dataDir, unit._sc_id_hash, type, idHash);
+        const location = join(dataDir, unit._sc_id_hash, "wget", idHash);
 
         return flowP(
           [
