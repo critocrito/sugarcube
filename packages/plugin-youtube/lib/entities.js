@@ -29,6 +29,10 @@ export const video = item =>
         type: "video",
         term: `https://www.youtube.com/watch?v=${item.id}`,
       },
+      {
+        type: "url",
+        term: `https://www.youtube.com/watch?v=${item.id}`,
+      },
     ],
   });
 
@@ -60,6 +64,10 @@ export const playlistVideo = item =>
       },
       {
         type: "video",
+        term: `https://www.youtube.com/watch?v=${item.contentDetails.videoId}`,
+      },
+      {
+        type: "url",
         term: `https://www.youtube.com/watch?v=${item.contentDetails.videoId}`,
       },
     ],
