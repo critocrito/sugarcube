@@ -1,4 +1,4 @@
-import {curry, flow, map, filter, concat, merge, get, getOr} from "lodash/fp";
+import {curry, map, merge, flatten, get, getOr} from "lodash/fp";
 
 const TAG = /(?:#)([A-Za-z0-9_](?:(?:[A-Za-z0-9_]|(?:\.(?!\.))){0,28}(?:[A-Za-z0-9_]))?)/g;
 const MENTION = /(?:@)([A-Za-z0-9_](?:(?:[A-Za-z0-9_]|(?:\.(?!\.))){0,28}(?:[A-Za-z0-9_]))?)/g;
@@ -32,21 +32,14 @@ export const postEntity = curry((username, post) => {
     {type: "image", term: entity.imageUrl},
     {type: "image", term: entity.userProfilePicture},
   ];
-  const lfMedia = filter({type: "image"}, lfLinks);
   const lfHashtags = map(term => ({type: "hashtag", term}), entity.hashtags);
   const lfMentions = map(term => ({type: "mention", term}), entity.mentions);
-  const lfRelations = flow([
-    concat(lfHashtags),
-    concat(lfMentions),
-    concat(map(({term}) => ({type: "url", term}), lfLinks)),
-  ])([]);
-  const lfDownloads = lfLinks;
+  const lfRelations = flatten([lfHashtags, lfMentions, lfLinks]);
 
   return merge(entity, {
     _sc_links: lfLinks,
-    _sc_media: lfMedia,
+    _sc_media: lfLinks,
     _sc_relations: lfRelations,
-    _sc_downloads: lfDownloads,
   });
 });
 

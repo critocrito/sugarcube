@@ -26,7 +26,7 @@ export const entity = curry((source, unit) =>
     _sc_content_fields: ["title"],
     _sc_links: [{type: "url", term: unit.href}],
     _sc_relations: [{type: "url", term: unit.href}],
-    _sc_downloads: [{type: "url", term: unit.href}],
+    _sc_media: [{type: "url", term: unit.href}],
   })
 );
 
@@ -50,11 +50,10 @@ export const imagesEntity = curry((term, unit) =>
       {type: "url", term: unit.href},
       {type: "url", term: unit.imgHref},
     ],
-    _sc_downloads: [
+    _sc_media: [
       {type: "image", term: unit.href},
       {type: "url", term: unit.imgHref},
     ],
-    _sc_media: [{type: "image", term: unit.href}],
   })
 );
 

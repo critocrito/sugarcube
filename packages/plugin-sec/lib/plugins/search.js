@@ -79,7 +79,7 @@ const scrape = html => {
       sic: !sic || sic === "0000" ? null : sic,
       _sc_id_fields: ["cik"],
       _sc_relations: [{type: "url", term: filingLink}],
-      _sc_downloads: [{type: "url", term: filingLink}],
+      _sc_media: [{type: "url", term: filingLink}],
       _sc_links: [{type: "url", term: filingLink}],
     };
   }, chunk(4, results));

@@ -51,7 +51,7 @@ const content = (envelope, {log, cfg}) => {
             {type: "url", term: r.webUrl},
             {type: "url", term: r.apiUrl},
           ],
-          _sc_downloads: [
+          _sc_media: [
             {type: "url", term: r.webUrl},
             {type: "json", term: r.apiUrl},
           ],

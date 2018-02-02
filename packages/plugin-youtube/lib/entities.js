@@ -30,13 +30,6 @@ export const video = item =>
         term: `https://www.youtube.com/watch?v=${item.id}`,
       },
     ],
-    _sc_downloads: [
-      {
-        type: "youtube_video",
-        term: `https://www.youtube.com/watch?v=${item.id}`,
-        videoId: item.id,
-      },
-    ],
   });
 
 export const playlistVideo = item =>
@@ -68,13 +61,6 @@ export const playlistVideo = item =>
       {
         type: "video",
         term: `https://www.youtube.com/watch?v=${item.contentDetails.videoId}`,
-      },
-    ],
-    _sc_downloads: [
-      {
-        type: "youtube_video",
-        term: `https://www.youtube.com/watch?v=${item.contentDetails.videoId}`,
-        videoId: item.contentDetails.videoId,
       },
     ],
   });
