@@ -2,7 +2,6 @@ import {merge, get, includes} from "lodash/fp";
 import {flowP, tapP, collectP, caughtP} from "dashp";
 import {join} from "path";
 import {envelope as env, plugin as p} from "@sugarcube/core";
-import {mkdirP} from "@sugarcube/plugin-fs";
 
 import {assertDir, wget} from "../utils";
 
@@ -12,37 +11,30 @@ const fetchPage = (envelope, {cfg, log}) => {
   const cmd = get("http.wget_cmd", cfg);
   const dataDir = get("http.data_dir", cfg);
 
-  return flowP(
-    [
-      mkdirP,
-      () =>
-        env.fmapDataAsync(
-          unit =>
-            collectP(media => {
-              if (!includes(media.type, wgetTypes)) return media;
+  return env.fmapDataAsync(
+    unit =>
+      collectP(media => {
+        if (!includes(media.type, wgetTypes)) return media;
 
-              const {type, term} = media;
-              const idHash = media._sc_id_hash;
-              const location = join(dataDir, unit._sc_id_hash, type, idHash);
+        const {type, term} = media;
+        const idHash = media._sc_id_hash;
+        const location = join(dataDir, unit._sc_id_hash, type, idHash);
 
-              return flowP(
-                [
-                  wget(cmd, location),
-                  () => unit._sc_downloads.push({location, type, term}),
-                  caughtP(e =>
-                    // FIXME: Wget breaks a lot with error code 8.
-                    log.error(`Wget on ${term} failed with ${e}`)
-                  ),
-                  tapP(() => log.info(`Wget'ed ${term} to ${location}.`)),
-                  () => media,
-                ],
-                term
-              );
-            }, unit._sc_media).then(ms => merge(unit, {_sc_media: ms})),
-          envelope
-        ),
-    ],
-    dataDir
+        return flowP(
+          [
+            wget(cmd, location),
+            () => unit._sc_downloads.push({location, type, term}),
+            caughtP(e =>
+              // FIXME: Wget breaks a lot with error code 8.
+              log.error(`Wget on ${term} failed with ${e}`)
+            ),
+            tapP(() => log.info(`Wget'ed ${term} to ${location}.`)),
+            () => media,
+          ],
+          term
+        );
+      }, unit._sc_media).then(ms => merge(unit, {_sc_media: ms})),
+    envelope
   );
 };
 

@@ -7,7 +7,7 @@ import {spawn} from "child-process-promise";
 import {mkdirP, sha256sum} from "@sugarcube/plugin-fs";
 
 export const assertDir = (envelope, {cfg}) => {
-  const dir = cfg.http.download_dir;
+  const dir = cfg.http.data_dir;
   return mkdirP(dir).then(() => envelope);
 };
 
