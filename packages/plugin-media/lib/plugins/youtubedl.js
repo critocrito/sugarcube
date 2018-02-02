@@ -33,8 +33,8 @@ const plugin = (envelope, {cfg, log}) => {
               }
               const location = join(
                 dataDir,
-                type,
                 unit._sc_id_hash,
+                "youtubedl",
                 `${idHash}.${videoFormat}`
               );
 
