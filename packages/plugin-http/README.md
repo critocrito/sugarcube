@@ -6,21 +6,23 @@ Plugins based on HTTP requests.
 
 ### `http_get`
 
-Fetch images, files, pdf's and videos from `_sc_downloads`.
+Fetch images, files, pdf's and videos from `_sc_data`. Downloaded targets are
+added to the `_sc_downloads` collection.
 
 **Configuration Options**:
 
-- `http.download_dir` (defaults to `./downloads`)
+- `http.data_dir` (defaults to `./data`)
 
   Specify the target download directory.
 
 ### `http_wget`
 
-Fetch whole web pages from `_sc_downloads`.
+Fetch whole web pages from `_sc_media`. Downloaded targets are added to the
+`_sc_downloads` collection.
 
 **Configuration Options**:
 
-- `http.download_dir` (defaults to `./downloads`)
+- `http.data_dir` (defaults to `./data`)
 
   Specify the target download directory.
 

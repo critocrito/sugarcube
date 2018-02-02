@@ -12,10 +12,10 @@ forEach(p => {
   // eslint-disable-next-line no-param-reassign
   p.argv = merge(
     {
-      "http.download_dir": {
+      "http.data_dir": {
         type: "string",
         nargs: 1,
-        default: "downloads",
+        default: "data",
         desc: "The path to the download directory.",
       },
     },

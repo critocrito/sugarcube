@@ -35,7 +35,7 @@ export const download = curry((dir, d) => {
     .then(sha256 => merge(d, {location, sha256}));
 });
 
-export const wget = curry((cmd, target, {term}) => {
+export const wget = curry((cmd, target, term) => {
   const args = [
     "-q",
     "--no-check-certificate",
