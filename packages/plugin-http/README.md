@@ -15,6 +15,10 @@ added to the `_sc_downloads` collection.
 
   Specify the target download directory.
 
+- `http.get_types` (defaults to "image,file,pdf,video")
+
+  Fetch files of this media type. Separate different types using a comma.
+
 ### `http_wget`
 
 Fetch whole web pages from `_sc_media`. Downloaded targets are added to the

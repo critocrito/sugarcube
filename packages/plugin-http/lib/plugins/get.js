@@ -5,10 +5,9 @@ import {envelope as env, plugin as p} from "@sugarcube/core";
 
 import {assertDir, download} from "../utils";
 
-const getTypes = ["image", "file", "pdf", "video"];
-
 const curlGet = (envelope, {log, cfg}) => {
   const dataDir = get("http.data_dir", cfg);
+  const getTypes = get("http.get_types", cfg).split(",");
 
   return env.fmapDataAsync(
     unit =>
@@ -37,5 +36,14 @@ const curlGet = (envelope, {log, cfg}) => {
 const plugin = p.liftManyA2([assertDir, curlGet]);
 
 plugin.desc = "Fetch images from the web.";
+
+plugin.argv = {
+  "http.get_types": {
+    type: "string",
+    nargs: 1,
+    default: "image,file,pdf,video",
+    desc: "Fetch files of those media types.",
+  },
+};
 
 export default plugin;
