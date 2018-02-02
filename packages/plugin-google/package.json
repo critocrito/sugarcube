@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/plugin-google",
-  "version": "0.5.1",
+  "version": "0.7.0",
   "description": "A plugin for SugarCube to interact with some google services.",
   "main": "_dist/index.js",
   "repository": "https://gitlab.com/sugarcube/sugarcube",

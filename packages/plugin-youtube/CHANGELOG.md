@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.7.0"></a>
+# [0.7.0](https://gitlab.com/sugarcube/sugarcube/compare/v0.6.1...v0.7.0) (2018-02-02)
+
+
+### Features
+
+* Consistently use _sc_media over _sc_downloads. ([9c92935](https://gitlab.com/sugarcube/sugarcube/commit/9c92935))
+* **plugin-youtube:** Removed deprecated youtube_download plugin. ([cd9abad](https://gitlab.com/sugarcube/sugarcube/commit/cd9abad))
+* **plugin-youtube:** Store the link to the video as url type in _sc_media as well. ([18e4f9a](https://gitlab.com/sugarcube/sugarcube/commit/18e4f9a))
+
+
+
+
 <a name="0.6.0"></a>
 # [0.6.0](https://gitlab.com/sugarcube/sugarcube/compare/v0.5.1...v0.6.0) (2018-02-01)
 

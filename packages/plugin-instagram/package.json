@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/plugin-instagram",
-  "version": "0.5.0",
+  "version": "0.7.0",
   "description": "A SugarCube plugin to query Instagram.",
   "main": "_dist/index.js",
   "repository": "https://gitlab.com/sugarcube/sugarcube",
