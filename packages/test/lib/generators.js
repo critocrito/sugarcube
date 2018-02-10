@@ -8,11 +8,25 @@ import {
   string,
   record,
   nestring,
+  suchthat,
 } from "jsverify";
 
 import {data as ds, queries as qs} from "@sugarcube/core";
 
 const trueOrFalse = () => random(0, 1) === 0;
+
+const objArb = suchthat(dict(string), o =>
+  Object.keys(o).reduce((memo, k) => {
+    if (!memo) return memo;
+    // Skip undefined and empty strings
+    if (!k) return false;
+    // Forbid unicode control characters and spaces
+    if (/[\u0000-\u0020]/u.test(k)) return false;
+    // Disallow certain keys
+    if (/^-+|_+/.test(k)) return false;
+    return true;
+  }, true)
+);
 
 const generate = (arb, len) => {
   const l = len || random(0, 5);
@@ -24,12 +38,15 @@ const generate = (arb, len) => {
 };
 
 const randomSpec = () => {
-  switch (random(0, 3)) {
+  switch (random(0, 5)) {
     case 0: {
-      return {[nestring.generator(2)]: dict(string)};
+      return {[nestring.generator(2)]: objArb};
     }
     case 1: {
       return {[nestring.generator(2)]: array(string)};
+    }
+    case 2: {
+      return {[nestring.generator(2)]: record(randomSpec())};
     }
     default: {
       return {[nestring.generator(2)]: string};
