@@ -15,7 +15,7 @@ sugarcube -Q glob_pattern:files/**/*.pdf -p tika_parse
 
 ### `tika_links` plugin
 
-This plugin iterates over all links in `_sc_links` and fetches the text and
+This plugin iterates over all links in `_sc_media` and fetches the text and
 meta data for this link. This plugin ignores any errors that the fetch might
 throw.
 

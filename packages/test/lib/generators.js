@@ -99,7 +99,6 @@ const dataUnitSpec = {
   field1: nestring,
   field2: nestring,
   _sc_id_fields: constant(["field1", "field2"]),
-  _sc_links: listsArb,
   _sc_media: listsArb,
   _sc_relations: listsArb,
   _sc_downloads: listsArb,

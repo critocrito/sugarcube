@@ -15,7 +15,6 @@ import {now, concatManyWith, equalsManyWith} from "../utils";
 import {hashWithField} from "../utils/hasher";
 
 const listFields = [
-  "_sc_links",
   "_sc_relations",
   "_sc_media",
   "_sc_downloads",
@@ -38,7 +37,6 @@ const contentId = u => u._sc_content_hash || hashUnitContent(u);
  * @typedef {Object} Unit
  * @property {string} _sc_id_hash The unique identifier of this unit.
  * @property {Array.<string>} _sc_markers A list of run markers.
- * @property {Array.<Object>} _sc_links A list of links.
  * @property {Array.<Object>} _sc_relations A list of relations.
  * @property {Array.<Object>} _sc_media A list of media entities.
  * @property {Array.<Object>} _sc_downloads A list of downloads.
@@ -226,7 +224,7 @@ const {fmapAsync} = ls;
  * @returns {Data} The list of units, where a single list of the unit was
  * mapped over `f`.
  * @example
- * // Returns xs with f applied to every element of `_sc_links`.
+ * // Returns xs with f applied to every element of `_sc_downloads`.
  * xs = generator(10);
  * const f = doSomethingWithAnObject;
  * fmapList('_sc_downloads', f, xs);
@@ -257,16 +255,7 @@ const fmapListAsync = curry((field, f, xs) =>
 );
 
 /**
- * `fmapList` specialized for `_sc_links`.
- */
-const fmapLinks = fmapList("_sc_links");
-/**
- * The asynchronous version of `fmapLinks`.
- */
-const fmapLinksAsync = fmapListAsync("_sc_links");
-
-/**
- * `fmapList` specialized for `_sc_downloads`.
+ * `fmapList` specialized for `_sc_relations`.
  */
 const fmapRelations = fmapList("_sc_relations");
 /**
@@ -275,7 +264,7 @@ const fmapRelations = fmapList("_sc_relations");
 const fmapRelationsAsync = fmapListAsync("_sc_relations");
 
 /**
- * `fmapList` specialized for `_sc_downloads`.
+ * `fmapList` specialized for `_sc_media`.
  */
 const fmapMedia = fmapList("_sc_media");
 /**
@@ -359,8 +348,6 @@ export default {
   fmapRelationsAsync,
   fmapMedia,
   fmapMediaAsync,
-  fmapLinks,
-  fmapLinksAsync,
   fmapQueries,
   fmapQueriesAsync,
 

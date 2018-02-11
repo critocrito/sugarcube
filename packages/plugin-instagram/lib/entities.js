@@ -27,20 +27,16 @@ export const postEntity = curry((username, post) => {
     _sc_content_fields: ["imageUrl", "caption"],
     _sc_query: username,
   };
-  const lfLinks = [
+  const lfMedia = [
     {type: "url", term: entity.postUrl},
     {type: "image", term: entity.imageUrl},
     {type: "image", term: entity.userProfilePicture},
   ];
   const lfHashtags = map(term => ({type: "hashtag", term}), entity.hashtags);
   const lfMentions = map(term => ({type: "mention", term}), entity.mentions);
-  const lfRelations = flatten([lfHashtags, lfMentions, lfLinks]);
+  const lfRelations = flatten([lfHashtags, lfMentions, lfMedia]);
 
-  return merge(entity, {
-    _sc_links: lfLinks,
-    _sc_media: lfLinks,
-    _sc_relations: lfRelations,
-  });
+  return merge(entity, {_sc_media: lfMedia, _sc_relations: lfRelations});
 });
 
 export default {postEntity};

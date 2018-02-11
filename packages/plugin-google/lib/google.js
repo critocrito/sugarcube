@@ -24,7 +24,6 @@ export const entity = curry((source, unit) =>
     _sc_source: source,
     _sc_id_fields: ["href"],
     _sc_content_fields: ["title"],
-    _sc_links: [{type: "url", term: unit.href}],
     _sc_relations: [{type: "url", term: unit.href}],
     _sc_media: [{type: "url", term: unit.href}],
   })
@@ -42,10 +41,6 @@ export const imagesEntity = curry((term, unit) =>
   merge(unit, {
     _sc_content_fields: [unit.imgHref],
     _sc_queries: [{type: "google_images", term}],
-    _sc_links: [
-      {type: "url", term: unit.href},
-      {type: "url", term: unit.imgHref},
-    ],
     _sc_relations: [
       {type: "url", term: unit.href},
       {type: "url", term: unit.imgHref},

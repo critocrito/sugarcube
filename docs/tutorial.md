@@ -31,7 +31,7 @@ you only have to type `node --version`.
 ## Requirements
 
 To run `sugarcube` you have to install [NodeJS](https://nodejs.org/en/). The
-easiest way to do this, is to use [nvm](https://github.com/creationix/nvm). Node Version Manager (nvm) is a script written to manage multiple active NodeJS versions. 
+easiest way to do this, is to use [nvm](https://github.com/creationix/nvm). Node Version Manager (nvm) is a script written to manage multiple active NodeJS versions.
 SugarCube works with the latest version of NodeJS (at the time of this
 writing 7.7.4) and was tested with version 6.9.0.
 
@@ -52,7 +52,7 @@ $ npm --version
 ## Simply SugarCube
 
 We start by creating a new SugarCube project. This is nothing more than a
-directory with some files. Through the terminal you will create a new directory, in this example we have called it 'sugarcubetest', enter into that directory and add a file to it. 
+directory with some files. Through the terminal you will create a new directory, in this example we have called it 'sugarcubetest', enter into that directory and add a file to it.
 
 Firtly create a new folder by typing in 'mkdir', shorthand for 'make directories', and your chosen name for this directory:
 
@@ -75,7 +75,7 @@ You should end up with a single file in the `sugarcubetest` directory named
 SugarCube. Test that this file is there by typing:
 
 ```
-$ ls 
+$ ls
 ```
 This lists all the files in your directory. If your terminal window shows you this response then you are on the right track:
 
@@ -92,16 +92,16 @@ configuration to the screen. Type in the following command:
 $ npm install -S @sugarcube/cli @sugarcube/plugin-ddg @sugarcube/plugin-tap
 ```
 
-If all went fine, you should have a folder named `node_modules`, within your 'sugarcubetest' directory. This 'node_modules' folder should contain `sugarcube` and all it's dependencies. 
+If all went fine, you should have a folder named `node_modules`, within your 'sugarcubetest' directory. This 'node_modules' folder should contain `sugarcube` and all it's dependencies.
 
-To check that node_modules is installed, type in the command 'ls' to list the contents of the directory. 
+To check that node_modules is installed, type in the command 'ls' to list the contents of the directory.
 
 Install the 'sugarcube' command by typing into your terminal:
 
 ```
 $ $(npm bin)/sugarcube -h
 ```
-Note that you will be entering in the dollar symbol ($) for this command. You should see the following in your terminal window: 
+Note that you will be entering in the dollar symbol ($) for this command. You should see the following in your terminal window:
 
 ```
 $ $(npm bin)/sugarcube -h
@@ -429,7 +429,7 @@ tweet occurred.
 There is a series of extra fields that are added to every unit by
 SugarCube. Their keys usually start with `_sc`. These extra fields often
 convey an additional semantic meaning in a plugin independent manner. It
-allows plugins to operate on data in an independent manner, e.g. `_sc_links`
+allows plugins to operate on data in an independent manner, e.g. `_sc_media`
 holds all links, that a data unit might contain. Now any plugin that wants to
 operate on links (such as `http_get` or `http_wget`) don't need to know
 anything about the specific plugin that generate the data in the first place.
@@ -438,16 +438,11 @@ This is an example, how such a unit of data looks like.
 
 ```
 {
-	"_sc_links" : [{
+	"_sc_media" : [{
 	  "type" : "url",
       "href" : "https://www.theguardian.com/us-news/2016/aug/14/third-party-candidates-johnson-stein-mcmullin-debate-polling-percentage",
       "_sc_id_hash" : "3e4ec721a206f46c1b1d30c958be6355e8f3665fe26ec51302dad565c5449096"
-	}, {
-      "type" : "self",
-      "href" : "https://content.guardianapis.com/us-news/2016/aug/14/third-party-candidates-johnson-stein-mcmullin-debate-polling-percentage",
-      "_sc_id_hash" : "5779a75ec7b430a5ebdf4402324067d1be03f25ade0506453e1082c335a1df01"
 	}],
-	"_sc_media" : [ ],
 	"_sc_pubdates" : {
 		"fetch" : "2017-03-21T23:22:35.426Z",
 		"source" : "2016-08-14T12:00:35Z)

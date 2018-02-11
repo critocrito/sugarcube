@@ -6,18 +6,6 @@ export const video = item =>
     _sc_id_fields: ["id"],
     _sc_content_fields: ["snippet.title", "snippet.description"],
     _sc_pubdates: {source: moment.utc(item.snippet.publishedAt).toDate()},
-    _sc_links: [
-      {
-        type: "self",
-        term: `https://www.youtube.com/watch?v=${item.id}`,
-      },
-      {
-        type: "thumbnail",
-        term: item.snippet.thumbnails.high.url,
-        width: item.snippet.thumbnails.high.width,
-        height: item.snippet.thumbnails.high.height,
-      },
-    ],
     _sc_media: [
       {
         type: "thumbnail",
@@ -43,18 +31,6 @@ export const playlistVideo = item =>
     _sc_id_fields: ["id"],
     _sc_content_fields: ["snippet.title", "snippet.description"],
     _sc_pubdates: {source: moment.utc(item.snippet.publishedAt).toDate()},
-    _sc_links: [
-      {
-        type: "self",
-        term: `https://www.youtube.com/watch?v=${item.id}`,
-      },
-      {
-        type: "thumbnail",
-        term: item.snippet.thumbnails.high.url,
-        width: item.snippet.thumbnails.high.width,
-        height: item.snippet.thumbnails.high.height,
-      },
-    ],
     _sc_media: [
       {
         type: "thumbnail",

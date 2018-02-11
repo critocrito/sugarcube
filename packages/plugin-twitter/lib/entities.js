@@ -111,7 +111,7 @@ const hashtagsToRelations = map(h => merge({}, {type: "hashtag", term: h.tag}));
 const linksToRelations = map(l => merge({}, {type: "url", term: l.term}));
 
 const tweet = t => {
-  const lfLinks = flow([getOr([], "entities.urls"), urlEntities("url")])(t);
+  const lfUrls = flow([getOr([], "entities.urls"), urlEntities("url")])(t);
   const lfMedia = flow([getOr([], "extended_entities.media"), mediaEntities])(
     t
   );
@@ -127,14 +127,13 @@ const tweet = t => {
       _sc_id_fields: ["tweet_id"],
       _sc_content_fields: ["tweet"],
       _sc_pubdates: pubDates(t),
-      _sc_links: lfLinks,
       _sc_relations: flatten([
         mentionsToRelations(lfMentions),
         hashtagsToRelations(lfHashtags),
-        lfLinks,
+        lfUrls,
         lfMedia,
       ]),
-      _sc_media: flatten([lfMedia, lfLinks]),
+      _sc_media: flatten([lfMedia, lfUrls]),
       user: userEntity(t.user),
       urls: getOr([], "entities.url", t),
       medias: getOr([], "extended_entities.media", t),
@@ -151,7 +150,7 @@ const user = curry((source, u) => {
     getOr([], "entities.description.urls", u),
     getOr([], "status.entities.urls", u),
   ]);
-  const lfLinks = map(l => ({type: "url", term: l.expanded_url}), urls);
+  const lfUrls = map(l => ({type: "url", term: l.expanded_url}), urls);
   const lfImages = flow([
     getOr([], "extended_entities.media"),
     mediaEntities,
@@ -170,14 +169,13 @@ const user = curry((source, u) => {
     {
       _sc_id_fields: ["user_id"],
       _sc_pubdates: pubDates(u),
-      _sc_links: lfLinks,
       _sc_relations: flatten([
         hashtagsToRelations(lfHashtags),
         mentionsToRelations(lfMentions),
-        linksToRelations(lfLinks),
+        linksToRelations(lfUrls),
         linksToRelations(lfImages),
       ]),
-      _sc_media: flatten([lfImages, lfLinks]),
+      _sc_media: flatten([lfImages, lfUrls]),
       // TODO: This is broken, where does _sc_graph* from from?
       // _sc_graph: {from: u._sc_graph_from, depth: u._sc_graph_depth},
       urls,

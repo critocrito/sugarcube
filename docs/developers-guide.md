@@ -124,7 +124,6 @@ are understood only by a few plugins.
   }
   ```
 
-- `_sc_links`
 - `_sc_media`
 - `_sc_relations`
 - `_sc_downloads`

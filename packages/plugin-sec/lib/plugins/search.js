@@ -67,7 +67,7 @@ const scrape = html => {
     //   .split(",");
     const cik = $("#cikSearch", second).text();
     const sic = $("#sicSearch", second).text();
-
+    const media = [{type: "url", term: filingLink}];
     const $filing = cheerio.load(await retryP(request(filingLink)));
 
     return {
@@ -78,9 +78,8 @@ const scrape = html => {
       cik,
       sic: !sic || sic === "0000" ? null : sic,
       _sc_id_fields: ["cik"],
-      _sc_relations: [{type: "url", term: filingLink}],
-      _sc_media: [{type: "url", term: filingLink}],
-      _sc_links: [{type: "url", term: filingLink}],
+      _sc_relations: media,
+      _sc_media: media,
     };
   }, chunk(4, results));
 };

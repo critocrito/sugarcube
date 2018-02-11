@@ -43,10 +43,6 @@ const content = (envelope, {log, cfg}) => {
           _sc_id_fields: ["id"],
           _sc_content_fields: ["webTitle", "webUrl"],
           _sc_pubdates: {source: moment.utc(r.webPublicationDate).toDate()},
-          _sc_links: [
-            {type: "url", href: r.webUrl},
-            {type: "self", href: r.apiUrl},
-          ],
           _sc_relations: [
             {type: "url", term: r.webUrl},
             {type: "url", term: r.apiUrl},

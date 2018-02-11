@@ -72,10 +72,6 @@ var mightyDucky = function(val, {log}) {
         finalized._sc_content_fields = ['content'];
         finalized._sc_content = 'content';
         finalized._sc_media = [{term: lo.href, type: 'url'}],
-        finalized._sc_links = [
-          {term: lo.href, type: 'url'},
-          {term: lo.query_url, type: 'url'},
-        ];
         finalized._sc_relations = [{type: 'url', term: lo.href}];
 
         val.data.push(finalized);
