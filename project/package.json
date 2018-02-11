@@ -29,6 +29,7 @@
     "@sugarcube/plugin-sec": "file:../packages/plugin-sec",
     "@sugarcube/plugin-tap": "file:../packages/plugin-tap",
     "@sugarcube/plugin-telegram": "file:../packages/plugin-telegram",
+    "@sugarcube/plugin-test": "file:../packages/plugin-test",
     "@sugarcube/plugin-tika": "file:../packages/plugin-tika",
     "@sugarcube/plugin-tor": "file:../packages/plugin-tor",
     "@sugarcube/plugin-twitter": "file:../packages/plugin-twitter",

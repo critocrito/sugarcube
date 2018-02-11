@@ -1,0 +1,21 @@
+{
+  "name": "@sugarcube/plugin-test",
+  "version": "0.7.0",
+  "description": "Plugins useful for testing SugarCube.",
+  "main": "_dist/index.js",
+  "license": "GPL-3.0",
+  "repository": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-test",
+  "author": "Christo <christo@cryptodrunks.net>",
+  "keywords": [
+    "sugarcube",
+    "sugarcube-plugin",
+    "data",
+    "transformation"
+  ],
+  "dependencies": {
+    "@sugarcube/core": "^0.5.0",
+    "@sugarcube/test": "^0.5.1",
+    "dashp": "^0.8.1",
+    "lodash": "^4.17.5"
+  }
+}
