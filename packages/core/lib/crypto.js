@@ -1,7 +1,7 @@
 import {flow, curry, pick, values} from "lodash/fp";
 import crypto from "crypto";
 
-import {stringify} from "./";
+import {stringify} from "./utils";
 
 const epoch = d => Math.floor(d / 1000);
 
@@ -32,12 +32,6 @@ export const md5 = s =>
     .update(s)
     .digest("hex");
 
-export const hashKeys = curry((keys, u) =>
-  flow([pick(keys), values, stringify, sha256])(u)
-);
-
-export const hashWithField = curry((field, u) => hashKeys(u[field], u));
-
 // Generate strong uid's.
 // - `random` :: If not provided a random seed is created.
 // - `d` :: Use this time stamp as counter. If not provided use `Date.now()`.
@@ -54,12 +48,18 @@ export const uid = (random, d) => {
   return id;
 };
 
+export const hashKeys = curry((keys, u) =>
+  flow([pick(keys), values, stringify, sha256])(u)
+);
+
+export const hashWithField = curry((field, u) => hashKeys(u[field], u));
+
 export default {
   generateSeed,
   sha256,
   sha1,
   md5,
+  uid,
   hashKeys,
   hashWithField,
-  uid,
 };

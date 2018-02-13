@@ -4,11 +4,10 @@ import {concat, uniqWith, sortBy, isEqual} from "lodash/fp";
 import jsc, {property} from "jsverify";
 import sinon from "sinon";
 
-import {data, utils} from "../../packages/core";
+import data from "../../packages/core/lib/data/data";
+import {concatManyWith, equalsManyWith} from "../../packages/core/lib/utils";
 import {dataArb} from "../../packages/test";
-import {uid} from "../../packages/core/lib/utils/hasher";
-
-const {concatManyWith, equalsManyWith} = utils;
+import {uid} from "../../packages/core/lib/crypto";
 
 const {dataId, concatOne} = data;
 const unique = uniqWith(isEqual);

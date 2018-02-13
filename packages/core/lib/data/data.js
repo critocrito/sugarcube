@@ -12,7 +12,7 @@ import {
 
 import ls from "./list";
 import {now, concatManyWith, equalsManyWith} from "../utils";
-import {hashWithField} from "../utils/hasher";
+import {hashWithField} from "../crypto";
 
 const listFields = [
   "_sc_relations",

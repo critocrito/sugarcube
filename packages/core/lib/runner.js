@@ -6,7 +6,7 @@ import {liftManyA2} from "./data/plugin";
 import {envelopeQueries, fmapData} from "./data/envelope";
 import ds from "./data/data";
 import {state} from "./state";
-import {uid, generateSeed} from "./utils/hasher";
+import {uid, generateSeed} from "./crypto";
 import {now} from "./utils";
 
 // The following functions provide funtionalities that should be run every

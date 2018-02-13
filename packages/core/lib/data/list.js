@@ -11,7 +11,7 @@ import {
 import {collectP} from "dashp";
 
 import {arrayify, concatManyWith, equalsManyWith} from "../utils";
-import {hashKeys} from "../utils/hasher";
+import {hashKeys} from "../crypto";
 
 const hashListId = hashKeys(["type", "term"]);
 

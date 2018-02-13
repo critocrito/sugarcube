@@ -1,6 +1,6 @@
 import {curry, reduce, get, concat, isEmpty} from "lodash/fp";
 
-import {queriesByType} from "../data/envelope";
+import {queriesByType} from "./data/envelope";
 
 // TODO: Deprecated. Better use a sort of validation.
 export const assertCfg = curry((expected, envelope, {cfg}) => {
