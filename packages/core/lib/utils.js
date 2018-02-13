@@ -1,5 +1,4 @@
 import {
-  curry,
   flow,
   map,
   concat,
@@ -31,6 +30,10 @@ const ncurry = n => {
     return g;
   };
 
+  Object.defineProperty(localCurry, "name", {
+    value: `curry${n}`,
+    configureable: true,
+  });
   return localCurry;
 };
 
@@ -41,7 +44,7 @@ export const curry5 = ncurry(5);
 
 export const now = () => new Date();
 
-export const tap = curry((f, x) => {
+export const tap = curry2("tap", (f, x) => {
   f(cloneDeep(x));
   return x;
 });
@@ -58,25 +61,28 @@ export const printf = (x, opts = {}) => {
 export const stringify = s => (isString(s) ? s : JSON.stringify(s));
 export const arrayify = a => (isArray(a) ? a : [a]);
 
-export const concatManyWith = curry((idField, identical, merger, xs, ys) => {
-  const x = keyBy(idField, xs);
-  const y = keyBy(idField, ys);
-  const kx = keys(x);
-  const ky = keys(y);
+export const concatManyWith = curry5(
+  "concatManyWith",
+  (idField, identical, merger, xs, ys) => {
+    const x = keyBy(idField, xs);
+    const y = keyBy(idField, ys);
+    const kx = keys(x);
+    const ky = keys(y);
 
-  const same = intersection(kx, ky);
-  const different = xor(kx, ky);
+    const same = intersection(kx, ky);
+    const different = xor(kx, ky);
 
-  const merged = map(
-    id => (identical(x[id], y[id]) ? x[id] : merger(x[id], y[id])),
-    same
-  );
+    const merged = map(
+      id => (identical(x[id], y[id]) ? x[id] : merger(x[id], y[id])),
+      same
+    );
 
-  const notmerged = map(id => x[id] || y[id], different);
-  return concat(merged, notmerged);
-});
+    const notmerged = map(id => x[id] || y[id], different);
+    return concat(merged, notmerged);
+  }
+);
 
-export const equalsManyWith = curry((cmp, xs, ys) => {
+export const equalsManyWith = curry3("equalsManyWith", (cmp, xs, ys) => {
   if (xs.length !== ys.length) return false;
   if (xs.length === 0) return true;
   return isEqualWith(cmp, xs, ys);
@@ -87,7 +93,9 @@ export const equalsManyWith = curry((cmp, xs, ys) => {
  *
  * @returns {Object} options The available options.
  */
-export const pluginOptions = pickBy(has("argv"));
+export const pluginOptions = curry3("pluginOptions", (f, xs, ys) => f(xs, ys))(
+  pickBy(has("argv"))
+);
 
 export default {
   curry2,

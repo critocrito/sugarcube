@@ -1,7 +1,7 @@
-import {flow, curry, pick, values} from "lodash/fp";
+import {flow, pick, values} from "lodash/fp";
 import crypto from "crypto";
 
-import {stringify} from "./utils";
+import {stringify, curry2} from "./utils";
 
 const epoch = d => Math.floor(d / 1000);
 
@@ -48,11 +48,13 @@ export const uid = (random, d) => {
   return id;
 };
 
-export const hashKeys = curry((keys, u) =>
+export const hashKeys = curry2("hashKeys", (keys, u) =>
   flow([pick(keys), values, stringify, sha256])(u)
 );
 
-export const hashWithField = curry((field, u) => hashKeys(u[field], u));
+export const hashWithField = curry2("hashWithField", (field, u) =>
+  hashKeys(u[field], u)
+);
 
 export default {
   generateSeed,

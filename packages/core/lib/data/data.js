@@ -1,5 +1,4 @@
 import {
-  curry,
   reduce,
   merge,
   mergeAll,
@@ -11,7 +10,7 @@ import {
 } from "lodash/fp";
 
 import ls from "./list";
-import {now, concatManyWith, equalsManyWith} from "../utils";
+import {now, curry2, curry3, concatManyWith, equalsManyWith} from "../utils";
 import {hashWithField} from "../crypto";
 
 const listFields = [
@@ -72,7 +71,7 @@ const contentId = u => u._sc_content_hash || hashUnitContent(u);
  * @returns {boolean} Returns `true` if the two units have the same identity,
  * otherwise `false`.
  */
-const equalsOne = curry((a, b) => isEqual(dataId(a), dataId(b)));
+const equalsOne = curry2("equalsOne", (a, b) => isEqual(dataId(a), dataId(b)));
 /**
  * Compare two units for value equality. This means two units have the same
  * value.
@@ -113,7 +112,7 @@ const emptyOne = () => {
  * @param {Unit} b The target unit to merge.
  * @return {Unit} The result of concatenationg b into a.
  */
-const concatOne = curry((a, b) => {
+const concatOne = curry2("concatOne", (a, b) => {
   const lists = reduce(
     (memo, h) =>
       merge(memo, {[h]: ls.concat(a[h] || ls.empty(), b[h] || ls.empty())}),
@@ -154,7 +153,9 @@ const hashOne = u => {
  * @returns {boolean} Returns `true` if both lists of units are equal,
  * otherwise `false`.
  */
-const equals = equalsManyWith(equalsOne);
+const equals = curry3("equals", (f, a, b) => f(a, b))(
+  equalsManyWith(equalsOne)
+);
 /**
  * Test two lists of units for value equality. They are equal if each unit is
  * equivalent to the other unit at the same index.
@@ -165,7 +166,9 @@ const equals = equalsManyWith(equalsOne);
  * @returns {boolean} Returns `true` if both lists of units have equal value,
  * otherwise `false`.
  */
-const identical = equalsManyWith(identicalOne);
+const identical = curry3("identical", (f, a, b) => f(a, b))(
+  equalsManyWith(identicalOne)
+);
 
 /**
  * Create an empty list of units. This forms the identity element for a
@@ -186,7 +189,9 @@ const empty = constant([]);
  * @param {Unit} b The target unit to merge.
  * @return {Unit} The result of concatenationg b into a.
  */
-const concat = concatManyWith(dataId, equalsOne, concatOne);
+const concat = curry3("concat", (f, a, b) => f(a, b))(
+  concatManyWith(dataId, equalsOne, concatOne)
+);
 
 /**
  * Map a function over a list of units. This is equivalent as `Array.map`.
@@ -229,7 +234,7 @@ const {fmapAsync} = ls;
  * const f = doSomethingWithAnObject;
  * fmapList('_sc_downloads', f, xs);
  */
-const fmapList = curry((field, f, xs) =>
+const fmapList = curry3("fmapList", (field, f, xs) =>
   fmap(u => concatOne(u, {[field]: ls.fmap(f, u[field])}), xs)
 );
 
@@ -247,7 +252,7 @@ const fmapList = curry((field, f, xs) =>
  * @param {Data} a The list of units.
  * @returns {Promise.<Data>} The result list of every unit applied to `f`.
  */
-const fmapListAsync = curry((field, f, xs) =>
+const fmapListAsync = curry3("fmapListAsync", (field, f, xs) =>
   fmapAsync(
     u => ls.fmapAsync(f, u[field]).then(ys => concatOne(u, {[field]: ys})),
     xs
@@ -257,38 +262,54 @@ const fmapListAsync = curry((field, f, xs) =>
 /**
  * `fmapList` specialized for `_sc_relations`.
  */
-const fmapRelations = fmapList("_sc_relations");
+const fmapRelations = curry3("fmapRelations", (f, g, xs) => f(g, xs))(
+  fmapList("_sc_relations")
+);
 /**
  * The asynchronous version of `fmapRelations`.
  */
-const fmapRelationsAsync = fmapListAsync("_sc_relations");
+const fmapRelationsAsync = curry3("fmapRelationsAsync", (f, g, xs) => f(g, xs))(
+  fmapListAsync("_sc_relations")
+);
 
 /**
  * `fmapList` specialized for `_sc_media`.
  */
-const fmapMedia = fmapList("_sc_media");
+const fmapMedia = curry3("fmapMedia", (f, g, xs) => f(g, xs))(
+  fmapList("_sc_media")
+);
 /**
  * The asynchronous version of `fmapMedia`.
  */
-const fmapMediaAsync = fmapListAsync("_sc_media");
+const fmapMediaAsync = curry3("fmapMediaAsync", (f, g, xs) => f(g, xs))(
+  fmapListAsync("_sc_media")
+);
 
 /**
  * `fmapList` specialized for `_sc_downloads`.
  */
-const fmapDownloads = fmapList("_sc_downloads");
+const fmapDownloads = curry3("fmapDownloads", (f, g, xs) => f(g, xs))(
+  fmapList("_sc_downloads")
+);
 /**
  * The asynchronous version of `fmapDownloads`.
  */
-const fmapDownloadsAsync = fmapListAsync("_sc_downloads");
+const fmapDownloadsAsync = curry3("fmapDownloadsAsync", (f, g, xs) => f(g, xs))(
+  fmapListAsync("_sc_downloads")
+);
 
 /**
  * `fmapList` specialized for `_sc_queries`.
  */
-const fmapQueries = fmapList("_sc_queries");
+const fmapQueries = curry3("fmapQueries", (f, g, xs) => f(g, xs))(
+  fmapList("_sc_queries")
+);
 /**
  * The asynchronous version of `fmapQueries`.
  */
-const fmapQueriesAsync = fmapListAsync("_sc_queries");
+const fmapQueriesAsync = curry3("fmapQueriesAsync", (f, g, xs) => f(g, xs))(
+  fmapListAsync("_sc_queries")
+);
 
 // Applicative
 const {pure, apply} = ls;
@@ -313,7 +334,7 @@ const {filter} = ls;
  * @param {Data} xs The list of units.
  * @returns {Data} A list of units with duplicates removed.
  */
-const uniq = uniqBy(dataId);
+const uniq = xs => uniqBy(dataId, xs);
 
 /**
  * Calculate hashes for every unit of data in a list.
@@ -322,7 +343,7 @@ const uniq = uniqBy(dataId);
  * @param {Data} xs A list of units.
  * @returns {Data} A list of units, with hashes calculated for every unit.
  */
-const hash = fmap(hashOne);
+const hash = xs => fmap(hashOne, xs);
 
 export default {
   listFields,

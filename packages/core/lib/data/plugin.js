@@ -1,5 +1,6 @@
-import {curry} from "lodash/fp";
 import {foldP, liftP2} from "dashp";
+
+import {curry3} from "../utils";
 
 /**
  * Lift many binary functions over two Applicatives.
@@ -20,7 +21,7 @@ import {foldP, liftP2} from "dashp";
  * const b = Promise.resolve(env);
  * liftManyA2([f1, f2], a, b); // f1(a,b).then(r => f2(r, b)).then(...)
  */
-export const liftManyA2 = curry((fs, a, b) =>
+export const liftManyA2 = curry3("liftManyA2", (fs, a, b) =>
   foldP((memo, f) => liftP2(f, memo, b), a, fs)
 );
 

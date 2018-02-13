@@ -7,7 +7,7 @@ import {envelopeQueries, fmapData} from "./data/envelope";
 import ds from "./data/data";
 import {state} from "./state";
 import {uid, generateSeed} from "./crypto";
-import {now} from "./utils";
+import {now, curry3} from "./utils";
 
 // The following functions provide funtionalities that should be run every
 // time a plugin is run. The plugin runner composes them with the plugin.
@@ -86,7 +86,7 @@ const source = curry((name, envelope) =>
  *
  * run();
  */
-const runner = curry((plugins, cfg, queries) => {
+const runner = curry3("runner", (plugins, cfg, queries) => {
   const stats = state({});
   const seed = generateSeed(8);
   const timestamp = now();
