@@ -18,6 +18,27 @@ import {
 } from "lodash/fp";
 import {inspect} from "util";
 
+const ncurry = n => {
+  const localCurry = (name, f, ...args) => {
+    const g = (...largs) => {
+      const rest = args.concat(largs);
+
+      if (rest.length < n) return localCurry(name, f, ...rest);
+      return f(...rest);
+    };
+    const desc = `${name}-${n - args.length}`;
+    Object.defineProperty(g, "name", {value: desc, configureable: true});
+    return g;
+  };
+
+  return localCurry;
+};
+
+export const curry2 = ncurry(2);
+export const curry3 = ncurry(3);
+export const curry4 = ncurry(4);
+export const curry5 = ncurry(5);
+
 export const now = () => new Date();
 
 export const tap = curry((f, x) => {
@@ -69,6 +90,10 @@ export const equalsManyWith = curry((cmp, xs, ys) => {
 export const pluginOptions = pickBy(has("argv"));
 
 export default {
+  curry2,
+  curry3,
+  curry4,
+  curry5,
   now,
   tap,
   printf,
