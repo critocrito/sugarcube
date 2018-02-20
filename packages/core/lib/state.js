@@ -26,7 +26,6 @@ export const state = (obj = {}) => {
     return path ? getOr({}, path, data) : data;
   };
 
-  // FIXME: Updating existing paths fails at the moment.
   const update = (...args) => {
     let [path, f] = args;
     if (!f) {
@@ -40,7 +39,7 @@ export const state = (obj = {}) => {
       return merge(data, expanded);
     };
 
-    s = s.chain(data => State(ss => [data, Object.assign({}, calc(data), ss)]));
+    s = s.chain(data => State(ss => [data, Object.assign({}, ss, calc(data))]));
 
     return s;
   };

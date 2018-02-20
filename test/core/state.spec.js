@@ -15,9 +15,12 @@ import {state} from "../../packages/core/lib/state";
 const isJsonEqual = (a, b) =>
   isEqual(JSON.parse(JSON.stringify(a)), JSON.parse(JSON.stringify(b)));
 
-const pathArb = jsc.asciinestring.smap(
-  flow([replace(/\s*\.*/g, ""), split(""), join(".")]),
-  identity
+const pathArb = jsc.suchthat(
+  jsc.asciinestring.smap(
+    flow([replace(/\s*\.*/g, ""), split(""), join(".")]),
+    identity
+  ),
+  x => x !== ""
 );
 
 const stateArb = jsc.bless({
@@ -70,6 +73,14 @@ describe("state", () => {
   property("get with path", pathArb, stateArb, (path, data) => {
     const obj = path ? set(path, data, {}) : {};
     const s = state(obj);
+
+    return isJsonEqual(s.get(path), path ? data : {});
+  });
+
+  property("updates an existing path", pathArb, stateArb, (path, data) => {
+    const obj = path ? set(path, {}, {}) : {};
+    const s = state(obj);
+    s.update(path, x => merge(x, data));
 
     return isJsonEqual(s.get(path), path ? data : {});
   });
