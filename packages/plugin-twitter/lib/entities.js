@@ -50,7 +50,7 @@ const mediaEntities = map(media =>
     {
       id: media.id_str,
       type: media.type === "photo" ? "image" : media.type,
-      term: media.expanded_url,
+      term: media.type === "photo" ? media.media_url_https : media.expanded_url,
     }
   )
 );
