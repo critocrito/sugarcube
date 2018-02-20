@@ -3,85 +3,57 @@ import {
   identity,
   replace,
   merge,
-  set,
+  get,
   split,
   join,
   isEqual,
+  isPlainObject,
 } from "lodash/fp";
 import jsc, {property} from "jsverify";
 
 import {state} from "../../packages/core/lib/state";
-
-const isJsonEqual = (a, b) =>
-  isEqual(JSON.parse(JSON.stringify(a)), JSON.parse(JSON.stringify(b)));
+import {objArb} from "../../packages/test/lib/generators";
 
 const pathArb = jsc.suchthat(
   jsc.asciinestring.smap(
+    // Remove periods and any white space character, before forming the path.
     flow([replace(/\s*\.*/g, ""), split(""), join(".")]),
-    identity
+    flow([replace(/\.*/g, ""), split("")])
   ),
+  // We filter out empty strings, they are not valid paths.
   x => x !== ""
 );
 
-const stateArb = jsc.bless({
-  generator: seed => {
-    const keyArb = jsc.bless({
-      generator: () =>
-        Math.random()
-          .toString(36)
-          .replace(/[^a-z]+/g, "")
-          .substr(0, 5),
-    });
-    const valueArb = jsc.oneof([jsc.bool, jsc.number, jsc.string]);
-
-    return jsc
-      .array(keyArb)
-      .generator(seed)
-      .reduce(
-        (memo, key) => merge(memo, {[key]: valueArb.generator(seed)}),
-        {}
-      );
-  },
-});
+const stateArb = objArb.smap(o => state(o), identity);
 
 describe("state", () => {
-  property("creation", stateArb, data => {
-    const s = state(data);
-    return isJsonEqual(s.get(), data);
+  property("get === get", stateArb, s => isEqual(s.get(), s.get()));
+
+  property("always return an object for a path", stateArb, pathArb, (s, path) =>
+    isPlainObject(s.get(path))
+  );
+
+  property("updates are sequences", stateArb, jsc.array(objArb), (s, xs) => {
+    const obj = xs.reduce(merge, s.get());
+    xs.forEach(x => s.update(y => merge(y, x)));
+    return isEqual(obj, s.get());
   });
 
-  property("update", stateArb, stateArb, (obj, data) => {
-    const s = state(obj);
-    s.update(x => merge(x, data));
-    return isJsonEqual(s.get(), merge(obj, data));
+  property("update with paths", stateArb, pathArb, objArb, (s, p, o) => {
+    s.update(p, x => merge(x, o));
+    return isEqual(get(p, s.get()), s.get(p));
   });
 
   property(
-    "update with path",
+    "update with paths multiple times",
+    stateArb,
     pathArb,
-    stateArb,
-    stateArb,
-    (path, obj, data) => {
-      const s = state(obj);
-      s.update(path, x => merge(x, data));
-      const updated = path ? set(path, data, {}) : data;
-
-      return isJsonEqual(s.get(), merge(obj, updated));
+    objArb,
+    objArb,
+    (s, p, o1, o2) => {
+      s.update(p, x => merge(x, o1));
+      s.update(p, x => merge(x, o2));
+      return isEqual(get(p, s.get()), s.get(p));
     }
   );
-
-  property("get with path", pathArb, stateArb, (path, data) => {
-    const obj = path ? set(path, data, {}) : {};
-    const s = state(obj);
-
-    return isJsonEqual(s.get(path), path ? data : {});
-  });
-
-  property("updates an existing path", pathArb, stateArb, (path, data) => {
-    const obj = path ? set(path, {}, {}) : {};
-    const s = state(obj);
-    s.update(path, x => merge(x, data));
-
-    return isJsonEqual(s.get(path), path ? data : {});
-  });
 });
