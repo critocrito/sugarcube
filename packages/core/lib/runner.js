@@ -1,4 +1,4 @@
-import {flow, curry, map, zip, merge, size} from "lodash/fp";
+import {flow, map, zip, merge, size} from "lodash/fp";
 import Bacon from "baconjs";
 import {flowP, caughtP, tapP, foldP} from "dashp";
 
@@ -7,30 +7,30 @@ import {envelopeQueries, fmapData} from "./data/envelope";
 import ds from "./data/data";
 import {state} from "./state";
 import {uid, generateSeed} from "./crypto";
-import {now, curry3} from "./utils";
+import {now, curry2, curry3, curry4} from "./utils";
 
 // The following functions provide funtionalities that should be run every
 // time a plugin is run. The plugin runner composes them with the plugin.
-const pluginStats = curry((stream, name, stats, envelope) => {
+const pluginStats = curry4("pluginStats", (stream, name, stats, envelope) => {
   stream.push({type: "plugin_stats", plugin: name, size: size(envelope.data)});
   return envelope;
 });
 
-const start = curry((stream, name, envelope) => {
+const start = curry3("start", (stream, name, envelope) => {
   stream.push({type: "plugin_start", ts: now(), plugin: name});
   return envelope;
 });
 
-const end = curry((stream, name, envelope) => {
+const end = curry3("end", (stream, name, envelope) => {
   stream.push({type: "plugin_end", ts: now(), plugin: name});
   return envelope;
 });
 
-const mark = curry((marker, envelope) =>
+const mark = curry2("mark", (marker, envelope) =>
   fmapData(ds.concatOne({_sc_markers: [marker]}), envelope)
 );
 
-const dates = curry((date, envelope) =>
+const dates = curry2("dates", (date, envelope) =>
   fmapData(ds.concatOne({_sc_pubdates: {pipeline: date}}), envelope)
 );
 
@@ -38,7 +38,7 @@ const unitDefaults = fmapData(ds.concatOne(ds.emptyOne()));
 
 const hashData = fmapData(ds.hashOne);
 
-const source = curry((name, envelope) =>
+const source = curry2("source", (name, envelope) =>
   fmapData(ds.concatOne({_sc_source: name}), envelope)
 );
 
