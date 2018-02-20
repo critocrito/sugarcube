@@ -11,7 +11,7 @@ import {
   property,
   isNaN,
 } from "lodash/fp";
-import {foldP, flowP, tapP} from "dashp";
+import {foldP, flowP, tapP, caughtP} from "dashp";
 
 import {request, throttle, cursorify, recurse} from "./utils";
 import {
@@ -29,7 +29,7 @@ const apiErrors = curry((log, user, e) => {
   if (/401/.test(e.message)) {
     log.warn(`Failed to fetch ${user}: ${e.message}`);
     return [];
-  } else if(e[0] && e[0].code === 34) {
+  } else if (e[0] && e[0].code === 34) {
     log.warn(`Failed to fetch ${user}: ${e[0].message}`);
     return [];
   }
@@ -59,6 +59,7 @@ export const feed = curry((cfg, log, users) => {
         [
           op,
           tapP(rs => log.info(`Fetched ${size(rs)} tweets for ${user}.`)),
+          caughtP(apiErrors(log, user)),
           flow([tweetTransform, concat(memo)]),
         ],
         params
@@ -89,10 +90,11 @@ export const followers = (cfg, log, users) => {
         [
           op,
           tapP(rs => log.info(`Fetched ${size(rs)} followers of ${user}.`)),
+          caughtP(apiErrors(log, user)),
           flow([followersTransform, concat(memo)]),
         ],
         params
-      ).catch(apiErrors(log, user));
+      );
     },
     [],
     users
@@ -119,10 +121,11 @@ export const friends = (cfg, log, users) => {
         [
           op,
           tapP(rs => log.info(`Fetched ${size(rs)} friends of ${user}.`)),
+          caughtP(apiErrors(log, user)),
           flow([friendsTransform, concat(memo)]),
         ],
         params
-      ).catch(apiErrors(log, user));
+      );
     },
     [],
     users
