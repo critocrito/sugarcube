@@ -15,7 +15,7 @@ import {data as ds, queries as qs} from "@sugarcube/core";
 
 const trueOrFalse = () => random(0, 1) === 0;
 
-const objArb = suchthat(dict(string), o =>
+export const objArb = suchthat(dict(string), o =>
   Object.keys(o).reduce((memo, k) => {
     if (!memo) return memo;
     // Skip undefined and empty strings
@@ -24,6 +24,8 @@ const objArb = suchthat(dict(string), o =>
     if (/[\u0000-\u0020]/u.test(k)) return false;
     // Disallow certain keys
     if (/^-+|_+/.test(k)) return false;
+    // Keys don't start with white space
+    if (/^\s*/.test(k)) return false;
     return true;
   }, true)
 );
@@ -154,6 +156,7 @@ export const envelope = (sizeData, sizeQueries) => ({
 });
 
 export default {
+  objArb,
   queriesArb,
   queries,
   listArb,
