@@ -97,6 +97,14 @@ export const pluginOptions = curry3("pluginOptions", (f, xs, ys) => f(xs, ys))(
   pickBy(has("argv"))
 );
 
+export const isFunction = f => typeof f === "function";
+
+export const isThenable = p =>
+  p instanceof Promise ||
+  (Boolean(p) &&
+    (typeof p === "object" || typeof p === "function") &&
+    isFunction(p.then));
+
 export default {
   curry2,
   curry3,
@@ -110,4 +118,6 @@ export default {
   concatManyWith,
   equalsManyWith,
   pluginOptions,
+  isFunction,
+  isThenable,
 };

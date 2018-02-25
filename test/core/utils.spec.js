@@ -5,13 +5,24 @@ import jsc, {property} from "jsverify";
 import sinon from "sinon";
 
 import data from "../../packages/core/lib/data/data";
-import {concatManyWith, equalsManyWith} from "../../packages/core/lib/utils";
+import {
+  concatManyWith,
+  equalsManyWith,
+  isThenable,
+} from "../../packages/core/lib/utils";
 import {dataArb} from "../../packages/test/lib";
 import {uid} from "../../packages/core/lib/crypto";
 
 const {dataId, concatOne} = data;
 const unique = uniqWith(isEqual);
 const sort = sortBy(JSON.stringify);
+
+const maybePromiseArb = jsc
+  .tuple([jsc.nat, jsc.bool])
+  .smap(
+    ([x, toPromisify]) => [toPromisify ? Promise.resolve(x) : x, toPromisify],
+    jsc.shrink.tuple([jsc.nat.shrink, jsc.shrink.noop])
+  );
 
 describe("deep concatenation", () => {
   property("eliminates duplicates", dataArb, xs =>
@@ -83,5 +94,13 @@ describe("uid generation", () => {
 
   property("produces strings of 40 characters", jsc.unit, () =>
     isEqual(40, uid().length)
+  );
+});
+
+describe("The isThenable util", () => {
+  property(
+    "tests if an object is a promise",
+    maybePromiseArb,
+    ([obj, gotPromisified]) => isEqual(isThenable(obj), gotPromisified)
   );
 });
