@@ -12,7 +12,7 @@ import {spreadP, collectP} from "dashp";
 
 import ls from "./list";
 import ds from "./data";
-import {curry2, curry3} from "../utils";
+import {curry2, curry3, isThenable} from "../utils";
 
 /**
  * Queries are a list of questions.
@@ -197,6 +197,10 @@ export const difference = curry2("difference", (e1, e2) => {
  * Map a function over the data, and another one over queries of an envelope.
  *
  * `fmap :: (Functor f, Env a) => (x -> y) -> (v -> w) -> f a -> f a`
+ *
+ * This function is overloaded. If any iteratee returns a promise, return a
+ * promise instead and resolve to the envelope.
+ *
  * @param {Function} f A function to map over a list of units.
  * @param {Function} g A function to map over a list of queries.
  * @param {Envelope} e A envelope to map over.
@@ -206,6 +210,12 @@ export const difference = curry2("difference", (e1, e2) => {
 export const fmap = curry3("fmap", (f, g, e) => {
   const data = ds.fmap(f, e.data || ds.empty());
   const queries = ls.fmap(g, e.queries || ls.empty());
+
+  if (isThenable(data) && isThenable(queries))
+    return Promise.all([Promise.resolve(data), Promise.resolve(queries)]).then(
+      spreadP(envelope)
+    );
+
   return envelope(data, queries);
 });
 /**
@@ -236,11 +246,9 @@ export const fmapQueries = curry2("fmapQueries", (f, e) =>
  * @returns {Promise.<Envelope>} A promise for a result envelope with `f`
  * mapped over `e.data` and `g` mapped over `e.queries`.
  */
+// TODO: Deprecate fmapAsync. fmap is overloaded and can replace fmapAsync.
 export const fmapAsync = curry3("fmapAsync", (f, g, e) =>
-  Promise.all([
-    ds.fmapAsync(f, e.data || ds.empty()),
-    ls.fmapAsync(g, e.queries || ls.empty()),
-  ]).then(spreadP(envelope))
+  Promise.resolve(fmap(f, g, e))
 );
 /**
  * Similar to `fmapAsync`, but only with a single function to map over `data`.

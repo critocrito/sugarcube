@@ -79,7 +79,9 @@ describe("envelope interface", () => {
   );
 
   property("identity of a Functor asynchronously", envelopeArb, a =>
-    fmapAsync(identity, identity, a).then(equals(a))
+    fmapAsync(x => Promise.resolve(x), x => Promise.resolve(x), a).then(
+      equals(a)
+    )
   );
 
   property(
@@ -359,6 +361,21 @@ describe("envelope interface", () => {
         await fmapQueriesAsync(f, a),
       ]);
     });
+
+    property(
+      "works with synchronous and asynchronous mappers",
+      jsc.bool,
+      jsc.bool,
+      envelopeArb,
+      async (isF, isG, e) => {
+        const f = isF ? a => a : a => Promise.resolve(a);
+        const g = isG ? a => a : a => Promise.resolve(a);
+
+        const results = await fmap(f, g, e);
+
+        return equals(results, e);
+      }
+    );
   });
 
   describe("fmapDataList and fmapDataListAsync", () => {
