@@ -4,7 +4,7 @@
   "scripts": {
     "precommit": "! git rev-parse --abbrev-ref HEAD | grep -q master || lint-staged",
     "commitmsg": "! git rev-parse --abbrev-ref HEAD | grep -q master || validate-commit-msg",
-    "test": "mocha -c -R progress -t 6000 -r babel-register -r test/helpers.js test/**/*.spec.js",
+    "test": "mocha -c -R progress -t 6000 -r babel-core/register -r test/helpers.js test/**/*.spec.js",
     "check": "eslint --print-config .eslintrc.json | eslint-config-prettier-check",
     "lint": "eslint packages/**/lib/**/*.js test/**/*.js boilerplate-plugin/lib/**/*.js scripts/**/*.js",
     "fix": "npm run lint -- --fix",
@@ -42,7 +42,6 @@
     "prettier": "^1.7.0",
     "rimraf": "^2.6.2",
     "sinon": "^4.0.1",
-    "source-map-support": "^0.5.0",
     "validate-commit-msg": "^2.14.0"
   }
 }

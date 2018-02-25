@@ -13,8 +13,8 @@ import {
 import {of} from "dashp";
 import jsc, {property} from "jsverify";
 
-import {envelope as env, data} from "../../packages/core";
-import {envelopeArb} from "../../packages/test";
+import {envelope as env, data} from "../../packages/core/lib";
+import {envelopeArb} from "../../packages/test/lib";
 
 const {
   envelope,

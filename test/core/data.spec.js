@@ -11,8 +11,8 @@ import {
 import {of} from "dashp";
 import jsc, {property} from "jsverify";
 
-import {data, queries as list} from "../../packages/core";
-import {unitArb, dataArb} from "../../packages/test";
+import {data, queries as list} from "../../packages/core/lib";
+import {unitArb, dataArb} from "../../packages/test/lib";
 
 const {
   emptyOne,

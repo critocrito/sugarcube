@@ -6,7 +6,7 @@ import sinon from "sinon";
 
 import data from "../../packages/core/lib/data/data";
 import {concatManyWith, equalsManyWith} from "../../packages/core/lib/utils";
-import {dataArb} from "../../packages/test";
+import {dataArb} from "../../packages/test/lib";
 import {uid} from "../../packages/core/lib/crypto";
 
 const {dataId, concatOne} = data;

@@ -9,7 +9,7 @@ import {
 import jsc, {property} from "jsverify";
 
 import list from "../../packages/core/lib/data/list";
-import {listArb, listsArb} from "../../packages/test";
+import {listArb, listsArb} from "../../packages/test/lib";
 
 const {
   emptyOne,
