@@ -47,7 +47,7 @@ contributions are released under the same terms.
 ## Plugin Developments
 
 You are free to develop plugins for SugarCube as you wish. See the [developers
-guide](https://gitlab.com/sugarcube/tree/master/docs/developers-guide). If a
+guide](https://gitlab.com/sugarcube/sugarcube/blob/master/docs/developers-guide.md). If a
 plugin already exists, that does something similar, consider to contribute to
 this plugin instead of creating a new one. To include your plugin into the
 SugarCube distribution, you have to apply the same coding and contribution
