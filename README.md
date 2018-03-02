@@ -50,3 +50,18 @@ To install those dependencies run:
 - On Archlinux: `pacman -S jdk8-openjdk`
 - On Debian: `apt install openjdk-7-jdk`
 - Using Homebrew: `brew cask install java`
+
+## Testing
+
+This repository contains an example project, to quickly try pipelines during
+development. Use [`yarn`](https://yarnpkg.com/en/) over `npm` to avoid an
+error about not found paths. [`jq`](https://stedolan.github.io/jq/) parses the
+JSON file to extract all dependencies and outputs them as a text stream. To
+set it up with the current development version:
+
+```
+npm run setup
+lerna exec yarn link
+cd project
+jq -r '.dependencies|keys[]' package.json | xargs npm link
+```
