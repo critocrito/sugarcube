@@ -5,7 +5,7 @@
     "precommit": "! git rev-parse --abbrev-ref HEAD | grep -q master || lint-staged",
     "commitmsg": "! git rev-parse --abbrev-ref HEAD | grep -q master || validate-commit-msg",
     "test": "mocha -c -R progress -t 6000 -r babel-core/register -r babel-polyfill -r test/helpers.js test/**/*.spec.js",
-    "test-e2e": "cd project && npm run test",
+    "test-e2e": "cd project && npm run test-parallel",
     "check": "eslint --print-config .eslintrc.json | eslint-config-prettier-check",
     "lint": "eslint packages/**/lib/**/*.js test/**/*.js boilerplate-plugin/lib/**/*.js scripts/**/*.js",
     "fix": "npm run lint -- --fix",

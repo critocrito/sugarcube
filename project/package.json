@@ -4,7 +4,8 @@
   "description": "An example project to help development.",
   "main": "index.js",
   "scripts": {
-    "test": "for i in issues/*; do sugarcube -c $i; done"
+    "test": "for i in issues/*; do sugarcube -c $i; done",
+    "test-parallel": "find issues/*.json -type f -print0 | parallel -0 sugarcube -c"
   },
   "keywords": [],
   "author": "Christo <christo@cryptodrunks.net> (https://cryptodrunks.net/~christo)",
