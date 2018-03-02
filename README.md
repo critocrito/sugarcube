@@ -66,6 +66,22 @@ cd project
 jq -r '.dependencies|keys[]' package.json | xargs npm link
 ```
 
+The example project provides a `Vagrantfile` as well. It boots a VM with
+MongoDB, Elasticsearch and NodeJS installed.
+
+```
+cd project
+vagrant box add debian/stretch64
+vagrant up
+```
+
+Test the DB connections:
+
+```
+mongo mongodb://localhost:27007
+curl -X GET http://localhost:9200/_cluster/health?pretty
+```
+
 ## Scripts
 
 The `./scripts` folder contains some programs I used in the past. Install all
