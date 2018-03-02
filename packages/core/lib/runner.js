@@ -88,6 +88,9 @@ const source = curry2("source", (name, envelope) =>
  */
 const runner = curry3("runner", (plugins, cfg, queries) => {
   const stats = state({});
+  // FIXME: The signature of `runner` has to change to allow seed objects for
+  //        cache. Using the `cfg` option is just a crutch.
+  const cache = state(cfg.cache ? cfg.cache : {});
   const seed = generateSeed(8);
   const timestamp = now();
   const stream = Bacon.Bus();
@@ -124,7 +127,7 @@ const runner = curry3("runner", (plugins, cfg, queries) => {
                 end(stream, name),
               ],
               envelope,
-              {stats, log, cfg: merge({marker}, cfg)}
+              {cache, stats, log, cfg: merge({marker}, cfg)}
             ),
           envelopeQueries(queries)
         ),
@@ -137,6 +140,7 @@ const runner = curry3("runner", (plugins, cfg, queries) => {
 
   run.marker = marker;
   run.stream = stream;
+  run.cache = cache;
 
   return run;
 });

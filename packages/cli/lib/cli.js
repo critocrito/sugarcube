@@ -3,6 +3,7 @@ import {
   curry,
   map,
   reduce,
+  merge,
   concat,
   join,
   split,
@@ -14,6 +15,7 @@ import {
   isString,
   isEmpty,
 } from "lodash/fp";
+import fs from "fs";
 import dotenv from "dotenv";
 import {runner, utils} from "@sugarcube/core";
 
@@ -88,6 +90,11 @@ const yargs = require("yargs")
   .alias("d", "debug")
   .describe("d", "Enable debug logging")
   .config("c", parseConfigFileWithExtends)
+  .nargs("C", 1)
+  .string("C")
+  .default("C", "./.sugarcube_cache.json")
+  .alias("C", "cache")
+  .describe("C", "Location of the cache file.")
   .help("h")
   .alias("h", "help")
   .version();
@@ -117,8 +124,28 @@ if (!isEmpty(missingPlugins)) {
 // We can collect queries from a file as well as the command line.
 const queries = concat(argv.q ? argv.q : [], argv.Q ? argv.Q : []);
 
-const argvOmit = ["_", "h", "help", "q", "Q", "d", "debug", "c", "p", "$0"];
-const config = omit(argvOmit, argv);
+let cache;
+if (fs.existsSync(argv.cache)) {
+  cache = JSON.parse(fs.readFileSync(argv.cache).toString());
+} else {
+  cache = {};
+}
+
+const argvOmit = [
+  "_",
+  "h",
+  "help",
+  "q",
+  "Q",
+  "d",
+  "debug",
+  "c",
+  "p",
+  "$0",
+  "C",
+  "cache",
+];
+const config = flow([omit(argvOmit), merge({cache})])(argv);
 
 // Now we have our queries and config, we can create a sugarcube run, and
 // execute it. We also wire the logging to the stream messages.
@@ -170,4 +197,6 @@ run.stream.onError(haltAndCough(argv.debug));
 info(`Starting run ${run.marker}.`);
 
 // Run the pipeline.
-run().catch(haltAndCough(argv.debug));
+run()
+  .then(() => fs.writeFileSync(argv.cache, JSON.stringify(run.cache.get())))
+  .catch(haltAndCough(argv.debug));

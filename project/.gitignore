@@ -2,3 +2,4 @@ configs/*.json
 queries/*.json
 google-sheets-token.json
 data
+.sugarcube_cache.json
