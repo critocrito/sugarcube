@@ -4,7 +4,7 @@
   "description": "An example project to help development.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "for i in issues/*; do sugarcube -c $i; done"
   },
   "keywords": [],
   "author": "Christo <christo@cryptodrunks.net> (https://cryptodrunks.net/~christo)",
