@@ -145,7 +145,7 @@ const argvOmit = [
   "C",
   "cache",
 ];
-const config = flow([omit(argvOmit), merge({cache})])(argv);
+const config = flow([omit(argvOmit), merge({cache, plugins})])(argv);
 
 // Now we have our queries and config, we can create a sugarcube run, and
 // execute it. We also wire the logging to the stream messages.

@@ -127,7 +127,7 @@ const runner = curry3("runner", (plugins, cfg, queries) => {
                 end(stream, name),
               ],
               envelope,
-              {cache, stats, log, cfg: merge({marker}, cfg)}
+              {plugins, cache, stats, log, cfg: merge({marker}, cfg)}
             ),
           envelopeQueries(queries)
         ),
@@ -141,6 +141,7 @@ const runner = curry3("runner", (plugins, cfg, queries) => {
   run.marker = marker;
   run.stream = stream;
   run.cache = cache;
+  run.plugins = plugins;
 
   return run;
 });
