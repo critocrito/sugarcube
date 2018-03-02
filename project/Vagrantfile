@@ -1,16 +1,64 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+$initScript = <<-"SCRIPT"
+  MONGOD_CONF_FILE="/etc/mongodb.conf"
+  IPTABLES_RULES="/etc/iptables.up.rules"
+  NETWORK_PRE_HOOK="/etc/network/if-pre-up.d/iptables"
+
+  apt-get update
+  DEBIAN_FRONTEND=noninteractive apt-get install -y mongodb \
+                                                    iftop \
+                                                    lsof
+
+  iptables -P INPUT ACCEPT
+  iptables -P FORWARD ACCEPT
+  iptables -P OUTPUT ACCEPT
+  iptables -t nat -F
+  iptables -t mangle -F
+  iptables -F
+  iptables -X
+  iptables -I INPUT -i lo -j ACCEPT
+  iptables -I INPUT ! -i lo -d 127.0.0.0/8 -j REJECT
+  iptables -I INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+  iptables -I OUTPUT -j ACCEPT
+  iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT
+  iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 2222 -j ACCEPT
+  iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 27017 -j ACCEPT
+  iptables -I INPUT -p icmp -m icmp --icmp-type 8 -j ACCEPT
+  iptables -I INPUT -m limit --limit 5/min -j LOG --log-prefix "iptables denied: " --log-level 7
+  # iptables -I INPUT -j REJECT
+  iptables -I FORWARD -j REJECT
+
+  iptables-save > $IPTABLES_RULES
+
+  tee -a $NETWORK_PRE_HOOK <<-"EOF"
+#!/bin/sh
+/sbin/iptables-restore < /etc/iptables.up.rules
+EOF
+
+  chmod +x $NETWORK_PRE_HOOK
+
+  sed -i 's/^bind_ip/#bind_ip/g' $MONGOD_CONF_FILE
+  systemctl restart mongodb.service
+SCRIPT
+
 Vagrant.configure("2") do |config|
-  config.vm.box = "debian/jessie64"
-  config.vm.network "forwarded_port", guest: 27017, host: 27007
-  config.vm.provision "shell", inline: <<-SHELL
-    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0C49F3730359A14518585931BC711F9BA15703C6
-    echo "deb http://repo.mongodb.org/apt/debian jessie/mongodb-org/3.4 main" | tee /etc/apt/sources.list.d/mongodb-org-3.4.list
-    apt-get update
-    DEBIAN_FRONTEND=noninteractive apt-get install -y mongodb-org
-    sed -i 's/^  bindIp: 127.0.0.1/  bindIp: 0.0.0.0/g' /etc/mongod.conf
-    systemctl enable mongod.service
-    systemctl restart mongod.service
-  SHELL
+  config.vm.box = "debian/stretch64"
+
+  config.vm.provider "virtualbox" do |v|
+    v.customize ["modifyvm", :id, "--cpus", "2"]
+  end
+
+  config.vm.define :mongo do |mongo|
+    # mongo.vm.network :private_network, ip: "192.168.42.100"
+    mongo.vm.network "forwarded_port", guest: 27017, host: 27007
+    mongo.vm.provision "shell", inline: $initScript
+    mongo.vm.synced_folder ".",
+                           "/vagrant",
+                           type: "rsync",
+                           rsync__args: ["-a", "-v", "-z", "--progress"],
+                           rsync__excludes: ["data", "node_modules"],
+                           rsync__verbose: true
+  end
 end
