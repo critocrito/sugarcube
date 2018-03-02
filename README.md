@@ -65,3 +65,23 @@ lerna exec yarn link
 cd project
 jq -r '.dependencies|keys[]' package.json | xargs npm link
 ```
+
+## Scripts
+
+The `./scripts` folder contains some programs I used in the past. Install all
+dependencies.
+
+```
+cd scripts
+npm i
+```
+
+To use a program run it from the project root.
+
+```
+./scripts/count-imports.js dashp
+```
+
+- `count-imports.js` :: Count the usage of a dependency in the SuagrCube code
+  base. The program takes the name of the dependency as it's arguments and
+  prints a count of the imports, e.g. `./scripts/count-imports lodash/fp`.
