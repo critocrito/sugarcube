@@ -122,7 +122,11 @@ if (!isEmpty(missingPlugins)) {
 }
 
 // We can collect queries from a file as well as the command line.
-const queries = concat(argv.q ? argv.q : [], argv.Q ? argv.Q : []);
+const queries = flow([
+  concat(argv.q ? argv.q : []),
+  concat(argv.Q ? argv.Q : []),
+  concat(argv.queries ? argv.queries : []),
+])([]);
 
 let cache;
 if (fs.existsSync(argv.cache)) {
@@ -144,8 +148,12 @@ const argvOmit = [
   "$0",
   "C",
   "cache",
+  "queries",
 ];
-const config = flow([omit(argvOmit), merge({cache, plugins})])(argv);
+const config = flow([
+  omit(argvOmit),
+  cfg => merge(cfg, {queries, cache, plugins}),
+])(argv);
 
 // Now we have our queries and config, we can create a sugarcube run, and
 // execute it. We also wire the logging to the stream messages.

@@ -1,0 +1,9 @@
+{
+  "plugins": "ddg_search,tap_printf",
+  "queries": [
+    {
+      "type": "ddg_search",
+      "term": "Keith Johnstone"
+    }
+  ]
+}
