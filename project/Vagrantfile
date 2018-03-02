@@ -4,6 +4,7 @@
 $initScript = <<-"SCRIPT"
   MONGOD_CONF_FILE="/etc/mongodb.conf"
   ELASTICSEARCH_CONF_FILE="/etc/elasticsearch/elasticsearch.yml"
+  NODE_VERSION="8.x"
   IPTABLES_RULES="/etc/iptables.up.rules"
   NETWORK_PRE_HOOK="/etc/network/if-pre-up.d/iptables"
 
@@ -16,6 +17,7 @@ $initScript = <<-"SCRIPT"
                                                     dirmngr \
                                                     vim \
                                                     htop \
+                                                    build-essential \
                                                     openjdk-8-jdk-headless
 
   iptables -P INPUT ACCEPT
@@ -50,10 +52,13 @@ EOF
   chmod +x $NETWORK_PRE_HOOK
 
   apt-key adv --fetch-keys https://artifacts.elastic.co/GPG-KEY-elasticsearch
+  apt-key adv --fetch-keys https://deb.nodesource.com/gpgkey/nodesource.gpg.key
   echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | tee -a /etc/apt/sources.list.d/elastic-6.x.list
+  echo "deb https://deb.nodesource.com/node_${NODE_VERSION} $(lsb_release -c -s) main" | tee -a /etc/apt/sources.list.d/nodejs.list
+  echo "deb-src https://deb.nodesource.com/node_${NODE_VERSION} $(lsb_release -c -s) main" | tee -a /etc/apt/sources.list.d/nodejs.list
 
   apt-get update
-  DEBIAN_FRONTEND=noninteractive apt-get install -y elasticsearch
+  DEBIAN_FRONTEND=noninteractive apt-get install -y elasticsearch nodejs
 
   sed -i 's/^bind_ip/#bind_ip/g' $MONGOD_CONF_FILE
   sed -i 's/^#network\.host: 192.168.0.1/network\.host: 0.0.0.0/g' $ELASTICSEARCH_CONF_FILE
