@@ -9,7 +9,7 @@ import utilsA from "./utils";
 import assert from "./assert";
 import crypto from "./crypto";
 
-const utils = merge(utilsA, {hasher: crypto, assertions: assert});
+const utils = merge(utilsA, {assertions: assert});
 
 export {runner, queries, data, envelope, plugin, utils, assert, crypto};
 
