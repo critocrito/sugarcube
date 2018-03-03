@@ -1,5 +1,5 @@
 import {size, get} from "lodash/fp";
-import {mapP, flowP, flatmapP} from "dashp";
+import {flowP, flatmapP} from "dashp";
 import {envelope as e, plugin as p} from "@sugarcube/core";
 
 import {fetchByAppToken, page} from "../api";
@@ -16,7 +16,7 @@ const apiPages = (envelope, {log, cfg}) => {
   log.debug(`Found ${size(queries)} queries.`);
 
   return flowP(
-    [flatmapP(page(fetcher)), mapP(rs => e.concatData(rs, envelope))],
+    [flatmapP(page(fetcher)), rs => e.concatData(rs, envelope)],
     queries
   );
 };
