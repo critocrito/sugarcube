@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.8.0"></a>
+# [0.8.0](https://gitlab.com/sugarcube/sugarcube/compare/v0.7.0...v0.8.0) (2018-03-03)
+
+
+### Features
+
+* **cli:** Specify queries in config files. ([b1e5064](https://gitlab.com/sugarcube/sugarcube/commit/b1e5064)), closes [#4](https://gitlab.com/sugarcube/sugarcube/issues/4)
+* **core:** Provide all available plugins to a plugin. ([cf2ebdf](https://gitlab.com/sugarcube/sugarcube/commit/cf2ebdf))
+* **core,cli:** Added support for persistent cache. ([ea0429e](https://gitlab.com/sugarcube/sugarcube/commit/ea0429e))
+
+
+
+
 <a name="0.5.0"></a>
 # [0.5.0](https://gitlab.com/sugarcube/sugarcube/compare/v0.4.0...v0.5.0) (2018-01-30)
 

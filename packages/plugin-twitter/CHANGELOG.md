@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.8.0"></a>
+# [0.8.0](https://gitlab.com/sugarcube/sugarcube/compare/v0.7.0...v0.8.0) (2018-03-03)
+
+
+### Bug Fixes
+
+* **plugin-twitter:** Append the direct link to an image in _sc_media. ([67aaa1a](https://gitlab.com/sugarcube/sugarcube/commit/67aaa1a)), closes [#26](https://gitlab.com/sugarcube/sugarcube/issues/26)
+* **plugin-twitter:** Stop loosing fetched tweets when encountering an error. ([045e395](https://gitlab.com/sugarcube/sugarcube/commit/045e395)), closes [#25](https://gitlab.com/sugarcube/sugarcube/issues/25)
+
+
+
+
 <a name="0.6.0"></a>
 # [0.6.0](https://gitlab.com/sugarcube/sugarcube/compare/v0.5.1...v0.6.0) (2018-02-01)
 

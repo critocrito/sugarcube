@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.8.0"></a>
+# [0.8.0](https://gitlab.com/sugarcube/sugarcube/compare/v0.7.0...v0.8.0) (2018-03-03)
+
+
+### Bug Fixes
+
+* **core:** Allow state updates to existing paths. ([0b2aca1](https://gitlab.com/sugarcube/sugarcube/commit/0b2aca1))
+
+
+### Features
+
+* **core:** Added the isThenable predicate. ([e9dae59](https://gitlab.com/sugarcube/sugarcube/commit/e9dae59))
+* **core:** Implement custom named curry function. ([121ba34](https://gitlab.com/sugarcube/sugarcube/commit/121ba34))
+* **core:** Overload fmap to replace fmapAsync. ([fe641ad](https://gitlab.com/sugarcube/sugarcube/commit/fe641ad))
+* **core:** Provide all available plugins to a plugin. ([cf2ebdf](https://gitlab.com/sugarcube/sugarcube/commit/cf2ebdf))
+* **core,cli:** Added support for persistent cache. ([ea0429e](https://gitlab.com/sugarcube/sugarcube/commit/ea0429e))
+
+
+
+
 <a name="0.5.0"></a>
 # [0.5.0](https://gitlab.com/sugarcube/sugarcube/compare/v0.4.0...v0.5.0) (2018-01-30)
 
