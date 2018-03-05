@@ -23,7 +23,7 @@
     "@sugarcube/eslint-config-sugarcube": "^0.2.0",
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.0.1",
-    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-env": "^1.6.1",
     "babel-register": "^6.26.0",
     "benchmark": "^2.1.4",
     "bluebird": "^3.5.1",
