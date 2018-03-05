@@ -62,6 +62,6 @@ const content = (envelope, {log, cfg}) => {
 
 const plugin = p.liftManyA2([assertKey, content]);
 
-plugin.description = "Search for content of The Guardian.";
+plugin.desc = "Search for content of The Guardian.";
 
 export default plugin;
