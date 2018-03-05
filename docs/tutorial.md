@@ -32,15 +32,15 @@ you only have to type `node --version`.
 
 To run `sugarcube` you have to install [NodeJS](https://nodejs.org/en/). The
 easiest way to do this, is to use [nvm](https://github.com/creationix/nvm). Node Version Manager (nvm) is a script written to manage multiple active NodeJS versions.
-SugarCube works with the latest version of NodeJS (at the time of this
-writing 7.7.4) and was tested with version 6.9.0.
+SugarCube works with the latest LTS release of NodeJS or newer. At the time of
+this writing the latest LTS release is v8.9.4 named Carbon.
 
 Follow the
 [installation instructions](https://github.com/creationix/nvm#install-script) to install nvm. Check in your terminal that 'node' has been installed by entering in the following command:
 
 ```
 $ node --version
-v6.9.0
+v8.9.4
 ```
 You will also need npm, which is a package manager for NodeJS packages. This will have also been installed when you installed nvm. Check by typing the following in your terminal window:
 

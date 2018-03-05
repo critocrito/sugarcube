@@ -3,8 +3,8 @@ before_script:
   - npm install
   - npm run setup
 
-test:7:
-  image: node:7.6
+test:lts:
+  image: node:carbon
   script:
     - npm run test
 
