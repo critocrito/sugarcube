@@ -1,13 +1,19 @@
 import {flow, forEach, values, pick, merge} from "lodash/fp";
 import apiPages from "./plugins/api-pages";
 import apiUsers from "./plugins/api-users";
+import apiFeed from "./plugins/api-feed";
 
 const plugins = {
-  facebook_api_pages: apiPages,
-  facebook_api_users: apiUsers,
+  facebook_api_page: apiPages,
+  facebook_api_user: apiUsers,
+  facebook_api_feed: apiFeed,
 };
 
-const apiPlugins = ["facebook_api_pages", "facebook_api_users"];
+const apiPlugins = [
+  "facebook_api_page",
+  "facebook_api_user",
+  "facebook_api_feed",
+];
 
 // eslint-disable-next-line lodash-fp/no-unused-result
 flow([

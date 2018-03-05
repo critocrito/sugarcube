@@ -50,29 +50,41 @@ Fetch data about a Facebook page. It uses `facebook_page` as query type.
 - **facebook.app_id**
 - **facebook.app_secret**
 
-## Development
+### `facebook_api_feed`
 
-This scaffolding builds a CommonJS module that runs on NodeJS.
+Fetch the feed of a Facebook page. It uses `facebook_page` as query type. This
+works currently for pages only.
 
-There are the following `npm` scripts:
+    sugarcube -Q facebook_id:filmsforaction \
+              -p facebook_api_feed \
+              --facebook.app_id <app_id> \
+              --facebook.app_secret <app_secret>
 
--   `watch` - Run a watcher for the tests.
--   `test` - Run all specs in `test/`.
--   `lint-docs` - Lint the [JSDoc](http://usejsdoc.org) docstrings using
-    [Documentation](https://github.com/documentationjs/documentation).
--   `lint-src` - Use [ESLint](https://eslint.org/) and
-    [Prettier](https://github.com/prettier/prettier) to enforce the coding
-    style.
--   `lint` - Run `lint-docs` and `lint-src`.
--   `fix` - Automatically fix linting errors in the JavaScript code.
--   `clean` - Remove all compiled bundles.
--   `docs` - Build the API docs using
-    [Documentation](https://github.com/documentationjs/documentation).
--   `compile` - Compile the ES6 sources using [Babel](https://babeljs.io/) using
-    [rollup](https://rollupjs.org/). Runs the `clean` target before compilation.
--   `build` - Build the whole bundle. This lints, tests, documents and compiles
-    the while package.
--   `check` - Test that ESLint and Prettier are in alignment.
--   `publish` - Publish to the [NPM repository](https://www.npmjs.com/).
--   `release` - Make a new release using [Conventional
-    Commits](https://conventionalcommits.org/).
+**Configuration Options**:
+
+- *--facebook.app_id*: The app id issued by Facebook.
+- *--facebook.app_secret*: The secret token issued by Facebook.
+
+## Examples
+
+The following example fetches the feed of facebook pages, downloads all
+images, fetches videos using `youtube-dl`, takes screenshots of the
+entries and exports a CSV file. One of the pages fails because it doesn't
+exist. The `facebook_api_feed` plugin ignores missing pages, and continues
+with the rest of the pipeline.
+
+```
+$(npm bin)/sugarcube -c configs/facebook.json \
+                     -Q facebook_page:BATH5,facebook_page:MoqawamaSourria \
+                     -p
+                     facebook_api_feed,http_get,http_screenshot,media_youtubedl,csv_export
+                     \
+                     --csv.filename data.csv \
+                     --http.data_dir data \
+                     --http.headless true \
+                     --http.get_types image \
+                     --media.youtubedl_cmd youtube-dl \
+                     --media.download_format mp4 \
+                     --media.data_dir data \
+                     -d
+```

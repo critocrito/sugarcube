@@ -1,7 +1,7 @@
 import {curry, merge, getOr} from "lodash/fp";
 import request from "request-promise";
 
-import {pageEntity, userEntity} from "./entities";
+import {pageEntity, userEntity, feedEntity} from "./entities";
 import {pageFields, userFields, postFields} from "./fields";
 
 const FB_API_URL = "https://graph.facebook.com";
@@ -50,4 +50,8 @@ export const user = curry((fetcher, id) =>
     fetchUser(fetcher, id),
     fetchFeed(fetcher, id),
   ]).then(([node, feed]) => userEntity(merge(node, {feed})))
+);
+
+export const feed = curry((fetcher, id) =>
+  fetchFeed(fetcher, id).then(feedEntity)
 );
