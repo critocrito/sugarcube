@@ -93,9 +93,7 @@ export const equalsManyWith = curry3("equalsManyWith", (cmp, xs, ys) => {
  *
  * @returns {Object} options The available options.
  */
-export const pluginOptions = curry3("pluginOptions", (f, xs, ys) => f(xs, ys))(
-  pickBy(has("argv"))
-);
+export const pluginOptions = xs => pickBy(has("argv"), xs);
 
 export const isFunction = f => typeof f === "function";
 

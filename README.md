@@ -61,9 +61,12 @@ set it up with the current development version:
 
 ```
 npm run setup
-lerna exec yarn link
 cd project
-jq -r '.dependencies|keys[]' package.json | xargs npm link
+mkdir -p node_modules/.bin
+cd node_modules
+ln -sf ../../packages @sugarcube
+cd .bin
+ln -sf ../@sugarcube/cli/bin/sugarcube .
 ```
 
 The example project provides a `Vagrantfile` as well. It boots a VM with
