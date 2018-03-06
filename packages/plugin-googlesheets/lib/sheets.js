@@ -1,7 +1,7 @@
 import {curry, find, getOr} from "lodash/fp";
 import {flowP, flowP2, flowP3, flowP4} from "dashp";
 import pify from "pify";
-import google from "googleapis";
+import {google} from "googleapis";
 
 import authenticate from "./auth";
 import {
@@ -31,7 +31,7 @@ const createSpreadsheet = flowP([createSpreadsheetRequest, spreadsheetCreate]);
 const getSpreadsheet = flowP2([getSpreadsheetRequest, spreadsheetGet]);
 
 const getSheet = curry(async (auth, id, name) => {
-  const spreadsheet = await getSpreadsheet(auth, id);
+  const {data: spreadsheet} = await getSpreadsheet(auth, id);
   const sheet = find(["properties.title", name], spreadsheet.sheets);
   return getOr(null, "properties", sheet);
 });

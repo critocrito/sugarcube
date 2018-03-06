@@ -1,18 +1,15 @@
 import fs from "fs";
 import pify from "pify";
-import googleAuth from "google-auth-library";
+import {OAuth2Client} from "google-auth-library";
 
-const GoogleAuth = googleAuth;
 const statAsync = pify(fs.stat);
 const readFileAsync = pify(fs.readFile);
 const writeFileAsync = pify(fs.writeFile);
 
 const TOKEN_FILE = "google-sheets-token.json";
 
-const authClient = (client, secret) => {
-  const auth = new GoogleAuth();
-  return new auth.OAuth2(client, secret, "urn:ietf:wg:oauth:2.0:oob");
-};
+const authClient = (client, secret) =>
+  new OAuth2Client(client, secret, "urn:ietf:wg:oauth:2.0:oob");
 
 const requestToken = oauth2Client => {
   const authUrl = oauth2Client.generateAuthUrl({
@@ -49,7 +46,7 @@ const authenticate = async (client, secret, refreshToken) => {
 
   if (refreshToken) {
     try {
-      credentials = await pify(auth.getToken)(refreshToken);
+      credentials = await auth.getToken(refreshToken);
       await credsToFile(TOKEN_FILE, credentials);
       auth.credentials = credentials;
       return auth;
