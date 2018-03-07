@@ -11,11 +11,13 @@ const querySource = "glob_pattern";
 const importPlugin = (envelope, {cfg, log}) => {
   const patterns = env.queriesByType(querySource, envelope);
   const delimiter = get("csv.delimiter", cfg);
+  const sourceName = get("csv.import_source", cfg);
   // FIXME: Split the string as part of the command parsing coercion
   const idFields = get("csv.id_fields", cfg).split(",");
 
   const entity = merge(d.emptyOne(), {
     _sc_id_fields: idFields,
+    _sc_source: sourceName,
   });
 
   return flowP(
@@ -34,5 +36,14 @@ const importPlugin = (envelope, {cfg, log}) => {
 const plugin = p.liftManyA2([assertIdFields, importPlugin]);
 
 plugin.desc = "Import data from csv files.";
+
+plugin.argv = {
+  "csv.import_source": {
+    type: "string",
+    default: "csv_import",
+    nargs: 1,
+    desc: "Set the _sc_source field.",
+  },
+};
 
 export default plugin;
