@@ -26,18 +26,6 @@ const plugin = (envelope, {log}) => {
                 merge(memo, {
                   [`${field}_text`]: text,
                   [`${field}_meta`]: meta,
-                  _sc_media: unit._sc_media.concat([
-                    {
-                      type: "tika_location_text",
-                      term: text,
-                      field,
-                    },
-                    {
-                      type: "tika_location_meta",
-                      term: meta,
-                      field,
-                    },
-                  ]),
                 }),
             ],
             value
