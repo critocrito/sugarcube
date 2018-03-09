@@ -26,6 +26,24 @@ Export sugarcube data in csv format to a file.
 $(npm bin)/sugarcube -c config.json -p google_search,csv_export --csv.filename data.csv
 ```
 
+### `csv_export_queries` plugin
+
+Export the queries of an envelope to a file.
+
+**Configuration**:
+
+- `csv.delimiter` (defaults to `,`)
+
+  Specify the csv delimiter.
+
+- `csv.queries_filename` (defaults to `out.csv`). Specify the target queries file.
+
+```
+$(npm bin)/sugarcube -c config.json \
+                     -p sheets_queries,csv_export_queries \
+                     --csv.queries_filename queries.csv
+```
+
 ### `csv_import` plugin
 
 Import a csv file, and turn it into sugarcube data.
