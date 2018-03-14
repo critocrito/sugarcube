@@ -1,6 +1,6 @@
 import {size, get} from "lodash/fp";
 import {flowP, flatmapP, caughtP, tapP} from "dashp";
-import {envelope as e, plugin as p} from "@sugarcube/core";
+import {envelope as env, plugin as p} from "@sugarcube/core";
 
 import {fetchByAppToken, feed} from "../api";
 import {assertAppCredentials} from "../assertions";
@@ -10,7 +10,7 @@ const querySource = "facebook_page";
 const apiFeed = (envelope, {cfg, log}) => {
   const appId = get("facebook.app_id", cfg);
   const appSecret = get("facebook.app_secret", cfg);
-  const queries = e.queriesByType(querySource, envelope);
+  const queries = env.queriesByType(querySource, envelope);
   const fetcher = fetchByAppToken(appId, appSecret);
 
   log.debug(`Found ${size(queries)} queries.`);
@@ -27,14 +27,14 @@ const apiFeed = (envelope, {cfg, log}) => {
             log.warn(msg);
             return [];
           }
-          throw e;
+          throw err;
         }),
       ],
       id
     );
   };
 
-  return flowP([flatmapP(query), rs => e.concatData(rs, envelope)], queries);
+  return flowP([flatmapP(query), rs => env.concatData(rs, envelope)], queries);
 };
 
 const plugin = p.liftManyA2([assertAppCredentials, apiFeed]);
