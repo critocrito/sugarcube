@@ -10,7 +10,7 @@ var tapP = dashp.tap;
 var collectP = dashp.collect;
 var flowP = dashp.flow;
 
-var sharedFields = ['href', 'type', 'content', 'title', 'order' ];
+var sharedFields = ['href', 'description', 'title'];
 
 var duckClean = function(dirtyContent) {
   /* because contains a lot of spaces and \n\n */
@@ -36,12 +36,8 @@ var goGoDuck = function(searchQuery) {
         var href = url.parse(cheerio.load(div)('.result__a').attr('href'), true);
 
         parsed_links.push({
-          // html_section: completeSection,
-          query: searchQuery,
-          order: i + 1,
           href: href.query.uddg,
-          query_url: uri,
-          content: duckClean(entryDesc),
+          description: duckClean(entryDesc),
           title: duckClean(entryTitle)
         });
       });
@@ -69,8 +65,7 @@ var mightyDucky = function(val, {log}) {
         var finalized = _.pick(lo, sharedFields);
         finalized._sc_source = 'ddg_search';
         finalized._sc_id_fields = ['href'];
-        finalized._sc_content_fields = ['content'];
-        finalized._sc_content = 'content';
+        finalized._sc_content_fields = ['description'];
         finalized._sc_media = [{term: lo.href, type: 'url'}],
         finalized._sc_relations = [{type: 'url', term: lo.href}];
 
