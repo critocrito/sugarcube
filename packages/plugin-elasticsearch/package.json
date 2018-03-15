@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/plugin-elasticsearch",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "",
   "main": "_dist/index.js",
   "license": "GPL-3.0",
