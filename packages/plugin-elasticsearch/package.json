@@ -1,0 +1,25 @@
+{
+  "name": "@sugarcube/plugin-elasticsearch",
+  "version": "0.7.0",
+  "description": "",
+  "main": "_dist/index.js",
+  "license": "GPL-3.0",
+  "repository": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-elasticsearch",
+  "author": "Christo <christo@cryptodrunks.net>",
+  "keywords": [
+    "sugarcube",
+    "sugarcube-plugin",
+    "data",
+    "transformation",
+    "elasticsearch",
+    "data storage"
+  ],
+  "dependencies": {
+    "@sugarcube/core": "0.8.0",
+    "dashp": "^0.8.1",
+    "elasticsearch": "^14.1.0",
+    "glob": "^7.1.2",
+    "lodash": "^4.17.4",
+    "pify": "^3.0.0"
+  }
+}

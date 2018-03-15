@@ -8,7 +8,7 @@
     "test-parallel": "find issues/*.json -type f -print0 | parallel -0 sugarcube -c"
   },
   "keywords": [],
-  "author": "Christo <christo@cryptodrunks.net> (https://cryptodrunks.net/~christo)",
+  "author": "Christo <christo@cryptodrunks.net>",
   "license": "GPL-3.0",
   "dependencies": {
     "@sugarcube/cli": "file:../packages/cli",
@@ -16,6 +16,7 @@
     "@sugarcube/plugin-aqicn": "file:../packages/plugin-aqicn",
     "@sugarcube/plugin-csv": "file:../packages/plugin-csv",
     "@sugarcube/plugin-ddg": "file:../packages/plugin-ddg",
+    "@sugarcube/plugin-elasticsearch": "file:../packages/plugin-elasticsearch",
     "@sugarcube/plugin-facebook": "file:../packages/plugin-facebook",
     "@sugarcube/plugin-fs": "file:../packages/plugin-fs",
     "@sugarcube/plugin-google": "file:../packages/plugin-google",

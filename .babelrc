@@ -7,5 +7,6 @@
         }
       }
     ]
-  ]
+  ],
+  "plugins": ["syntax-async-generators", "transform-async-generator-functions"]
 }
