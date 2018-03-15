@@ -36,8 +36,8 @@ export const search = curry((url, headless, term) =>
     n =>
       n
         .type("#lst-ib", term)
-        .click("#_fZl")
-        .wait("#rso"),
+        .click("input[name='btnK']")
+        .wait("div.srg"),
     html,
   ])(url)
 );
