@@ -45,9 +45,10 @@ export const createIndex = curry4(
 
 export const query = curry4("query", async (index, body, amount, client) => {
   const response = await client.search({
-    index: `${index}*`,
+    index: `${index}`,
     size: amount,
     body,
+    requestTimeout: "90000",
   });
   const data = map(
     flow([property("_source"), unstripify]),
