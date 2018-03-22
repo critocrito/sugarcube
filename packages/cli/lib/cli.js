@@ -6,7 +6,6 @@ import {
   merge,
   concat,
   join,
-  split,
   omit,
   keys,
   difference,
@@ -35,11 +34,16 @@ const haltAndCough = curry((d, e) => {
 });
 
 // Make sure we have all requested plugins.
-// <type>:<term>,... -> [{type: "<type>", term: "<term>"}, ...]
-const cliQueries = flow([
-  split(","),
-  map(flow([split(":"), zipObject(["type", "term"])])),
-]);
+// <type>:<term> -> {type: "<type>", term: "<term>"}
+const cliQueries = map(
+  flow([
+    s => {
+      const results = s.match(/^([a-z_]*):(.*)/);
+      return [results[1], results[2]];
+    },
+    zipObject(["type", "term"]),
+  ])
+);
 
 // Load variables from .env
 dotenv.config();
@@ -74,17 +78,15 @@ const yargs = require("yargs")
       mapFiles(parseConfigFile),
     ])
   )
-  .nargs("Q", 1)
-  .describe(
-    "Q",
-    [
-      "Queries in the form: <type>:<term>[,<type>:<term>[,..]].",
+  .option("Q", {
+    type: "array",
+    desc: [
+      "Queries in the form: <type>:<term>.",
       "Note that spaces have to be escaped, e.g.: ",
-      // eslint-disable-next-line no-useless-escape
-      "twitter_search:Keith Johnstone",
-    ].join(" ")
-  )
-  .coerce("Q", cliQueries)
+      "twitter_search:Keith\\ Johnstone",
+    ].join(" "),
+    coerce: cliQueries,
+  })
   .option("d")
   .boolean("d")
   .alias("d", "debug")
