@@ -79,6 +79,51 @@ following pipeline:
 sugarcube -Q glob_pattern:2018.json -p elastic_import,csv_export
 ```
 
+## `elastic_import_query` plugin
+
+Similar to the `elastic_import` plugin, but instead of providing files of
+queries, supply them directly through the query sources. The query type is
+called `elastic_query`. The query term has to be a valid JSON string, that is
+an Elasticsearch search body.
+
+**Configuration Options:**
+
+- `elastic.host`: Set the hostname of the Elasticsearch server. Defaults to
+  `localhost`.
+- `elastic.port`: Set the port of the Elasticsearch server. Defaults to
+  `9200`.
+- `elastic.index`: Define the prefix to be used for index names. Defaults to
+  `sugarcube`.
+- `elastic.amount`: Set the maximum numbers of units to import. Defaults to
+  `1000`.
+
+**Example:**
+
+Let's say I have two types of lists, one are keywords, and the other one are
+city names. The following shell script iterates over two arrays, and calls a
+pipeline for every possible combination of keywords/cities:
+
+```
+#!/bin/bash
+
+declare -a cities=("aberdeen" "sheffield");
+declare -a keywords=("qlikview" "expedian");
+
+for i in "${cities[@]}"
+do
+  for j in "${keywords[@]}"
+  do
+    sugarcube -Q elastic_query:'{"query": {"bool": {"must": [{"match": {"href_text": "'"$i"'"}},{"match": {"href_text": "'"$j"'"}}]}}}' -p elastic_import_query --csv.filename $i-$j.csv $@
+  done
+done
+```
+
+I can then call this script like that:
+
+```
+./pipelines.sh --elastic.index my-index
+```
+
 ## `elastic_complement` plugin
 
 Complement data in the pipeline with existing data stored in
