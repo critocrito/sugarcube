@@ -1,28 +1,13 @@
 import {flow, intersection, pick, forEach, merge, keys} from "lodash/fp";
-import {plugin} from "@sugarcube/core";
 
 import exportPlugin from "./plugins/export";
 import importPlugin from "./plugins/import";
 import queriesPlugin from "./plugins/queries";
-import {assertCredentials, assertSpreadsheet, assertSheet} from "./assertions";
 
 const plugins = {
-  sheets_export: plugin.liftManyA2([
-    assertCredentials,
-    assertSpreadsheet,
-    exportPlugin,
-  ]),
-  sheets_import: plugin.liftManyA2([
-    assertCredentials,
-    assertSpreadsheet,
-    assertSheet,
-    importPlugin,
-  ]),
-  sheets_queries: plugin.liftManyA2([
-    assertCredentials,
-    assertSpreadsheet,
-    queriesPlugin,
-  ]),
+  sheets_export: exportPlugin,
+  sheets_import: importPlugin,
+  sheets_queries: queriesPlugin,
 };
 
 const authPlugins = flow([

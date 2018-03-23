@@ -1,11 +1,12 @@
 import {size, get, getOr} from "lodash/fp";
-import {envelope as env} from "@sugarcube/core";
+import {envelope as env, plugin as p} from "@sugarcube/core";
 import withSession from "../sheets";
 import {rowsToUnits} from "../utils";
+import {assertCredentials, assertSpreadsheet, assertSheet} from "../assertions";
 
 // TODO: case for then no _sc_id_hash exists
 // possibly rename this one update_from_sheet
-const plugin = async (envelope, {log, cfg}) => {
+const importData = async (envelope, {log, cfg}) => {
   const client = get("google.client_id", cfg);
   const secret = get("google.client_secret", cfg);
   const refreshToken = get("google.refresh_token", cfg);
@@ -26,6 +27,13 @@ const plugin = async (envelope, {log, cfg}) => {
 
   return env.concatData(units, envelope);
 };
+
+const plugin = p.liftManyA2([
+  assertCredentials,
+  assertSpreadsheet,
+  assertSheet,
+  importData,
+]);
 
 plugin.desc = "Import SugarCube data from a google spreadsheet";
 

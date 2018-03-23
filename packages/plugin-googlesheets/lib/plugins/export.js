@@ -1,15 +1,16 @@
 import {curry, flow, get, getOr, size} from "lodash/fp";
 import {retryP} from "dashp";
-import {envelope as env} from "@sugarcube/core";
+import {envelope as env, plugin as p} from "@sugarcube/core";
 import withSession from "../sheets";
 import {header, unitsToRows, rowsToUnits} from "../utils";
+import {assertCredentials, assertSpreadsheet} from "../assertions";
 
 const mergeUnitsAndRows = curry((units, rows) => {
   const data = rowsToUnits(header(rows), rows);
   return env.concat(env.envelopeData(data), env.envelopeData(units)).data;
 });
 
-const plugin = async (envelope, {log, cfg}) => {
+const exportData = async (envelope, {log, cfg}) => {
   const client = get("google.client_id", cfg);
   const secret = get("google.client_secret", cfg);
   const refreshToken = get("google.refresh_token", cfg);
@@ -62,6 +63,8 @@ const plugin = async (envelope, {log, cfg}) => {
 
   return envelope;
 };
+
+const plugin = p.liftManyA2([assertCredentials, assertSpreadsheet, exportData]);
 
 plugin.desc = "Export SugarCube data to a google spreadsheet.";
 
