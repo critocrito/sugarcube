@@ -71,7 +71,7 @@ forEach(p => {
   p.argv = merge(
     {
       "google.sheet_fields": {
-        type: "string",
+        type: "array",
         desc: "Fields of SugarCube units to export and import.",
       },
     },
