@@ -1,11 +1,9 @@
-import {size, get, getOr} from "lodash/fp";
+import {merge, size, get, getOr} from "lodash/fp";
 import {envelope as env, plugin as p} from "@sugarcube/core";
 import withSession from "../sheets";
 import {rowsToUnits} from "../utils";
 import {assertCredentials, assertSpreadsheet, assertSheet} from "../assertions";
 
-// TODO: case for then no _sc_id_hash exists
-// possibly rename this one update_from_sheet
 const importData = async (envelope, {log, cfg}) => {
   const client = get("google.client_id", cfg);
   const secret = get("google.client_secret", cfg);
@@ -13,11 +11,14 @@ const importData = async (envelope, {log, cfg}) => {
   const id = get("google.spreadsheet_id", cfg);
   const sheet = get("google.sheet", cfg);
   const sheetFields = getOr([], "google.sheet_fields", cfg);
+  const idFields = get("google.id_fields", cfg);
 
   const units = await withSession(
     async ({getValues}) => {
       const rows = await getValues(id, sheet);
-      return rowsToUnits(sheetFields, rows);
+      const data = rowsToUnits(sheetFields, rows);
+      if (idFields) return data.map(merge({_sc_id_fields: idFields}));
+      return data;
     },
     {client, secret, refreshToken}
   );
@@ -39,9 +40,14 @@ plugin.desc = "Import SugarCube data from a google spreadsheet";
 
 plugin.argv = {
   "google.sheet": {
-    type: "text",
+    type: "string",
     default: "Sheet1",
     desc: "Name of the sheet in the spreadsheet to import",
+  },
+  "google.id_fields": {
+    type: "array",
+    nargs: 1,
+    desc: "Specify the id fields. Use multiple times to specify more fields.",
   },
 };
 
