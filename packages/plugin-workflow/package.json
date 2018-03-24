@@ -1,0 +1,19 @@
+{
+  "name": "@sugarcube/plugin-workflow",
+  "version": "0.8.0",
+  "description": "Support investigation workflows for SugarCube.",
+  "main": "_dist/index.js",
+  "license": "GPL-3.0",
+  "repository": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-workflow",
+  "author": "Christo <christo@cryptodrunks.net>",
+  "keywords": [
+    "sugarcube",
+    "sugarcube-plugin",
+    "data",
+    "transformation"
+  ],
+  "dependencies": {
+    "@sugarcube/core": "0.8.0",
+    "lodash": "^4.17.5"
+  }
+}
