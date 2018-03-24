@@ -81,6 +81,12 @@ const flattenAndExpand = reduce(
 const exportPlugin = (val, {cfg, log}) => {
   const filename = get("csv.filename", cfg);
   const delimiter = get("csv.delimiter", cfg);
+  const skipEmpty = get("csv.skip_empty", cfg);
+
+  if (skipEmpty && size(val.data) === 0) {
+    log.info("Data pipeline is empty. Skip the export.");
+    return val;
+  }
 
   log.info(`Converting to csv and writing to ${filename}.`);
   log.debug(`Converting ${size(val.data)} units to CSV.`);
@@ -114,6 +120,10 @@ plugin.argv = {
     default: "out.csv",
     nargs: 1,
     desc: "The file name to write the CSV to",
+  },
+  "csv.skip_empty": {
+    type: "boolean",
+    desc: "Skip export of empty data pipelines.",
   },
 };
 
