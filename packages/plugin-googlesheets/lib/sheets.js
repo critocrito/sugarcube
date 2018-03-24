@@ -59,7 +59,7 @@ const duplicateSheet = curry(async (auth, id, from, to, title) => {
   return getSheet(auth, to, title);
 });
 
-const getValues = flowP3([getValuesRequest, get, getOr([], "values")]);
+const getValues = flowP3([getValuesRequest, get, getOr([], "data.values")]);
 const createValues = flowP4([createValuesRequest, update]);
 const clearValues = flowP3([clearValuesRequest, clear]);
 
