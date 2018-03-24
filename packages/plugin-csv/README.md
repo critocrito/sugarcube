@@ -16,11 +16,10 @@ Export sugarcube data in csv format to a file.
 
 **Configuration**:
 
-- `csv.delimiter` (defaults to `,`)
-
-  Specify the csv delimiter.
-
+- `csv.delimiter` (defaults to `,`) Specify the csv delimiter.
 - `csv.filename` (defaults to `out.csv`). Specify the target file.
+- `csv.skip_empty` Use this option to only export data pipelines that contain
+  any data.
 
 ```
 $(npm bin)/sugarcube -c config.json -p google_search,csv_export --csv.filename data.csv

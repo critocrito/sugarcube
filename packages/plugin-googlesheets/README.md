@@ -71,12 +71,14 @@ browser and note the authorization token. Add this token to your configuration.
 Export data to a Google spreadsheet.
 
 - `google.spreadsheet_id`: The ID of the spreadsheet to export to.
-- `google.sheet_fields`: A list of field names, which get exported to the
-  spreadsheet.
+- `google.sheet_fields`: Specify the field names, which should be exported to
+  the spreadsheet.
 - `google.copy_from_spreadsheet`: Specify the spreadsheet ID to copy the
   template from. Requires `google.copy_from_sheet` as well.
 - `google.copy_from_sheet`: Specify a sheet name to copy the template
   from. Requires `google.copy_from_spreadsheet` as well.
+- `google.skip_empty` Use this option to only export data pipelines that contain
+  any data.
 
 ### `sheets_import`
 
