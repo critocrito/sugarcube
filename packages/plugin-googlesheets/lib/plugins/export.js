@@ -18,11 +18,11 @@ const exportData = async (envelope, {log, cfg}) => {
   const fields = getOr([], "google.sheet_fields", cfg);
   const copyFromSheet = get("google.copy_from_sheet", cfg);
   const copyFromSpreadsheet = get("google.copy_from_spreadsheet", cfg);
-  const ignoreEmpty = get("google.ignore_empty", cfg);
+  const skipEmpty = get("google.skip_empty", cfg);
   const sheetName = getOr(cfg.marker, "google.sheet", cfg);
 
-  if (ignoreEmpty && envelope.data.length === 0) {
-    log.info("Ignoring empty pipeline. Moving on.");
+  if (skipEmpty && size(envelope.data) === 0) {
+    log.info("Data pipeline is empty. Skip the export.");
     return envelope;
   }
 
@@ -83,10 +83,9 @@ plugin.argv = {
     type: "text",
     desc: "Duplicate a sheet from this spreadsheet ID.",
   },
-  "google.ignore_empty": {
+  "google.skip_empty": {
     type: "boolean",
-    default: false,
-    desc: "Don't operate on a sheet if there are no units in the pipeline.",
+    desc: "Skip export of empty data pipelines.",
   },
 };
 
