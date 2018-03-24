@@ -50,10 +50,7 @@ const exportData = async (envelope, {log, cfg}) => {
 
       const rows = await getValues(id, sheetName);
 
-      log.info(
-        `Merging ${size(envelope.data)} new units and ${size(rows)}` +
-          ` existing rows.`
-      );
+      log.info(`Merging ${size(envelope.data)} into ${size(rows) - 1} units.`);
 
       const mergeEnvelope = flow([
         mergeUnitsAndRows(envelope.data),
