@@ -1,4 +1,4 @@
-import {size, get} from "lodash/fp";
+import {merge, size, get} from "lodash/fp";
 import {envelope as env} from "@sugarcube/core";
 
 import {Elastic} from "../elastic";
@@ -10,6 +10,7 @@ const plugin = async (envelope, {cfg, log}) => {
   const port = get("elastic.port", cfg);
   const index = get("elastic.index", cfg);
   const amount = get("elastic.amount", cfg);
+  const includeFields = get("elastic.include_fields", cfg);
 
   const queries = env.queriesByType(querySource, envelope);
 
@@ -18,7 +19,13 @@ const plugin = async (envelope, {cfg, log}) => {
       let results = [];
       // eslint-disable-next-line no-restricted-syntax
       for (const q of queries) {
-        const body = JSON.parse(q);
+        let body = JSON.parse(q);
+        if (includeFields)
+          body = merge(body, {
+            _source: includeFields
+              .concat(["_sc_*_hash"])
+              .map(f => f.replace(/^_sc/, "$sc")),
+          });
         const units = yield query(index, body, amount);
         log.info(`Fetched ${size(units)}/${amount} units for ${q}.`);
         results = results.concat(units);
@@ -39,6 +46,10 @@ plugin.argv = {
     nargs: 1,
     default: 1000,
     desc: "The amount of units to fetch.",
+  },
+  "elastic.include_fields": {
+    type: "array",
+    desc: "Only include those fields when importing data.",
   },
 };
 

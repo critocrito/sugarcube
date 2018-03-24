@@ -52,6 +52,9 @@ DSL](https://www.elastic.co/guide/en/elasticsearch/reference/6.2/query-dsl.html)
   `sugarcube`.
 - `elastic.amount`: Set the maximum numbers of units to import. Defaults to
   `1000`.
+- `elastic.include_fields`: Only fetch the fields specified. Defaults to fetch
+  all fields. `_sc_id_hash` and `_sc_content_hash` are always fetched and
+  don't need to be specified when using this option.
 
 **Example:**
 
@@ -96,6 +99,9 @@ an Elasticsearch search body.
   `sugarcube`.
 - `elastic.amount`: Set the maximum numbers of units to import. Defaults to
   `1000`.
+- `elastic.include_fields`: Only fetch the fields specified. Defaults to fetch
+  all fields. `_sc_id_hash` and `_sc_content_hash` are always fetched and
+  don't need to be specified when using this option.
 
 **Example:**
 

@@ -1,4 +1,4 @@
-import {size, get} from "lodash/fp";
+import {merge, size, get} from "lodash/fp";
 import {flatmapP} from "dashp";
 import fs from "fs";
 import {envelope as env} from "@sugarcube/core";
@@ -15,6 +15,7 @@ const plugin = async (envelope, {cfg, log}) => {
   const port = get("elastic.port", cfg);
   const index = get("elastic.index", cfg);
   const amount = get("elastic.amount", cfg);
+  const includeFields = get("elastic.include_fields", cfg);
 
   const patterns = env.queriesByType(querySource, envelope);
   const files = await flatmapP(p => globP(...[p, {nodir: true}]), patterns);
@@ -24,7 +25,13 @@ const plugin = async (envelope, {cfg, log}) => {
       let results = [];
       // eslint-disable-next-line no-restricted-syntax
       for (const file of files) {
-        const body = JSON.parse(fs.readFileSync(file));
+        let body = JSON.parse(fs.readFileSync(file));
+        if (includeFields)
+          body = merge(body, {
+            _source: includeFields
+              .concat(["_sc_*_hash"])
+              .map(f => f.replace(/^_sc/, "$sc")),
+          });
         const units = yield query(index, body, amount);
         log.info(`Fetched ${size(units)}/${amount} units for ${file}.`);
         results = results.concat(units);
@@ -45,6 +52,10 @@ plugin.argv = {
     nargs: 1,
     default: 1000,
     desc: "The amount of units to fetch.",
+  },
+  "elastic.include_fields": {
+    type: "array",
+    desc: "Only include those fields when importing data.",
   },
 };
 
