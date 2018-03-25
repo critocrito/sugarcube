@@ -1,5 +1,5 @@
-import {merge, size, get} from "lodash/fp";
-import {flatmapP} from "dashp";
+import {flow, map, concat, merge, size, get} from "lodash/fp";
+import {flowP, flatmapP} from "dashp";
 import fs from "fs";
 import {envelope as env} from "@sugarcube/core";
 import glob from "glob";
@@ -8,7 +8,8 @@ import pify from "pify";
 import {Elastic} from "../elastic";
 
 const globP = pify(glob);
-const querySource = "glob_pattern";
+const querySourceGlob = "glob_pattern";
+const querySourceQuery = "elastic_query";
 
 const plugin = async (envelope, {cfg, log}) => {
   const host = get("elastic.host", cfg);
@@ -17,15 +18,29 @@ const plugin = async (envelope, {cfg, log}) => {
   const amount = get("elastic.amount", cfg);
   const includeFields = get("elastic.include_fields", cfg);
 
-  const patterns = env.queriesByType(querySource, envelope);
-  const files = await flatmapP(p => globP(...[p, {nodir: true}]), patterns);
+  const files = await flowP(
+    [
+      env.queriesByType(querySourceGlob),
+      flatmapP(p => globP(...[p, {nodir: true}])),
+      map(file => JSON.parse(fs.readFileSync(file))),
+    ],
+    envelope
+  );
+  const queries = flow([
+    env.queriesByType(querySourceQuery),
+    map(query => JSON.parse(query)),
+  ])(envelope);
+
+  log.info(`Read ${size(files)} bodies from file.`);
+  log.info(`Read ${size(queries)} bodies from queries.`);
+
+  const bodies = [files, queries].reduce(concat, []);
 
   return Elastic.Do(
     function* queryData({query}) {
       let results = [];
       // eslint-disable-next-line no-restricted-syntax
-      for (const file of files) {
-        let body = JSON.parse(fs.readFileSync(file));
+      for (let body of bodies) {
         if (includeFields)
           body = merge(body, {
             _source: includeFields
@@ -33,7 +48,9 @@ const plugin = async (envelope, {cfg, log}) => {
               .map(f => f.replace(/^_sc/, "$sc")),
           });
         const units = yield query(index, body, amount);
-        log.info(`Fetched ${size(units)}/${amount} units for ${file}.`);
+        log.info(
+          `Fetched ${size(units)}/${amount} units for ${JSON.stringify(body)}.`
+        );
         results = results.concat(units);
       }
       return results;

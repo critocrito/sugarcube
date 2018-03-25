@@ -1,13 +1,11 @@
 import {forEach, merge, values} from "lodash/fp";
 import importPlugin from "./plugins/import";
-import importQueryPlugin from "./plugins/import-query";
 import exportPlugin from "./plugins/export";
 import complementPlugin from "./plugins/complement";
 import complementLeftPlugin from "./plugins/complement-left";
 
 export const plugins = {
   elastic_import: importPlugin,
-  elastic_import_query: importQueryPlugin,
   elastic_export: exportPlugin,
   elastic_complement: complementPlugin,
   elastic_complement_left: complementLeftPlugin,
