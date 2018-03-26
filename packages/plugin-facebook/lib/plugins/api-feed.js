@@ -16,11 +16,11 @@ const apiFeed = (envelope, {cfg, log}) => {
   log.debug(`Found ${size(queries)} queries.`);
 
   const query = id => {
-    log.debug(`Querying the feed of ${id}.`);
+    log.info(`Querying the feed of ${id}.`);
     return flowP(
       [
         feed(fetcher),
-        tapP(ms => log.debug(`Fetched ${size(ms)} messages for ${id}.`)),
+        tapP(ms => log.info(`Fetched ${size(ms)} messages for ${id}.`)),
         caughtP(err => {
           if (err.statusCode === 404) {
             const msg = get("error.error.message", err);
