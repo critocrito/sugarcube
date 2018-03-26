@@ -10,6 +10,7 @@ const querySource = "facebook_page";
 const apiFeed = (envelope, {cfg, log}) => {
   const appId = get("facebook.app_id", cfg);
   const appSecret = get("facebook.app_secret", cfg);
+  const limit = get("facebook.feed_limit", cfg);
   const queries = env.queriesByType(querySource, envelope);
   const fetcher = fetchByAppToken(appId, appSecret);
 
@@ -19,7 +20,7 @@ const apiFeed = (envelope, {cfg, log}) => {
     log.info(`Querying the feed of ${id}.`);
     return flowP(
       [
-        feed(fetcher),
+        feed(limit, fetcher),
         tapP(ms => log.info(`Fetched ${size(ms)} messages for ${id}.`)),
         caughtP(err => {
           if (err.statusCode === 404) {
@@ -38,6 +39,16 @@ const apiFeed = (envelope, {cfg, log}) => {
 };
 
 const plugin = p.liftManyA2([assertAppCredentials, apiFeed]);
+
+plugin.argv = {
+  "facebook.feed_limit": {
+    type: "number",
+    default: 0,
+    nargs: 1,
+    desc:
+      "Limit the number of feed messages. Setting it to 0 removes the limit.",
+  },
+};
 
 plugin.desc = "Fetch the feed of a page.";
 

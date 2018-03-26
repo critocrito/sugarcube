@@ -1,4 +1,4 @@
-import {merge, getOr} from "lodash/fp";
+import {merge, get} from "lodash/fp";
 import {utils} from "@sugarcube/core";
 import request from "request-promise";
 
@@ -22,26 +22,23 @@ const fetchApi = curry3("fetchApi", (accessToken, endpoint, qs) => {
   return request(opts);
 });
 
-const fetchNode = curry3("fetchNode", (fields, fetcher, id) =>
-  fetcher(id, {fields})
-);
-
-const fetchEdge = curry4("fetchEdge", (edge, fields, fetcher, id) =>
-  fetcher(`${id}/${edge}`, {
-    fields,
-    limit: 100,
-  }).then(getOr([], "data"))
-);
-
-const fetchPage = curry2("fetchPage", (fetcher, id) =>
-  fetchNode(pageFields, fetcher, id)
-);
-const fetchUser = curry2("fetchUser", (fetcher, id) =>
-  fetchNode(userFields, fetcher, id)
-);
-const fetchFeed = curry2("fetchFeed", (fetcher, id) =>
-  fetchEdge("feed", postFields, fetcher, id)
-);
+const fetchEdge = async (edge, fields, limit, fetcher, id) => {
+  let results = [];
+  let offset = 0;
+  for (;;) {
+    // eslint-disable-next-line no-await-in-loop
+    const data = await fetcher(`${id}/${edge}`, {
+      fields,
+      offset,
+      limit: 100,
+    }).then(get("data"));
+    results = results.concat(data);
+    offset = results.length;
+    if (data.length === 0) break;
+    if (limit !== 0 && results.length >= limit) break;
+  }
+  return results;
+};
 
 export const fetchByAppToken = curry4(
   "fetchByAppToken",
@@ -53,19 +50,13 @@ export const fetchByAppToken = curry4(
 );
 
 export const page = curry2("page", (fetcher, id) =>
-  Promise.all([
-    fetchPage(fetcher, id),
-    fetchFeed(fetcher, id),
-  ]).then(([node, feed]) => pageEntity(merge(node, {feed})))
+  fetcher(id, {fields: pageFields}).then(pageEntity)
 );
 
 export const user = curry2("user", (fetcher, id) =>
-  Promise.all([
-    fetchUser(fetcher, id),
-    fetchFeed(fetcher, id),
-  ]).then(([node, feed]) => userEntity(merge(node, {feed})))
+  fetcher(id, {fields: userFields}).then(userEntity)
 );
 
-export const feed = curry2("feed", (fetcher, id) =>
-  fetchFeed(fetcher, id).then(feedEntity)
+export const feed = curry3("feed", (limit, fetcher, id) =>
+  fetchEdge("feed", postFields, limit, fetcher, id).then(feedEntity)
 );

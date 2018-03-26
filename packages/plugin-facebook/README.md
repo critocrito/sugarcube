@@ -62,8 +62,10 @@ works currently for pages only.
 
 **Configuration Options**:
 
-- *--facebook.app_id*: The app id issued by Facebook.
-- *--facebook.app_secret*: The secret token issued by Facebook.
+- **facebook.app_id**: The app id issued by Facebook.
+- **facebook.app_secret**: The secret token issued by Facebook.
+- **facebook.feed_limit**: Limit the number of messages to download. When set
+  to 0 download all available messages. Defaults to 0.
 
 ## Examples
 
