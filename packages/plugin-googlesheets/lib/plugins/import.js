@@ -9,7 +9,7 @@ const importData = async (envelope, {log, cfg}) => {
   const secret = get("google.client_secret", cfg);
   const refreshToken = get("google.refresh_token", cfg);
   const id = get("google.spreadsheet_id", cfg);
-  const sheet = get("google.sheet", cfg);
+  const sheet = getOr("Sheet1", "google.sheet", cfg);
   const sheetFields = getOr([], "google.sheet_fields", cfg);
   const idFields = get("google.id_fields", cfg);
 
@@ -39,11 +39,6 @@ const plugin = p.liftManyA2([
 plugin.desc = "Import SugarCube data from a google spreadsheet";
 
 plugin.argv = {
-  "google.sheet": {
-    type: "string",
-    default: "Sheet1",
-    desc: "Name of the sheet in the spreadsheet to import",
-  },
   "google.id_fields": {
     type: "array",
     nargs: 1,

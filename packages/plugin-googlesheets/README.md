@@ -71,6 +71,7 @@ browser and note the authorization token. Add this token to your configuration.
 Export data to a Google spreadsheet.
 
 - `google.spreadsheet_id`: The ID of the spreadsheet to export to.
+- `google.sheet`: The name of the sheet to export to.
 - `google.sheet_fields`: Specify the field names, which should be exported to
   the spreadsheet.
 - `google.copy_from_spreadsheet`: Specify the spreadsheet ID to copy the
@@ -94,3 +95,4 @@ and the second column is the query term. The plugin looks up the
 `sheets_query` query type to determine the sheet in which to look.
 
 - `google.spreadsheet_id`: The ID of the spreadsheet to fetch from.
+- `google.sheet`: The name of the sheet to query from.

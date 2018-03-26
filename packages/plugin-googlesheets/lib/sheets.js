@@ -54,8 +54,8 @@ const duplicateSheet = curry(async (auth, id, from, to, title) => {
   if (!source) {
     throw new Error("Source Spreadsheet doesn't exist.");
   }
-  const {sheetId} = await copySheet(auth, id, source.sheetId, to);
-  await updateSheet(auth, to, sheetId, {title});
+  const {data} = await copySheet(auth, id, source.sheetId, to);
+  await updateSheet(auth, to, data.sheetId, {title});
   return getSheet(auth, to, title);
 });
 
