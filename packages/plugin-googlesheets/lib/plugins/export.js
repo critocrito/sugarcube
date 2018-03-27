@@ -75,11 +75,11 @@ plugin.desc = "Export SugarCube data to a google spreadsheet.";
 
 plugin.argv = {
   "google.copy_from_sheet": {
-    type: "text",
+    type: "string",
     desc: "Duplicate this sheet before exporting to the copy.",
   },
   "google.copy_from_spreadsheet": {
-    type: "text",
+    type: "string",
     desc: "Duplicate a sheet from this spreadsheet ID.",
   },
   "google.skip_empty": {
