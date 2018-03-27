@@ -18,7 +18,7 @@ const authPlugins = flow([
 
 const sheetPlugins = flow([
   keys,
-  intersection(["sheets_export", "sheet_import", "sheets_queries"]),
+  intersection(["sheets_export", "sheets_import", "sheets_queries"]),
   pick(plugins),
 ])(plugins);
 
