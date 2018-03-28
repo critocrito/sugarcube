@@ -16,6 +16,7 @@ const plugin = (envelope, {cfg, log}) => {
   const dataDir = get("media.data_dir", cfg);
   const cmd = get("media.youtubedl_cmd", cfg);
   const videoFormat = get("media.download_format", cfg);
+  const debug = get("media.youtubedl_debug", cfg);
 
   // ensure the download directory.
   return flowP(
@@ -45,7 +46,7 @@ const plugin = (envelope, {cfg, log}) => {
                   if (e.code === "ENOENT") {
                     return flowP(
                       [
-                        youtubeDl(cmd, videoFormat, term),
+                        youtubeDl(debug, cmd, videoFormat, term),
                         tapP(() =>
                           log.info(`Downloaded ${term} to ${location}.`)
                         ),
@@ -93,6 +94,10 @@ plugin.argv = {
     nargs: 1,
     default: "youtube-dl",
     desc: "The path to the youtube-dl command.",
+  },
+  "media.youtubedl_debug": {
+    type: "boolean",
+    desc: "Log the youtube-dl output and debug symbols to the console.",
   },
 };
 
