@@ -56,11 +56,14 @@ case of the CLI interface the tokens are stored in `.sugarcube_cache.json`.
 ### `sheets_export`
 
 Export data to a Google spreadsheet. This plugin merges existing data with new
-data. Duplicates are removed. If a sheet doesn't exist yet a new one will be
-created. By specifying `google.copy_from_spreadsheet` and
-`google.copy_from_sheet` the new sheet will be copied from a template. Both of
-those options have to be provided if a new sheet should be create from a
-template.
+data. Duplicates are removed. If a sheet doesn't exist yet, a new one will be
+created. Before any values are exported a backup of the target sheet is
+created with the name of `<sheet-name>-bkp`. If the export succeeds, the
+backup sheet is deleted.
+
+By specifying `google.copy_from_spreadsheet` and `google.copy_from_sheet` the
+new sheet will be copied from a template. Both of those options have to be
+provided if a new sheet should be create from a template.
 
 - `google.client_id`: The identifier for this client.
 - `google.client_secret`: A secret that is used by this client.

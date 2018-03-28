@@ -14,6 +14,7 @@ import {
   createValuesRequest,
   clearValuesRequest,
   appendValuesRequest,
+  deleteSheetRequest,
 } from "./requests";
 
 const sheets = google.sheets("v4");
@@ -38,6 +39,7 @@ const getSheet = curry(async (auth, id, name) => {
   return getOr(null, "properties", sheet);
 });
 const createSheet = flowP3([createSheetRequest, batchUpdate]);
+const deleteSheet = flowP3([deleteSheetRequest, batchUpdate]);
 const copySheet = flowP4([copySheetRequest, sheetCopy]);
 const getOrCreateSheet = curry(async (auth, id, name) => {
   const sheet = await getSheet(auth, id, name);
@@ -74,6 +76,7 @@ export default curry(async (f, {client, secret, tokens}) => {
     createSpreadsheet: () => createSpreadsheet(auth),
     getSpreadsheet: getSpreadsheet(auth),
     createSheet: createSheet(auth),
+    deleteSheet: deleteSheet(auth),
     getSheet: getSheet(auth),
     getOrCreateSheet: getOrCreateSheet(auth),
     updateSheet: updateSheet(auth),

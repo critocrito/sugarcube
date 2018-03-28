@@ -1,5 +1,4 @@
 import {curry, flow, merge, get, getOr, size} from "lodash/fp";
-import {retryP} from "dashp";
 import {envelope as env, plugin as p} from "@sugarcube/core";
 import withSession from "../sheets";
 import {header, unitsToRows, rowsToUnits} from "../utils";
@@ -36,6 +35,7 @@ const exportData = async (envelope, {log, cfg, cache}) => {
     async ({
       getOrCreateSheet,
       duplicateSheet,
+      deleteSheet,
       createValues,
       getValues,
       clearValues,
@@ -57,10 +57,18 @@ const exportData = async (envelope, {log, cfg, cache}) => {
         mergeUnitsAndRows(envelope.data),
         unitsToRows(fields),
       ]);
-      // TODO: If clear succeeds, but create not, I lost all my data. retryP
-      // is just a crutch here.
+
+      // To be safe not to loose any data, we make first a backup copy and
+      // delete it after we exported the new data.
+      const {sheetId: bkpSheetId} = await duplicateSheet(
+        id,
+        sheetName,
+        id,
+        `${sheetName}-bkp`
+      );
       await clearValues(id, sheetName);
-      await retryP(createValues(id, sheetName, mergeEnvelope(rows)));
+      await createValues(id, sheetName, mergeEnvelope(rows));
+      await deleteSheet(id, bkpSheetId);
     },
     {client, secret, tokens: cache.get("sheets.tokens")}
   );

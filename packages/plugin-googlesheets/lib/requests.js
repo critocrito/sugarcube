@@ -97,3 +97,11 @@ export const appendValuesRequest = curry(
     resource: {values},
   })
 );
+
+export const deleteSheetRequest = curry((auth, spreadsheetId, sheetId) => ({
+  auth,
+  spreadsheetId,
+  resource: {
+    requests: [{deleteSheet: {sheetId}}],
+  },
+}));
