@@ -36,19 +36,17 @@ const credsToFile = (file, credentials) =>
 
 const authenticate = async (client, secret, refreshToken) => {
   const auth = authClient(client, secret);
-  let credentials;
 
   if (await isFile("google-sheets-token.json")) {
-    credentials = await credsFromFile(TOKEN_FILE);
-    auth.credentials = credentials;
+    auth.credentials = await credsFromFile(TOKEN_FILE);
     return auth;
   }
 
   if (refreshToken) {
     try {
-      credentials = await auth.getToken(refreshToken);
-      await credsToFile(TOKEN_FILE, credentials);
-      auth.credentials = credentials;
+      const {tokens} = await auth.getToken(refreshToken);
+      await credsToFile(TOKEN_FILE, tokens);
+      auth.credentials = tokens;
       return auth;
       // eslint-disable-next-line no-empty
     } catch (e) {}
