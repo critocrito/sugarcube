@@ -3,28 +3,40 @@ import {flow, intersection, pick, forEach, merge, keys} from "lodash/fp";
 import exportPlugin from "./plugins/export";
 import importPlugin from "./plugins/import";
 import queriesPlugin from "./plugins/queries";
+import appendPlugin from "./plugins/append";
 
 const plugins = {
   sheets_export: exportPlugin,
   sheets_import: importPlugin,
   sheets_queries: queriesPlugin,
+  sheets_append: appendPlugin,
 };
 
 const authPlugins = flow([
   keys,
-  intersection(["sheets_export", "sheets_import", "sheets_queries"]),
+  intersection([
+    "sheets_export",
+    "sheets_import",
+    "sheets_queries",
+    "sheets_append",
+  ]),
   pick(plugins),
 ])(plugins);
 
 const sheetPlugins = flow([
   keys,
-  intersection(["sheets_export", "sheets_import", "sheets_queries"]),
+  intersection([
+    "sheets_export",
+    "sheets_import",
+    "sheets_queries",
+    "sheets_append",
+  ]),
   pick(plugins),
 ])(plugins);
 
 const fieldPlugins = flow([
   keys,
-  intersection(["sheets_export", "sheets_import"]),
+  intersection(["sheets_export", "sheets_import", "sheets_append"]),
   pick(plugins),
 ])(plugins);
 

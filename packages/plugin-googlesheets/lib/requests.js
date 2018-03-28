@@ -86,3 +86,14 @@ export const clearValuesRequest = curry((auth, spreadsheetId, sheet) => ({
   spreadsheetId,
   range: sheet,
 }));
+
+export const appendValuesRequest = curry(
+  (auth, spreadsheetId, sheet, values) => ({
+    auth,
+    spreadsheetId,
+    range: sheet,
+    valueInputOption: "USER_ENTERED",
+    insertDataOption: "INSERT_ROWS",
+    resource: {values},
+  })
+);

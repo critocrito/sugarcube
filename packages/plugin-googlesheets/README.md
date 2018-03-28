@@ -55,12 +55,18 @@ case of the CLI interface the tokens are stored in `.sugarcube_cache.json`.
 
 ### `sheets_export`
 
-Export data to a Google spreadsheet.
+Export data to a Google spreadsheet. This plugin merges existing data with new
+data. Duplicates are removed. If a sheet doesn't exist yet a new one will be
+created. By specifying `google.copy_from_spreadsheet` and
+`google.copy_from_sheet` the new sheet will be copied from a template. Both of
+those options have to be provided if a new sheet should be create from a
+template.
 
 - `google.client_id`: The identifier for this client.
 - `google.client_secret`: A secret that is used by this client.
 - `google.spreadsheet_id`: The ID of the spreadsheet to export to.
-- `google.sheet`: The name of the sheet to export to.
+- `google.sheet`: The name of the sheet to export to. Defaults to the run
+  marker of the current pipeline run.
 - `google.sheet_fields`: Specify the field names, which should be exported to
   the spreadsheet.
 - `google.copy_from_spreadsheet`: Specify the spreadsheet ID to copy the
@@ -77,7 +83,8 @@ Import data from a Google Spreadsheet.
 - `google.client_id`: The identifier for this client.
 - `google.client_secret`: A secret that is used by this client.
 - `google.spreadsheet_id`: The ID of the spreadsheet to import from.
-- `google.sheet`: The name of the sheet to use as import source.
+- `google.sheet`: The name of the sheet to use as import source. Defaults to
+  *Sheet1*.
 
 ### `sheets_queries`
 
@@ -88,4 +95,31 @@ and the second column is the query term. The plugin looks up the
 - `google.client_id`: The identifier for this client.
 - `google.client_secret`: A secret that is used by this client.
 - `google.spreadsheet_id`: The ID of the spreadsheet to fetch from.
-- `google.sheet`: The name of the sheet to query from.
+
+### `sheets_append`
+
+Append data to a Google spreadsheet. This plugin is similar to
+`sheets_export`, only that data isn't merged, but just appended to the end of
+the spreadsheet. This allows for rows with duplicated `_sc_id_hash`. A new
+sheet will be created if it doesn't exist yet. If the sheet contains no rows
+yet, the header will be exported as well. If there are already rows existing,
+no extra header will be exported.
+
+This plugin does not validate the order or number of existing cells. It's up
+to the user to make sure that the shape of the data that is appended matches
+the shape of the data that is already stored in the spreadsheet. The order of
+fields is controlled by the order of fields declared in `google.sheet_fields`.
+
+- `google.client_id`: The identifier for this client.
+- `google.client_secret`: A secret that is used by this client.
+- `google.spreadsheet_id`: The ID of the spreadsheet to export to.
+- `google.sheet`: The name of the sheet to export to. Defaults to the run
+  marker of the current pipeline run.
+- `google.sheet_fields`: Specify the field names, which should be exported to
+  the spreadsheet.
+- `google.copy_from_spreadsheet`: Specify the spreadsheet ID to copy the
+  template from. Requires `google.copy_from_sheet` as well.
+- `google.copy_from_sheet`: Specify a sheet name to copy the template
+  from. Requires `google.copy_from_spreadsheet` as well.
+- `google.skip_empty` Use this option to only export data pipelines that contain
+  any data.

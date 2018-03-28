@@ -13,6 +13,7 @@ import {
   getValuesRequest,
   createValuesRequest,
   clearValuesRequest,
+  appendValuesRequest,
 } from "./requests";
 
 const sheets = google.sheets("v4");
@@ -25,6 +26,7 @@ const update = pify(sheets.spreadsheets.values.update);
 const batchUpdate = pify(sheets.spreadsheets.batchUpdate);
 const get = pify(sheets.spreadsheets.values.get);
 const clear = pify(sheets.spreadsheets.values.clear);
+const append = pify(sheets.spreadsheets.values.append);
 
 // Actions
 const createSpreadsheet = flowP([createSpreadsheetRequest, spreadsheetCreate]);
@@ -62,6 +64,7 @@ const duplicateSheet = curry(async (auth, id, from, to, title) => {
 const getValues = flowP3([getValuesRequest, get, getOr([], "data.values")]);
 const createValues = flowP4([createValuesRequest, update]);
 const clearValues = flowP3([clearValuesRequest, clear]);
+const appendValues = flowP4([appendValuesRequest, append]);
 
 // This function provides a context within which to run a series of
 // interactions with the Google spreadsheet API.
@@ -78,6 +81,7 @@ export default curry(async (f, {client, secret, tokens}) => {
     createValues: createValues(auth),
     getValues: getValues(auth),
     clearValues: clearValues(auth),
+    appendValues: appendValues(auth),
     tokens: auth.credentials,
   };
   return [await f(api), auth.credentials];
