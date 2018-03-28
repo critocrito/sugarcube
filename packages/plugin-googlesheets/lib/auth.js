@@ -1,13 +1,6 @@
-import fs from "fs";
+import {isEmpty} from "lodash/fp";
 import readline from "readline";
-import pify from "pify";
 import {OAuth2Client} from "google-auth-library";
-
-const statAsync = pify(fs.stat);
-const readFileAsync = pify(fs.readFile);
-const writeFileAsync = pify(fs.writeFile);
-
-const TOKEN_FILE = "google-sheets-token.json";
 
 const authClient = (client, secret) =>
   new OAuth2Client(client, secret, "urn:ietf:wg:oauth:2.0:oob");
@@ -36,33 +29,17 @@ and paste the OAuth token here: `;
   });
 };
 
-const isFile = async file => {
-  let stats;
-  try {
-    stats = await statAsync(file);
-  } catch (e) {
-    if (e.code === "ENOENT") return false;
-    throw e;
-  }
-  return stats.isFile();
-};
-
-const credsFromFile = file => readFileAsync(file).then(JSON.parse);
-const credsToFile = (file, credentials) =>
-  writeFileAsync(file, JSON.stringify(credentials));
-
-const authenticate = async (client, secret) => {
+const authenticate = async (client, secret, tokens) => {
   const auth = authClient(client, secret);
 
-  if (await isFile("google-sheets-token.json")) {
-    auth.credentials = await credsFromFile(TOKEN_FILE);
+  if (!isEmpty(tokens)) {
+    auth.credentials = tokens;
     return auth;
   }
 
   const refreshToken = await requestToken(auth);
-  const {tokens} = await auth.getToken(refreshToken);
-  await credsToFile(TOKEN_FILE, tokens);
-  auth.credentials = tokens;
+  const response = await auth.getToken(refreshToken);
+  auth.credentials = response.tokens;
   return auth;
 };
 

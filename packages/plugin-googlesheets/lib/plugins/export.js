@@ -1,4 +1,4 @@
-import {curry, flow, get, getOr, size} from "lodash/fp";
+import {curry, flow, merge, get, getOr, size} from "lodash/fp";
 import {retryP} from "dashp";
 import {envelope as env, plugin as p} from "@sugarcube/core";
 import withSession from "../sheets";
@@ -10,7 +10,7 @@ const mergeUnitsAndRows = curry((units, rows) => {
   return env.concat(env.envelopeData(data), env.envelopeData(units)).data;
 });
 
-const exportData = async (envelope, {log, cfg}) => {
+const exportData = async (envelope, {log, cfg, cache}) => {
   const client = get("google.client_id", cfg);
   const secret = get("google.client_secret", cfg);
   const id = get("google.spreadsheet_id", cfg);
@@ -32,7 +32,7 @@ const exportData = async (envelope, {log, cfg}) => {
     throw new Error("Missing configuration: google.copy_from_sheet");
   }
 
-  await withSession(
+  const [, tokens] = await withSession(
     async ({
       getOrCreateSheet,
       duplicateSheet,
@@ -62,8 +62,10 @@ const exportData = async (envelope, {log, cfg}) => {
       await clearValues(id, sheetName);
       await retryP(createValues(id, sheetName, mergeEnvelope(rows)));
     },
-    {client, secret}
+    {client, secret, tokens: cache.get("sheets.tokens")}
   );
+
+  cache.update("sheets.tokens", merge(tokens));
 
   return envelope;
 };

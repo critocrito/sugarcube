@@ -48,6 +48,9 @@ When running the first time it will ask you to visit an URL to authorize your
 Google account. On success you will receive an OAuth token, which you have to
 paste in your terminal.
 
+The retrieved credentials are stored using the cache facility of SugarCube. In
+case of the CLI interface the tokens are stored in `.sugarcube_cache.json`.
+
 ## Plugins
 
 ### `sheets_export`
