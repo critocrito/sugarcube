@@ -1,4 +1,5 @@
 import fs from "fs";
+import readline from "readline";
 import pify from "pify";
 import {OAuth2Client} from "google-auth-library";
 
@@ -16,7 +17,23 @@ const requestToken = oauth2Client => {
     access_type: "offline",
     scope: ["https://www.googleapis.com/auth/spreadsheets"],
   });
-  throw new Error(`Authorize this app by visiting this url: ${authUrl}`);
+
+  const question = `Authorize this app by visiting this url:
+${authUrl}
+and paste the OAuth token here: `;
+
+  // eslint-disable-next-line promise/avoid-new
+  return new Promise((resolve, reject) => {
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
+    rl.on("error", reject);
+    rl.question(question, token => {
+      rl.close();
+      resolve(token);
+    });
+  });
 };
 
 const isFile = async file => {
@@ -34,7 +51,7 @@ const credsFromFile = file => readFileAsync(file).then(JSON.parse);
 const credsToFile = (file, credentials) =>
   writeFileAsync(file, JSON.stringify(credentials));
 
-const authenticate = async (client, secret, refreshToken) => {
+const authenticate = async (client, secret) => {
   const auth = authClient(client, secret);
 
   if (await isFile("google-sheets-token.json")) {
@@ -42,17 +59,11 @@ const authenticate = async (client, secret, refreshToken) => {
     return auth;
   }
 
-  if (refreshToken) {
-    try {
-      const {tokens} = await auth.getToken(refreshToken);
-      await credsToFile(TOKEN_FILE, tokens);
-      auth.credentials = tokens;
-      return auth;
-      // eslint-disable-next-line no-empty
-    } catch (e) {}
-  }
-
-  return requestToken(auth);
+  const refreshToken = await requestToken(auth);
+  const {tokens} = await auth.getToken(refreshToken);
+  await credsToFile(TOKEN_FILE, tokens);
+  auth.credentials = tokens;
+  return auth;
 };
 
 export default authenticate;

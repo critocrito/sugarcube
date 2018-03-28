@@ -10,7 +10,6 @@ const querySource = "sheets_query";
 const importQueries = (envelope, {log, cfg}) => {
   const client = get("google.client_id", cfg);
   const secret = get("google.client_secret", cfg);
-  const refreshToken = get("google.refresh_token", cfg);
   const id = get("google.spreadsheet_id", cfg);
   const queries = env.queriesByType(querySource, envelope);
 
@@ -24,7 +23,7 @@ const importQueries = (envelope, {log, cfg}) => {
         log.info(`Expanded ${id}/${query} to ${size(expanded)} queries.`);
         return expanded;
       },
-      {client, secret, refreshToken}
+      {client, secret}
     );
 
   return flowP(

@@ -65,8 +65,8 @@ const clearValues = flowP3([clearValuesRequest, clear]);
 
 // This function provides a context within which to run a series of
 // interactions with the Google spreadsheet API.
-export default curry(async (f, {client, secret, refreshToken}) => {
-  const auth = await authenticate(client, secret, refreshToken);
+export default curry(async (f, {client, secret}) => {
+  const auth = await authenticate(client, secret);
   const api = {
     createSpreadsheet: () => createSpreadsheet(auth),
     getSpreadsheet: getSpreadsheet(auth),

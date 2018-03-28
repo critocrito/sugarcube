@@ -7,7 +7,6 @@ import {assertCredentials, assertSpreadsheet, assertSheet} from "../assertions";
 const importData = async (envelope, {log, cfg}) => {
   const client = get("google.client_id", cfg);
   const secret = get("google.client_secret", cfg);
-  const refreshToken = get("google.refresh_token", cfg);
   const id = get("google.spreadsheet_id", cfg);
   const sheet = getOr("Sheet1", "google.sheet", cfg);
   const sheetFields = getOr([], "google.sheet_fields", cfg);
@@ -20,7 +19,7 @@ const importData = async (envelope, {log, cfg}) => {
       if (idFields) return data.map(merge({_sc_id_fields: idFields}));
       return data;
     },
-    {client, secret, refreshToken}
+    {client, secret}
   );
 
   log.info("Spreadsheet retrieved");

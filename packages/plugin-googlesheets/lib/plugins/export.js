@@ -13,7 +13,6 @@ const mergeUnitsAndRows = curry((units, rows) => {
 const exportData = async (envelope, {log, cfg}) => {
   const client = get("google.client_id", cfg);
   const secret = get("google.client_secret", cfg);
-  const refreshToken = get("google.refresh_token", cfg);
   const id = get("google.spreadsheet_id", cfg);
   const fields = getOr([], "google.sheet_fields", cfg);
   const copyFromSheet = get("google.copy_from_sheet", cfg);
@@ -63,7 +62,7 @@ const exportData = async (envelope, {log, cfg}) => {
       await clearValues(id, sheetName);
       await retryP(createValues(id, sheetName, mergeEnvelope(rows)));
     },
-    {client, secret, refreshToken}
+    {client, secret}
   );
 
   return envelope;
