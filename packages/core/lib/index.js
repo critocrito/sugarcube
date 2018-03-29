@@ -8,10 +8,21 @@ import plugin from "./data/plugin";
 import utilsA from "./utils";
 import assert from "./assert";
 import crypto from "./crypto";
+import createFeatureDecisions from "./features";
 
 const utils = merge(utilsA, {assertions: assert});
 
-export {runner, queries, data, envelope, plugin, utils, assert, crypto};
+export {
+  runner,
+  queries,
+  data,
+  envelope,
+  plugin,
+  utils,
+  assert,
+  crypto,
+  createFeatureDecisions,
+};
 
 export default {
   runner,
@@ -22,4 +33,5 @@ export default {
   utils,
   assert,
   crypto,
+  createFeatureDecisions,
 };

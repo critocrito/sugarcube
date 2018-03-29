@@ -15,7 +15,7 @@ import {
 } from "lodash/fp";
 import fs from "fs";
 import dotenv from "dotenv";
-import {runner} from "@sugarcube/core";
+import {runner, createFeatureDecisions} from "@sugarcube/core";
 
 import {mapFiles, parseConfigFile, parseConfigFileWithExtends} from "./";
 import {info, warn, error, debug} from "./logger";
@@ -137,6 +137,8 @@ if (argv.listPlugins) {
     .forEach(plugin => info(`${plugin}: ${plugins[plugin].desc}`));
   process.exit(0);
 }
+
+createFeatureDecisions(argv.features || []);
 
 // Halt if a plugin in the pipeline is not available.
 const missingPlugins = flow([keys, difference(argv.plugins)])(plugins);
