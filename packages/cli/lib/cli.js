@@ -20,7 +20,7 @@ import {runner, utils} from "@sugarcube/core";
 
 import {mapFiles, parseConfigFile, parseConfigFileWithExtends} from "./";
 import {info, warn, error, debug} from "./logger";
-import {loadModules} from "./plugins";
+import {modules} from "./packages";
 
 const reduceObj = reduce.convert({cap: false});
 const {pluginOptions} = utils;
@@ -102,7 +102,7 @@ const yargs = require("yargs")
   .version();
 
 // Load all available plugins.
-const plugins = loadModules();
+const plugins = modules().plugins();
 
 // Finalize the argument parsing for every plugin.
 const {argv} = flow([
