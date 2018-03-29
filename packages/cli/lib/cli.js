@@ -44,6 +44,10 @@ const cliQueries = map(
 // Load variables from .env
 dotenv.config();
 
+// Load all available plugins.
+const plugins = modules().plugins();
+const features = modules().features();
+
 // Basic arguments for the command line tool.
 const yargs = require("yargs")
   .env("SUGARCUBE_")
@@ -87,6 +91,13 @@ const yargs = require("yargs")
   .boolean("d")
   .alias("d", "debug")
   .describe("d", "Enable debug logging")
+  .option("D")
+  .array("D")
+  .alias("D", "features")
+  .describe("D", "Enable feature flags")
+  .option("list-features")
+  .boolean("list-features")
+  .describe("list-features", "List all available feature toggles.")
   .config("c", parseConfigFileWithExtends)
   .nargs("C", 1)
   .string("C")
@@ -96,9 +107,6 @@ const yargs = require("yargs")
   .help("h")
   .alias("h", "help")
   .version();
-
-// Load all available plugins.
-const plugins = modules().plugins();
 
 // Finalize the argument parsing for every plugin.
 const {argv} = Object.keys(plugins)
@@ -113,6 +121,13 @@ const {argv} = Object.keys(plugins)
   }, yargs);
 
 process.on("unhandledRejection", haltAndCough(argv.debug));
+
+if (argv.listFeatures) {
+  Object.keys(features).forEach(feature => {
+    info(`${feature}: ${features[feature].desc}`);
+  });
+  process.exit(0);
+}
 
 // Halt if a plugin in the pipeline is not available.
 const missingPlugins = flow([keys, difference(argv.plugins)])(plugins);
@@ -143,6 +158,10 @@ const argvOmit = [
   "Q",
   "d",
   "debug",
+  "D",
+  "features",
+  "list-features",
+  "listFeatures",
   "c",
   "p",
   "$0",
