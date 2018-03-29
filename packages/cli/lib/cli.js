@@ -98,6 +98,9 @@ const yargs = require("yargs")
   .option("list-features")
   .boolean("list-features")
   .describe("list-features", "List all available feature toggles.")
+  .option("list-plugins")
+  .boolean("list-plugins")
+  .describe("list-plugins", "List all available plugins.")
   .config("c", parseConfigFileWithExtends)
   .nargs("C", 1)
   .string("C")
@@ -123,9 +126,15 @@ const {argv} = Object.keys(plugins)
 process.on("unhandledRejection", haltAndCough(argv.debug));
 
 if (argv.listFeatures) {
-  Object.keys(features).forEach(feature => {
-    info(`${feature}: ${features[feature].desc}`);
-  });
+  Object.keys(features).forEach(feature =>
+    info(`${feature}: ${features[feature].desc}`)
+  );
+  process.exit(0);
+}
+if (argv.listPlugins) {
+  Object.keys(plugins)
+    .sort()
+    .forEach(plugin => info(`${plugin}: ${plugins[plugin].desc}`));
   process.exit(0);
 }
 
