@@ -3,14 +3,12 @@ import {
   map,
   concat,
   merge,
-  pickBy,
   cloneDeep,
   partialRight,
   keyBy,
   keys,
   intersection,
   xor,
-  has,
   isEqualWith,
   isString,
   isArray,
@@ -88,13 +86,6 @@ export const equalsManyWith = curry3("equalsManyWith", (cmp, xs, ys) => {
   return isEqualWith(cmp, xs, ys);
 });
 
-/**
- * Return all available options for the given plugins.
- *
- * @returns {Object} options The available options.
- */
-export const pluginOptions = xs => pickBy(has("argv"), xs);
-
 export const isFunction = f => typeof f === "function";
 
 export const isThenable = p =>
@@ -115,7 +106,6 @@ export default {
   arrayify,
   concatManyWith,
   equalsManyWith,
-  pluginOptions,
   isFunction,
   isThenable,
 };
