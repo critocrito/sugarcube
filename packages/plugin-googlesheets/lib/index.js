@@ -1,4 +1,12 @@
-import {flow, intersection, pick, forEach, merge, keys} from "lodash/fp";
+import {
+  flow,
+  intersection,
+  pick,
+  forEach,
+  merge,
+  keys,
+  values,
+} from "lodash/fp";
 
 import exportPlugin from "./plugins/export";
 import importPlugin from "./plugins/import";
@@ -20,7 +28,8 @@ const authPlugins = flow([
     "sheets_queries",
     "sheets_append",
   ]),
-  pick(plugins),
+  ps => pick(ps, plugins),
+  values,
 ])(plugins);
 
 const sheetPlugins = flow([
@@ -31,13 +40,15 @@ const sheetPlugins = flow([
     "sheets_queries",
     "sheets_append",
   ]),
-  pick(plugins),
+  ps => pick(ps, plugins),
+  values,
 ])(plugins);
 
 const fieldPlugins = flow([
   keys,
   intersection(["sheets_export", "sheets_import", "sheets_append"]),
-  pick(plugins),
+  ps => pick(ps, plugins),
+  values,
 ])(plugins);
 
 forEach(p => {
@@ -46,7 +57,7 @@ forEach(p => {
     {
       "google.client_id": {
         type: "string",
-        desc: "google OAuth client ID.",
+        desc: "Google OAuth client ID.",
       },
       "google.client_secret": {
         type: "string",
