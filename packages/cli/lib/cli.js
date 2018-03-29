@@ -2,7 +2,6 @@ import {
   flow,
   curry,
   map,
-  reduce,
   merge,
   concat,
   join,
@@ -16,14 +15,11 @@ import {
 } from "lodash/fp";
 import fs from "fs";
 import dotenv from "dotenv";
-import {runner, utils} from "@sugarcube/core";
+import {runner} from "@sugarcube/core";
 
 import {mapFiles, parseConfigFile, parseConfigFileWithExtends} from "./";
 import {info, warn, error, debug} from "./logger";
 import {modules} from "./packages";
-
-const reduceObj = reduce.convert({cap: false});
-const {pluginOptions} = utils;
 
 const haltAndCough = curry((d, e) => {
   error(e.message);
@@ -105,14 +101,16 @@ const yargs = require("yargs")
 const plugins = modules().plugins();
 
 // Finalize the argument parsing for every plugin.
-const {argv} = flow([
-  pluginOptions,
-  reduceObj(
-    (memo, p, name) =>
-      memo.group(keys(p.argv), `${name}: ${p.desc}`).options(p.argv),
-    yargs
-  ),
-])(plugins);
+const {argv} = Object.keys(plugins)
+  .sort()
+  .reduce((memo, name) => {
+    const plugin = plugins[name];
+    const description = plugin.desc;
+    const options = plugin.argv || {};
+    return memo
+      .group(keys(options), `${name}: ${description}`)
+      .options(options);
+  }, yargs);
 
 process.on("unhandledRejection", haltAndCough(argv.debug));
 
