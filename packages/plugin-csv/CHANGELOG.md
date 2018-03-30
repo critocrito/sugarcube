@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.9.0"></a>
+# [0.9.0](https://gitlab.com/sugarcube/sugarcube/compare/v0.8.0...v0.9.0) (2018-03-30)
+
+
+### Features
+
+* **plugin-csv:** Added a queries export plugin. ([101fa6f](https://gitlab.com/sugarcube/sugarcube/commit/101fa6f))
+* **plugin-csv:** Optionally skip export if there is no data. ([15b7dec](https://gitlab.com/sugarcube/sugarcube/commit/15b7dec))
+* **plugin-csv:** Set the _sc_source fields on import. ([686de5a](https://gitlab.com/sugarcube/sugarcube/commit/686de5a))
+
+
+
+
 <a name="0.8.0"></a>
 # [0.8.0](https://gitlab.com/sugarcube/sugarcube/compare/v0.7.0...v0.8.0) (2018-03-03)
 

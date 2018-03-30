@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.9.0"></a>
+# [0.9.0](https://gitlab.com/sugarcube/sugarcube/compare/v0.8.0...v0.9.0) (2018-03-30)
+
+
+### Bug Fixes
+
+* **plugin-tika:** Normalize text and meta in a more sane way. ([524bfd0](https://gitlab.com/sugarcube/sugarcube/commit/524bfd0))
+
+
+
+
 <a name="0.8.0"></a>
 # [0.8.0](https://gitlab.com/sugarcube/sugarcube/compare/v0.7.0...v0.8.0) (2018-03-03)
 

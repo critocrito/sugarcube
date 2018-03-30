@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.9.0"></a>
+# [0.9.0](https://gitlab.com/sugarcube/sugarcube/compare/v0.8.0...v0.9.0) (2018-03-30)
+
+
+### Bug Fixes
+
+* **plugin-googlesheet:** Correctly log the number of existing units when merging. ([b7ed5dc](https://gitlab.com/sugarcube/sugarcube/commit/b7ed5dc))
+* **plugin-googlesheets:** Adapted the getValues function to the new API. ([24b10c8](https://gitlab.com/sugarcube/sugarcube/commit/24b10c8))
+* **plugin-googlesheets:** Adapted to new google-auth-client API. ([524f4a5](https://gitlab.com/sugarcube/sugarcube/commit/524f4a5))
+* **plugin-googlesheets:** Copy template sheets when exporting. ([900c7f6](https://gitlab.com/sugarcube/sugarcube/commit/900c7f6)), closes [#28](https://gitlab.com/sugarcube/sugarcube/issues/28)
+* **plugin-googlesheets:** Fixed typo in plugin name. ([d97ecbd](https://gitlab.com/sugarcube/sugarcube/commit/d97ecbd))
+* **plugin-googlesheets:** Set shared plugin options on argv. ([a940945](https://gitlab.com/sugarcube/sugarcube/commit/a940945))
+* **plugin-googlesheets:** Use the string type for plugin options. ([8417e47](https://gitlab.com/sugarcube/sugarcube/commit/8417e47))
+
+
+### Features
+
+* **plugin-googlesheets:** Added the sheets_append plugin. ([5950852](https://gitlab.com/sugarcube/sugarcube/commit/5950852))
+* **plugin-googlesheets:** Optionally skip export if there is no data in the pipeline. ([455806e](https://gitlab.com/sugarcube/sugarcube/commit/455806e))
+* **plugin-googlesheets:** Specify id fields when importing data. ([d88b795](https://gitlab.com/sugarcube/sugarcube/commit/d88b795))
+
+
+
+
 <a name="0.8.0"></a>
 # [0.8.0](https://gitlab.com/sugarcube/sugarcube/compare/v0.7.0...v0.8.0) (2018-03-03)
 
