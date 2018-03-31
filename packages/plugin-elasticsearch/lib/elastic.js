@@ -14,6 +14,7 @@ const types = {
   google_search: "web-searches",
   facebook_api_feed: "feed",
   twitter_feed: "feed",
+  twitter_search: "feed",
   youtube_channel: "feed",
   default: "units",
 };
