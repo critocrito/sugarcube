@@ -155,3 +155,101 @@ data before exporting it again to Elasticsearch.
 sugarcube -Q ddg_search:Keith\ Johnstone \
           -p ddg_search,elastic_complement_left,elastic_export
 ```
+
+## Indexes
+
+This plugin will create all indexes with custom mappings when they don't yet
+exist. Using the `elastic.index` option it is possible to specify a prefix for
+the indexes scheme. The following indexes are created with custom mappings:
+
+- `<prefix>-web-searches`: Store all units that originate from a DuckDuckGo Or
+  Google search.
+- `<prefix>-feed`: Store all units that originate from an Facebook or Twitter
+  feed, a Twitter search or a YouTube channel.
+- `<prefix>-units`: Any unit that doesn't go into one of the above indexes is
+  stored in this catchall index.
+
+## API
+
+This module exports the abstraction layer that is used to communicate with
+Elasticsearch. It can be used to write custom scripts using the same API.
+
+### `Elastic.Do`
+
+```hs
+Do :: (G: Generator, host: String, port: Number): [Array, Array]
+```
+
+The `Do` function creates a context, in which a full interaction with
+Elasticsearch takes place. It takes a generator function that forms the
+interaction context and the host and port number of the Elasticsearch
+function. The `Do` context returns a tuple containing any results and the
+history of the interaction with Elasticsearch. The generator function receives
+a configured API as it's argument. This API is valid within a single
+interaction context:
+
+```js
+const [results, history] = await Elastic.Do(function* ({queryByIds}) {
+  yield queryByIds("sugarcube", ["id1", "id2"]);
+});
+
+history.forEach(([k, meta]) => console.log(`${k}: ${JSON.stringify(meta)}.`));
+// Do something with the results.
+```
+
+Every `Do` context receives the following API to Elasticsearch:
+
+#### `query`
+
+```hs
+query :: (index: String, body: Object, amount: Number): Array
+```
+
+Search Elasticsearch using a request body in the format of the Elasticsearch
+Query DSL.
+
+```js
+Elastic.Do(function* fetchTenDocuments({query}) {
+  const body = {
+    query: {
+      href_text: "search me",
+    },
+  };
+  yield query("sugarcube", body, 10);
+});
+```
+
+`query` returns an array containing any fetched documents.
+
+#### `queryByIds`
+
+```hs
+queryByIds :: (index: String, ids: Array): Array
+```
+
+Fetch documents by their ID. It returns an array of any document fetched from
+Elasticsearch.
+
+```js
+Elastic.Do(function* fetchUnits({queryByIds}) {
+  yield queryByIds("sugarcube", [1, 2, 3, 4]);
+});
+```
+
+#### `bulk`
+
+```hs
+bulk :: (index: String, ops: Object): Array
+```
+
+Run a bulk operation. The `ops` object contains all the units for the
+different bulk operations. Currently units can only be indexed. The `bulk`
+operation returns an array containing any errors that occured.
+
+```js
+Elastic.Do(function* bulkIndex({bulk}) {
+  const units = envelope.data;
+  const errors = yield bulk("sugarcube", {index: units});
+  if (errors.length > 0) { // ... deal with errrors }
+});
+```

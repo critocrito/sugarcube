@@ -3,8 +3,9 @@ import importPlugin from "./plugins/import";
 import exportPlugin from "./plugins/export";
 import complementPlugin from "./plugins/complement";
 import complementLeftPlugin from "./plugins/complement-left";
+import {Elastic} from "./elastic";
 
-export const plugins = {
+const plugins = {
   elastic_import: importPlugin,
   elastic_export: exportPlugin,
   elastic_complement: complementPlugin,
@@ -38,4 +39,6 @@ forEach(p => {
   );
 }, values(plugins));
 
-export default {plugins};
+export {Elastic} from "./elastic";
+export {plugins};
+export default {plugins, Elastic};
