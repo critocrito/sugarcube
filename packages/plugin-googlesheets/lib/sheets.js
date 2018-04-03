@@ -1,5 +1,5 @@
 import {curry, find, getOr} from "lodash/fp";
-import {flowP, flowP2, flowP3, flowP4} from "dashp";
+import {collectP, flowP, flowP2, flowP3, flowP4} from "dashp";
 import pify from "pify";
 import {google} from "googleapis";
 
@@ -15,6 +15,7 @@ import {
   clearValuesRequest,
   appendValuesRequest,
   deleteSheetRequest,
+  deleteRowsRequest,
 } from "./requests";
 
 const sheets = google.sheets("v4");
@@ -63,6 +64,10 @@ const duplicateSheet = curry(async (auth, id, from, to, title) => {
   return getSheet(auth, to, title);
 });
 
+// Make sure to make the requests in sequence, since I couldn't find out if
+// batchUpdates have a guaranteed order. Instead deleteRowsRequest breaks it
+// up in consecutive batchUpdates, where order can be enforced.
+const deleteRows = flowP4([deleteRowsRequest, collectP(batchUpdate)]);
 const getValues = flowP3([getValuesRequest, get, getOr([], "data.values")]);
 const createValues = flowP4([createValuesRequest, update]);
 const clearValues = flowP3([clearValuesRequest, clear]);
@@ -85,6 +90,7 @@ export default curry(async (f, {client, secret, tokens}) => {
     getValues: getValues(auth),
     clearValues: clearValues(auth),
     appendValues: appendValues(auth),
+    deleteRows: deleteRows(auth),
     tokens: auth.credentials,
   };
   return [await f(api), auth.credentials];

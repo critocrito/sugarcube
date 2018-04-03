@@ -180,6 +180,27 @@ const data = withSession(
 
 #### `appendValues`
 
+#### `deleteRows`
+
+```hs
+deleteRows :: (spreadsheetId: String, sheetId: Number, rows: Array): ()
+```
+
+Delete rows of a spreadsheet by index number. `rows` is an array of index
+numbers. Indexing is zero based. an Index of `1` actually deletes the row that
+is labeled as row `2` in the spreadsheet.
+
+```js
+withSession(await ({getOrCreateSheet, deleteRows}) => {
+  const {sheetId} = await getOrCreateSheet(id, sheetName);
+  const indexes = rows.reduce((memo, row, i) => {
+    if (row[3] === "Yes") return memo.concat(i);
+    return memo;
+  }, []);
+  await deleteRows(id, sheetId, indexes);
+}, {client, secret, tokens});
+```
+
 ### `unitsToRows`
 
 ```hs

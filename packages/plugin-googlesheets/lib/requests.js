@@ -1,4 +1,4 @@
-import {curry, merge} from "lodash/fp";
+import {curry, merge, last, get} from "lodash/fp";
 
 export const createSpreadsheetRequest = auth => ({
   auth,
@@ -105,3 +105,47 @@ export const deleteSheetRequest = curry((auth, spreadsheetId, sheetId) => ({
     requests: [{deleteSheet: {sheetId}}],
   },
 }));
+
+export const deleteRowsRequest = curry((auth, spreadsheetId, sheetId, rows) => {
+  const startPath = "resource.requests[0].deleteDimension.range.startIndex";
+  const endPath = "resource.requests[0].deleteDimension.range.endIndex";
+
+  const body = (start, end) => ({
+    auth,
+    spreadsheetId,
+    resource: {
+      requests: [
+        {
+          deleteDimension: {
+            range: {
+              sheetId,
+              startIndex: start,
+              endIndex: end,
+              dimension: "ROWS",
+            },
+          },
+        },
+      ],
+    },
+  });
+
+  // We remove rows starting at the end to prevent previous requests
+  // shifting row index numbers. Index numbers are zero based. An index of 1
+  // will delete the row with the row number of 2 in the spreadsheet.
+  return rows
+    .map(i => parseInt(i, 10))
+    .sort((a, b) => a - b)
+    .reverse()
+    .reduce((memo, row) => {
+      const lastRow = last(memo);
+      const startIndex = get(startPath, lastRow);
+      const endIndex = get(endPath, lastRow);
+
+      // determine if this and the previous row are consecutive, and merge the
+      // batch request.
+      if (startIndex - 1 === row) {
+        return memo.slice(0, -1).concat(body(row, endIndex));
+      }
+      return memo.concat(body(row, row + 1));
+    }, []);
+});
