@@ -13,6 +13,9 @@ import importPlugin from "./plugins/import";
 import queriesPlugin from "./plugins/queries";
 import appendPlugin from "./plugins/append";
 
+import withSession from "./sheets";
+import {unitsToRows, rowsToUnits, rowsToQueries} from "./utils";
+
 const plugins = {
   sheets_export: exportPlugin,
   sheets_import: importPlugin,
@@ -98,5 +101,5 @@ forEach(p => {
   );
 }, fieldPlugins);
 
-export {plugins};
-export default {plugins};
+export {plugins, withSession, unitsToRows, rowsToUnits, rowsToQueries};
+export default {plugins, withSession, unitsToRows, rowsToUnits, rowsToQueries};

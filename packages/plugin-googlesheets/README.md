@@ -126,3 +126,138 @@ fields is controlled by the order of fields declared in `google.sheet_fields`.
   from. Requires `google.copy_from_spreadsheet` as well.
 - `google.skip_empty` Use this option to only export data pipelines that contain
   any data.
+
+## API
+
+### `withSession`
+
+```hs
+withSession :: (
+  f: Function,
+  {client: String, secret: String, tokens: Object}
+): [Promise, Object]
+```
+
+The module exports the `withSession` function, which creates a context to
+interact with the Google Sheets API. The context takes a function as a first
+argument, which is executed within a single Google Sheets API session. It
+receives a complete API object as it's argument. The second argument is an
+object containing all parts required to authenticate the session.
+
+```js
+import {withSession, rowsToUnits} from "@sugarcube/plugin-googlesheets";
+
+const data = withSession(
+  async ({getValues}) => {
+    const rows = await getValues(spreadsheet, sheet);
+    return rowsToUnits(fields, rows);
+  },
+  {client, secret, tokens}
+);
+```
+
+#### `createSpreadsheet`
+
+#### `getSpreadsheet`
+
+#### `createSheet`
+
+#### `deleteSheet`
+
+#### `getSheet`
+
+#### `getOrCreateSheet`
+
+#### `updateSheet`
+
+#### `duplicateSheet`
+
+#### `createValues`
+
+#### `getValues`
+
+#### `clearValues`
+
+#### `appendValues`
+
+### `unitsToRows`
+
+```hs
+unitsToRows :: (fields: Array, units: Array): Array
+```
+
+Transform SugarCube data units to table rows. It takes a list of field paths
+and a list of data units and returns a list of rows. The resulting rows will
+always contain `_sc_id_hash` and `_sc_content_hash`, so there is no need to
+include those two fields into the fields array. The first row of the resulting
+rows is an array containing all header fields. Every consecutive row is
+equivalent to a single unit.
+
+```js
+import {unitsToRows} from "@sugarcube/plugin-googlesheets";
+
+const units = [
+  {_sc_id_hash: "one", _sc_content_hash: "one", a: 1, b: 2, c: 3},
+  {_sc_id_hash: "two", _sc_content_hash: "two", a: 4, b: 5, c: 6},
+  {_sc_id_hash: "three", _sc_content_hash: "three", a: 7, b: 8, c: 9},
+];
+const fields = ["a", "b"];
+const rows = unitsToRows(fields, units);
+console.log(rows);
+// [
+//  ["_sc_id_hash", "_sc_content_hash", "a", "b"],
+//  ["one", "one", 1, 2],
+//  ["two", "two", 4, 5],
+//  ["three", "three", 7, 8],
+// ]
+```
+
+### `rowsToUnits`
+
+```hs
+rowsToUnits :: (fields: Array, rows: Array): Array
+```
+
+Transform rows of data to SugarCube units of data. This function acts as the
+inverse to `unitsToRows`. The `fields` array specifies which header fields to
+convert. It will always convert `_sc_id_hash` and `_sc_content_hash`.
+
+```js
+import {rowsToUnits} from "@sugarcube/plugin-googlesheets";
+
+const rows = [
+  ["_sc_id_hash", "_sc_content_hash", "a", "b"],
+  ["one", "one", 1, 2],
+  ["two", "two", 4, 5],
+];
+const fields = ["a"];
+const units = rowsToUnits(fields, rows);
+console.log(units);
+// [
+//  {_sc_id_hash: "one", _sc_content_hash: "one", a: "1"},
+//  {_sc_id_hash: "two", _sc_content_hash: "two", a: 4},
+// ]
+```
+
+### `rowsToQueries`
+
+```hs
+rowsToQueries :: (rows: Array): Array
+```
+
+Convert rows of queries to a list of queries usable by SugarCube. Each query
+has a `type` and a `term`.
+
+```js
+import {rowsToQueries} from "@sugarcube/plugin-googlesheets";
+
+const rows = [
+  ["type", "term"],
+  ["ddg_search", "Keith Johnstone"],
+];
+const queries = rowsToQueries(rows);
+console.log(queries);
+// [
+//  {type: "ddg_search", term: "Keith Johnstone"},
+// ]
+```
