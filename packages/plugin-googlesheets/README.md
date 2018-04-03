@@ -201,6 +201,16 @@ withSession(await ({getOrCreateSheet, deleteRows}) => {
 }, {client, secret, tokens});
 ```
 
+#### `getAndRemoveRowsByField`
+
+```hs
+getAndRemoveRowsByField :: (id: String, sheet: String, field: String, value: String): Array
+```
+
+Fetch and remove rows from a spreadsheet based on an equality match. It
+returns an array of rows where the `field` matches `value`. The first row of
+the return array is the header of the spreadsheet.
+
 ### `unitsToRows`
 
 ```hs

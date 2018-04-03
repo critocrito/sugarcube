@@ -1,4 +1,4 @@
-import {curry, find, getOr} from "lodash/fp";
+import {curry, first, tail, find, findIndex, getOr} from "lodash/fp";
 import {collectP, flowP, flowP2, flowP3, flowP4} from "dashp";
 import pify from "pify";
 import {google} from "googleapis";
@@ -73,6 +73,29 @@ const createValues = flowP4([createValuesRequest, update]);
 const clearValues = flowP3([clearValuesRequest, clear]);
 const appendValues = flowP4([appendValuesRequest, append]);
 
+const getAndRemoveRowsByField = curry(
+  async (auth, id, sheetName, fieldName, fieldValue) => {
+    const {sheetId} = await getSheet(auth, id, sheetName);
+    const rows = await getValues(auth, id, sheetName);
+    const header = first(rows);
+    const fieldIndex = findIndex(col => col === fieldName, header);
+    const [data, indexes] = tail(rows).reduce(
+      ([rs, is], row, i) => {
+        if (row[fieldIndex] === fieldValue) {
+          // Add one to the index since we iterate over rows without the
+          // header row.
+          return [rs.concat([row]), is.concat(i + 1)];
+        }
+        return [rs, is];
+      },
+      [[], []]
+    );
+    if (data.length === 0) return [];
+    await deleteRows(auth, id, sheetId, indexes);
+    return [].concat([header]).concat(data);
+  }
+);
+
 // This function provides a context within which to run a series of
 // interactions with the Google spreadsheet API.
 export default curry(async (f, {client, secret, tokens}) => {
@@ -91,6 +114,7 @@ export default curry(async (f, {client, secret, tokens}) => {
     clearValues: clearValues(auth),
     appendValues: appendValues(auth),
     deleteRows: deleteRows(auth),
+    getAndRemoveRowsByField: getAndRemoveRowsByField(auth),
     tokens: auth.credentials,
   };
   return [await f(api), auth.credentials];
