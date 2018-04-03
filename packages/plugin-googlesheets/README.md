@@ -172,13 +172,13 @@ const data = withSession(
 
 #### `duplicateSheet`
 
-#### `createValues`
+#### `createRows`
 
-#### `getValues`
+#### `getRows`
 
-#### `clearValues`
+#### `clearRows`
 
-#### `appendValues`
+#### `appendRows`
 
 #### `deleteRows`
 

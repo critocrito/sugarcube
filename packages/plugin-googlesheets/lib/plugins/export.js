@@ -17,7 +17,7 @@ const exportData = async (envelope, {log, cfg, cache}) => {
   const copyFromSheet = get("google.copy_from_sheet", cfg);
   const copyFromSpreadsheet = get("google.copy_from_spreadsheet", cfg);
   const skipEmpty = get("google.skip_empty", cfg);
-  const sheetName = getOr(cfg.marker, "google.sheet", cfg);
+  const sheet = getOr(cfg.marker, "google.sheet", cfg);
 
   if (skipEmpty && size(envelope.data) === 0) {
     log.info("Data pipeline is empty. Skip the export.");
@@ -36,39 +36,45 @@ const exportData = async (envelope, {log, cfg, cache}) => {
       getOrCreateSheet,
       duplicateSheet,
       deleteSheet,
-      createValues,
-      getValues,
-      clearValues,
+      createRows,
+      getRows,
+      clearRows,
     }) => {
-      const {sheetId} = await (copyFromSheet
-        ? duplicateSheet(copyFromSpreadsheet, copyFromSheet, id, sheetName)
-        : getOrCreateSheet(id, sheetName));
+      const {sheetUrl: url} = await (copyFromSheet
+        ? duplicateSheet(copyFromSpreadsheet, copyFromSheet, id, sheet)
+        : getOrCreateSheet(id, sheet));
 
-      const url = `https://docs.google.com/spreadsheets/d/${id}/edit#gid=${sheetId}`;
-      log.info(`Units exported to ${url}`);
+      log.info(`Units exported to ${url}.`);
 
-      const rows = await getValues(id, sheetName);
+      const rows = await getRows(id, sheet);
 
       log.info(
         `Merging ${size(envelope.data)} into ${size(rows.slice(1))} units.`
       );
 
-      const mergeEnvelope = flow([
+      const mergedRows = flow([
         mergeUnitsAndRows(envelope.data),
         unitsToRows(fields),
-      ]);
+      ])(rows);
 
-      // To be safe not to loose any data, we make first a backup copy and
-      // delete it after we exported the new data.
-      const {sheetId: bkpSheetId} = await duplicateSheet(
-        id,
-        sheetName,
-        id,
-        `${sheetName}-bkp`
-      );
-      await clearValues(id, sheetName);
-      await createValues(id, sheetName, mergeEnvelope(rows));
-      await deleteSheet(id, bkpSheetId);
+      // No need to safely update data if the sheet is empty.
+      if (size(rows) === 0) {
+        await createRows(id, sheet, mergedRows);
+      } else {
+        // To be safe not to loose any data, we make first a backup copy and
+        // delete it after we exported the new data.
+        const bkpSheet = `${sheet}-bkp`;
+        const {sheetUrl} = await duplicateSheet(id, sheet, id, bkpSheet);
+        try {
+          await clearRows(id, sheet);
+          await createRows(id, sheet, mergedRows);
+          await deleteSheet(id, bkpSheet);
+        } catch (e) {
+          log.error(`Atomic data export failed.`);
+          log.error(`Backup sheet ${bkpSheet} is located at ${sheetUrl}.`);
+          throw e;
+        }
+      }
     },
     {client, secret, tokens: cache.get("sheets.tokens")}
   );

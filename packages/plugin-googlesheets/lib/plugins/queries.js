@@ -18,8 +18,8 @@ const importQueries = (envelope, {log, cfg, cache}) => {
 
   const querySheet = async query => {
     const [qs, t] = await withSession(
-      async ({getValues}) => {
-        const rows = await getValues(id, query);
+      async ({getRows}) => {
+        const rows = await getRows(id, query);
         const expanded = rowsToQueries(rows);
         log.info(`Expanded ${id}/${query} to ${size(expanded)} queries.`);
         return expanded;

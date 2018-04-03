@@ -12,7 +12,7 @@ const exportData = async (envelope, {log, cfg, cache}) => {
   const copyFromSheet = get("google.copy_from_sheet", cfg);
   const copyFromSpreadsheet = get("google.copy_from_spreadsheet", cfg);
   const skipEmpty = get("google.skip_empty", cfg);
-  const sheetName = getOr(cfg.marker, "google.sheet", cfg);
+  const sheet = getOr(cfg.marker, "google.sheet", cfg);
 
   if (skipEmpty && size(envelope.data) === 0) {
     log.info("Data pipeline is empty. Skip the export.");
@@ -27,20 +27,24 @@ const exportData = async (envelope, {log, cfg, cache}) => {
   }
 
   const [, tokens] = await withSession(
-    async ({getOrCreateSheet, duplicateSheet, appendValues, getValues}) => {
-      const {sheetId} = await (copyFromSheet
-        ? duplicateSheet(copyFromSpreadsheet, copyFromSheet, id, sheetName)
-        : getOrCreateSheet(id, sheetName));
+    async ({getOrCreateSheet, duplicateSheet, appendRows, getRows}) => {
+      const {sheetUrl} = await (copyFromSheet
+        ? duplicateSheet(copyFromSpreadsheet, copyFromSheet, id, sheet)
+        : getOrCreateSheet(id, sheet));
 
-      const url = `HTTP://docs.google.com/spreadsheets/d/${id}/edit#gid=${sheetId}`;
-      const rows = await getValues(id, sheetName);
+      const rows = await getRows(id, sheet);
+      const hasHeader = size(rows) > 0;
       const data = unitsToRows(fields, envelope.data);
       const dataNoHeader = data.slice(1);
 
-      log.info(`Appending units to ${url}`);
-      log.info(`Appending ${size(dataNoHeader)} units.`);
+      const {updatedRange: range} = await appendRows(
+        id,
+        sheet,
+        hasHeader ? data.slice(1) : data
+      );
 
-      await appendValues(id, sheetName, size(rows) > 0 ? dataNoHeader : data);
+      log.info(`Appended ${size(dataNoHeader)} units to ${sheetUrl}.`);
+      log.info(`Updated range ${range.replace(/^.*!/, "")} of ${sheet}.`);
     },
     {client, secret, tokens: cache.get("sheets.tokens")}
   );

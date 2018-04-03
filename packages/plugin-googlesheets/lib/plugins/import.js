@@ -13,8 +13,8 @@ const importData = async (envelope, {log, cfg, cache}) => {
   const idFields = get("google.id_fields", cfg);
 
   const [units, tokens] = await withSession(
-    async ({getValues}) => {
-      const rows = await getValues(id, sheet);
+    async ({getRows}) => {
+      const rows = await getRows(id, sheet);
       const data = rowsToUnits(sheetFields, rows);
       if (idFields) return data.map(merge({_sc_id_fields: idFields}));
       return data;
