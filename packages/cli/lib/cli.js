@@ -173,6 +173,8 @@ const argvOmit = [
   "features",
   "list-features",
   "listFeatures",
+  "list-plugins",
+  "listPlugins",
   "c",
   "p",
   "$0",
