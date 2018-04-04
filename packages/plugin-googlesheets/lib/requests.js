@@ -63,7 +63,7 @@ export const createSheetRequest = curry((auth, spreadsheetId, title) => ({
   },
 }));
 
-export const updateSheetRequest = curry(
+export const updateSheetPropsRequest = curry(
   (auth, spreadsheetId, sheetId, props) => ({
     auth,
     spreadsheetId,

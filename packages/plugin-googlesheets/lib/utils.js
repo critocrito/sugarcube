@@ -13,6 +13,7 @@ import {
   toLower,
   isEmpty,
 } from "lodash/fp";
+import {envelope as env} from "@sugarcube/core";
 
 const requiredFields = ["_sc_id_hash", "_sc_content_hash"];
 const queryFields = ["type", "term"];
@@ -52,4 +53,7 @@ export const rowsToUnits = curry((fields, rows) => zipRows(keys(fields), rows));
 // Map google spreadsheet rows to SugarCube queries.
 export const rowsToQueries = zipRows(queryFields);
 
-export default {unitsToRows, rowsToUnits, rowsToQueries};
+export const concatEnvelopeAndRows = curry(({data}, rows) => {
+  const units = rowsToUnits(header(rows), rows);
+  return env.concat(env.envelopeData(data), env.envelopeData(units));
+});

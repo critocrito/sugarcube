@@ -20,7 +20,7 @@ import {
   createSpreadsheetRequest,
   getSpreadsheetRequest,
   createSheetRequest,
-  updateSheetRequest,
+  updateSheetPropsRequest,
   copySheetRequest,
   deleteSheetRequest,
   getValuesRequest,
@@ -48,13 +48,14 @@ const createSpreadsheet = flowP([
   spreadsheetCreate,
   get("data"),
 ]);
+
 const getSpreadsheet = flowP2([
   getSpreadsheetRequest,
   spreadsheetGet,
   get("data"),
 ]);
 
-const getSheet = curry(async (auth, id, name) => {
+const getSheet = curry(async (auth, id, sheet) => {
   const spreadsheet = await getSpreadsheet(auth, id);
   return flow([
     map(({properties: s}) =>
@@ -62,22 +63,21 @@ const getSheet = curry(async (auth, id, name) => {
         sheetUrl: `${spreadsheet.spreadsheetUrl}#gid=${s.sheetId}`,
       })
     ),
-    find(["title", name]),
+    find(["title", sheet]),
   ])(spreadsheet.sheets);
 });
+
 const createSheet = curry(async (auth, id, sheet) => {
   await flowP3([createSheetRequest, spreadsheetBatchUpdate], auth, id, sheet);
   return getSheet(auth, id, sheet);
 });
+
 const deleteSheet = curry(async (auth, id, sheet) => {
   const {sheetId} = await getSheet(auth, id, sheet);
-  return flowP3(
-    [deleteSheetRequest, spreadsheetBatchUpdate],
-    auth,
-    id,
-    sheetId
-  );
+  await flowP3([deleteSheetRequest, spreadsheetBatchUpdate], auth, id, sheetId);
+  return null;
 });
+
 const getOrCreateSheet = curry(async (auth, id, sheet) => {
   const existingSheet = await getSheet(auth, id, sheet);
   if (!existingSheet) {
@@ -85,16 +85,19 @@ const getOrCreateSheet = curry(async (auth, id, sheet) => {
   }
   return existingSheet;
 });
-const updateSheet = curry(async (auth, id, sheet, props) => {
+
+const updateSheetProps = curry(async (auth, id, sheet, props) => {
   const {sheetId} = await getSheet(auth, id, sheet);
-  return flowP4(
-    [updateSheetRequest, spreadsheetBatchUpdate],
+  await flowP4(
+    [updateSheetPropsRequest, spreadsheetBatchUpdate],
     auth,
     id,
     sheetId,
     props
   );
+  return getSheet(auth, id, props.title ? props.title : sheet);
 });
+
 const duplicateSheet = curry(async (auth, id, sheet, toId, toSheet) => {
   // In case the target already exists
   const target = await getSheet(auth, toId, toSheet);
@@ -111,9 +114,20 @@ const duplicateSheet = curry(async (auth, id, sheet, toId, toSheet) => {
     sheetId,
     toId
   );
-  await updateSheet(auth, toId, title, {title: toSheet});
-  return getSheet(auth, toId, toSheet);
+  return updateSheetProps(auth, toId, title, {title: toSheet});
 });
+
+const getRows = flowP3([getValuesRequest, valuesGet, getOr([], "data.values")]);
+
+const clearRows = curry(async (auth, id, sheet) => {
+  await flowP3([clearValuesRequest, valuesClear], auth, id, sheet);
+});
+
+const appendRows = flowP4([
+  appendValuesRequest,
+  valuesAppend,
+  getOr({}, "data.updates"),
+]);
 
 // Make sure to make the requests in sequence, since I couldn't find out if
 // batchUpdates have a guaranteed order. Instead deleteRowsRequest breaks it
@@ -129,14 +143,8 @@ const deleteRows = curry(async (auth, id, sheet, indexes) => {
   );
   return responses.map(r => r.data);
 });
-const getRows = flowP3([getValuesRequest, valuesGet, getOr([], "data.values")]);
+
 const replaceRows = flowP4([createValuesRequest, valuesUpdate, get("data")]);
-const clearRows = flowP3([clearValuesRequest, valuesClear, get("data")]);
-const appendRows = flowP4([
-  appendValuesRequest,
-  valuesAppend,
-  getOr({}, "data.updates"),
-]);
 
 const safeReplaceRows = curry(async (auth, id, sheet, rows) => {
   // To be safe not to loose any data, we make first a backup copy and
@@ -187,7 +195,7 @@ export default curry(async (f, {client, secret, tokens}) => {
     deleteSheet: deleteSheet(auth),
     getSheet: getSheet(auth),
     getOrCreateSheet: getOrCreateSheet(auth),
-    updateSheet: updateSheet(auth),
+    updateSheetProps: updateSheetProps(auth),
     duplicateSheet: duplicateSheet(auth),
     replaceRows: replaceRows(auth),
     safeReplaceRows: safeReplaceRows(auth),

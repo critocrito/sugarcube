@@ -1,13 +1,8 @@
-import {curry, flow, merge, get, getOr, size} from "lodash/fp";
-import {envelope as env, plugin as p} from "@sugarcube/core";
+import {flow, merge, get, getOr, size} from "lodash/fp";
+import {plugin as p} from "@sugarcube/core";
 import withSession from "../sheets";
-import {header, unitsToRows, rowsToUnits} from "../utils";
+import {unitsToRows, concatEnvelopeAndRows} from "../utils";
 import {assertCredentials, assertSpreadsheet} from "../assertions";
-
-const mergeUnitsAndRows = curry((units, rows) => {
-  const data = rowsToUnits(header(rows), rows);
-  return env.concat(env.envelopeData(data), env.envelopeData(units)).data;
-});
 
 const exportData = async (envelope, {log, cfg, cache}) => {
   const client = get("google.client_id", cfg);
@@ -35,9 +30,9 @@ const exportData = async (envelope, {log, cfg, cache}) => {
     async ({
       getOrCreateSheet,
       duplicateSheet,
-      safeReplaceRows,
-      replaceRows,
       getRows,
+      replaceRows,
+      safeReplaceRows,
     }) => {
       const {sheetUrl: url} = await (copyFromSheet
         ? duplicateSheet(copyFromSpreadsheet, copyFromSheet, id, sheet)
@@ -52,7 +47,8 @@ const exportData = async (envelope, {log, cfg, cache}) => {
       );
 
       const mergedRows = flow([
-        mergeUnitsAndRows(envelope.data),
+        concatEnvelopeAndRows(envelope),
+        get("data"),
         unitsToRows(fields),
       ])(rows);
 
