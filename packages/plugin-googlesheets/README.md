@@ -172,8 +172,8 @@ object containing all parts required to authenticate the session.
 import {withSession, rowsToUnits} from "@sugarcube/plugin-googlesheets";
 
 const data = withSession(
-  async ({getValues}) => {
-    const rows = await getValues(spreadsheet, sheet);
+  async ({getRows}) => {
+    const rows = await getRows(id, sheet);
     return rowsToUnits(fields, rows);
   },
   {client, secret, tokens}
