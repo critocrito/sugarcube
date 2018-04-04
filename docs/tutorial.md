@@ -111,9 +111,8 @@ tap_printf: Print the envelope to the screen.
 Options:
   -p, --plugins  A list of plugins                                      [string]
   -q             Path to JSON queries file
-  -Q             Queries in the form: <type>:<term>[,<type>:<term>[,..]]. Note
-                 that spaces have to be escaped, e.g.:
-                 twitter_search:Keith Johnstone
+  -Q             Queries in the form: <type>:<term>. Note that spaces
+                 have to be escaped, e.g.: twitter_search:Keith\ Johnstone
   -d, --debug    Enable debug logging                                  [boolean]
   -c             Path to JSON config file
   -h, --help     Show help                                             [boolean]
@@ -314,7 +313,7 @@ $ npm install -S @sugarcube/plugin-twitter \
 ```
 
 ```
-$ $(npm bin)/sugarcube -Q twitter_user:@jairbolsonaro,twitter_query:Jair\ Bolsonaro \
+$ $(npm bin)/sugarcube -Q twitter_user:@jairbolsonaro -Q twitter_query:Jair\ Bolsonaro \
                         -p twitter_search,twitter_feed,http_get,media_exif \
                         --twitter.consumer_key <your key here> \
                         --twitter.consumer_secret <your key here> \
