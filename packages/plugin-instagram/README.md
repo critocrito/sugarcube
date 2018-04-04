@@ -1,5 +1,8 @@
 # `@sugarcube/plugin-instagram`
 
+NOTE: Instagram changed the way their website works. This means that this
+package currently doesn't work. Feel free to send a merge request though.
+
 - [Plugins](#plugins)
 - [Development](#development)
 
