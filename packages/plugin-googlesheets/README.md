@@ -129,6 +129,30 @@ fields is controlled by the order of fields declared in `google.sheet_fields`.
 
 ## API
 
+### Types
+
+Most types are equivalent to types returned by the [Google Sheets
+API](https://developers.google.com/sheets/api/reference/rest/). More details
+can be found there.
+
+#### `Rows`
+
+An array of arrays. It's a tabular structure that contains data from a
+spreadsheet. The first row always contains the header, all consecutive rows
+are data. The `Rows` structure is zero-indexed, while the labels in the UI are
+one-indexed.
+
+```js
+const [header, ...data] = await getRows(id, sheet);
+console.log(header);
+// ["a", "b", "c"]
+console.log(data);
+// [
+//  [1, 2, 3],
+//  [4, 5, 6],
+// ]
+```
+
 ### `withSession`
 
 ```hs
@@ -156,37 +180,220 @@ const data = withSession(
 );
 ```
 
+All functions within the session return a promise `F`.
+
 #### `createSpreadsheet`
+
+```hs
+createSpreadsheet :: (): F Spreadsheet
+```
+
+Creates a new spreadsheet. It takes no arguments and returns an instance of
+[`Spreadsheet`](https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets#Spreadsheet).
 
 #### `getSpreadsheet`
 
+```hs
+getSpreadsheet :: (id: String): F Spreadsheet
+```
+
+Retrieve an existing spreadsheet. It takes the spreadsheet ID as an argument
+and returns an instance of
+[`Spreadsheet`](https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets#Spreadsheet).
+
 #### `createSheet`
+
+```hs
+createSheet :: (id: String, sheet: String): F Sheet
+```
+
+Create a new named sheet on a spreadsheet. It takes the spreadsheet ID as
+first argument and the sheet name as second. Returns the properties part of
+the
+[`Sheet`](https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets#Sheet)
+object which also contains the `sheetUrl`.
+
+```js
+const {sheetUrl} = await createSheet(id, sheet);
+console.log(sheetUrl);
+```
 
 #### `deleteSheet`
 
+```hs
+deleteSheet :: (id: String, sheet: String): F ()
+```
+
+Delete a sheet on a spreadsheet. It takes the spreadsheet ID as first
+argument, and the sheet name as second argument.
+
+```js
+await deleteSheet(id, sheet);
+```
+
 #### `getSheet`
+
+```hs
+getSheet :: (id: String, sheet: String): F Sheet
+```
+
+Retrieve the properties of a single sheet on a spreadsheet. Returns the
+properties part of the
+[`Sheet`](https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets#Sheet)
+object which also contains the `sheetUrl`.
+
+```js
+const {sheetUrl} = await getSheet(id, sheet);
+console.log(sheetUrl);
+```
 
 #### `getOrCreateSheet`
 
-#### `updateSheet`
+```hs
+getOrCreateSheet :: (id: String, sheet: String): F Sheet
+```
+
+Get an existing sheet on a spreadsheet or create it if it doesn't yet
+exist. Returns the properties part of the
+[`Sheet`](https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets#Sheet)
+object which also contains the `sheetUrl`.
+
+```js
+const {sheetUrl} = await getOrCreateSheet(id, sheet);
+console.log(sheetUrl);
+```
+
+#### `updateSheetProps`
+
+```hs
+updateSheetProps :: (id: String, sheet: String, props: Object): F Sheet
+```
+
+Update the properties of a sheet on a spreadsheet. It takes the spreadsheet ID
+as first argument, the sheet name as second argument and an [sheet
+properties](https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets#SheetProperties)
+object as third argument. Returns the properties part of the
+[`Sheet`](https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets#Sheet)
+object which also contains the `sheetUrl`.
+
+```js
+const props = {title: "New Name"};
+const {title, sheetUrl} = await updateSheetProps(id, sheet, props);
+console.log(title, sheetUrl);
+```
 
 #### `duplicateSheet`
 
+```hs
+duplicateSheet :: (id: String, sheet: String, toId: String, toSheet: String): F Sheet
+```
+
+Make a clone of an existing sheet on a spreadsheet. The target spreadsheet can
+also be different than the source spreadsheet. It takes the source spreadsheet
+ID and source sheet name as first two argument and the target spreadsheet ID
+and target sheet name as third and fourth argument. Returns the properties part of the
+[`Sheet`](https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets#Sheet)
+object which also contains the `sheetUrl`.
+
+```js
+const {sheetUrl} = await duplicateSheet(sourceId, sourceSheet, targetId, targetSheet);
+console.log(sheetUrl);
+```
+
+#### `getRows`
+
+```hs
+getRows :: (id: String, sheet: String): F Rows
+```
+
+Return the content of a spreadsheet. It takes the spreadsheet ID as first
+argument and the sheet name as second argument. It returns the content of a
+spreadsheet as [`Rows`](#rows).
+
+```js
+const [header, ...rows] = await getRows(id, sheet);
+```
+
+#### `clearRows`
+
+```hs
+clearRows :: (id: String, sheet: String): F ()
+```
+
+Delete all rows in a sheet of a spreadsheet. It takes the spreadsheet ID as
+first argument and the sheet name as second argument.
+
+```js
+await clearRows(id, sheet);
+```
+
+#### `appendRows`
+
+```hs
+appendRows :: (id: String, sheet: String, rows: Rows): F Updates
+```
+
+Appends `rows` to the end of a sheet of a spreadsheet. It takes the
+spreadsheet ID and sheet name as first two arguments and a `Rows` type as
+third argument. It returns an [`Updates
+object`](https://developers.google.com/sheets/api/reference/rest/v4/UpdateValuesResponse)
+describing all changes.
+
+```js
+const {updatedRange} = await appendRows(id, sheet, rows);
+console.log(updatedRange);
+```
+
+#### `deleteRows`
+
+```hs
+deleteRows :: (id: String, sheet: String, indexes: Array): F ()
+```
+
+Delete rows of a spreadsheet by index number. `indexes` is an array of index
+numbers. Indexing is zero based. an Index of `1` actually deletes the row that
+is labeled as row `2` in the spreadsheet. Rows are emptied and removed, which
+will shrink the number of total rows in the sheet.
+
+```js
+const indexes = rows.reduce((memo, row, i) => {
+  if (row[3] === "Yes") return memo.concat(i);
+  return memo;
+}, []);
+await deleteRows(id, sheet, indexes);
+```
+
 #### `replaceRows`
+
+```hs
+replaceRows :: (id: String, sheet: String, rows: Rows): F Updates
+```
+
+Replace all rows in a spreadsheet with new rows. It takes the spreadsheet ID
+and sheet name as first two arguments and the replacement [`rows`](#rows) as
+third. It returns an [`Updates
+object`](https://developers.google.com/sheets/api/reference/rest/v4/UpdateValuesResponse)
+describing all changes.
+
+```js
+const {updatedRange} = aweait replaceRows(id, sheet, rows);
+console.log(updatedRange);
+```
 
 #### `safeReplaceRows`
 
 ```hs
-safeReplaceRows :: (id: String, sheet: String, rows: rows): Array
+safeReplaceRows :: (id: String, sheet: String, rows: Rows): F [Updates, Error]
 ```
 
 Like `replaceRows`, replace the rows of a spreadsheet with a new list of
 rows. In order to avoid any data loss, the original sheet is duplicated before
 any destructive operation. This function returns a tuple, where the first
-element is an updated values object if the function succeeds, or in case of
-any error, holds an error object as the second error object. The error object
-has the properties `spreadsheet`, `sheet` and `sheetUrl`, which is the
-location of the data backup.
+element is an [`Updates
+object`](https://developers.google.com/sheets/api/reference/rest/v4/UpdateValuesResponse)
+if the function succeeds, or in case of any error, holds an error object as
+the second element. The error object has the properties `spreadsheet`, `sheet`
+and `sheetUrl`, which is the location of the data backup.
 
 ```js
 const [updates, e] = await safeReplaceRows(spreadsheetId, sheetName, rows);
@@ -198,47 +405,26 @@ if (e) {
 }
 ```
 
-#### `getRows`
-
-#### `clearRows`
-
-#### `appendRows`
-
-#### `deleteRows`
-
-```hs
-deleteRows :: (id: String, sheet: String, rows: Array): ()
-```
-
-Delete rows of a spreadsheet by index number. `rows` is an array of index
-numbers. Indexing is zero based. an Index of `1` actually deletes the row that
-is labeled as row `2` in the spreadsheet.
-
-```js
-withSession(await ({getOrCreateSheet, deleteRows}) => {
-  const {sheetId} = await getOrCreateSheet(id, sheetName);
-  const indexes = rows.reduce((memo, row, i) => {
-    if (row[3] === "Yes") return memo.concat(i);
-    return memo;
-  }, []);
-  await deleteRows(id, sheetId, indexes);
-}, {client, secret, tokens});
-```
-
 #### `getAndRemoveRowsByField`
 
 ```hs
-getAndRemoveRowsByField :: (id: String, sheet: String, field: String, value: String): Array
+getAndRemoveRowsByField :: (id: String, sheet: String, field: String, value: String): F Rows
 ```
 
 Fetch and remove rows from a spreadsheet based on an equality match. It
-returns an array of rows where the `field` matches `value`. The first row of
-the return array is the header of the spreadsheet.
+returns [`Rows`](#rows) where the `field` matches `value`. The matched rows
+are removed from the sheet.
+
+```js
+const [header, ...data] = await getAndRemoveRowsByField(id, sheet, "enabled", "Yes");
+console.log(header);
+console.log(data);
+```
 
 ### `unitsToRows`
 
 ```hs
-unitsToRows :: (fields: Array, units: Array): Array
+unitsToRows :: (fields: Array, units: Array): Rows
 ```
 
 Transform SugarCube data units to table rows. It takes a list of field paths
@@ -270,7 +456,7 @@ console.log(rows);
 ### `rowsToUnits`
 
 ```hs
-rowsToUnits :: (fields: Array, rows: Array): Array
+rowsToUnits :: (fields: Array, rows: Rows): Array
 ```
 
 Transform rows of data to SugarCube units of data. This function acts as the
@@ -297,7 +483,7 @@ console.log(units);
 ### `rowsToQueries`
 
 ```hs
-rowsToQueries :: (rows: Array): Array
+rowsToQueries :: (rows: Rows): Array
 ```
 
 Convert rows of queries to a list of queries usable by SugarCube. Each query
@@ -316,3 +502,12 @@ console.log(queries);
 //  {type: "ddg_search", term: "Keith Johnstone"},
 // ]
 ```
+
+### `concatEnvelopeAndRows`
+
+```hs
+concatEnvelopeAndRows :: (envelope: Envelope, rows: Rows): Envelope
+```
+
+Concat the data of an envelope and rows to return a new envelope with the two
+sets merged.
