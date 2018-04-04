@@ -130,13 +130,29 @@ const deleteRows = curry(async (auth, id, sheet, indexes) => {
   return responses.map(r => r.data);
 });
 const getRows = flowP3([getValuesRequest, valuesGet, getOr([], "data.values")]);
-const createRows = flowP4([createValuesRequest, valuesUpdate, get("data")]);
+const replaceRows = flowP4([createValuesRequest, valuesUpdate, get("data")]);
 const clearRows = flowP3([clearValuesRequest, valuesClear, get("data")]);
 const appendRows = flowP4([
   appendValuesRequest,
   valuesAppend,
   getOr({}, "data.updates"),
 ]);
+
+const safeReplaceRows = curry(async (auth, id, sheet, rows) => {
+  // To be safe not to loose any data, we make first a backup copy and
+  // delete it after we exported the new data.
+  const bkpSheet = `${sheet}-bk`;
+  const {sheetUrl} = await duplicateSheet(auth, id, sheet, id, bkpSheet);
+  try {
+    await clearRows(auth, id, sheet);
+    const updatedData = await replaceRows(auth, id, sheet, rows);
+    await deleteSheet(auth, id, bkpSheet);
+    return [updatedData];
+  } catch (e) {
+    Object.assign(e, {spreadsheet: id, sheet: bkpSheet, sheetUrl});
+    return [null, e];
+  }
+});
 
 const getAndRemoveRowsByField = curry(
   async (auth, id, sheet, fieldName, fieldValue) => {
@@ -173,7 +189,8 @@ export default curry(async (f, {client, secret, tokens}) => {
     getOrCreateSheet: getOrCreateSheet(auth),
     updateSheet: updateSheet(auth),
     duplicateSheet: duplicateSheet(auth),
-    createRows: createRows(auth),
+    replaceRows: replaceRows(auth),
+    safeReplaceRows: safeReplaceRows(auth),
     getRows: getRows(auth),
     clearRows: clearRows(auth),
     appendRows: appendRows(auth),

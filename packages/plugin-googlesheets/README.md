@@ -172,7 +172,31 @@ const data = withSession(
 
 #### `duplicateSheet`
 
-#### `createRows`
+#### `replaceRows`
+
+#### `safeReplaceRows`
+
+```hs
+safeReplaceRows :: (id: String, sheet: String, rows: rows): Array
+```
+
+Like `replaceRows`, replace the rows of a spreadsheet with a new list of
+rows. In order to avoid any data loss, the original sheet is duplicated before
+any destructive operation. This function returns a tuple, where the first
+element is an updated values object if the function succeeds, or in case of
+any error, holds an error object as the second error object. The error object
+has the properties `spreadsheet`, `sheet` and `sheetUrl`, which is the
+location of the data backup.
+
+```js
+const [updates, e] = await safeReplaceRows(spreadsheetId, sheetName, rows);
+if (e) {
+  console.log(e.sheetUrl);
+  throw e;
+} else {
+  console.log(updates);
+}
+```
 
 #### `getRows`
 
@@ -183,7 +207,7 @@ const data = withSession(
 #### `deleteRows`
 
 ```hs
-deleteRows :: (spreadsheetId: String, sheetId: Number, rows: Array): ()
+deleteRows :: (id: String, sheet: String, rows: Array): ()
 ```
 
 Delete rows of a spreadsheet by index number. `rows` is an array of index

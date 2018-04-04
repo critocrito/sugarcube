@@ -35,10 +35,9 @@ const exportData = async (envelope, {log, cfg, cache}) => {
     async ({
       getOrCreateSheet,
       duplicateSheet,
-      deleteSheet,
-      createRows,
+      safeReplaceRows,
+      replaceRows,
       getRows,
-      clearRows,
     }) => {
       const {sheetUrl: url} = await (copyFromSheet
         ? duplicateSheet(copyFromSpreadsheet, copyFromSheet, id, sheet)
@@ -59,19 +58,12 @@ const exportData = async (envelope, {log, cfg, cache}) => {
 
       // No need to safely update data if the sheet is empty.
       if (size(rows) === 0) {
-        await createRows(id, sheet, mergedRows);
+        await replaceRows(id, sheet, mergedRows);
       } else {
-        // To be safe not to loose any data, we make first a backup copy and
-        // delete it after we exported the new data.
-        const bkpSheet = `${sheet}-bkp`;
-        const {sheetUrl} = await duplicateSheet(id, sheet, id, bkpSheet);
-        try {
-          await clearRows(id, sheet);
-          await createRows(id, sheet, mergedRows);
-          await deleteSheet(id, bkpSheet);
-        } catch (e) {
+        const [, e] = await safeReplaceRows(id, sheet, mergedRows);
+        if (e) {
           log.error(`Atomic data export failed.`);
-          log.error(`Backup sheet ${bkpSheet} is located at ${sheetUrl}.`);
+          log.error(`Backup sheet ${e.sheet} is located at ${e.sheetUrl}.`);
           throw e;
         }
       }
