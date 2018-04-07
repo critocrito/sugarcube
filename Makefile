@@ -18,7 +18,7 @@ compile :
 		done ; \
 	else \
 		for p in $(ARG); do \
-			$(BABEL) -d packages/$$p/_dist packages/$$p/lib --source-maps && \
+			$(BABEL) -s -D -d packages/$$p/_dist packages/$$p/lib && \
 			echo "✓ $$d passed compilation\n" ;\
 		done ; \
 	fi

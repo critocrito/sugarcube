@@ -1,4 +1,10 @@
 {
+  "plugins": [
+    "syntax-async-generators",
+    "transform-async-generator-functions",
+    "syntax-trailing-function-commas",
+    "transform-object-rest-spread"
+  ],
   "presets": [
     [
       "env", {
@@ -8,5 +14,21 @@
       }
     ]
   ],
-  "plugins": ["syntax-async-generators", "transform-async-generator-functions"]
+  "env": {
+    "test": {
+      "presets": [
+        [
+          "env",
+          {
+            "targets": {
+              "node": "current"
+            }
+          }
+        ]
+      ],
+      "plugins": [
+        "istanbul"
+      ]
+    }
+  }
 }
