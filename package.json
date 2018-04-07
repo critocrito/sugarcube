@@ -12,6 +12,7 @@
     "clean": "rimraf packages/**/_dist",
     "clean-mods": "lerna clean --yes",
     "compile": "make compile",
+    "watch": "make watch",
     "build": "npm run clean && npm run compile && npm run lint && npm run test",
     "prerelease": "npm run test && npm run test-e2e",
     "release": "npm run build && lerna publish --conventional-commits -m \"chore(release): Bumped to version %s.\"",

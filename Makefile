@@ -23,6 +23,9 @@ compile :
 		done ; \
 	fi
 
+watch :
+	$(BABEL) -w -s -D -d packages/$(ARG)/_dist packages/$(ARG)/lib
+
 docs :
 	@:
 

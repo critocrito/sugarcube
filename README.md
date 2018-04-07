@@ -51,6 +51,23 @@ To install those dependencies run:
 - On Debian: `apt install openjdk-7-jdk`
 - Using Homebrew: `brew cask install java`
 
+## Compilation
+
+There is a `compile` run target that compiles all packages. Provide the name
+of one or more package names to only compile those.
+
+```sh
+npm run compile
+npm run compile plugin-tika cli core
+```
+
+Using the `watch` target a single package can be watched for file changes that
+trigger a compilation.
+
+```sh
+npm run watch plugin-tika
+```
+
 ## Testing
 
 This repository contains an example project, to quickly try pipelines during
