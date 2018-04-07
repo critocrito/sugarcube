@@ -11,13 +11,13 @@ const querySource = "youtube_channel";
 const listChannel = (envelope, {cfg, log}) => {
   const key = get("youtube.api_key", cfg);
   const counter = new Counter(
-    size(filter(q => q.type === querySource, envelope.queries))
+    size(filter(q => q.type === querySource, envelope.queries)),
   );
 
   const range = {
     publishedBefore: get("youtube.published_before", cfg)
       ? moment(get("youtube.published_before", cfg), "YYYY-MM-DD").format(
-          "YYYY-MM-DDTHH:mm:ssZ"
+          "YYYY-MM-DDTHH:mm:ssZ",
         )
       : undefined,
     publishedAfter: get("youtube.past_days", cfg)
@@ -25,7 +25,7 @@ const listChannel = (envelope, {cfg, log}) => {
           .subtract(get("youtube.past_days", cfg), "d")
           .format("YYYY-MM-DDTHH:mm:ssZ") ||
         moment(get("youtube.published_after", cfg), "YYYY-MM-DD").format(
-          "YYYY-MM-DDTHH:mm:ssZ"
+          "YYYY-MM-DDTHH:mm:ssZ",
         )
       : undefined,
   };
@@ -36,13 +36,13 @@ const listChannel = (envelope, {cfg, log}) => {
         videoChannelPlaylist(key),
         tapP(ds =>
           log.info(
-            `Received ${size(
-              ds
-            )} videos for ${q}. (${counter.count()}/${counter.total})`
-          )
+            `Received ${size(ds)} videos for ${q}. (${counter.count()}/${
+              counter.total
+            })`,
+          ),
         ),
       ],
-      q
+      q,
     );
 
   if (range.publishedBefore || range.publishedAfter) {
@@ -55,13 +55,13 @@ const listChannel = (envelope, {cfg, log}) => {
           videoChannel(key, pickBy(identity, range)),
           tapP(ds =>
             log.info(
-              `Received ${size(
-                ds
-              )} videos for ${q}. (${counter.count()}/${counter.total})`
-            )
+              `Received ${size(ds)} videos for ${q}. (${counter.count()}/${
+                counter.total
+              })`,
+            ),
           ),
         ],
-        q
+        q,
       );
 
     return env.flatMapQueriesAsync(fe, querySource, envelope);

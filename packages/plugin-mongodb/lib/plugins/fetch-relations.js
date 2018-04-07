@@ -17,12 +17,12 @@ const fetchRelations = (envelope, {cfg, log}) => {
       whenP(
         () => get("mongodb.embed_units", cfg),
         collectP(r =>
-          db.fetchData(r.units).then(units => d.concatOne(r, {units}))
-        )
+          db.fetchData(r.units).then(units => d.concatOne(r, {units})),
+        ),
       ),
       rs => env.concatData(rs, envelope),
     ],
-    queries
+    queries,
   );
 };
 

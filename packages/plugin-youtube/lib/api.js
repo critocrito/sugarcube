@@ -103,13 +103,13 @@ export const videoChannel = curry((key, range, id) =>
       // There is a limit on how many video ids can be queried at once.
       return collectP(videosList(key), chunk(50, ids));
     })
-    .then(flatten)
+    .then(flatten),
 );
 
 export const videoChannelPlaylist = curry((key, id) =>
   channelToPlaylist(key, id)
     .then(playlistVideos(key))
-    .then(flatten)
+    .then(flatten),
 );
 
 export default {

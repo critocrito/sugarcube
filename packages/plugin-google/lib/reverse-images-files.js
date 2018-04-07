@@ -24,16 +24,16 @@ const plugin = (envelope, {log, cfg}) => {
               merge(unit),
               entity("google_reverse_image"),
             ],
-            path.resolve(unit.location)
-          )
+            path.resolve(unit.location),
+          ),
         ),
       ],
-      term
+      term,
     );
 
   return flowP(
     [flatmapP(search), mapP(rs => env.concatData(rs, envelope))],
-    queries
+    queries,
   );
 };
 

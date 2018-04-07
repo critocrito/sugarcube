@@ -20,14 +20,14 @@ const plugin = (envelope, {cfg, log}) => {
       if (size(errors) > 0) {
         errors.forEach(e =>
           log.error(
-            `Unit ${e.id} threw an error (${e.error.type}): ${e.error.reason}`
-          )
+            `Unit ${e.id} threw an error (${e.error.type}): ${e.error.reason}`,
+          ),
         );
         throw new Error(`Indexing units threw an error.`);
       }
     },
     host,
-    port
+    port,
   ).then(([, history]) => {
     history.forEach(([k, meta]) => log.debug(`${k}: ${JSON.stringify(meta)}.`));
     return envelope;

@@ -16,8 +16,8 @@ export const download = curry(
       request(from)
         .on("end", resolve)
         .on("error", reject)
-        .on("response", res => res.pipe(fs.createWriteStream(to)))
-    )
+        .on("response", res => res.pipe(fs.createWriteStream(to))),
+    ),
 );
 
 export const wget = curry((cmd, target, term) => {

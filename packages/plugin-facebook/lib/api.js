@@ -46,17 +46,17 @@ export const fetchByAppToken = curry4(
     const accessToken = `${appId}|${appSecret}`;
 
     return fetchApi(accessToken, endpoint, qs);
-  }
+  },
 );
 
 export const page = curry2("page", (fetcher, id) =>
-  fetcher(id, {fields: pageFields}).then(pageEntity)
+  fetcher(id, {fields: pageFields}).then(pageEntity),
 );
 
 export const user = curry2("user", (fetcher, id) =>
-  fetcher(id, {fields: userFields}).then(userEntity)
+  fetcher(id, {fields: userFields}).then(userEntity),
 );
 
 export const feed = curry3("feed", (limit, fetcher, id) =>
-  fetchEdge("feed", postFields, limit, fetcher, id).then(feedEntity)
+  fetchEdge("feed", postFields, limit, fetcher, id).then(feedEntity),
 );

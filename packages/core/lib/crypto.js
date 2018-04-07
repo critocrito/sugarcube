@@ -49,11 +49,11 @@ export const uid = (random, d) => {
 };
 
 export const hashKeys = curry2("hashKeys", (keys, u) =>
-  flow([pick(keys), values, stringify, sha256])(u)
+  flow([pick(keys), values, stringify, sha256])(u),
 );
 
 export const hashWithField = curry2("hashWithField", (field, u) =>
-  hashKeys(u[field], u)
+  hashKeys(u[field], u),
 );
 
 export default {

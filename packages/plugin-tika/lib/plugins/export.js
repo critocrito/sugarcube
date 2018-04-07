@@ -10,7 +10,7 @@ const plugin = (envelope, {cfg, log}) => {
   return mkdirP(dataDir).then(() =>
     env.fmapDataAsync(unit => {
       const medias = unit._sc_media.filter(
-        m => m.type !== "tika_location_text" || m.type !== "tika_location_meta"
+        m => m.type !== "tika_location_text" || m.type !== "tika_location_meta",
       );
       if (medias.length === 0) return unit;
 
@@ -36,13 +36,13 @@ const plugin = (envelope, {cfg, log}) => {
               sha256,
               type,
             }));
-        })
+        }),
       ).then(downloads =>
         merge(unit, {
           _sc_downloads: unit._sc_downloads.concat(downloads),
-        })
+        }),
       );
-    }, envelope)
+    }, envelope),
   );
 };
 

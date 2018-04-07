@@ -12,7 +12,7 @@ const friendsPlugin = (envelope, {log, cfg}) => {
     [
       `Fetching friends of ${users.join(", ")}`,
       `${cfg.twitter.recurse_depth} levels deep.`,
-    ].join(" ")
+    ].join(" "),
   );
 
   return friends(cfg, log, users).then(rs => env.concatData(rs, envelope));

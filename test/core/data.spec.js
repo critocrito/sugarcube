@@ -36,11 +36,11 @@ const isTrue = isEqual(true);
 
 describe("data unit interface", () => {
   property("reflexivity of identity equality", unitArb, u =>
-    isTrue(equalsOne(u, clone(u)))
+    isTrue(equalsOne(u, clone(u))),
   );
 
   property("symmetry of identity equality", unitArb, u =>
-    isEqual(equalsOne(u, clone(u)), equalsOne(clone(u), u))
+    isEqual(equalsOne(u, clone(u)), equalsOne(clone(u), u)),
   );
 
   property("transitivity of identity equality", unitArb, u => {
@@ -50,11 +50,11 @@ describe("data unit interface", () => {
   });
 
   property("reflexivity of value equality", unitArb, u =>
-    isTrue(identicalOne(u, clone(u)))
+    isTrue(identicalOne(u, clone(u))),
   );
 
   property("symmetry of value equality", unitArb, u =>
-    isEqual(identicalOne(u, clone(u)), identicalOne(clone(u), u))
+    isEqual(identicalOne(u, clone(u)), identicalOne(clone(u), u)),
   );
 
   property("transitivity of value equality", unitArb, u => {
@@ -64,25 +64,25 @@ describe("data unit interface", () => {
   });
 
   property("associativity of a monoid", unitArb, unitArb, unitArb, (u, j, k) =>
-    equalsOne(concatOne(concatOne(u, j), k), concatOne(u, concatOne(j, k)))
+    equalsOne(concatOne(concatOne(u, j), k), concatOne(u, concatOne(j, k))),
   );
 
   property("right identity of a Monoid", unitArb, u =>
-    equalsOne(concatOne(u, emptyOne()), u)
+    equalsOne(concatOne(u, emptyOne()), u),
   );
 
   property("left identity of a Monoid", unitArb, u =>
-    equalsOne(concatOne(emptyOne(), u), u)
+    equalsOne(concatOne(emptyOne(), u), u),
   );
 });
 
 describe("data interface", () => {
   property("reflexivity of identity equality", dataArb, xs =>
-    isTrue(equals(xs, clone(xs)))
+    isTrue(equals(xs, clone(xs))),
   );
 
   property("symmetry of identical equality", dataArb, xs =>
-    isEqual(equals(xs, clone(xs)), equals(clone(xs), xs))
+    isEqual(equals(xs, clone(xs)), equals(clone(xs), xs)),
   );
 
   property("transitivity of identity equality", dataArb, xs => {
@@ -92,11 +92,11 @@ describe("data interface", () => {
   });
 
   property("reflexivity of value equality", dataArb, xs =>
-    isTrue(identical(xs, clone(xs)))
+    isTrue(identical(xs, clone(xs))),
   );
 
   property("symmetry of value equality", dataArb, xs =>
-    isEqual(identical(xs, clone(xs)), identical(clone(xs), xs))
+    isEqual(identical(xs, clone(xs)), identical(clone(xs), xs)),
   );
 
   property("transitivity of value equality", dataArb, xs => {
@@ -111,19 +111,19 @@ describe("data interface", () => {
     dataArb,
     dataArb,
     (xs, ys, zs) =>
-      equals(concat(concat(xs, ys), zs), concat(xs, concat(ys, zs)))
+      equals(concat(concat(xs, ys), zs), concat(xs, concat(ys, zs))),
   );
 
   property("right identity of a Monoid", dataArb, xs =>
-    equals(concat(xs, empty()), uniq(xs))
+    equals(concat(xs, empty()), uniq(xs)),
   );
 
   property("left identity of a Monoid", dataArb, xs =>
-    equals(concat(empty(), xs), uniq(xs))
+    equals(concat(empty(), xs), uniq(xs)),
   );
 
   property("identity of a Functor", dataArb, xs =>
-    equals(fmap(identity, xs), xs)
+    equals(fmap(identity, xs), xs),
   );
 
   property(
@@ -135,11 +135,11 @@ describe("data interface", () => {
       const f = merge(x);
       const g = merge(y);
       return equals(fmap(z => f(g(z)), xs), fmap(f, fmap(g, xs)));
-    }
+    },
   );
 
   property("identity of an Applicative", dataArb, xs =>
-    equals(data.apply(data.pure(identity), xs), xs)
+    equals(data.apply(data.pure(identity), xs), xs),
   );
 
   property(
@@ -151,7 +151,7 @@ describe("data interface", () => {
       const lhs = data.apply(data.pure(f), data.pure(x));
       const rhs = data.pure(f(x));
       return equals(lhs, rhs);
-    }
+    },
   );
 
   property(
@@ -163,7 +163,7 @@ describe("data interface", () => {
       const lhs = data.apply(u, data.pure(x));
       const rhs = data.apply(data.pure(f => f(x)), u);
       return equals(lhs, rhs);
-    }
+    },
   );
 
   property(
@@ -178,7 +178,7 @@ describe("data interface", () => {
       const lhs = data.apply(data.apply(data.apply(data.pure(comp), u), v), xs);
       const rhs = data.apply(u, data.apply(v, xs));
       return equals(lhs, rhs);
-    }
+    },
   );
 
   describe("fmap and fmapAsync", () => {
@@ -189,7 +189,7 @@ describe("data interface", () => {
       (xs, x) => {
         const f = y => concatOne(y, x);
         return every(isMatch(x), fmap(f, xs));
-      }
+      },
     );
 
     property(
@@ -200,7 +200,7 @@ describe("data interface", () => {
         const f = y => concatOne(y, x);
         const p = flow([f, of]);
         return equals(await fmapAsync(f, xs), await fmapAsync(p, xs));
-      }
+      },
     );
 
     property(
@@ -210,7 +210,7 @@ describe("data interface", () => {
       async (xs, x) => {
         const f = y => concatOne(y, x);
         return equals(fmap(f, xs), await fmapAsync(f, xs));
-      }
+      },
     );
   });
 
@@ -230,16 +230,16 @@ describe("data interface", () => {
         const f = y => list.concatOne(y, obj);
         return equals(
           fmapList("_sc_downloads", f, xs),
-          await fmapListAsync("_sc_downloads", f, xs)
+          await fmapListAsync("_sc_downloads", f, xs),
         );
-      }
+      },
     );
   });
 });
 
 describe("data hashing", () => {
   property("hashes a single unit", unitArb, u =>
-    has("_sc_id_hash", hashOne(u))
+    has("_sc_id_hash", hashOne(u)),
   );
 
   property("hashes many homonyms", dataArb, xs => {

@@ -12,11 +12,11 @@ const plugin = (envelope, {log}) => {
     [
       flatmapP(unfold),
       tapP(rs =>
-        log.info(`Expanded ${size(queries)} queries to ${size(rs)} paths.`)
+        log.info(`Expanded ${size(queries)} queries to ${size(rs)} paths.`),
       ),
       rs => env.concatData(rs, envelope),
     ],
-    queries
+    queries,
   );
 };
 

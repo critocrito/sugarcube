@@ -29,11 +29,11 @@ const isTrue = isEqual(true);
 
 describe("list interface", () => {
   property("reflexivity of equality", listArb, h =>
-    isTrue(equalsOne(h, clone(h)))
+    isTrue(equalsOne(h, clone(h))),
   );
 
   property("symmetry of equality", listArb, h =>
-    isEqual(equalsOne(h, clone(h)), equalsOne(clone(h), h))
+    isEqual(equalsOne(h, clone(h)), equalsOne(clone(h), h)),
   );
 
   property("transitivity of equality", listArb, h => {
@@ -43,25 +43,25 @@ describe("list interface", () => {
   });
 
   property("associativity of a monoid", listArb, listArb, listArb, (h, j, k) =>
-    equalsOne(concatOne(concatOne(h, j), k), concatOne(h, concatOne(j, k)))
+    equalsOne(concatOne(concatOne(h, j), k), concatOne(h, concatOne(j, k))),
   );
 
   property("right identity of a Monoid", listArb, h =>
-    identicalOne(concatOne(h, emptyOne()), h)
+    identicalOne(concatOne(h, emptyOne()), h),
   );
 
   property("left identity of a Monoid", listArb, h =>
-    equalsOne(concatOne(emptyOne(), h), h)
+    equalsOne(concatOne(emptyOne(), h), h),
   );
 });
 
 describe("lists interface", () => {
   property("reflexivity of equality", listsArb, xs =>
-    isTrue(equals(xs, clone(xs)))
+    isTrue(equals(xs, clone(xs))),
   );
 
   property("symmetry of equality", listsArb, xs =>
-    isEqual(equals(xs, clone(xs)), equals(clone(xs), xs))
+    isEqual(equals(xs, clone(xs)), equals(clone(xs), xs)),
   );
 
   property("transitivity of equality", listsArb, xs => {
@@ -76,19 +76,19 @@ describe("lists interface", () => {
     listsArb,
     listsArb,
     (xs, ys, zs) =>
-      equals(concat(concat(xs, ys), zs), concat(xs, concat(ys, zs)))
+      equals(concat(concat(xs, ys), zs), concat(xs, concat(ys, zs))),
   );
 
   property("right identity of a Monoid", listsArb, xs =>
-    equals(concat(xs, empty()), uniq(xs))
+    equals(concat(xs, empty()), uniq(xs)),
   );
 
   property("left identity of a Monoid", listsArb, xs =>
-    equals(concat(empty(), xs), uniq(xs))
+    equals(concat(empty(), xs), uniq(xs)),
   );
 
   property("identity of a Functor", listsArb, xs =>
-    equals(fmap(identity, xs), xs)
+    equals(fmap(identity, xs), xs),
   );
 
   property(
@@ -100,16 +100,16 @@ describe("lists interface", () => {
       const f = merge(a);
       const g = merge(b);
       return equals(fmap(z => f(g(z)), xs), fmap(f, fmap(g, xs)));
-    }
+    },
   );
 });
 
 describe("lists hashing", () => {
   property("hashes a single list", listArb, h =>
-    has("_sc_id_hash", hashOne(h))
+    has("_sc_id_hash", hashOne(h)),
   );
 
   property("hashes many lists", listsArb, xs =>
-    every(has("_sc_id_hash"), hash(xs))
+    every(has("_sc_id_hash"), hash(xs)),
   );
 });

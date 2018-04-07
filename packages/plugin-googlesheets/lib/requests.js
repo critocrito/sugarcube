@@ -24,7 +24,7 @@ export const createValuesRequest = curry(
     valueInputOption: "USER_ENTERED",
     spreadsheetId,
     range: `${sheet}!A1`,
-  })
+  }),
 );
 
 export const copySheetRequest = curry(
@@ -35,7 +35,7 @@ export const copySheetRequest = curry(
     resource: {
       destinationSpreadsheetId: `${targetId}`,
     },
-  })
+  }),
 );
 
 export const createSheetRequest = curry((auth, spreadsheetId, title) => ({
@@ -78,7 +78,7 @@ export const updateSheetPropsRequest = curry(
         },
       ],
     },
-  })
+  }),
 );
 
 export const clearValuesRequest = curry((auth, spreadsheetId, sheet) => ({
@@ -95,7 +95,7 @@ export const appendValuesRequest = curry(
     valueInputOption: "USER_ENTERED",
     insertDataOption: "INSERT_ROWS",
     resource: {values},
-  })
+  }),
 );
 
 export const deleteSheetRequest = curry((auth, spreadsheetId, sheetId) => ({

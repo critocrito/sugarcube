@@ -28,10 +28,10 @@ const content = (envelope, {log, cfg}) => {
       [
         searchGuardian(key),
         tapP(rs =>
-          log.info(`Fetched ${size(rs)} pieces of content for ${term}.`)
+          log.info(`Fetched ${size(rs)} pieces of content for ${term}.`),
         ),
       ],
-      term
+      term,
     );
 
   return flowP(
@@ -56,7 +56,7 @@ const content = (envelope, {log, cfg}) => {
       }),
       rs => env.concatData(rs, envelope),
     ],
-    queries
+    queries,
   );
 };
 

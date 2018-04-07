@@ -12,6 +12,6 @@ describe("SugarCube plugin", () => {
   property(
     "lifts many binary functions to actions",
     jsc.array(fnArb),
-    async fs => isEqual(await liftManyA2(fs, 0, 1), size(fs))
+    async fs => isEqual(await liftManyA2(fs, 0, 1), size(fs)),
   );
 });

@@ -61,7 +61,7 @@ const getSheet = curry(async (auth, id, sheet) => {
     map(({properties: s}) =>
       merge(s, {
         sheetUrl: `${spreadsheet.spreadsheetUrl}#gid=${s.sheetId}`,
-      })
+      }),
     ),
     find(["title", sheet]),
   ])(spreadsheet.sheets);
@@ -93,7 +93,7 @@ const updateSheetProps = curry(async (auth, id, sheet, props) => {
     auth,
     id,
     sheetId,
-    props
+    props,
   );
   return getSheet(auth, id, props.title ? props.title : sheet);
 });
@@ -112,7 +112,7 @@ const duplicateSheet = curry(async (auth, id, sheet, toId, toSheet) => {
     auth,
     id,
     sheetId,
-    toId
+    toId,
   );
   return updateSheetProps(auth, toId, title, {title: toSheet});
 });
@@ -139,7 +139,7 @@ const deleteRows = curry(async (auth, id, sheet, indexes) => {
     auth,
     id,
     sheetId,
-    indexes
+    indexes,
   );
   return responses.map(r => r.data);
 });
@@ -176,12 +176,12 @@ const getAndRemoveRowsByField = curry(
         }
         return [rs, is];
       },
-      [[], []]
+      [[], []],
     );
     if (data.length === 0) return [];
     await deleteRows(auth, id, sheet, indexes);
     return [].concat([header]).concat(data);
-  }
+  },
 );
 
 // This function provides a context within which to run a series of

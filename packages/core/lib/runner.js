@@ -27,11 +27,11 @@ const end = curry3("end", (stream, name, envelope) => {
 });
 
 const mark = curry2("mark", (marker, envelope) =>
-  fmapData(ds.concatOne({_sc_markers: [marker]}), envelope)
+  fmapData(ds.concatOne({_sc_markers: [marker]}), envelope),
 );
 
 const dates = curry2("dates", (date, envelope) =>
-  fmapData(ds.concatOne({_sc_pubdates: {pipeline: date}}), envelope)
+  fmapData(ds.concatOne({_sc_pubdates: {pipeline: date}}), envelope),
 );
 
 const unitDefaults = fmapData(ds.concatOne(ds.emptyOne()));
@@ -39,7 +39,7 @@ const unitDefaults = fmapData(ds.concatOne(ds.emptyOne()));
 const hashData = fmapData(ds.hashOne);
 
 const source = curry2("source", (name, envelope) =>
-  fmapData(ds.concatOne({_sc_source: name}), envelope)
+  fmapData(ds.concatOne({_sc_source: name}), envelope),
 );
 
 /**
@@ -127,15 +127,15 @@ const runner = curry3("runner", (plugins, cfg, queries) => {
                 end(stream, name),
               ],
               envelope,
-              {plugins, cache, stats, log, cfg: merge({marker}, cfg)}
+              {plugins, cache, stats, log, cfg: merge({marker}, cfg)},
             ),
-          envelopeQueries(queries)
+          envelopeQueries(queries),
         ),
         caughtP(e => stream.error(e)),
         tapP(() => stream.push({type: "stats", stats: stats.get()})),
         tapP(() => stream.end()),
       ],
-      pipeline
+      pipeline,
     );
 
   run.marker = marker;

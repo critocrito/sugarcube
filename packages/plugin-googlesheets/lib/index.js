@@ -76,7 +76,7 @@ forEach(p => {
         desc: "Google spreadsheet ID to use.",
       },
     },
-    p.argv
+    p.argv,
   );
 }, authPlugins);
 
@@ -89,7 +89,7 @@ forEach(p => {
         desc: "The name of the sheet to use.",
       },
     },
-    p.argv
+    p.argv,
   );
 }, sheetPlugins);
 
@@ -102,7 +102,7 @@ forEach(p => {
         desc: "Fields of SugarCube units to export and import.",
       },
     },
-    p.argv
+    p.argv,
   );
 }, fieldPlugins);
 

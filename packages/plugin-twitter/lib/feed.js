@@ -18,7 +18,7 @@ const feedPlugin = (envelope, {log, cfg}) => {
       tapP(rs => log.info(`Fetched ${size(rs)} tweets for all queries.`)),
       rs => env.concatData(rs, envelope),
     ],
-    users
+    users,
   );
 };
 

@@ -7,15 +7,15 @@ const searchUrl = "https://google.com/search";
 const imagesUrl = "https://images.google.com";
 
 export const googleSearch = curry((headless, term) =>
-  search(searchUrl, headless, term).then(parseSearches(searchUrl))
+  search(searchUrl, headless, term).then(parseSearches(searchUrl)),
 );
 
 export const imageSearch = curry((scrollCount, headless, term) =>
-  images(searchUrl, scrollCount, headless, term).then(parseImages)
+  images(searchUrl, scrollCount, headless, term).then(parseImages),
 );
 
 export const reverseImageSearchFromFile = curry((headless, term) =>
-  reverseImagesFromFile(imagesUrl, headless, term).then(parseReverseImages)
+  reverseImagesFromFile(imagesUrl, headless, term).then(parseReverseImages),
 );
 
 export const entity = curry((source, unit) =>
@@ -26,7 +26,7 @@ export const entity = curry((source, unit) =>
     _sc_content_fields: ["title"],
     _sc_relations: [{type: "url", term: unit.href}],
     _sc_media: [{type: "url", term: unit.href}],
-  })
+  }),
 );
 
 export const searchEntity = curry((term, unit) =>
@@ -34,7 +34,7 @@ export const searchEntity = curry((term, unit) =>
     _sc_pubdates: {source: unit.date},
     _sc_queries: [{type: "google_search", term}],
     _sc_content_fields: ["title", "description"],
-  })
+  }),
 );
 
 export const imagesEntity = curry((term, unit) =>
@@ -49,7 +49,7 @@ export const imagesEntity = curry((term, unit) =>
       {type: "image", term: unit.href},
       {type: "url", term: unit.imgHref},
     ],
-  })
+  }),
 );
 
 export default {

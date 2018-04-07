@@ -22,7 +22,7 @@ import {curry3} from "../utils";
  * liftManyA2([f1, f2], a, b); // f1(a,b).then(r => f2(r, b)).then(...)
  */
 export const liftManyA2 = curry3("liftManyA2", (fs, a, b) =>
-  foldP((memo, f) => liftP2(f, memo, b), a, fs)
+  foldP((memo, f) => liftP2(f, memo, b), a, fs),
 );
 
 export default {liftManyA2};

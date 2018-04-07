@@ -17,12 +17,12 @@ const plugin = (envelope, {log, cfg}) => {
         imageSearch(3, headless),
         collectP(flow([entity(querySource), imagesEntity(term)])),
       ],
-      term
+      term,
     );
 
   return flowP(
     [flatmapP(search), mapP(rs => env.concatData(rs, envelope))],
-    queries
+    queries,
   );
 };
 

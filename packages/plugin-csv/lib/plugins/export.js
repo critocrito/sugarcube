@@ -26,7 +26,7 @@ import {assertFilename} from "../assertions";
 // Prefixing the namespace and turning a list of pairs to an object are handled
 // in one pass for performance reasons.
 const namespacePairsToObj = curry((ns, pairs) =>
-  reduce((memo, [k, v]) => merge(memo, {[`${ns}_${k}`]: v}), {}, pairs)
+  reduce((memo, [k, v]) => merge(memo, {[`${ns}_${k}`]: v}), {}, pairs),
 );
 
 // lodash provides already `toPairs` for objects. This creates pairs of index
@@ -60,7 +60,7 @@ const flatten = unit =>
       }
     },
     {},
-    toPairs(unit)
+    toPairs(unit),
   );
 
 // `flattenAndExpand` iterates over the whole input data and creates flat
@@ -75,7 +75,7 @@ const flattenAndExpand = reduce(
 
     return [concat(flatUnits, flattenedUnit), keyNames(flattenedUnit)];
   },
-  [[], []]
+  [[], []],
 );
 
 const exportPlugin = (val, {cfg, log}) => {

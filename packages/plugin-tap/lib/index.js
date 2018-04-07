@@ -17,7 +17,7 @@ forEach(p => {
         desc: "Limit the output to <n> data units.",
       },
     },
-    p.argv
+    p.argv,
   );
 }, values(plugins));
 

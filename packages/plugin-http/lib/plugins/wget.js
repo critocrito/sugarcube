@@ -26,15 +26,15 @@ const fetchPage = (envelope, {cfg, log}) => {
             () => unit._sc_downloads.push({location, type, term}),
             caughtP(e =>
               // FIXME: Wget breaks a lot with error code 8.
-              log.error(`Wget on ${term} failed with ${e}`)
+              log.error(`Wget on ${term} failed with ${e}`),
             ),
             tapP(() => log.info(`Wget'ed ${term} to ${location}.`)),
             () => media,
           ],
-          term
+          term,
         );
       }, unit._sc_media).then(ms => merge(unit, {_sc_media: ms})),
-    envelope
+    envelope,
   );
 };
 

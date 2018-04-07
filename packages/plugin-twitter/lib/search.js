@@ -18,7 +18,7 @@ const searchPlugin = (envelope, {log, cfg}) => {
       tapP(rs => log.info(`Fetched ${size(rs)} search results.`)),
       rs => env.concatData(rs, envelope),
     ],
-    queries
+    queries,
   );
 };
 

@@ -24,7 +24,7 @@ const plugin = async (envelope, {cfg, log}) => {
       flatmapP(p => globP(...[p, {nodir: true}])),
       map(file => JSON.parse(fs.readFileSync(file))),
     ],
-    envelope
+    envelope,
   );
   const queries = flow([
     env.queriesByType(querySourceQuery),
@@ -49,14 +49,14 @@ const plugin = async (envelope, {cfg, log}) => {
           });
         const units = yield query(index, body, amount);
         log.info(
-          `Fetched ${size(units)}/${amount} units for ${JSON.stringify(body)}.`
+          `Fetched ${size(units)}/${amount} units for ${JSON.stringify(body)}.`,
         );
         results = results.concat(units);
       }
       return results;
     },
     host,
-    port
+    port,
   ).then(([rs, history]) => {
     history.forEach(([k, meta]) => log.debug(`${k}: ${JSON.stringify(meta)}.`));
     return env.concatData(rs, envelope);

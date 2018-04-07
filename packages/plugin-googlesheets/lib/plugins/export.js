@@ -43,7 +43,7 @@ const exportData = async (envelope, {log, cfg, cache}) => {
       const rows = await getRows(id, sheet);
 
       log.info(
-        `Merging ${size(envelope.data)} into ${size(rows.slice(1))} units.`
+        `Merging ${size(envelope.data)} into ${size(rows.slice(1))} units.`,
       );
 
       const mergedRows = flow([
@@ -64,7 +64,7 @@ const exportData = async (envelope, {log, cfg, cache}) => {
         }
       }
     },
-    {client, secret, tokens: cache.get("sheets.tokens")}
+    {client, secret, tokens: cache.get("sheets.tokens")},
   );
 
   cache.update("sheets.tokens", merge(tokens));

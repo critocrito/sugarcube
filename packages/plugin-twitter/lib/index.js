@@ -39,7 +39,7 @@ forEach(p => {
         desc: "The twitter access token secret",
       },
     },
-    p.argv
+    p.argv,
   );
 }, values(plugins));
 
@@ -55,7 +55,7 @@ forEach(p => {
         desc: "How deep to recurse into the graph",
       },
     },
-    p.argv
+    p.argv,
   );
 }, recursivePlugins);
 

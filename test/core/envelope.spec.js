@@ -39,13 +39,13 @@ const isTrue = isEqual(true);
 
 describe("envelope interface", () => {
   property("reflexivity of identity equality", envelopeArb, a =>
-    isTrue(equals(a, clone(a)))
+    isTrue(equals(a, clone(a))),
   );
 
   property(
     "symmetry of identical equality",
     envelopeArb,
-    a => equals(a, clone(a)) && equals(clone(a), a)
+    a => equals(a, clone(a)) && equals(clone(a), a),
   );
 
   property("transitivity of identity equality", envelopeArb, a => {
@@ -63,25 +63,25 @@ describe("envelope interface", () => {
       const lhs = concat(concat(a, b), c);
       const rhs = concat(a, concat(b, c));
       return equals(lhs, rhs);
-    }
+    },
   );
 
   property("right identity of a Monoid", envelopeArb, a =>
-    equals(concat(a, empty()), a)
+    equals(concat(a, empty()), a),
   );
 
   property("left identity of a Monoid", envelopeArb, a =>
-    equals(a, concat(a, empty()))
+    equals(a, concat(a, empty())),
   );
 
   property("identity of a Functor", envelopeArb, a =>
-    equals(fmap(identity, identity, a), a)
+    equals(fmap(identity, identity, a), a),
   );
 
   property("identity of a Functor asynchronously", envelopeArb, a =>
     fmapAsync(x => Promise.resolve(x), x => Promise.resolve(x), a).then(
-      equals(a)
-    )
+      equals(a),
+    ),
   );
 
   property(
@@ -94,9 +94,9 @@ describe("envelope interface", () => {
       const g = merge(y);
       return equals(
         fmap(z => f(g(z)), z => f(g(z)), a),
-        fmap(f, f, fmap(g, g, a))
+        fmap(f, f, fmap(g, g, a)),
       );
-    }
+    },
   );
 
   property(
@@ -109,14 +109,14 @@ describe("envelope interface", () => {
       const g = merge(y);
       return equals(
         await fmapAsync(z => f(g(z)), z => f(g(z)), a),
-        await fmapAsync(f, f, fmap(g, g, a))
+        await fmapAsync(f, f, fmap(g, g, a)),
       );
-    }
+    },
   );
 
   describe("set operations", () => {
     property("produce unions", envelopeArb, envelopeArb, (a, b) =>
-      equals(union(a, b), concat(a, b))
+      equals(union(a, b), concat(a, b)),
     );
 
     property("produce intersections", envelopeArb, envelopeArb, (a, b) => {
@@ -131,7 +131,7 @@ describe("envelope interface", () => {
       });
       return equals(
         intersection(a, b),
-        envelope(intersectionData, intersectionQueries)
+        envelope(intersectionData, intersectionQueries),
       );
     });
 
@@ -147,7 +147,7 @@ describe("envelope interface", () => {
       });
       return equals(
         difference(a, b),
-        envelope(complementData, complementQueries)
+        envelope(complementData, complementQueries),
       );
     });
 
@@ -158,7 +158,7 @@ describe("envelope interface", () => {
       envelopeArb,
       envelopeArb,
       envelopeArb,
-      (a, b, c) => equals(union(union(a, b), c), union(a, union(b, c)))
+      (a, b, c) => equals(union(union(a, b), c), union(a, union(b, c))),
     );
 
     property(
@@ -169,19 +169,19 @@ describe("envelope interface", () => {
       (a, b, c) =>
         equals(
           intersection(intersection(a, b), c),
-          intersection(a, intersection(b, c))
-        )
+          intersection(a, intersection(b, c)),
+        ),
     );
 
     property("is commutative for unions", envelopeArb, envelopeArb, (a, b) =>
-      equals(union(a, b), union(b, a))
+      equals(union(a, b), union(b, a)),
     );
 
     property(
       "is commutative for intersections",
       envelopeArb,
       envelopeArb,
-      (a, b) => equals(intersection(a, b), intersection(b, a))
+      (a, b) => equals(intersection(a, b), intersection(b, a)),
     );
 
     property(
@@ -192,8 +192,8 @@ describe("envelope interface", () => {
       (a, b, c) =>
         equals(
           union(a, intersection(b, c)),
-          intersection(union(a, b), union(a, c))
-        )
+          intersection(union(a, b), union(a, c)),
+        ),
     );
 
     property(
@@ -204,8 +204,8 @@ describe("envelope interface", () => {
       (a, b, c) =>
         equals(
           intersection(a, union(b, c)),
-          union(intersection(a, b), intersection(a, c))
-        )
+          union(intersection(a, b), intersection(a, c)),
+        ),
     );
 
     property(
@@ -216,26 +216,26 @@ describe("envelope interface", () => {
         const x = difference(a, b);
         const y = difference(b, a);
         return equals(intersection(x, y), envelope([], []));
-      }
+      },
     );
 
     property("intersection domination", envelopeArb, a =>
-      equals(intersection(a, empty()), empty())
+      equals(intersection(a, empty()), empty()),
     );
 
     property("first absorption law", envelopeArb, envelopeArb, (a, b) =>
-      equals(union(a, intersection(a, b)), a)
+      equals(union(a, intersection(a, b)), a),
     );
 
     property("first absorption law", envelopeArb, envelopeArb, (a, b) =>
-      equals(intersection(a, union(a, b)), a)
+      equals(intersection(a, union(a, b)), a),
     );
 
     property(
       "express intersection in terms of set difference",
       envelopeArb,
       envelopeArb,
-      (a, b) => equals(intersection(a, b), difference(a, difference(a, b)))
+      (a, b) => equals(intersection(a, b), difference(a, difference(a, b))),
     );
 
     property(
@@ -246,8 +246,8 @@ describe("envelope interface", () => {
       (a, b, c) =>
         equals(
           difference(c, intersection(a, b)),
-          union(difference(c, a), difference(c, b))
-        )
+          union(difference(c, a), difference(c, b)),
+        ),
     );
 
     property(
@@ -258,8 +258,8 @@ describe("envelope interface", () => {
       (a, b, c) =>
         equals(
           difference(c, union(a, b)),
-          intersection(difference(c, a), difference(c, b))
-        )
+          intersection(difference(c, a), difference(c, b)),
+        ),
     );
 
     property(
@@ -270,8 +270,8 @@ describe("envelope interface", () => {
       (a, b, c) =>
         equals(
           difference(c, difference(b, a)),
-          union(intersection(c, a), difference(c, b))
-        )
+          union(intersection(c, a), difference(c, b)),
+        ),
     );
 
     property(
@@ -285,7 +285,7 @@ describe("envelope interface", () => {
         const z = intersection(b, difference(c, a));
 
         return equals(x, y) && equals(x, z) && equals(y, z);
-      }
+      },
     );
 
     property(
@@ -296,20 +296,20 @@ describe("envelope interface", () => {
       (a, b, c) =>
         equals(
           union(difference(b, a), c),
-          difference(union(b, c), difference(a, c))
-        )
+          difference(union(b, c), difference(a, c)),
+        ),
     );
 
     property("sixth notable identity of complements", envelopeArb, a =>
-      equals(difference(a, a), empty())
+      equals(difference(a, a), empty()),
     );
 
     property("seventh notable identity of complements", envelopeArb, a =>
-      equals(difference(empty(), a), empty())
+      equals(difference(empty(), a), empty()),
     );
 
     property("eigth notable identity of complements", envelopeArb, a =>
-      equals(difference(a, empty()), a)
+      equals(difference(a, empty()), a),
     );
   });
 
@@ -331,7 +331,7 @@ describe("envelope interface", () => {
         const f = y => merge(y, obj);
         const p = flow([f, of]);
         return equals(await fmapAsync(f, f, a), await fmapAsync(p, p, a));
-      }
+      },
     );
 
     property(
@@ -341,7 +341,7 @@ describe("envelope interface", () => {
         const obj = {[Symbol("key")]: Symbol("value")};
         const f = y => merge(y, obj);
         return equals(fmap(f, f, a), await fmapAsync(f, f, a));
-      }
+      },
     );
 
     property("has a specialized version for data", envelopeArb, async a => {
@@ -374,7 +374,7 @@ describe("envelope interface", () => {
         const results = await fmap(f, g, e);
 
         return equals(results, e);
-      }
+      },
     );
   });
 
@@ -399,9 +399,9 @@ describe("envelope interface", () => {
         const f = y => merge(y, obj);
         return equals(
           fmapDataDownloads(f, a),
-          await fmapDataDownloadsAsync(f, a)
+          await fmapDataDownloadsAsync(f, a),
         );
-      }
+      },
     );
   });
 });

@@ -9,7 +9,7 @@ const plugin = (envelope, {cfg, log}) => {
   const {queries} = envelope;
 
   log.info(
-    `Converting ${size(queries)} queries to csv and writing to ${filename}.`
+    `Converting ${size(queries)} queries to csv and writing to ${filename}.`,
   );
 
   const csv = stringify({header: true, quotedString: true, delimiter});

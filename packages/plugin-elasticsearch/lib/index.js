@@ -35,7 +35,7 @@ forEach(p => {
         desc: "The index prefix to use.",
       },
     },
-    p.argv
+    p.argv,
   );
 }, values(plugins));
 

@@ -39,7 +39,7 @@ export const search = curry((url, headless, term) =>
         .click("input[name='btnK']")
         .wait("div.srg"),
     html,
-  ])(url)
+  ])(url),
 );
 
 export const images = curry((url, scrollCount, headless, term) =>
@@ -47,7 +47,7 @@ export const images = curry((url, scrollCount, headless, term) =>
     urlify({tbm: "isch", q: term}),
     browse(headless),
     scrolledHtml(scrollCount),
-  ])(url)
+  ])(url),
 );
 
 export const reverseImagesFromFile = curry((url, headless, path) =>
@@ -62,7 +62,7 @@ export const reverseImagesFromFile = curry((url, headless, path) =>
         .upload("#qbfile", path)
         .wait(5000), // TODO: Maybe there is a better wait condition.
     html,
-  ])(url)
+  ])(url),
 );
 
 export default {search, images, reverseImagesFromFile};

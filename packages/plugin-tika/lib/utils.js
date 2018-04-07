@@ -15,7 +15,7 @@ export const extract = location =>
     tika.extract(location, (err, text, meta) => {
       if (err) return reject(err);
       return resolve([text, meta]);
-    })
+    }),
   );
 
 // safeExtract is useful for fetching links, that might otherwise throw silly
@@ -35,7 +35,7 @@ export const entity = curry((unit, text, meta) => {
       return memo;
     },
     unit._sc_id_fields || [],
-    ["Content-Type"]
+    ["Content-Type"],
   );
 
   const contentFields = reduce(
@@ -46,7 +46,7 @@ export const entity = curry((unit, text, meta) => {
       return memo;
     },
     unit._sc_content_fields || [],
-    ["title"]
+    ["title"],
   );
 
   const contentType = has(meta["Content-Type"], contentTypes)
@@ -63,6 +63,6 @@ export const entity = curry((unit, text, meta) => {
         _sc_id_fields: idFields,
         _sc_content_fields: contentFields,
       },
-    ])
+    ]),
   );
 });

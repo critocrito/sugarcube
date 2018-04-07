@@ -16,7 +16,7 @@ const fetchUnits = (envelope, {log}) => {
       tapP(rs => log.info(`Fetched ${size(rs)} units.`)),
       rs => env.concatData(rs, envelope),
     ],
-    queries
+    queries,
   );
 };
 

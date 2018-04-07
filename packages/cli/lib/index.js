@@ -52,7 +52,7 @@ export const parseConfigFileWithExtends = path => {
     arrayify,
     reduce(
       (memo, extend) => merge(parseConfigFileWithExtends(extend), memo),
-      cfg
+      cfg,
     ),
     omit(["extends"]),
   ])(configExtends);

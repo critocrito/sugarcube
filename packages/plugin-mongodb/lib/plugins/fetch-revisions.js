@@ -17,7 +17,7 @@ const fetchRevisions = (envelope, {log}) => {
       collectP(r => db.fetchUnit(r.unit).then(u => d.concatOne(r, {unit: u}))),
       rs => env.concatData(rs, envelope),
     ],
-    queries
+    queries,
   );
 };
 

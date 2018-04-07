@@ -19,7 +19,7 @@ const importData = async (envelope, {log, cfg, cache}) => {
       if (idFields) return data.map(merge({_sc_id_fields: idFields}));
       return data;
     },
-    {client, secret, tokens: cache.get("sheets.tokens")}
+    {client, secret, tokens: cache.get("sheets.tokens")},
   );
 
   log.info("Spreadsheet retrieved");

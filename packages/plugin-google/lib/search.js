@@ -17,7 +17,7 @@ const plugin = (envelope, {log, cfg}) => {
         googleSearch(headless),
         collectP(flow([entity(querySource), searchEntity(term)])),
       ],
-      term
+      term,
     );
 
   return flowP([flatmapP(search), rs => env.concatData(rs, envelope)], queries);

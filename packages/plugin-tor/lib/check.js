@@ -15,7 +15,7 @@ const plugin = (envelope, {log}) =>
       }),
       () => envelope,
     ],
-    uri
+    uri,
   );
 
 plugin.desc = "Check if HTTP is happening over the TOR network.";

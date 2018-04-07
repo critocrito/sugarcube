@@ -81,7 +81,7 @@ const equalsOne = curry2("equalsOne", (a, b) => isEqual(dataId(a), dataId(b)));
  * @param {Unit} b The second unit to compare.
  * @returns {boolean} Returns `true` if the two units are idenitical,
  * otherwise `false`.
-*/
+ */
 const {identicalOne} = ls;
 
 /**
@@ -96,7 +96,7 @@ const emptyOne = () => {
   const lists = reduce(
     (memo, h) => merge(memo, {[h]: ls.empty()}),
     {},
-    listFields
+    listFields,
   );
 
   return mergeAll([dates, markers, lists]);
@@ -117,7 +117,7 @@ const concatOne = curry2("concatOne", (a, b) => {
     (memo, h) =>
       merge(memo, {[h]: ls.concat(a[h] || ls.empty(), b[h] || ls.empty())}),
     {},
-    listFields
+    listFields,
   );
   const markers = {
     _sc_markers: loUniq(loConcat(a._sc_markers || [], b._sc_markers || [])),
@@ -137,7 +137,7 @@ const hashOne = u => {
   const hashes = reduce(
     (memo, h) => merge(memo, {[h]: ls.hash(u[h])}),
     {_sc_id_hash: dataId(u), _sc_content_hash: contentId(u)},
-    listFields
+    listFields,
   );
   return concatOne(u, hashes);
 };
@@ -154,7 +154,7 @@ const hashOne = u => {
  * otherwise `false`.
  */
 const equals = curry3("equals", (f, a, b) => f(a, b))(
-  equalsManyWith(equalsOne)
+  equalsManyWith(equalsOne),
 );
 /**
  * Test two lists of units for value equality. They are equal if each unit is
@@ -167,7 +167,7 @@ const equals = curry3("equals", (f, a, b) => f(a, b))(
  * otherwise `false`.
  */
 const identical = curry3("identical", (f, a, b) => f(a, b))(
-  equalsManyWith(identicalOne)
+  equalsManyWith(identicalOne),
 );
 
 /**
@@ -190,7 +190,7 @@ const empty = constant([]);
  * @return {Unit} The result of concatenationg b into a.
  */
 const concat = curry3("concat", (f, a, b) => f(a, b))(
-  concatManyWith(dataId, equalsOne, concatOne)
+  concatManyWith(dataId, equalsOne, concatOne),
 );
 
 /**
@@ -235,7 +235,7 @@ const {fmapAsync} = ls;
  * fmapList('_sc_downloads', f, xs);
  */
 const fmapList = curry3("fmapList", (field, f, xs) =>
-  fmap(u => concatOne(u, {[field]: ls.fmap(f, u[field])}), xs)
+  fmap(u => concatOne(u, {[field]: ls.fmap(f, u[field])}), xs),
 );
 
 /**
@@ -255,60 +255,60 @@ const fmapList = curry3("fmapList", (field, f, xs) =>
 const fmapListAsync = curry3("fmapListAsync", (field, f, xs) =>
   fmapAsync(
     u => ls.fmapAsync(f, u[field]).then(ys => concatOne(u, {[field]: ys})),
-    xs
-  )
+    xs,
+  ),
 );
 
 /**
  * `fmapList` specialized for `_sc_relations`.
  */
 const fmapRelations = curry3("fmapRelations", (f, g, xs) => f(g, xs))(
-  fmapList("_sc_relations")
+  fmapList("_sc_relations"),
 );
 /**
  * The asynchronous version of `fmapRelations`.
  */
 const fmapRelationsAsync = curry3("fmapRelationsAsync", (f, g, xs) => f(g, xs))(
-  fmapListAsync("_sc_relations")
+  fmapListAsync("_sc_relations"),
 );
 
 /**
  * `fmapList` specialized for `_sc_media`.
  */
 const fmapMedia = curry3("fmapMedia", (f, g, xs) => f(g, xs))(
-  fmapList("_sc_media")
+  fmapList("_sc_media"),
 );
 /**
  * The asynchronous version of `fmapMedia`.
  */
 const fmapMediaAsync = curry3("fmapMediaAsync", (f, g, xs) => f(g, xs))(
-  fmapListAsync("_sc_media")
+  fmapListAsync("_sc_media"),
 );
 
 /**
  * `fmapList` specialized for `_sc_downloads`.
  */
 const fmapDownloads = curry3("fmapDownloads", (f, g, xs) => f(g, xs))(
-  fmapList("_sc_downloads")
+  fmapList("_sc_downloads"),
 );
 /**
  * The asynchronous version of `fmapDownloads`.
  */
 const fmapDownloadsAsync = curry3("fmapDownloadsAsync", (f, g, xs) => f(g, xs))(
-  fmapListAsync("_sc_downloads")
+  fmapListAsync("_sc_downloads"),
 );
 
 /**
  * `fmapList` specialized for `_sc_queries`.
  */
 const fmapQueries = curry3("fmapQueries", (f, g, xs) => f(g, xs))(
-  fmapList("_sc_queries")
+  fmapList("_sc_queries"),
 );
 /**
  * The asynchronous version of `fmapQueries`.
  */
 const fmapQueriesAsync = curry3("fmapQueriesAsync", (f, g, xs) => f(g, xs))(
-  fmapListAsync("_sc_queries")
+  fmapListAsync("_sc_queries"),
 );
 
 // Applicative

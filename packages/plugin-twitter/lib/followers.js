@@ -12,7 +12,7 @@ const followersPlugin = (envelope, {log, cfg}) => {
     [
       `Fetching followers of ${users.join(", ")}`,
       `${cfg.twitter.recurse_depth} levels deep.`,
-    ].join(" ")
+    ].join(" "),
   );
 
   return followers(cfg, log, users).then(rs => env.concatData(rs, envelope));

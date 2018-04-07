@@ -21,13 +21,14 @@ export const objArb = suchthat(dict(string), o =>
     // Skip undefined and empty strings
     if (!k) return false;
     // Forbid unicode control characters and spaces
+    // eslint-disable-next-line no-control-regex
     if (/[\u0000-\u0020]/u.test(k)) return false;
     // Disallow certain keys
     if (/^-+|_+/.test(k)) return false;
     // Keys don't start with white space
     if (/^\s*/.test(k)) return false;
     return true;
-  }, true)
+  }, true),
 );
 
 const generate = (arb, len) => {
@@ -128,7 +129,7 @@ export const dataArb = array(unitArb)
   .smap(ds.uniq, identity)
   .smap(
     map(x => (trueOrFalse() ? merge(x, {_sc_id_hash: ds.dataId(x)}) : x)),
-    identity
+    identity,
   );
 
 /**

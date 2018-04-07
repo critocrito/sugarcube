@@ -43,8 +43,8 @@ const search = curry((numResults, count, term) =>
 
       return request(requestUrl.toString());
     },
-    [...Array(Math.ceil(count / numResults)).keys()]
-  )
+    [...Array(Math.ceil(count / numResults)).keys()],
+  ),
 );
 
 const scrape = html => {
@@ -96,15 +96,15 @@ const plugin = (envelope, {log, cfg}) => {
         flowP([search(pageCount, total), flatmapP2(scrape)]),
         tapP(rs => log.info(`Fetched ${size(rs)} results.`)),
         collectP2(unit =>
-          merge(unit, {_sc_queries: [{type: "sec_search", term}]})
+          merge(unit, {_sc_queries: [{type: "sec_search", term}]}),
         ),
       ],
-      term
+      term,
     );
   };
 
   return flatmapP2(q => retryP(doSearch(q)), queries).then(rs =>
-    env.concatData(rs, envelope)
+    env.concatData(rs, envelope),
   );
 };
 

@@ -18,7 +18,7 @@ const plugin = (envelope, {log, cfg}) => {
         flow([
           feed(postCount),
           tap(xs => log.info(`Fetched ${size(xs)} posts for ${u}'s feed.`)),
-        ])(u)
+        ])(u),
       ),
       tap(rs => {
         const c = size(queries);
@@ -26,7 +26,7 @@ const plugin = (envelope, {log, cfg}) => {
       }),
       F.map(rs => e.concatData(rs, envelope)),
     ],
-    queries
+    queries,
   );
 };
 

@@ -16,7 +16,7 @@ forEach(p => {
         desc: "Prettify the JSON output.",
       },
     },
-    p.argv
+    p.argv,
   );
 }, values(plugins));
 

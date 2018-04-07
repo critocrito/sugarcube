@@ -28,13 +28,13 @@ const plugin = (envelope, {log}) => {
                   [`${field}_meta`]: meta,
                 }),
             ],
-            value
+            value,
           );
         },
         unit,
-        fields
+        fields,
       ),
-    envelope
+    envelope,
   );
 };
 

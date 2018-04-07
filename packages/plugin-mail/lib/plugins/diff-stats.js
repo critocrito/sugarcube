@@ -37,7 +37,7 @@ const encrypt = (to, text) =>
       if (e) reject(e);
       if (encrypted) resolve(encrypted.toString());
       reject();
-    })
+    }),
   );
 
 const mail = (transporter, from, to, message, subject, toEncrypt) =>
@@ -46,7 +46,7 @@ const mail = (transporter, from, to, message, subject, toEncrypt) =>
       () => (toEncrypt ? encrypt(to, message) : message),
       text => transporter.sendMail({from, subject, to, text}),
     ],
-    null
+    null,
   );
 
 const querySource = "mail_recipient";
@@ -65,7 +65,7 @@ const mailDiffStats = (envelope, {cfg, log, stats}) => {
 
   const subject = "Message from SugarCube.";
   const body = dots.diff_stats(
-    Object.assign({}, {recipients, added, removed, shared, meta})
+    Object.assign({}, {recipients, added, removed, shared, meta}),
   );
   const transporter = createTransporter(cfg);
 
@@ -82,8 +82,8 @@ const mailDiffStats = (envelope, {cfg, log, stats}) => {
             if (cfg.mail.debug) {
               log.info(
                 ["Emailing the following:", "", info.message.toString()].join(
-                  "\n"
-                )
+                  "\n",
+                ),
               );
             } else {
               log.info(`Accepted mail for: ${info.accepted.join(", ")}`);
@@ -94,9 +94,9 @@ const mailDiffStats = (envelope, {cfg, log, stats}) => {
             log.warn(e);
           }),
         ],
-        recipient
+        recipient,
       );
-    })
+    }),
   ).then(() => envelope);
 };
 

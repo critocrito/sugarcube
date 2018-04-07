@@ -36,7 +36,7 @@ const client = curry(
     });
 
     return {getAsync: pify(t.get).bind(t)};
-  }
+  },
 );
 
 export const request = curry((cfg, baseUrl, params) =>
@@ -44,8 +44,8 @@ export const request = curry((cfg, baseUrl, params) =>
     get("twitter.consumer_key", cfg),
     get("twitter.consumer_secret", cfg),
     get("twitter.consumer_access_token_key", cfg),
-    get("twitter.consumer_access_token_secret", cfg)
-  ).getAsync(baseUrl, params)
+    get("twitter.consumer_access_token_secret", cfg),
+  ).getAsync(baseUrl, params),
 );
 
 export const cursorify = fn => {
@@ -92,26 +92,26 @@ export const recurse = curry((maxDepth, key, fn) => {
             const target = result[key];
 
             // eslint-disable-next-line promise/avoid-new
-            return iter(
-              merge(params, {[key]: target}),
-              nextDepth,
-              target
-            ).then(r =>
-              concat(
-                memo,
-                mergeAll([
-                  result,
-                  {_sc_graph_depth: depth, _sc_graph_from: recurseFrom},
-                  map(
-                    merge({_sc_graph_depth: nextDepth, _sc_graph_from: target}),
-                    r
-                  ),
-                ])
-              )
+            return iter(merge(params, {[key]: target}), nextDepth, target).then(
+              r =>
+                concat(
+                  memo,
+                  mergeAll([
+                    result,
+                    {_sc_graph_depth: depth, _sc_graph_from: recurseFrom},
+                    map(
+                      merge({
+                        _sc_graph_depth: nextDepth,
+                        _sc_graph_from: target,
+                      }),
+                      r,
+                    ),
+                  ]),
+                ),
             );
           },
           [],
-          results
+          results,
         );
       }
       return results;

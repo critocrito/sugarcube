@@ -29,7 +29,7 @@ const importPlugin = (envelope, {cfg, log}) => {
       tapP(xs => log.info(`Parsed ${xs.length} units.`)),
       xs => env.concatData(xs, envelope),
     ],
-    patterns
+    patterns,
   );
 };
 

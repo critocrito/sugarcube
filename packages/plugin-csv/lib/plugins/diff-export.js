@@ -42,8 +42,8 @@ const plugin = (envelope, {cfg, log, stats}) => {
               units.forEach(r => csv.write(r));
               csv.end();
             });
-          })
-        )
+          }),
+        ),
       );
     })
     .then(() => envelope);

@@ -24,7 +24,7 @@ const importQueries = (envelope, {log, cfg, cache}) => {
         log.info(`Expanded ${id}/${query} to ${size(expanded)} queries.`);
         return expanded;
       },
-      {client, secret, tokens: cache.get("sheets.tokens")}
+      {client, secret, tokens: cache.get("sheets.tokens")},
     );
     tokens = t;
     return qs;
@@ -39,7 +39,7 @@ const importQueries = (envelope, {log, cfg, cache}) => {
       }),
       rs => env.concatQueries(rs, envelope),
     ],
-    queries
+    queries,
   );
 };
 

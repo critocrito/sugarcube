@@ -38,7 +38,7 @@ const curlGet = (envelope, {log, cfg}) => {
                         () => download(term, location),
                         tapP(() => log.info(`Fetched ${term} to ${location}.`)),
                       ],
-                      null
+                      null,
                     );
                   }
                   throw e;
@@ -51,14 +51,14 @@ const curlGet = (envelope, {log, cfg}) => {
                 sha256,
                 type,
                 term,
-              })
+              }),
             ),
             () => media,
           ],
-          null
+          null,
         );
       }, unit._sc_media).then(ms => merge(unit, {_sc_media: ms})),
-    envelope
+    envelope,
   );
 };
 

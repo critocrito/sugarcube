@@ -21,29 +21,29 @@ const maybePromiseArb = jsc
   .tuple([jsc.nat, jsc.bool])
   .smap(
     ([x, toPromisify]) => [toPromisify ? Promise.resolve(x) : x, toPromisify],
-    jsc.shrink.tuple([jsc.nat.shrink, jsc.shrink.noop])
+    jsc.shrink.tuple([jsc.nat.shrink, jsc.shrink.noop]),
   );
 
 describe("deep concatenation", () => {
   property("eliminates duplicates", dataArb, xs =>
     isEqual(
       sort(concatManyWith(dataId, isEqual, concatOne, xs, xs)),
-      sort(unique(concat(xs, xs)))
-    )
+      sort(unique(concat(xs, xs))),
+    ),
   );
 
   property("from left to right and right to left", dataArb, dataArb, (xs, ys) =>
     isEqual(
       sort(concatManyWith(dataId, isEqual, concatOne, xs, ys)),
-      sort(concatManyWith(dataId, isEqual, concatOne, ys, xs))
-    )
+      sort(concatManyWith(dataId, isEqual, concatOne, ys, xs)),
+    ),
   );
 
   property("on equal data", dataArb, xs =>
     isEqual(
       sort(concatManyWith(dataId, isEqual, concatOne, xs, xs)),
-      sort(unique(xs))
-    )
+      sort(unique(xs)),
+    ),
   );
 });
 
@@ -52,7 +52,7 @@ describe("equality testing", () => {
     "is equivalent to a fold over two lists",
     jsc.array(jsc.dict(jsc.string)),
     jsc.array(jsc.dict(jsc.string)),
-    (xs, ys) => isEqual(isEqual(xs, ys), equalsManyWith(isEqual, xs, ys))
+    (xs, ys) => isEqual(isEqual(xs, ys), equalsManyWith(isEqual, xs, ys)),
   );
 });
 
@@ -93,7 +93,7 @@ describe("uid generation", () => {
   });
 
   property("produces strings of 40 characters", jsc.unit, () =>
-    isEqual(40, uid().length)
+    isEqual(40, uid().length),
   );
 });
 
@@ -101,6 +101,6 @@ describe("The isThenable util", () => {
   property(
     "tests if an object is a promise",
     maybePromiseArb,
-    ([obj, gotPromisified]) => isEqual(isThenable(obj), gotPromisified)
+    ([obj, gotPromisified]) => isEqual(isThenable(obj), gotPromisified),
   );
 });

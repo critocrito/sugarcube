@@ -34,7 +34,7 @@ flow([
           desc: "The Facebook app secret.",
         },
       },
-      p.argv
+      p.argv,
     );
   }),
 ])(plugins);

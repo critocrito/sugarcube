@@ -72,12 +72,12 @@ export const concatManyWith = curry5(
 
     const merged = map(
       id => (identical(x[id], y[id]) ? x[id] : merger(x[id], y[id])),
-      same
+      same,
     );
 
     const notmerged = map(id => x[id] || y[id], different);
     return concat(merged, notmerged);
-  }
+  },
 );
 
 export const equalsManyWith = curry3("equalsManyWith", (cmp, xs, ys) => {

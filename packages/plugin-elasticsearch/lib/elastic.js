@@ -41,7 +41,7 @@ export const createIndex = curry4(
 
     if (await client.indices.exists({index: indexName})) return ofP(null);
     return client.indices.create({index: indexName, body});
-  }
+  },
 );
 
 export const query = curry4("query", async (index, body, amount, client) => {
@@ -53,7 +53,7 @@ export const query = curry4("query", async (index, body, amount, client) => {
   });
   const data = map(
     flow([property("_source"), unstripify]),
-    get("hits.hits", response)
+    get("hits.hits", response),
   );
   const meta = merge(response.timed_out ? {timedOut: true} : {}, {
     took: get("took", response),
@@ -81,15 +81,15 @@ export const bulk = curry3("bulk", async (index, ops, client) => {
   await Promise.all(
     map(
       key => createIndex(index, key, mappings[key], client),
-      Object.keys(sorted)
-    )
+      Object.keys(sorted),
+    ),
   );
 
   const responses = await Promise.all(
     map(
       key => client.bulk({body: sorted[key], type: "units", refresh: true}),
-      Object.keys(sorted)
-    )
+      Object.keys(sorted),
+    ),
   );
 
   return responses.reduce(
@@ -106,11 +106,11 @@ export const bulk = curry3("bulk", async (index, ops, client) => {
             merge(acc[1], set(path, count + 1, {})),
           ];
         },
-        [errors, meta.stats]
+        [errors, meta.stats],
       );
       return [newErrors, {took, stats}];
     },
-    [[], {took: 0, stats: {}}]
+    [[], {took: 0, stats: {}}],
   );
 });
 

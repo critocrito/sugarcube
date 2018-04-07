@@ -1,14 +1,31 @@
 {
-    "extends": [
-        "@sugarcube/eslint-config-sugarcube"
+  "extends": [
+    "@sugarcube/eslint-config-sugarcube"
+  ],
+  "parser": "babel-eslint",
+  "rules": {
+    "comma-dangle": [
+      "error",
+      {
+        "arrays": "always-multiline",
+        "objects": "always-multiline",
+        "imports": "always-multiline",
+        "exports": "always-multiline",
+        "functions": "always-multiline"
+      }
     ],
-    "parser": "babel-eslint",
-    "rules": {
-	"import/no-extraneous-dependencies": [
-	    "error",
-	    {
-	      "devDependencies": ["test/**/*.js", "scripts/**/*.js"]
-	    }
-	]
-    }
+    "prettier/prettier": [
+      "error",
+      {
+        "trailingComma": "all",
+        "bracketSpacing": false
+      }
+    ],
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+	"devDependencies": ["test/**/*.js", "scripts/**/*.js"]
+      }
+    ]
+  }
 }

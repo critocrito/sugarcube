@@ -19,7 +19,7 @@ const sendMessage = (envelope, {log, cfg}) => {
     const msg = reduce(
       (memo, s) => `${memo} ${d[s]}`,
       `${_sc_source}:`,
-      _sc_content_fields
+      _sc_content_fields,
     );
 
     log.debug(`Sending: ${msg}`);

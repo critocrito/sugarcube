@@ -19,7 +19,7 @@ const rp = require("request-promise");
 const fetch = (username, maxId) => {
   const opts = merge(
     {uri: `https://instagram.com/${username}/media`, json: true},
-    maxId ? {qs: {max_id: maxId}} : {}
+    maxId ? {qs: {max_id: maxId}} : {},
   );
 
   return rp(opts)
@@ -40,7 +40,7 @@ export const feed = curry((count, username) => {
       return fetch(username, id).then(concat(memo));
     },
     [],
-    xs
+    xs,
   ).then(take(count));
 });
 

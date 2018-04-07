@@ -18,10 +18,10 @@ const pathArb = jsc.suchthat(
   jsc.asciinestring.smap(
     // Remove periods and any white space character, before forming the path.
     flow([replace(/\s*\.*/g, ""), split(""), join(".")]),
-    flow([replace(/\.*/g, ""), split("")])
+    flow([replace(/\.*/g, ""), split("")]),
   ),
   // We filter out empty strings, they are not valid paths.
-  x => x !== ""
+  x => x !== "",
 );
 
 const stateArb = objArb.smap(o => state(o), identity);
@@ -30,7 +30,7 @@ describe("state", () => {
   property("get === get", stateArb, s => isEqual(s.get(), s.get()));
 
   property("always return an object for a path", stateArb, pathArb, (s, path) =>
-    isPlainObject(s.get(path))
+    isPlainObject(s.get(path)),
   );
 
   property("updates are sequences", stateArb, jsc.array(objArb), (s, xs) => {
@@ -54,6 +54,6 @@ describe("state", () => {
       s.update(p, x => merge(x, o1));
       s.update(p, x => merge(x, o2));
       return isEqual(get(p, s.get()), s.get(p));
-    }
+    },
   );
 });

@@ -20,7 +20,7 @@ forEach(p => {
         desc: "Browse headless or show the browser window.",
       },
     },
-    p.argv
+    p.argv,
   );
 }, values(plugins));
 

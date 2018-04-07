@@ -17,7 +17,7 @@ const apiPages = (envelope, {log, cfg}) => {
 
   return flowP(
     [flatmapP(page(fetcher)), rs => e.concatData(rs, envelope)],
-    queries
+    queries,
   );
 };
 

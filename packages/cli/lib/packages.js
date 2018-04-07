@@ -50,12 +50,12 @@ export let modules = () => {
     plugins: () =>
       Object.keys(packages).reduce(
         (memo, key) => merge(memo, packages[key].plugins || {}),
-        {}
+        {},
       ),
     features: () =>
       Object.keys(packages).reduce(
         (memo, key) => merge(memo, packages[key].features || {}),
-        {}
+        {},
       ),
   });
   return modules();

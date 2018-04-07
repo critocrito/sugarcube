@@ -24,7 +24,7 @@ const screenshotUrl = curry((headless, url, path) => {
             fullPage: true,
           })
           .then(() => page),
-    ])
+    ]),
   );
 });
 
@@ -46,7 +46,7 @@ const screenshot = (envelope, {cfg, log}) => {
             () =>
               accessAsync(location)
                 .then(() =>
-                  log.info(`Screenshot ${term} exists at ${location}`)
+                  log.info(`Screenshot ${term} exists at ${location}`),
                 )
                 .catch(e => {
                   if (e.code === "ENOENT") {
@@ -56,11 +56,11 @@ const screenshot = (envelope, {cfg, log}) => {
                         () => screenshotUrl(headless, term, location),
                         tapP(() =>
                           log.info(
-                            `Screenshot of ${term} stored in ${location}.`
-                          )
+                            `Screenshot of ${term} stored in ${location}.`,
+                          ),
                         ),
                       ],
-                      null
+                      null,
                     );
                   }
                   throw e;
@@ -73,14 +73,14 @@ const screenshot = (envelope, {cfg, log}) => {
                 sha256,
                 type,
                 term,
-              })
+              }),
             ),
             () => media,
           ],
-          null
+          null,
         );
       }, unit._sc_media).then(ms => merge(unit, {_sc_media: ms})),
-    envelope
+    envelope,
   );
 };
 

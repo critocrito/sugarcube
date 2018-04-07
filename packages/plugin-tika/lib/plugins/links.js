@@ -13,9 +13,9 @@ const parseLinks = envelope =>
           safeExtract,
           ([text, meta]) => merge(unit, {text, meta}),
         ],
-        unit
+        unit,
       ),
-    envelope
+    envelope,
   );
 
 const plugin = parseLinks;

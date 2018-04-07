@@ -40,13 +40,13 @@ const exportData = async (envelope, {log, cfg, cache}) => {
       const {updatedRange: range} = await appendRows(
         id,
         sheet,
-        hasHeader ? data.slice(1) : data
+        hasHeader ? data.slice(1) : data,
       );
 
       log.info(`Appended ${size(dataNoHeader)} units to ${sheetUrl}.`);
       log.info(`Updated range ${range.replace(/^.*!/, "")} of ${sheet}.`);
     },
-    {client, secret, tokens: cache.get("sheets.tokens")}
+    {client, secret, tokens: cache.get("sheets.tokens")},
   );
 
   cache.update("sheets.tokens", merge(tokens));

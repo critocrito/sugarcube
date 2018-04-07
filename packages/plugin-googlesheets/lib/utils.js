@@ -39,12 +39,12 @@ const zipRows = curry((fields, rows) =>
     map(fixBools),
     map(zipObjectDeep(header(rows))), // Create a list of objects.
     map(pick(fields)), // Only select the wanted fields.
-  ])(rows)
+  ])(rows),
 );
 
 // Map SugarCube units to google spreadheet rows.
 export const unitsToRows = curry((fields, units) =>
-  concat([keys(fields)], map(at(keys(fields)), units))
+  concat([keys(fields)], map(at(keys(fields)), units)),
 );
 
 // Map google spreadsheet rows to SugarCube units.

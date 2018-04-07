@@ -17,15 +17,15 @@ const queryDb = (envelope, {log}) => {
           [
             () => db.findMany(db.unitsC, q, {}),
             tapP(rs =>
-              log.info(`Queried ${size(rs)} units for ${JSON.stringify(q)}.`)
+              log.info(`Queried ${size(rs)} units for ${JSON.stringify(q)}.`),
             ),
           ],
-          q
-        )
+          q,
+        ),
       ),
       rs => env.concatData(rs, envelope),
     ],
-    queries
+    queries,
   );
 };
 

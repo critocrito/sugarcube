@@ -15,7 +15,7 @@ forEach(p => {
         desc: "An API key for authentication.",
       },
     },
-    p.argv
+    p.argv,
   );
 }, values(plugins));
 

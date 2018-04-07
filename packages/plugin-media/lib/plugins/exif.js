@@ -14,7 +14,7 @@ const exif = href => {
       gm(res).identify((err, data) => {
         if (err) return resolve({});
         return resolve(data);
-      })
+      }),
     );
   });
 };

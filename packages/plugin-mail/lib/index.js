@@ -35,7 +35,7 @@ forEach(p => {
         nargs: 1,
       },
     },
-    p.argv
+    p.argv,
   );
 }, values(plugins));
 

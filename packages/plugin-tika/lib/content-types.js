@@ -9,7 +9,7 @@ const imageJpeg = unit => {
       return memo;
     },
     unit._sc_content_fields || [],
-    ["Image Height", "Image Width"]
+    ["Image Height", "Image Width"],
   );
 
   return merge(unit, {_sc_content_fields: contentFields});
@@ -24,7 +24,7 @@ const applicationPdf = unit => {
       return memo;
     },
     unit._sc_content_fields || [],
-    ["text"]
+    ["text"],
   );
 
   return merge(unit, {_sc_content_fields: contentFields});

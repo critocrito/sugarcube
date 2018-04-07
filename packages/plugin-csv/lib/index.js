@@ -27,7 +27,7 @@ forEach(p => {
         desc: "Use as CSV delimeter",
       },
     },
-    p.argv
+    p.argv,
   );
 }, values(plugins));
 
@@ -41,7 +41,7 @@ forEach(p => {
         coerce: arg => arg.split(","),
       },
     },
-    p.argv
+    p.argv,
   );
 }, importPlugins);
 

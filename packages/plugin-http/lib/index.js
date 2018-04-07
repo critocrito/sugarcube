@@ -21,7 +21,7 @@ forEach(p => {
         desc: "The path to the download directory.",
       },
     },
-    p.argv
+    p.argv,
   );
 }, values(plugins));
 

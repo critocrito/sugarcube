@@ -36,6 +36,6 @@ describe("unit keys", () => {
   });
 
   property("stripping underscores can be inversed", unitArb, unit =>
-    isEqual(unstripify(stripUnderscores(unit)), unit)
+    isEqual(unstripify(stripUnderscores(unit)), unit),
   );
 });

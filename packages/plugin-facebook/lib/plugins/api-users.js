@@ -17,7 +17,7 @@ const apiUsers = (envelope, {log, cfg}) => {
 
   return flowP(
     [flatmapP(user(fetcher)), rs => e.concatData(rs, envelope)],
-    queries
+    queries,
   );
 };
 

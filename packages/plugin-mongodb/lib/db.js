@@ -39,7 +39,7 @@ const findMany = (coll, query = {}, projection = {}) =>
     db
       .collection(coll)
       .find(query, projection)
-      .toArray()
+      .toArray(),
   );
 
 const findOne = (coll, query) =>
@@ -48,7 +48,7 @@ const findOne = (coll, query) =>
       .collection(coll)
       .find(query)
       .limit(1)
-      .next()
+      .next(),
   );
 
 const insertMany = (coll, docs) =>
@@ -56,7 +56,7 @@ const insertMany = (coll, docs) =>
     db
       .collection(coll)
       .insertMany(docs)
-      .then(({ops}) => ops)
+      .then(({ops}) => ops),
   );
 
 const insertOne = (coll, doc) =>
@@ -64,17 +64,17 @@ const insertOne = (coll, doc) =>
     db
       .collection(coll)
       .insertOne(doc)
-      .then(({ops}) => first(ops))
+      .then(({ops}) => first(ops)),
   );
 
 const updateOne = (coll, query, update) =>
   Promise.using(connection(), db =>
-    db.collection(coll).updateOne(query, update)
+    db.collection(coll).updateOne(query, update),
   );
 
 const upsertOne = (coll, query, update) =>
   Promise.using(connection(), db =>
-    db.collection(coll).updateOne(query, update, {upsert: true})
+    db.collection(coll).updateOne(query, update, {upsert: true}),
   );
 
 const removeOne = (coll, selector) =>
@@ -122,7 +122,7 @@ const matchRevisions = ids => {
         return concat(memo, [r._sc_id_hash]);
       }
       return memo;
-    }, [])
+    }, []),
   );
 };
 
@@ -169,7 +169,7 @@ const storeRevisions = ({data}) => {
   const hashes = reduce(
     (memo, u) => merge(memo, {[u._sc_id_hash]: u._sc_content_hash}),
     {},
-    data
+    data,
   );
 
   return matchRevisions(hashes).then(results => {
@@ -189,6 +189,7 @@ const fetchRevisions = ids =>
   findMany(revisionsC, {unit: {$in: ids}}, {_id: 0});
 
 const updateUnit = unit => {
+  // eslint-disable-next-line camelcase
   const {_sc_id_hash} = unit;
   return flowP([
     fetchUnit,

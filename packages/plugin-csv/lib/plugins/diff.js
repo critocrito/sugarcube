@@ -23,9 +23,10 @@ const diffPlugin = (envelope, {cfg, log, stats}) => {
       parseMany(delimiter),
       tapP(xs =>
         log.info(
-          `Diffing ${xs.length} from CSV with ${envelope.data
-            .length} from envelope.`
-        )
+          `Diffing ${xs.length} from CSV with ${
+            envelope.data.length
+          } from envelope.`,
+        ),
       ),
       xs => {
         const toDiff = env.envelopeData(xs);
@@ -35,7 +36,7 @@ const diffPlugin = (envelope, {cfg, log, stats}) => {
         const shared = env.intersection(toDiff, envelope);
 
         const strip = map(u =>
-          pick(u._sc_id_fields.concat(["_sc_id_hash"]), u)
+          pick(u._sc_id_fields.concat(["_sc_id_hash"]), u),
         );
 
         const diff = {
@@ -51,14 +52,15 @@ const diffPlugin = (envelope, {cfg, log, stats}) => {
         log.info(`${removed.data.length} units removed.`);
         log.info(`${shared.data.length} units shared.`);
         log.info(
-          `Diffing: ${diff.meta.count}/${envelope.data.length} (${diff.meta
-            .pipeline}).`
+          `Diffing: ${diff.meta.count}/${envelope.data.length} (${
+            diff.meta.pipeline
+          }).`,
         );
 
         return envelope;
       },
     ],
-    patterns
+    patterns,
   );
 };
 

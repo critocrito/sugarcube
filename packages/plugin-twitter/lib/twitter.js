@@ -52,7 +52,7 @@ export const feed = curry((cfg, log, users) => {
         },
         isNaN(parseInt(10, user))
           ? {screen_name: user.replace(/^@/, "")}
-          : {user_id: user}
+          : {user_id: user},
       );
 
       return flowP(
@@ -62,11 +62,11 @@ export const feed = curry((cfg, log, users) => {
           caughtP(apiErrors(log, user)),
           flow([tweetTransform, concat(memo)]),
         ],
-        params
+        params,
       ).catch(apiErrors(log, user));
     },
     [],
-    users
+    users,
   );
 });
 
@@ -76,7 +76,7 @@ export const followers = (cfg, log, users) => {
   const op = recurse(
     recurseDepth,
     "screen_name",
-    cursorify(throttle(delay, request(cfg, "followers/list.json")))
+    cursorify(throttle(delay, request(cfg, "followers/list.json"))),
   );
 
   return foldP(
@@ -93,11 +93,11 @@ export const followers = (cfg, log, users) => {
           caughtP(apiErrors(log, user)),
           flow([followersTransform, concat(memo)]),
         ],
-        params
+        params,
       );
     },
     [],
-    users
+    users,
   );
 };
 
@@ -107,7 +107,7 @@ export const friends = (cfg, log, users) => {
   const op = recurse(
     recurseDepth,
     "screen_name",
-    cursorify(throttle(delay, request(cfg, "friends/list.json")))
+    cursorify(throttle(delay, request(cfg, "friends/list.json"))),
   );
 
   return foldP(
@@ -124,11 +124,11 @@ export const friends = (cfg, log, users) => {
           caughtP(apiErrors(log, user)),
           flow([friendsTransform, concat(memo)]),
         ],
-        params
+        params,
       );
     },
     [],
-    users
+    users,
   );
 };
 
@@ -146,8 +146,8 @@ export const search = curry((cfg, log, queries) => {
           op,
           tapP(rs =>
             log.info(
-              `Fetched ${size(rs.statuses)} tweets for the term ${query}`
-            )
+              `Fetched ${size(rs.statuses)} tweets for the term ${query}`,
+            ),
           ),
           flow([
             property("statuses"),
@@ -156,11 +156,11 @@ export const search = curry((cfg, log, queries) => {
             concat(memo),
           ]),
         ],
-        params
+        params,
       );
     },
     [],
-    queries
+    queries,
   );
 });
 

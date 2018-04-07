@@ -31,7 +31,7 @@ const apiFeed = (envelope, {cfg, log}) => {
           throw err;
         }),
       ],
-      id
+      id,
     );
   };
 

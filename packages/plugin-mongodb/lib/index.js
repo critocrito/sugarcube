@@ -40,7 +40,7 @@ forEach(p => {
         default: "mongodb://localhost/sugarcube",
       },
     },
-    p.argv
+    p.argv,
   );
 }, values(plugins));
 

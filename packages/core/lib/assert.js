@@ -13,7 +13,7 @@ export const assertCfg = curry3("assertCfg", (expected, envelope, {cfg}) => {
       return memo;
     },
     [],
-    expected
+    expected,
   );
 
   if (!isEmpty(errors)) {

@@ -19,7 +19,7 @@ const listId = l => l._sc_id_hash || hashListId(l);
 // A single List
 // Setoid
 const equalsOne = curry3("equalsOne", (f, a, b) => f(listId(a), listId(b)))(
-  isEqual
+  isEqual,
 );
 const identicalOne = curry3("identicalOne", (f, a, b) => f(a, b))(isEqual);
 
@@ -30,16 +30,16 @@ const concatOne = curry3("concatOne", (f, a, b) => f(a, b))(merge);
 // A list of lists
 // Setoid
 const equals = curry3("equals", (f, a, b) => f(a, b))(
-  equalsManyWith(equalsOne)
+  equalsManyWith(equalsOne),
 );
 const identical = curry3("identical", (f, a, b) => f(a, b))(
-  equalsManyWith(identicalOne)
+  equalsManyWith(identicalOne),
 );
 
 // Monoid
 const empty = constant([]);
 const concat = curry3("concat", (f, a, b) => f(a, b))(
-  concatManyWith(listId, equalsOne, concatOne)
+  concatManyWith(listId, equalsOne, concatOne),
 );
 
 // Functor

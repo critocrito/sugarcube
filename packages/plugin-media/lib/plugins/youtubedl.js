@@ -36,7 +36,7 @@ const plugin = (envelope, {cfg, log}) => {
                 dataDir,
                 unit._sc_id_hash,
                 "youtubedl",
-                `${idHash}.${videoFormat}`
+                `${idHash}.${videoFormat}`,
               );
 
               // Download all videos.
@@ -48,29 +48,29 @@ const plugin = (envelope, {cfg, log}) => {
                       [
                         youtubeDl(debug, cmd, videoFormat, term),
                         tapP(() =>
-                          log.info(`Downloaded ${term} to ${location}.`)
+                          log.info(`Downloaded ${term} to ${location}.`),
                         ),
                       ],
-                      location
+                      location,
                     );
                   }
                   throw e;
                 })
                 .then(() =>
-                  Promise.all([md5sum(location), sha256sum(location)])
+                  Promise.all([md5sum(location), sha256sum(location)]),
                 )
                 .then(([md5, sha256]) =>
-                  unit._sc_downloads.push({location, md5, sha256, type, term})
+                  unit._sc_downloads.push({location, md5, sha256, type, term}),
                 )
                 .catch(() =>
-                  log.warn(`Failed to download video ${term} to ${location}`)
+                  log.warn(`Failed to download video ${term} to ${location}`),
                 )
                 .then(() => media);
             }, unit._sc_media).then(ms => merge(unit, {_sc_media: ms})),
-          envelope
+          envelope,
         ),
     ],
-    dataDir
+    dataDir,
   );
 };
 

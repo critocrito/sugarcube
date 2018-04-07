@@ -64,19 +64,19 @@ export const envelopeQueries = queries => ({data: ds.empty(), queries});
  */
 export const equals = curry2(
   "equals",
-  (e1, e2) => ds.equals(e1.data, e2.data) && ls.equals(e1.queries, e2.queries)
+  (e1, e2) => ds.equals(e1.data, e2.data) && ls.equals(e1.queries, e2.queries),
 );
 /**
  * Like `equals`, but only the equality `data` is compared.
  */
 export const equalsData = curry2("equalsData", (e1, e2) =>
-  ds.equals(e1.data, e2.data)
+  ds.equals(e1.data, e2.data),
 );
 /**
  * Like `equals`, but only the equality `queries` is compared.
  */
 export const equalsQueries = curry2("equalsQueries", (e1, e2) =>
-  ls.equals(e1.queries, e2.queries)
+  ls.equals(e1.queries, e2.queries),
 );
 
 /**
@@ -115,28 +115,28 @@ export const concatLeft = curry2("concatLeft", (e1, e2) => concat(e2, e1));
  * @returns {Envelope} A new envelope with `a` concatenated into `e.data`.
  */
 export const concatData = curry2("concatData", (data, e) =>
-  concat(e, envelopeData(data))
+  concat(e, envelopeData(data)),
 );
 
 /**
  * Same as `concatData`, but Prefers newer data
  */
 export const concatDataLeft = curry2("concatDataLeft", (data, e) =>
-  concatLeft(e, envelopeData(data))
+  concatLeft(e, envelopeData(data)),
 );
 
 /**
  * Same as `concatData`, but then for queries.
  */
 export const concatQueries = curry2("concatQueries", (queries, e) =>
-  concat(e, envelopeQueries(queries))
+  concat(e, envelopeQueries(queries)),
 );
 
 /**
  * Same as `concatQueries`, but prefers new queries
  */
 export const concatQueriesLeft = curry2("concatQueriesLeft", (queries, e) =>
-  concatLeft(e, envelopeQueries(queries))
+  concatLeft(e, envelopeQueries(queries)),
 );
 
 /**
@@ -157,13 +157,13 @@ export const intersection = curry2("intersection", (e1, e2) => {
   const data = intersectionWith(
     (a, b) => ds.dataId(a) === ds.dataId(b),
     e1.data,
-    e2.data
+    e2.data,
   );
   const queries = intersectionWith(
     // FIXME: Replace once id hashing for queries is introduced.
     (a, b) => a.type === b.type && a.term === b.term,
     e1.queries,
-    e2.queries
+    e2.queries,
   );
   return envelope(data, queries);
 });
@@ -182,13 +182,13 @@ export const difference = curry2("difference", (e1, e2) => {
   const data = differenceWith(
     (a, b) => ds.dataId(a) === ds.dataId(b),
     e1.data,
-    e2.data
+    e2.data,
   );
   const queries = differenceWith(
     // FIXME: Replace once id hashing for queries is introduced.
     (a, b) => a.type === b.type && a.term === b.term,
     e1.queries,
-    e2.queries
+    e2.queries,
   );
   return envelope(data, queries);
 });
@@ -213,7 +213,7 @@ export const fmap = curry3("fmap", (f, g, e) => {
 
   if (isThenable(data) && isThenable(queries))
     return Promise.all([Promise.resolve(data), Promise.resolve(queries)]).then(
-      spreadP(envelope)
+      spreadP(envelope),
     );
 
   return envelope(data, queries);
@@ -222,13 +222,13 @@ export const fmap = curry3("fmap", (f, g, e) => {
  * Similar to `fmap`, but only with a single function to map over `data`.
  */
 export const fmapData = curry2("fmapData", (f, e) =>
-  envelope(ds.fmap(f, e.data), e.queries)
+  envelope(ds.fmap(f, e.data), e.queries),
 );
 /**
  * Similar to `fmap`, but only with a single function to map over `queries`.
  */
 export const fmapQueries = curry2("fmapQueries", (f, e) =>
-  envelope(e.data, ls.fmap(f, e.queries))
+  envelope(e.data, ls.fmap(f, e.queries)),
 );
 
 /**
@@ -248,26 +248,26 @@ export const fmapQueries = curry2("fmapQueries", (f, e) =>
  */
 // TODO: Deprecate fmapAsync. fmap is overloaded and can replace fmapAsync.
 export const fmapAsync = curry3("fmapAsync", (f, g, e) =>
-  Promise.resolve(fmap(f, g, e))
+  Promise.resolve(fmap(f, g, e)),
 );
 /**
  * Similar to `fmapAsync`, but only with a single function to map over `data`.
  */
 export const fmapDataAsync = curry2("fmapDataAsync", (f, e) =>
-  ds.fmapAsync(f, e.data || ds.empty()).then(data => envelope(data, e.queries))
+  ds.fmapAsync(f, e.data || ds.empty()).then(data => envelope(data, e.queries)),
 );
 /**
  * Similar to `fmapAsync`, but only with a single function to map over `data`.
  */
 export const fmapQueriesAsync = curry2("fmapQueriesAsync", (f, e) =>
-  ls.fmapAsync(f, e.queries || ls.empty()).then(envelope(e.data))
+  ls.fmapAsync(f, e.queries || ls.empty()).then(envelope(e.data)),
 );
 
 export const fmapDataList = curry3("fmapDataList", (iteratee, f, e) =>
-  envelope(iteratee(f, e.data), e.queries)
+  envelope(iteratee(f, e.data), e.queries),
 );
 export const fmapDataListAsync = curry3("fmapDataListAsync", (iteratee, f, e) =>
-  iteratee(f, e.data).then(data => envelope(data, e.queries))
+  iteratee(f, e.data).then(data => envelope(data, e.queries)),
 );
 
 export const fmapDataDownloads = fmapDataList(ds.fmapDownloads);
@@ -299,15 +299,15 @@ export const filter = curry3("filter", (p1, p2, e) => {
 });
 /**
  * Similar to `filter`, but with a single predicate to filter `data`.
-*/
+ */
 export const filterData = curry2("filterData", (p, e) =>
-  envelope(ds.filter(p, e.data), e.queries)
+  envelope(ds.filter(p, e.data), e.queries),
 );
 /**
  * Similar to `filter`, but with a single predicate to filter `queries`.
-*/
+ */
 export const filterQueries = curry2("filterQueries", (p, e) =>
-  envelope(e.data, ls.filter(p, e.queries))
+  envelope(e.data, ls.filter(p, e.queries)),
 );
 
 export const uniq = e => envelope(ds.uniq(e.data), ls.uniq(e.queries));
@@ -324,8 +324,8 @@ export const flatMapQueriesAsync = curry3(
   (f, source, e) =>
     collectP(
       q => f(q.term).then(ds.fmap(ds.concatOne({_sc_queries: [q]}))),
-      filterQueries(({type}) => type === source, e).queries
-    ).then(d => concatData(flatMap(identity, d), e))
+      filterQueries(({type}) => type === source, e).queries,
+    ).then(d => concatData(flatMap(identity, d), e)),
 );
 
 export default {

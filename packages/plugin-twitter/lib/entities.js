@@ -51,16 +51,16 @@ const mediaEntities = map(media =>
       id: media.id_str,
       type: media.type === "photo" ? "image" : media.type,
       term: media.type === "photo" ? media.media_url_https : media.expanded_url,
-    }
-  )
+    },
+  ),
 );
 
 const urlEntities = curry((type, es) =>
-  map(url => merge({}, {type, term: url.expanded_url}), es)
+  map(url => merge({}, {type, term: url.expanded_url}), es),
 );
 
 const hashtagEntities = map(tag =>
-  merge({}, {tag: `#${toLower(tag.text)}`, original_tag: tag.text})
+  merge({}, {tag: `#${toLower(tag.text)}`, original_tag: tag.text}),
 );
 
 const mentionEntities = map(mention =>
@@ -70,8 +70,8 @@ const mentionEntities = map(mention =>
       mention: mention.screen_name,
       name: mention.name,
       id: mention.id_str,
-    }
-  )
+    },
+  ),
 );
 
 const pubDates = unit => {
@@ -103,7 +103,7 @@ const tweetEntity = flow([
 ]);
 
 const mentionsToRelations = map(m =>
-  merge({}, {type: "twitter_mention", term: m.mention})
+  merge({}, {type: "twitter_mention", term: m.mention}),
 );
 
 const hashtagsToRelations = map(h => merge({}, {type: "hashtag", term: h.tag}));
@@ -113,7 +113,7 @@ const linksToRelations = map(l => merge({}, {type: "url", term: l.term}));
 const tweet = t => {
   const lfUrls = flow([getOr([], "entities.urls"), urlEntities("url")])(t);
   const lfMedia = flow([getOr([], "extended_entities.media"), mediaEntities])(
-    t
+    t,
   );
   const lfHashtags = flow([getOr([], "entities.hashtags"), hashtagEntities])(t);
 
@@ -140,7 +140,7 @@ const tweet = t => {
       hashtags: lfHashtags,
       mentions: lfMentions,
     },
-    tweetEntity(t)
+    tweetEntity(t),
   );
 };
 
@@ -183,7 +183,7 @@ const user = curry((source, u) => {
       hashtags: lfHashtags,
       mentions: lfMentions,
     },
-    userEntity(u)
+    userEntity(u),
   );
 });
 

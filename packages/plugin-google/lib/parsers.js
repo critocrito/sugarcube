@@ -15,7 +15,7 @@ export const parseSearches = curry((searchUrl, body) => {
       const cached = $("a", actionItems[0]).attr("href");
       const similar = `${searchUrl}${$("a", actionItems[1]).attr("href")}`;
       const date = flow([trimCharsEnd(" - "), maybeDate])(
-        $("div.s span.st > span.f", el).text()
+        $("div.s span.st > span.f", el).text(),
       );
       const description = $("div.s span.st", el).text();
 

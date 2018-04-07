@@ -38,7 +38,7 @@ const cliQueries = map(
       return [results[1], results[2]];
     },
     zipObject(["type", "term"]),
-  ])
+  ]),
 );
 
 // Load variables from .env
@@ -68,7 +68,7 @@ const yargs = require("yargs")
       "Path to JSON queries file.",
       "Can be specified multiple times, or multiple files can be separated",
       "by a comma.",
-    ].join(" ")
+    ].join(" "),
   )
   // Imitate the behavior of .config('c')
   .coerce(
@@ -76,7 +76,7 @@ const yargs = require("yargs")
     flow([
       arg => (isArray(arg) ? arg : arg.split(",")),
       mapFiles(parseConfigFile),
-    ])
+    ]),
   )
   .option("Q", {
     type: "array",
@@ -127,7 +127,7 @@ process.on("unhandledRejection", haltAndCough(argv.debug));
 
 if (argv.listFeatures) {
   Object.keys(features).forEach(feature =>
-    info(`${feature}: ${features[feature].desc}`)
+    info(`${feature}: ${features[feature].desc}`),
   );
   process.exit(0);
 }
