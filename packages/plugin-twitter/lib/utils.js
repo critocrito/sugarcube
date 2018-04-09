@@ -92,22 +92,25 @@ export const recurse = curry((maxDepth, key, fn) => {
             const target = result[key];
 
             // eslint-disable-next-line promise/avoid-new
-            return iter(merge(params, {[key]: target}), nextDepth, target).then(
-              r =>
-                concat(
-                  memo,
-                  mergeAll([
-                    result,
-                    {_sc_graph_depth: depth, _sc_graph_from: recurseFrom},
-                    map(
-                      merge({
-                        _sc_graph_depth: nextDepth,
-                        _sc_graph_from: target,
-                      }),
-                      r,
-                    ),
-                  ]),
-                ),
+            return iter(
+              merge(params, {[key]: target}),
+              nextDepth,
+              target,
+            ).then(r =>
+              concat(
+                memo,
+                mergeAll([
+                  result,
+                  {_sc_graph_depth: depth, _sc_graph_from: recurseFrom},
+                  map(
+                    merge({
+                      _sc_graph_depth: nextDepth,
+                      _sc_graph_from: target,
+                    }),
+                    r,
+                  ),
+                ]),
+              ),
             );
           },
           [],
