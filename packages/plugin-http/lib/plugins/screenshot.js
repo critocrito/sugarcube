@@ -36,7 +36,8 @@ const screenshot = (envelope, {cfg, log}) => {
     unit =>
       collectP(media => {
         if (media.type !== "url") return media;
-        const {type, term} = media;
+        const {type, term, href} = media;
+        const source = href || term;
         const idHash = media._sc_id_hash;
         const dir = join(dataDir, unit._sc_id_hash, "screenshot");
         const location = join(dir, `${idHash}.jpeg`);
@@ -46,17 +47,17 @@ const screenshot = (envelope, {cfg, log}) => {
             () =>
               accessAsync(location)
                 .then(() =>
-                  log.info(`Screenshot ${term} exists at ${location}`),
+                  log.info(`Screenshot ${source} exists at ${location}`),
                 )
                 .catch(e => {
                   if (e.code === "ENOENT") {
                     return flowP(
                       [
                         () => mkdirP(dir),
-                        () => screenshotUrl(headless, term, location),
+                        () => screenshotUrl(headless, source, location),
                         tapP(() =>
                           log.info(
-                            `Screenshot of ${term} stored in ${location}.`,
+                            `Screenshot of ${source} stored in ${location}.`,
                           ),
                         ),
                       ],
@@ -67,13 +68,19 @@ const screenshot = (envelope, {cfg, log}) => {
                 }),
             () => Promise.all([md5sum(location), sha256sum(location)]),
             tapP(([md5, sha256]) =>
-              unit._sc_downloads.push({
-                dir,
-                md5,
-                sha256,
-                type,
-                term,
-              }),
+              unit._sc_downloads.push(
+                Object.assign(
+                  {},
+                  {
+                    dir,
+                    md5,
+                    sha256,
+                    type,
+                    term,
+                  },
+                  href ? {href} : {},
+                ),
+              ),
             ),
             () => media,
           ],

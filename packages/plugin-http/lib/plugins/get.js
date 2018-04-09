@@ -20,23 +20,28 @@ const curlGet = (envelope, {log, cfg}) => {
       collectP(media => {
         if (!includes(media.type, getTypes)) return media;
 
-        const {type, term} = media;
+        const {type, term, href} = media;
+        const source = href || term;
         const idHash = media._sc_id_hash;
         const dir = join(dataDir, unit._sc_id_hash, type, idHash);
-        const location = join(dir, basename(url.parse(term).pathname));
+        const location = join(dir, basename(url.parse(source).pathname));
 
         return flowP(
           [
             () =>
               accessAsync(location)
-                .then(() => log.info(`Media at ${term} exists at ${location}`))
+                .then(() =>
+                  log.info(`Media at ${source} exists at ${location}`),
+                )
                 .catch(e => {
                   if (e.code === "ENOENT") {
                     return flowP(
                       [
                         () => mkdirP(dir),
-                        () => download(term, location),
-                        tapP(() => log.info(`Fetched ${term} to ${location}.`)),
+                        () => download(source, location),
+                        tapP(() =>
+                          log.info(`Fetched ${source} to ${location}.`),
+                        ),
                       ],
                       null,
                     );
@@ -45,13 +50,19 @@ const curlGet = (envelope, {log, cfg}) => {
                 }),
             () => Promise.all([md5sum(location), sha256sum(location)]),
             tapP(([md5, sha256]) =>
-              unit._sc_downloads.push({
-                dir,
-                md5,
-                sha256,
-                type,
-                term,
-              }),
+              unit._sc_downloads.push(
+                Object.assign(
+                  {},
+                  {
+                    dir,
+                    md5,
+                    sha256,
+                    type,
+                    term,
+                  },
+                  href ? {href} : {},
+                ),
+              ),
             ),
             () => media,
           ],
