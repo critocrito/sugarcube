@@ -41,3 +41,13 @@ search for tweets. To search for a specific hashtag, prefix the query with
 - `twitter.tweet_count` (for twitter_feed)
 - `twitter.retweets` (for twitter_feed)
 - `twitter.recurse_depth` (for twitter_friends and twitter_followers)
+
+The `twitter_search` plugin takes additionally the following optional
+parameters:
+
+- `twitter.language`: Limit tweets to the following languages provided as [ISO
+  639-1](http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code,
+  e.g. **pt** or **es**.
+- `twitter.geocode`: Limit tweets to the specified `langitude,latitude,radius`
+  triplet, e.g. 37.781157,-122.398720,3km. The radius can be either specified
+  as **km** or as **mi**.

@@ -4,6 +4,7 @@ import {
   map,
   merge,
   concat,
+  get,
   join,
   split,
   parseInt,
@@ -133,13 +134,26 @@ export const friends = (cfg, log, users) => {
 };
 
 export const search = curry((cfg, log, queries) => {
+  const modifiers = ["twitter.language", "twitter.geocode"].reduce(
+    (memo, key) => {
+      switch (key) {
+        case "twitter.language":
+          return get(key, cfg) ? merge(memo, {lang: get(key, cfg)}) : memo;
+        case "twitter.geocode":
+          return get(key, cfg) ? merge(memo, {geocode: get(key, cfg)}) : memo;
+        default:
+          return memo;
+      }
+    },
+    {},
+  );
   const delay = rateLimit(180);
   const op = throttle(delay, request(cfg, "search/tweets.json"));
 
   return foldP(
     (memo, query) => {
       const q = flow([split(" "), map(encodeURIComponent), join("+")])(query);
-      const params = {count: 100, q};
+      const params = merge({count: 100, q}, modifiers);
 
       return flowP(
         [

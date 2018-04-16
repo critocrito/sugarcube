@@ -21,6 +21,9 @@ const tweetFields = [
   "tweet_id",
   "tweet",
   "tweet_time",
+  "geo",
+  "coordinates",
+  "place",
 ];
 
 const userFields = [
