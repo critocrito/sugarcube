@@ -24,6 +24,7 @@ const tweetFields = [
   "geo",
   "coordinates",
   "place",
+  "href",
 ];
 
 const userFields = [
@@ -100,6 +101,7 @@ const tweetEntity = flow([
       tweet_id: t.id_str,
       tweet: t.text,
       tweet_time: createdAt.isValid() ? createdAt.toDate() : null,
+      href: `https://twitter.com/statuses/${t.id_str}`,
     });
   },
   pick(tweetFields),
