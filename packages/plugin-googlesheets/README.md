@@ -78,6 +78,12 @@ provided if a new sheet should be create from a template.
   from. Requires `google.copy_from_spreadsheet` as well.
 - `google.skip_empty` Use this option to only export data pipelines that contain
   any data.
+- `google.selection_list`: Enable a drop down selection list for a field. It
+  validates that input can only be one of the specified options. The selection
+  list is specified using the following format:
+  `<field-name>:opt1,opt2,opt3`. This will validate the input of
+  `<field-name>` to be one of `opt1`, `opt2` or `opt3`. This option is an
+  array and can be specified multiple times.
 
 ### `sheets_import`
 
@@ -126,6 +132,12 @@ fields is controlled by the order of fields declared in `google.sheet_fields`.
   from. Requires `google.copy_from_spreadsheet` as well.
 - `google.skip_empty` Use this option to only export data pipelines that contain
   any data.
+- `google.selection_list`: Enable a drop down selection list for a field. It
+  validates that input can only be one of the specified options. The selection
+  list is specified using the following format:
+  `<field-name>:opt1,opt2,opt3`. This will validate the input of
+  `<field-name>` to be one of `opt1`, `opt2` or `opt3`. This option is an
+  array and can be specified multiple times.
 
 ## API
 

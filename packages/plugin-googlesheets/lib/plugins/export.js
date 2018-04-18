@@ -1,7 +1,11 @@
 import {flow, merge, get, getOr, size} from "lodash/fp";
 import {plugin as p} from "@sugarcube/core";
 import withSession from "../sheets";
-import {unitsToRows, concatEnvelopeAndRows} from "../utils";
+import {
+  unitsToRows,
+  concatEnvelopeAndRows,
+  coerceSelectionLists,
+} from "../utils";
 import {assertCredentials, assertSpreadsheet} from "../assertions";
 
 const exportData = async (envelope, {log, cfg, cache}) => {
@@ -13,6 +17,9 @@ const exportData = async (envelope, {log, cfg, cache}) => {
   const copyFromSpreadsheet = get("google.copy_from_spreadsheet", cfg);
   const skipEmpty = get("google.skip_empty", cfg);
   const sheet = getOr(cfg.marker, "google.sheet", cfg);
+  const selectionLists = coerceSelectionLists(
+    get("google.selection_list", cfg),
+  );
 
   if (skipEmpty && size(envelope.data) === 0) {
     log.info("Data pipeline is empty. Skip the export.");
@@ -33,6 +40,7 @@ const exportData = async (envelope, {log, cfg, cache}) => {
       getRows,
       replaceRows,
       safeReplaceRows,
+      setSelection,
     }) => {
       const {sheetUrl: url} = await (copyFromSheet
         ? duplicateSheet(copyFromSpreadsheet, copyFromSheet, id, sheet)
@@ -63,6 +71,11 @@ const exportData = async (envelope, {log, cfg, cache}) => {
           throw e;
         }
       }
+      await Promise.all(
+        selectionLists.map(([field, inputs]) =>
+          setSelection(id, sheet, field, inputs),
+        ),
+      );
     },
     {client, secret, tokens: cache.get("sheets.tokens")},
   );

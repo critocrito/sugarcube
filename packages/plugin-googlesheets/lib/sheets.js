@@ -9,7 +9,9 @@ import {
   findIndex,
   get,
   getOr,
+  isEqual,
   isNil,
+  isString,
 } from "lodash/fp";
 import {collectP, flowP, flowP2, flowP3, flowP4} from "dashp";
 import pify from "pify";
@@ -24,10 +26,12 @@ import {
   copySheetRequest,
   deleteSheetRequest,
   getValuesRequest,
+  getHeaderRequest,
   createValuesRequest,
   clearValuesRequest,
   appendValuesRequest,
   deleteRowsRequest,
+  setSelectionRequest,
 } from "./requests";
 
 const sheets = google.sheets("v4");
@@ -118,6 +122,12 @@ const duplicateSheet = curry(async (auth, id, sheet, toId, toSheet) => {
 });
 
 const getRows = flowP3([getValuesRequest, valuesGet, getOr([], "data.values")]);
+const getHeader = flowP3([
+  getHeaderRequest,
+  valuesGet,
+  getOr([], "data.values"),
+  first,
+]);
 
 const clearRows = curry(async (auth, id, sheet) => {
   await flowP3([clearValuesRequest, valuesClear], auth, id, sheet);
@@ -166,7 +176,8 @@ const getAndRemoveRowsByField = curry(
   async (auth, id, sheet, fieldName, fieldValue) => {
     const rows = await getRows(auth, id, sheet);
     const header = first(rows);
-    const fieldIndex = findIndex(col => col === fieldName, header);
+    const fieldIndex = findIndex(isEqual(fieldName), header);
+    if (fieldIndex < 0) return [];
     const [data, indexes] = tail(rows).reduce(
       ([rs, is], row, i) => {
         if (row[fieldIndex] === fieldValue) {
@@ -184,6 +195,18 @@ const getAndRemoveRowsByField = curry(
   },
 );
 
+const setSelection = curry(async (auth, id, sheet, field, selections) => {
+  const inputs = isString(selections) ? selections.split(",") : selections;
+  const {sheetId} = await getSheet(auth, id, sheet);
+  const header = await getHeader(auth, id, sheet);
+  const column = findIndex(isEqual(field), header);
+  if (column < 0) return Promise.resolve();
+  // FIXME: dashp doesn't export flowP5.
+  return spreadsheetBatchUpdate(
+    setSelectionRequest(auth, id, sheetId, column, inputs),
+  );
+});
+
 // This function provides a context within which to run a series of
 // interactions with the Google spreadsheet API.
 export default curry(async (f, {client, secret, tokens}) => {
@@ -200,10 +223,12 @@ export default curry(async (f, {client, secret, tokens}) => {
     replaceRows: replaceRows(auth),
     safeReplaceRows: safeReplaceRows(auth),
     getRows: getRows(auth),
+    getHeader: getHeader(auth),
     clearRows: clearRows(auth),
     appendRows: appendRows(auth),
     deleteRows: deleteRows(auth),
     getAndRemoveRowsByField: getAndRemoveRowsByField(auth),
+    setSelection: setSelection(auth),
     tokens: auth.credentials,
   };
   return [await f(api), auth.credentials];

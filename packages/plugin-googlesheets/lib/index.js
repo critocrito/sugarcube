@@ -59,6 +59,13 @@ const fieldPlugins = flow([
   values,
 ])(plugins);
 
+const selectionPlugins = flow([
+  keys,
+  intersection(["sheets_export", "sheets_append"]),
+  ps => pick(ps, plugins),
+  values,
+])(plugins);
+
 forEach(p => {
   // eslint-disable-next-line no-param-reassign
   p.argv = merge(
@@ -105,6 +112,20 @@ forEach(p => {
     p.argv,
   );
 }, fieldPlugins);
+
+forEach(p => {
+  // eslint-disable-next-line no-param-reassign
+  p.argv = merge(
+    {
+      "google.selection_list": {
+        type: "array",
+        desc: "Validate a field as one of a list, e.g. fieldname:opt1,opt2,op3",
+        default: [],
+      },
+    },
+    p.argv,
+  );
+}, selectionPlugins);
 
 export {
   plugins,

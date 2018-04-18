@@ -17,6 +17,14 @@ export const getValuesRequest = curry((auth, spreadsheetId, sheet) => ({
   range: sheet,
 }));
 
+export const getHeaderRequest = curry((auth, spreadsheetId, sheet) => ({
+  auth,
+  valueRenderOption: "FORMATTED_VALUE",
+  dateTimeRenderOption: "SERIAL_NUMBER",
+  spreadsheetId,
+  range: `${sheet}!1:1`,
+}));
+
 export const createValuesRequest = curry(
   (auth, spreadsheetId, sheet, values) => ({
     auth,
@@ -149,3 +157,32 @@ export const deleteRowsRequest = curry((auth, spreadsheetId, sheetId, rows) => {
       return memo.concat(body(row, row + 1));
     }, []);
 });
+
+export const setSelectionRequest = curry(
+  (auth, spreadsheetId, sheetId, column, inputs) => ({
+    auth,
+    spreadsheetId,
+    resource: {
+      requests: [
+        {
+          setDataValidation: {
+            range: {
+              sheetId,
+              startRowIndex: 1,
+              startColumnIndex: column,
+              endColumnIndex: column + 1,
+            },
+            rule: {
+              condition: {
+                type: "ONE_OF_LIST",
+                values: [inputs.map(i => ({userEnteredValue: i}))],
+              },
+              strict: true,
+              showCustomUi: true,
+            },
+          },
+        },
+      ],
+    },
+  }),
+);
