@@ -186,3 +186,63 @@ export const setSelectionRequest = curry(
     },
   }),
 );
+
+export const formatHeaderRequest = curry((auth, spreadsheetId, sheetId) => ({
+  auth,
+  spreadsheetId,
+  resource: {
+    requests: [
+      {
+        repeatCell: {
+          range: {
+            sheetId,
+            startRowIndex: 0,
+            endRowIndex: 1,
+          },
+          cell: {
+            userEnteredFormat: {
+              backgroundColor: {
+                red: 0,
+                green: 0,
+                blue: 0,
+              },
+              horizontalAlignment: "CENTER",
+              textFormat: {
+                foregroundColor: {
+                  red: 1,
+                  green: 1,
+                  blue: 1,
+                },
+                fontSize: 8,
+                bold: true,
+              },
+              borders: {
+                left: {
+                  style: "SOLID",
+                  color: {red: 1, green: 1, blue: 1},
+                },
+                right: {
+                  style: "SOLID",
+                  color: {red: 1, green: 1, blue: 1},
+                },
+              },
+            },
+          },
+          fields:
+            "userEnteredFormat(backgroundColor,textFormat,horizontalAlignment,borders)",
+        },
+      },
+      {
+        updateSheetProperties: {
+          properties: {
+            sheetId,
+            gridProperties: {
+              frozenRowCount: 1,
+            },
+          },
+          fields: "gridProperties.frozenRowCount",
+        },
+      },
+    ],
+  },
+}));

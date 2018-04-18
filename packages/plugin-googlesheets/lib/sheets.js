@@ -32,6 +32,7 @@ import {
   appendValuesRequest,
   deleteRowsRequest,
   setSelectionRequest,
+  formatHeaderRequest,
 } from "./requests";
 
 const sheets = google.sheets("v4");
@@ -122,6 +123,7 @@ const duplicateSheet = curry(async (auth, id, sheet, toId, toSheet) => {
 });
 
 const getRows = flowP3([getValuesRequest, valuesGet, getOr([], "data.values")]);
+
 const getHeader = flowP3([
   getHeaderRequest,
   valuesGet,
@@ -129,15 +131,31 @@ const getHeader = flowP3([
   first,
 ]);
 
+const formatHeader = curry(async (auth, id, sheet) => {
+  const {sheetId} = await getSheet(auth, id, sheet);
+  return flowP3(
+    [formatHeaderRequest, spreadsheetBatchUpdate],
+    auth,
+    id,
+    sheetId,
+  );
+});
+
 const clearRows = curry(async (auth, id, sheet) => {
   await flowP3([clearValuesRequest, valuesClear], auth, id, sheet);
 });
 
-const appendRows = flowP4([
-  appendValuesRequest,
-  valuesAppend,
-  getOr({}, "data.updates"),
-]);
+const appendRows = curry(async (auth, id, sheet, rows) => {
+  const update = await flowP4(
+    [appendValuesRequest, valuesAppend, getOr({}, "data.updates")],
+    auth,
+    id,
+    sheet,
+    rows,
+  );
+  await formatHeader(auth, id, sheet);
+  return update;
+});
 
 // Make sure to make the requests in sequence, since I couldn't find out if
 // batchUpdates have a guaranteed order. Instead deleteRowsRequest breaks it
@@ -154,7 +172,17 @@ const deleteRows = curry(async (auth, id, sheet, indexes) => {
   return responses.map(r => r.data);
 });
 
-const replaceRows = flowP4([createValuesRequest, valuesUpdate, get("data")]);
+const replaceRows = curry(async (auth, id, sheet, rows) => {
+  const updatedData = await flowP4(
+    [createValuesRequest, valuesUpdate, get("data")],
+    auth,
+    id,
+    sheet,
+    rows,
+  );
+  await formatHeader(auth, id, sheet);
+  return updatedData;
+});
 
 const safeReplaceRows = curry(async (auth, id, sheet, rows) => {
   // To be safe not to loose any data, we make first a backup copy and
@@ -229,6 +257,7 @@ export default curry(async (f, {client, secret, tokens}) => {
     deleteRows: deleteRows(auth),
     getAndRemoveRowsByField: getAndRemoveRowsByField(auth),
     setSelection: setSelection(auth),
+    formatHeader: formatHeader(auth),
     tokens: auth.credentials,
   };
   return [await f(api), auth.credentials];
