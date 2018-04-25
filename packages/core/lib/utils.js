@@ -94,6 +94,18 @@ export const isThenable = p =>
     (typeof p === "object" || typeof p === "function") &&
     isFunction(p.then));
 
+export const sToA = curry2("sToA", (delimiter, val) => {
+  if (!val || val.length === 0) return [];
+  if (Array.isArray(val)) return val;
+  return val.split(delimiter).map(s => s.trim());
+});
+
+export const aToS = curry2("aToS", (delimiter, val) => {
+  let v = val;
+  if (!val || typeof val === "string") v = sToA(delimiter, val);
+  return v.map(s => s.trim()).join(delimiter);
+});
+
 export default {
   curry2,
   curry3,
@@ -108,4 +120,6 @@ export default {
   equalsManyWith,
   isFunction,
   isThenable,
+  aToS,
+  sToA,
 };

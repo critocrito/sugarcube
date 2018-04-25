@@ -9,6 +9,8 @@ import {
   concatManyWith,
   equalsManyWith,
   isThenable,
+  aToS,
+  sToA,
 } from "../../packages/core/lib/utils";
 import {dataArb} from "../../packages/test/lib";
 import {uid} from "../../packages/core/lib/crypto";
@@ -103,4 +105,87 @@ describe("The isThenable util", () => {
     maybePromiseArb,
     ([obj, gotPromisified]) => isEqual(isThenable(obj), gotPromisified),
   );
+});
+
+describe("value transformations", () => {
+  it("converts arrays into strings", () => {
+    const value = ["one", "two"];
+    const expected = "one,two";
+    aToS(",", value).should.eql(expected);
+  });
+
+  it("trims strings during conversion", () => {
+    const value = ["one ", " two"];
+    const expected = "one,two";
+    aToS(",", value).should.eql(expected);
+  });
+
+  it("converts arrays into strings only if it is an array", () => {
+    const value = "one,two";
+    const expected = "one,two";
+    aToS(",", value).should.eql(expected);
+  });
+
+  it("when converting to array and it is a string, trim it's elements", () => {
+    const value = "one, two ";
+    const expected = "one,two";
+    aToS(",", value).should.eql(expected);
+  });
+
+  it("converts an empty array to an empty string", () => {
+    const value = [];
+    const expected = "";
+    aToS(",", value).should.eql(expected);
+  });
+
+  it("converts nil to an empty string", () => {
+    const value = null;
+    const expected = "";
+    aToS(",", value).should.eql(expected);
+  });
+
+  it("converts strings into arrays", () => {
+    const value = "one,two";
+    const expected = ["one", "two"];
+    sToA(",", value).should.eql(expected);
+  });
+
+  it("trims values during conversion", () => {
+    const value = " one, two , three";
+    const expected = ["one", "two", "three"];
+    sToA(",", value).should.eql(expected);
+  });
+
+  it("only converts strings to arrays if it's a string", () => {
+    const value = ["one", "two"];
+    const expected = ["one", "two"];
+    sToA(",", value).should.eql(expected);
+  });
+
+  it("converts an empty string to an empty array", () => {
+    const value = "";
+    const expected = [];
+    sToA(",", value).should.eql(expected);
+  });
+
+  it("converts nil to an empty array", () => {
+    const value = null;
+    const expected = [];
+    sToA(",", value).should.eql(expected);
+  });
+
+  it("can handle different delimiters when converting strings to arrays", () => {
+    const value = "one|two";
+    const expected = ["one", "two"];
+    [sToA("|", value), sToA(",", value.replace(/\|/g, ","))].should.eql([
+      expected,
+      expected,
+    ]);
+  });
+
+  property("conversion is idempotent", "asciichar & string", ([d, s]) => {
+    const delimiter = d.replace(/\s/, ",");
+    const value = s.replace(/\s/g, "");
+    return isEqual(aToS(delimiter, sToA(delimiter, value)), value);
+  });
 });
