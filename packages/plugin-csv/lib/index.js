@@ -38,7 +38,6 @@ forEach(p => {
       "csv.id_fields": {
         nargs: 1,
         desc: "Specify the id fields separated by a comma.",
-        coerce: arg => arg.split(","),
       },
     },
     p.argv,

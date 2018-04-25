@@ -1,13 +1,16 @@
 /* eslint-disable no-console */
 import {omit, getOr, take} from "lodash/fp";
+import {utils} from "@sugarcube/core";
 import {inspect} from "util";
+
+const {sToA} = utils;
 
 const printf = (envelope, {stats, cfg, cache}) => {
   const {data, queries} = envelope;
   const {plugins} = cfg;
   const limit = getOr(null, "tap.limit", cfg);
   // FIXME: The default from printf.argv doesn't work here.
-  const selection = getOr("data", "tap.select", cfg).split(",");
+  const selection = sToA(",", getOr("data", "tap.select", cfg));
   const printables = {
     data,
     queries,

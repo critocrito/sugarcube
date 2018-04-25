@@ -4,16 +4,17 @@ import pify from "pify";
 import fs from "fs";
 import url from "url";
 import {join, basename} from "path";
-import {envelope as env, plugin as p} from "@sugarcube/core";
+import {envelope as env, plugin as p, utils} from "@sugarcube/core";
 import {mkdirP, sha256sum, md5sum} from "@sugarcube/plugin-fs";
 
 import {assertDir, download} from "../utils";
 
+const {sToA} = utils;
 const accessAsync = pify(fs.access);
 
 const curlGet = (envelope, {log, cfg}) => {
   const dataDir = get("http.data_dir", cfg);
-  const getTypes = get("http.get_types", cfg).split(",");
+  const getTypes = sToA(",", get("http.get_types", cfg));
 
   return env.fmapDataAsync(
     unit =>
