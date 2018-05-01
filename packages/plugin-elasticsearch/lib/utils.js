@@ -5,10 +5,10 @@ import {utils} from "@sugarcube/core";
 const {curry2} = utils;
 
 const mapUnitKeys = curry2("mapUnitKeys", (fn, unit) => {
-  const stripArrays = ary =>
+  const mapArrays = ary =>
     ary.map(value => {
-      if (isPlainObject(value)) return stripUnderscores(value);
-      if (isArray(value)) return stripArrays(value);
+      if (isPlainObject(value)) return mapUnitKeys(fn, value);
+      if (isArray(value)) return mapArrays(value);
       return value;
     });
 
@@ -16,9 +16,9 @@ const mapUnitKeys = curry2("mapUnitKeys", (fn, unit) => {
     const newKey = fn(key);
 
     if (isPlainObject(unit[key]))
-      return merge(memo, {[newKey]: stripUnderscores(unit[key])});
+      return merge(memo, {[newKey]: mapUnitKeys(fn, unit[key])});
     if (isArray(unit[key]))
-      return merge(memo, {[newKey]: stripArrays(unit[key])});
+      return merge(memo, {[newKey]: mapArrays(unit[key])});
     return merge(memo, {[newKey]: unit[key]});
   }, {});
 });

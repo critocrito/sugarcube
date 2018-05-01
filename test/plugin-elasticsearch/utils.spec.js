@@ -38,4 +38,18 @@ describe("unit keys", () => {
   property("stripping underscores can be inversed", unitArb, unit =>
     isEqual(unstripify(stripUnderscores(unit)), unit),
   );
+
+  it("it recursively strips", () => {
+    const obj = {_a: [{_a: 23}]};
+    const expected = {$a: [{$a: 23}]};
+    const result = stripUnderscores(obj);
+    result.should.eql(expected);
+  });
+
+  it("it recursively unstrips", () => {
+    const obj = {$a: [{$a: 23}]};
+    const expected = {_a: [{_a: 23}]};
+    const result = unstripify(obj);
+    result.should.eql(expected);
+  });
 });
