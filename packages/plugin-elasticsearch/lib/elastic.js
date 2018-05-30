@@ -51,10 +51,21 @@ export const query = curry4("query", async (index, body, amount, client) => {
     body,
     requestTimeout: "90000",
   });
-  const data = map(
-    flow([property("_source"), unstripify]),
-    get("hits.hits", response),
-  );
+
+  const data = map(u => {
+    const source = flow([property("_source"), unstripify])(u);
+    return Object.assign(
+      {},
+      source,
+      {_sc_elastic_score: get("_score", u)},
+      get("highlight", u)
+        ? {
+            _sc_elastic_highlights: flow([get("highlight"), unstripify])(u),
+          }
+        : {},
+    );
+  }, get("hits.hits", response));
+
   const meta = merge(response.timed_out ? {timedOut: true} : {}, {
     took: get("took", response),
     total: get("hits.total", response),

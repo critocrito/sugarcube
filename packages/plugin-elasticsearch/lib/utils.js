@@ -27,6 +27,9 @@ export const stripUnderscores = mapUnitKeys(key => key.replace(/^[_]+/, "$"));
 export const unstripify = mapUnitKeys(key => key.replace(/^[$$]/, "_"));
 
 export const omitFromData = (fields, data) => {
-  if (fields) return data.map(omit(fields.split(",")));
-  return data;
+  const FIELD_NAME = /^_sc_elastic/;
+  return data.map(unit => {
+    const internalFields = Object.keys(unit).filter(k => FIELD_NAME.test(k));
+    return omit(internalFields.concat(fields), unit);
+  });
 };

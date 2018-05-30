@@ -1,13 +1,16 @@
 import {size, get} from "lodash/fp";
+import {utils} from "@sugarcube/core";
 
 import {Elastic} from "../elastic";
 import {omitFromData} from "../utils";
+
+const {sToA} = utils;
 
 const plugin = (envelope, {cfg, log}) => {
   const host = get("elastic.host", cfg);
   const port = get("elastic.port", cfg);
   const index = get("elastic.index", cfg);
-  const omitFields = get("elastic.omit_fields", cfg);
+  const omitFields = sToA(",", get("elastic.omit_fields", cfg));
 
   return Elastic.Do(
     function* indexUnits({bulk}) {
