@@ -88,8 +88,6 @@ const moveData = async (envelope, {log, cfg, cache}) => {
     {client, secret, tokens: cache.get("sheets.tokens")},
   );
 
-  log.info("Spreadsheet retrieved");
-  log.info(`Updating ${size(units)} units from sheet`);
   cache.update("sheets.tokens", merge(tokens));
 
   return env.concatData(units, envelope);
