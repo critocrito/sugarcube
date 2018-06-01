@@ -55,8 +55,7 @@ const plugin = async (envelope, {cfg, log}) => {
       }
       return results;
     },
-    host,
-    port,
+    {host, port},
   ).then(([rs, history]) => {
     history.forEach(([k, meta]) => log.debug(`${k}: ${JSON.stringify(meta)}.`));
     return env.concatData(rs, envelope);

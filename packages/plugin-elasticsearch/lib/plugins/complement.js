@@ -15,8 +15,7 @@ const plugin = async (envelope, {cfg, log}) => {
       log.info(`Complementing ${size(existing)} existing units.`);
       return existing;
     },
-    host,
-    port,
+    {host, port},
   ).then(([rs, history]) => {
     history.forEach(([k, meta]) => log.debug(`${k}: ${JSON.stringify(meta)}.`));
     return env.concatData(rs, envelope);

@@ -25,12 +25,32 @@ Store data of the current envelope in Elasticsearch.
   `sugarcube`.
 - `elastic.omit_fields`: Omit those fields from being stored in
   Elasticsearch. Define multiple fields by separating them with a comma.
+- `elastic.mappings`: Supply a path to a JSON file that contains custom mapping definitions.
 
 **Example:**
 
 ```
 sugarcube -Q ddg_search:Keith\ Johnstone -p ddg_search,elastic_export
 ```
+
+To use custom mapping, write your mappings in a JSON file:
+
+```sh
+cat << EOF > mappings.json
+{
+  "cities": {"type": "nested"}
+}
+EOF
+```
+
+```
+sugarcube -Q ddg_search:Keith\ Johnstone \
+          -p ddg_search,elastic_export \
+          --elastic.index dancers \
+          --elastic.mappings mappings.json
+```
+
+Indexes are created the first time an export happens. In order to change the mappings of an existing index see [this](https://www.elastic.co/blog/changing-mapping-with-zero-downtime), [this](https://www.elastic.co/blog/reindex-is-coming) and [this](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-reindex.html).
 
 ## `elastic_import` plugin
 
@@ -177,21 +197,22 @@ Elasticsearch. It can be used to write custom scripts using the same API.
 ### `Elastic.Do`
 
 ```hs
-Do :: (G: Generator, host: String, port: Number): [Array, Array]
+Do :: (G: Generator, {host: String, port: Number, mappings: {}}): [Array, Array]
 ```
 
 The `Do` function creates a context, in which a full interaction with
 Elasticsearch takes place. It takes a generator function that forms the
-interaction context and the host and port number of the Elasticsearch
-function. The `Do` context returns a tuple containing any results and the
-history of the interaction with Elasticsearch. The generator function receives
-a configured API as it's argument. This API is valid within a single
+interaction context and an configuration object containing the host and port
+of the Elasticsearch server. Additionally it accepts an object containing
+custom mappings. The `Do` context returns a tuple containing any results and
+the history of the interaction with Elasticsearch. The generator function
+receives a configured API as it's argument. This API is valid within a single
 interaction context:
 
 ```js
 const [results, history] = await Elastic.Do(function* ({queryByIds}) {
   yield queryByIds("sugarcube", ["id1", "id2"]);
-});
+}, {host: "localhost", port: 9200});
 
 history.forEach(([k, meta]) => console.log(`${k}: ${JSON.stringify(meta)}.`));
 // Do something with the results.

@@ -4,10 +4,10 @@ import elastic from "elasticsearch";
 import {utils} from "@sugarcube/core";
 
 import {unstripify, stripUnderscores} from "./utils";
-import mappings from "./mappings";
+import defaultMappings from "./mappings";
 import queries from "./queries";
 
-const {curry3, curry4} = utils;
+const {curry2, curry3, curry4} = utils;
 
 const types = {
   ddg_search: "web-searches",
@@ -74,56 +74,65 @@ export const query = curry4("query", async (index, body, amount, client) => {
   return [data, meta];
 });
 
-export const bulk = curry3("bulk", async (index, ops, client) => {
-  const sorted = ops.index.reduce((memo, unit) => {
-    const type = types[unit._sc_source]
-      ? types[unit._sc_source]
-      : types.default;
-    // eslint-disable-next-line no-param-reassign
-    if (!memo[type]) memo[type] = [];
-    // eslint-disable-next-line no-param-reassign
-    memo[type] = memo[type].concat([
-      {index: toHeader(`${index}-${type}`, unit)},
-      stripUnderscores(unit),
-    ]);
-    return memo;
-  }, {});
+export const bulk = curry4(
+  "bulk",
+  async (index, ops, client, customMappings) => {
+    const sorted = ops.index.reduce((memo, unit) => {
+      const type = types[unit._sc_source]
+        ? types[unit._sc_source]
+        : types.default;
+      // eslint-disable-next-line no-param-reassign
+      if (!memo[type]) memo[type] = [];
+      // eslint-disable-next-line no-param-reassign
+      memo[type] = memo[type].concat([
+        {index: toHeader(`${index}-${type}`, unit)},
+        stripUnderscores(unit),
+      ]);
+      return memo;
+    }, {});
 
-  await Promise.all(
-    map(
-      key => createIndex(index, key, mappings[key], client),
-      Object.keys(sorted),
-    ),
-  );
+    await Promise.all(
+      map(
+        key =>
+          createIndex(
+            index,
+            key,
+            Object.assign(defaultMappings[key], customMappings),
+            client,
+          ),
+        Object.keys(sorted),
+      ),
+    );
 
-  const responses = await Promise.all(
-    map(
-      key => client.bulk({body: sorted[key], type: "units", refresh: true}),
-      Object.keys(sorted),
-    ),
-  );
+    const responses = await Promise.all(
+      map(
+        key => client.bulk({body: sorted[key], type: "units", refresh: true}),
+        Object.keys(sorted),
+      ),
+    );
 
-  return responses.reduce(
-    ([errors, meta], resp) => {
-      const took = meta.took + resp.took;
-      const [newErrors, stats] = resp.items.reduce(
-        (acc, item) => {
-          const path = `${item.index._index}.${item.index.result}`;
-          const count = getOr(0, path, acc[1]);
-          return [
-            item.index.error
-              ? acc[0].concat([{id: item.index._id, error: item.index.error}])
-              : acc[0],
-            merge(acc[1], set(path, count + 1, {})),
-          ];
-        },
-        [errors, meta.stats],
-      );
-      return [newErrors, {took, stats}];
-    },
-    [[], {took: 0, stats: {}}],
-  );
-});
+    return responses.reduce(
+      ([errors, meta], resp) => {
+        const took = meta.took + resp.took;
+        const [newErrors, stats] = resp.items.reduce(
+          (acc, item) => {
+            const path = `${item.index._index}.${item.index.result}`;
+            const count = getOr(0, path, acc[1]);
+            return [
+              item.index.error
+                ? acc[0].concat([{id: item.index._id, error: item.index.error}])
+                : acc[0],
+              merge(acc[1], set(path, count + 1, {})),
+            ];
+          },
+          [errors, meta.stats],
+        );
+        return [newErrors, {took, stats}];
+      },
+      [[], {took: 0, stats: {}}],
+    );
+  },
+);
 
 export const queryByIds = curry3("queryByIds", (index, ids, client) => {
   const body = queries.byIds(ids);
@@ -131,9 +140,10 @@ export const queryByIds = curry3("queryByIds", (index, ids, client) => {
 });
 
 export const Elastic = {
-  Do: curry3("ElasticDo", (G, host, port) => {
+  Do: curry2("ElasticDo", async (G, {host, port, mappings}) => {
     const client = connect(`${host}:${port}`);
     const api = {bulk, query, queryByIds};
+    const customMappings = stripUnderscores(mappings || {});
     const generator = G(api);
     let data;
     let history = [];
@@ -141,7 +151,7 @@ export const Elastic = {
     const chain = async nextG => {
       const {done, value} = await nextG.next(data);
       if (done) return ofP([value || data, history]);
-      const [result, meta] = await value(client);
+      const [result, meta] = await value(client, customMappings);
       // All curried function names have the format of <name>-<int> where
       // <int> is the number of missing arguments. For a prettier output in
       // the history strip -<int> from the name.
