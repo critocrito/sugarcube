@@ -58,6 +58,12 @@ export const concatEnvelopeAndRows = curry(({data}, rows) => {
   return env.concat(env.envelopeData(data), env.envelopeData(units));
 });
 
+export const concatRows = curry((rowsA, rowsB) => {
+  const unitsA = rowsToUnits(header(rowsA), rowsA);
+  const unitsB = rowsToUnits(header(rowsB), rowsB);
+  return env.concat(env.envelopeData(unitsA), env.envelopeData(unitsB));
+});
+
 export const coerceSelectionLists = list =>
   list.map(s => {
     const [field, options] = s.split(":");

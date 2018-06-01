@@ -12,6 +12,7 @@ import exportPlugin from "./plugins/export";
 import importPlugin from "./plugins/import";
 import queriesPlugin from "./plugins/queries";
 import appendPlugin from "./plugins/append";
+import movePlugin from "./plugins/move";
 
 import withSession from "./sheets";
 import {
@@ -26,6 +27,7 @@ const plugins = {
   sheets_import: importPlugin,
   sheets_queries: queriesPlugin,
   sheets_append: appendPlugin,
+  sheets_move: movePlugin,
 };
 
 const authPlugins = flow([
@@ -35,6 +37,7 @@ const authPlugins = flow([
     "sheets_import",
     "sheets_queries",
     "sheets_append",
+    "sheets_move",
   ]),
   ps => pick(ps, plugins),
   values,
@@ -47,6 +50,7 @@ const sheetPlugins = flow([
     "sheets_import",
     "sheets_queries",
     "sheets_append",
+    "sheets_move",
   ]),
   ps => pick(ps, plugins),
   values,
@@ -54,14 +58,19 @@ const sheetPlugins = flow([
 
 const fieldPlugins = flow([
   keys,
-  intersection(["sheets_export", "sheets_import", "sheets_append"]),
+  intersection([
+    "sheets_export",
+    "sheets_import",
+    "sheets_append",
+    "sheets_move",
+  ]),
   ps => pick(ps, plugins),
   values,
 ])(plugins);
 
 const selectionPlugins = flow([
   keys,
-  intersection(["sheets_export", "sheets_append"]),
+  intersection(["sheets_export", "sheets_append", "sheets_move"]),
   ps => pick(ps, plugins),
   values,
 ])(plugins);
