@@ -7,8 +7,3 @@ test:lts:
   image: node:carbon
   script:
     - npm run test
-
-test:latest:
-  image: node:latest
-  script:
-    - npm run test
