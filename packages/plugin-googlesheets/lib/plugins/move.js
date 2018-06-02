@@ -1,6 +1,6 @@
 import {flow, merge, size, get, getOr} from "lodash/fp";
 import {envelope as env, plugin as p} from "@sugarcube/core";
-import withSession from "../sheets";
+import SheetsDo from "../sheets";
 import {unitsToRows, concatRows, coerceSelectionLists} from "../utils";
 import {assertCredentials, assertSpreadsheet, assertSheet} from "../assertions";
 
@@ -26,30 +26,37 @@ const moveData = async (envelope, {log, cfg, cache}) => {
     throw new Error("Missing configuration: google.copy_from_sheet");
   }
 
-  const [units, tokens] = await withSession(
-    async ({
+  const [units, tokens, history] = await SheetsDo(
+    function* moveUnits({
       getOrCreateSheet,
       duplicateSheet,
       getRows,
       replaceRows,
       safeReplaceRows,
-      setSelection,
-    }) => {
-      const rowsToMove = await getRows(id, sheet);
+      setSelections,
+    }) {
+      const rowsToMove = yield getRows(id, sheet);
 
       if (skipEmpty && rowsToMove.length < 2) {
         log.warn("No data to move. Skip the move.");
         return [];
       }
 
-      const {sheetUrl: targetUrl} = await (copyFromSheet
-        ? duplicateSheet(copyFromSpreadsheet, copyFromSheet, toId, toSheet)
-        : getOrCreateSheet(toId, toSheet));
-      const existingRows = await getRows(toId, toSheet);
+      const {sheetUrl: targetUrl} = copyFromSheet
+        ? yield duplicateSheet(
+            copyFromSpreadsheet,
+            copyFromSheet,
+            toId,
+            toSheet,
+          )
+        : yield getOrCreateSheet(toId, toSheet);
+      const existingRows = yield getRows(toId, toSheet);
 
       log.info(`Moving ${rowsToMove.length} observations to ${targetUrl}.`);
       log.info(
-        `Merging ${rowsToMove.length} observations into ${existingRows.length} observations.`,
+        `Merging ${rowsToMove.length} observations into ${
+          existingRows.length
+        } observations.`,
       );
 
       const mergedRows = flow([
@@ -60,9 +67,9 @@ const moveData = async (envelope, {log, cfg, cache}) => {
 
       // No need to safely update data if the sheet is empty.
       if (size(existingRows) === 0) {
-        await replaceRows(toId, toSheet, mergedRows);
+        yield replaceRows(toId, toSheet, mergedRows);
       } else {
-        const [, e] = await safeReplaceRows(toId, toSheet, mergedRows);
+        const [, e] = yield safeReplaceRows(toId, toSheet, mergedRows);
         if (e) {
           log.error(`Atomic data replace of target failed.`);
           log.error(`Backup sheet ${e.sheet} is located at ${e.sheetUrl}.`);
@@ -71,23 +78,21 @@ const moveData = async (envelope, {log, cfg, cache}) => {
       }
 
       // Clean existing sheet.
-      const [, e] = await safeReplaceRows(id, sheet, rowsToMove.slice(0, 1));
+      const [, e] = yield safeReplaceRows(id, sheet, rowsToMove.slice(0, 1));
       if (e) {
         log.error(`Atomic data replace of source failed.`);
         log.error(`Backup sheet ${e.sheet} is located at ${e.sheetUrl}.`);
         throw e;
       }
 
-      await Promise.all(
-        selectionLists.map(([field, inputs]) =>
-          setSelection(id, sheet, field, inputs),
-        ),
-      );
+      yield setSelections(toId, toSheet, selectionLists);
+
       return mergedRows;
     },
     {client, secret, tokens: cache.get("sheets.tokens")},
   );
 
+  history.forEach(([k, meta]) => log.debug(`${k}: ${JSON.stringify(meta)}.`));
   cache.update("sheets.tokens", merge(tokens));
 
   return env.concatData(units, envelope);

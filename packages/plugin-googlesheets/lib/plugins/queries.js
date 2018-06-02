@@ -1,7 +1,7 @@
-import {merge, get, size} from "lodash/fp";
+import {merge, get} from "lodash/fp";
 import {flowP, flatmapP, tapP} from "dashp";
 import {envelope as env, plugin as p} from "@sugarcube/core";
-import withSession from "../sheets";
+import SheetsDo from "../sheets";
 import {rowsToQueries} from "../utils";
 import {assertCredentials, assertSpreadsheet} from "../assertions";
 
@@ -14,18 +14,27 @@ const importQueries = (envelope, {log, cfg, cache}) => {
   const queries = env.queriesByType(querySource, envelope);
   let tokens;
 
-  log.info(`Fetching ${size(queries)} sheet${size(queries) > 1 ? "s" : ""}`);
+  log.info(`Fetching ${queries.length} sheet${queries.length > 1 ? "s" : ""}`);
 
   const querySheet = async query => {
-    const [qs, t] = await withSession(
-      async ({getRows}) => {
-        const rows = await getRows(id, query);
+    const [qs, t, history] = await SheetsDo(
+      function* fetchQueries({getSheet, getRows}) {
+        const {sheetUrl} = yield getSheet(id, query);
+        const rows = yield getRows(id, query);
         const expanded = rowsToQueries(rows);
-        log.info(`Expanded ${id}/${query} to ${size(expanded)} queries.`);
+        const count = expanded.length;
+
+        log.info(
+          `Expanded ${sheetUrl} to ${count} ${
+            count > 1 ? "queries" : "query"
+          }.`,
+        );
+
         return expanded;
       },
       {client, secret, tokens: cache.get("sheets.tokens")},
     );
+    history.forEach(([k, meta]) => log.debug(`${k}: ${JSON.stringify(meta)}.`));
     tokens = t;
     return qs;
   };
@@ -34,7 +43,8 @@ const importQueries = (envelope, {log, cfg, cache}) => {
     [
       flatmapP(querySheet),
       tapP(rs => {
-        log.info(`Fetched ${size(rs)} quer${size(rs) > 1 ? "ies" : "y"}.`);
+        const count = rs.length;
+        log.info(`Fetched a total of ${count} quer${count > 1 ? "ies" : "y"}.`);
         cache.update("sheets.tokens", merge(tokens));
       }),
       rs => env.concatQueries(rs, envelope),

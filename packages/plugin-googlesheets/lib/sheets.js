@@ -1,5 +1,4 @@
 import {
-  curry,
   flow,
   map,
   merge,
@@ -13,8 +12,9 @@ import {
   isNil,
   isString,
 } from "lodash/fp";
-import {collectP, flowP, flowP2, flowP3, flowP4} from "dashp";
+import {ofP, collectP, flowP, flowP2, flowP3, flowP4} from "dashp";
 import pify from "pify";
+import {utils} from "@sugarcube/core";
 import {google} from "googleapis";
 
 import authenticate from "./auth";
@@ -35,6 +35,7 @@ import {
   formatHeaderRequest,
 } from "./requests";
 
+const {curry2, curry3, curry4, curry5} = utils;
 const sheets = google.sheets("v4");
 
 // API promisified
@@ -54,14 +55,12 @@ const createSpreadsheet = flowP([
   get("data"),
 ]);
 
-const getSpreadsheet = flowP2([
-  getSpreadsheetRequest,
-  spreadsheetGet,
-  get("data"),
-]);
+const getSpreadsheet = curry2("getSpreadsheet", (id, auth) =>
+  flowP2([getSpreadsheetRequest, spreadsheetGet, get("data")])(auth, id),
+);
 
-const getSheet = curry(async (auth, id, sheet) => {
-  const spreadsheet = await getSpreadsheet(auth, id);
+const getSheet = curry3("getSheet", async (id, sheet, auth) => {
+  const spreadsheet = await getSpreadsheet(id, auth);
   return flow([
     map(({properties: s}) =>
       merge(s, {
@@ -72,67 +71,80 @@ const getSheet = curry(async (auth, id, sheet) => {
   ])(spreadsheet.sheets);
 });
 
-const createSheet = curry(async (auth, id, sheet) => {
+const createSheet = curry3("createSheet", async (id, sheet, auth) => {
   await flowP3([createSheetRequest, spreadsheetBatchUpdate], auth, id, sheet);
-  return getSheet(auth, id, sheet);
+  return getSheet(id, sheet, auth);
 });
 
-const deleteSheet = curry(async (auth, id, sheet) => {
-  const {sheetId} = await getSheet(auth, id, sheet);
+const deleteSheet = curry3("deleteSheet", async (id, sheet, auth) => {
+  const {sheetId} = await getSheet(id, sheet, auth);
   await flowP3([deleteSheetRequest, spreadsheetBatchUpdate], auth, id, sheetId);
   return null;
 });
 
-const getOrCreateSheet = curry(async (auth, id, sheet) => {
-  const existingSheet = await getSheet(auth, id, sheet);
+const getOrCreateSheet = curry3("getOrCreateSheet", async (id, sheet, auth) => {
+  const existingSheet = await getSheet(id, sheet, auth);
   if (!existingSheet) {
-    return createSheet(auth, id, sheet);
+    return createSheet(id, sheet, auth);
   }
   return existingSheet;
 });
 
-const updateSheetProps = curry(async (auth, id, sheet, props) => {
-  const {sheetId} = await getSheet(auth, id, sheet);
-  await flowP4(
-    [updateSheetPropsRequest, spreadsheetBatchUpdate],
+const updateSheetProps = curry4(
+  "updateSheet",
+  async (id, sheet, props, auth) => {
+    const {sheetId} = await getSheet(id, sheet, auth);
+    await flowP4(
+      [updateSheetPropsRequest, spreadsheetBatchUpdate],
+      auth,
+      id,
+      sheetId,
+      props,
+    );
+    return getSheet(id, props.title ? props.title : sheet, auth);
+  },
+);
+
+const duplicateSheet = curry5(
+  "duplicateSheet",
+  async (id, sheet, toId, toSheet, auth) => {
+    // In case the target already exists
+    const target = await getSheet(toId, toSheet, auth);
+    if (target) return target;
+    const source = await getSheet(id, sheet, auth);
+    if (isNil(source)) {
+      throw new Error("Source Spreadsheet doesn't exist.");
+    }
+    const {sheetId} = source;
+    const {title} = await flowP4(
+      [copySheetRequest, sheetCopy, get("data")],
+      auth,
+      id,
+      sheetId,
+      toId,
+    );
+    return updateSheetProps(toId, title, {title: toSheet}, auth);
+  },
+);
+
+const getRows = curry3("getRows", (id, sheet, auth) =>
+  flowP3([getValuesRequest, valuesGet, getOr([], "data.values")])(
     auth,
     id,
-    sheetId,
-    props,
-  );
-  return getSheet(auth, id, props.title ? props.title : sheet);
-});
+    sheet,
+  ),
+);
 
-const duplicateSheet = curry(async (auth, id, sheet, toId, toSheet) => {
-  // In case the target already exists
-  const target = await getSheet(auth, toId, toSheet);
-  if (target) return target;
-  const source = await getSheet(auth, id, sheet);
-  if (isNil(source)) {
-    throw new Error("Source Spreadsheet doesn't exist.");
-  }
-  const {sheetId} = source;
-  const {title} = await flowP4(
-    [copySheetRequest, sheetCopy, get("data")],
+const getHeader = curry3("getHeader", (id, sheet, auth) =>
+  flowP3([getHeaderRequest, valuesGet, getOr([], "data.values"), first])(
     auth,
     id,
-    sheetId,
-    toId,
-  );
-  return updateSheetProps(auth, toId, title, {title: toSheet});
-});
+    sheet,
+  ),
+);
 
-const getRows = flowP3([getValuesRequest, valuesGet, getOr([], "data.values")]);
-
-const getHeader = flowP3([
-  getHeaderRequest,
-  valuesGet,
-  getOr([], "data.values"),
-  first,
-]);
-
-const formatHeader = curry(async (auth, id, sheet) => {
-  const {sheetId} = await getSheet(auth, id, sheet);
+const formatHeader = curry3("formatHeader", async (id, sheet, auth) => {
+  const {sheetId} = await getSheet(id, sheet, auth);
   return flowP3(
     [formatHeaderRequest, spreadsheetBatchUpdate],
     auth,
@@ -141,11 +153,11 @@ const formatHeader = curry(async (auth, id, sheet) => {
   );
 });
 
-const clearRows = curry(async (auth, id, sheet) => {
+const clearRows = curry3("clearRows", async (id, sheet, auth) => {
   await flowP3([clearValuesRequest, valuesClear], auth, id, sheet);
 });
 
-const appendRows = curry(async (auth, id, sheet, rows) => {
+const appendRows = curry4("appendRows", async (id, sheet, rows, auth) => {
   const update = await flowP4(
     [appendValuesRequest, valuesAppend, getOr({}, "data.updates")],
     auth,
@@ -153,15 +165,15 @@ const appendRows = curry(async (auth, id, sheet, rows) => {
     sheet,
     rows,
   );
-  await formatHeader(auth, id, sheet);
+  await formatHeader(id, sheet, auth);
   return update;
 });
 
 // Make sure to make the requests in sequence, since I couldn't find out if
 // batchUpdates have a guaranteed order. Instead deleteRowsRequest breaks it
 // up in consecutive batchUpdates, where order can be enforced.
-const deleteRows = curry(async (auth, id, sheet, indexes) => {
-  const {sheetId} = await getSheet(auth, id, sheet);
+const deleteRows = curry4("deleteRows", async (id, sheet, indexes, auth) => {
+  const {sheetId} = await getSheet(id, sheet, auth);
   const responses = await flowP4(
     [deleteRowsRequest, collectP(spreadsheetBatchUpdate)],
     auth,
@@ -172,7 +184,7 @@ const deleteRows = curry(async (auth, id, sheet, indexes) => {
   return responses.map(r => r.data);
 });
 
-const replaceRows = curry(async (auth, id, sheet, rows) => {
+const replaceRows = curry4("replaceRows", async (id, sheet, rows, auth) => {
   const updatedData = await flowP4(
     [createValuesRequest, valuesUpdate, get("data")],
     auth,
@@ -180,29 +192,33 @@ const replaceRows = curry(async (auth, id, sheet, rows) => {
     sheet,
     rows,
   );
-  await formatHeader(auth, id, sheet);
+  await formatHeader(id, sheet, auth);
   return updatedData;
 });
 
-const safeReplaceRows = curry(async (auth, id, sheet, rows) => {
-  // To be safe not to loose any data, we make first a backup copy and
-  // delete it after we exported the new data.
-  const bkpSheet = `${sheet}-bk`;
-  const {sheetUrl} = await duplicateSheet(auth, id, sheet, id, bkpSheet);
-  try {
-    await clearRows(auth, id, sheet);
-    const updatedData = await replaceRows(auth, id, sheet, rows);
-    await deleteSheet(auth, id, bkpSheet);
-    return [updatedData];
-  } catch (e) {
-    Object.assign(e, {spreadsheet: id, sheet: bkpSheet, sheetUrl});
-    return [null, e];
-  }
-});
+const safeReplaceRows = curry4(
+  "safeReplaceRows",
+  async (id, sheet, rows, auth) => {
+    // To be safe not to loose any data, we make first a backup copy and
+    // delete it after we exported the new data.
+    const bkpSheet = `${sheet}-bk`;
+    const {sheetUrl} = await duplicateSheet(id, sheet, id, bkpSheet, auth);
+    try {
+      await clearRows(id, sheet, auth);
+      const updatedData = await replaceRows(id, sheet, rows, auth);
+      await deleteSheet(id, bkpSheet, auth);
+      return [updatedData];
+    } catch (e) {
+      Object.assign(e, {spreadsheet: id, sheet: bkpSheet, sheetUrl});
+      return [null, e];
+    }
+  },
+);
 
-const getAndRemoveRowsByField = curry(
-  async (auth, id, sheet, fieldName, fieldValue) => {
-    const rows = await getRows(auth, id, sheet);
+const getAndRemoveRowsByField = curry5(
+  "getAndRemoveRowsByField",
+  async (id, sheet, fieldName, fieldValue, auth) => {
+    const rows = await getRows(id, sheet, auth);
     const header = first(rows);
     const fieldIndex = findIndex(isEqual(fieldName), header);
     if (fieldIndex < 0) return [];
@@ -218,47 +234,81 @@ const getAndRemoveRowsByField = curry(
       [[], []],
     );
     if (data.length === 0) return [];
-    await deleteRows(auth, id, sheet, indexes);
+    await deleteRows(id, sheet, indexes, auth);
     return [].concat([header]).concat(data);
   },
 );
 
-const setSelection = curry(async (auth, id, sheet, field, selections) => {
-  const inputs = isString(selections) ? selections.split(",") : selections;
-  const {sheetId} = await getSheet(auth, id, sheet);
-  const header = await getHeader(auth, id, sheet);
-  const column = findIndex(isEqual(field), header);
-  if (column < 0) return Promise.resolve();
-  // FIXME: dashp doesn't export flowP5.
-  return spreadsheetBatchUpdate(
-    setSelectionRequest(auth, id, sheetId, column, inputs),
-  );
-});
+const setSelection = curry5(
+  "setSelection",
+  async (id, sheet, field, selections, auth) => {
+    const inputs = isString(selections) ? selections.split(",") : selections;
+    const {sheetId} = await getSheet(id, sheet, auth);
+    const header = await getHeader(id, sheet, auth);
+    const column = findIndex(isEqual(field), header);
+    if (column < 0) return Promise.resolve();
+    // FIXME: dashp doesn't export flowP5.
+    return spreadsheetBatchUpdate(
+      setSelectionRequest(auth, id, sheetId, column, inputs),
+    );
+  },
+);
 
-// This function provides a context within which to run a series of
-// interactions with the Google spreadsheet API.
-export default curry(async (f, {client, secret, tokens}) => {
+const setSelections = curry4("setSelections", (id, sheet, selections, auth) =>
+  Promise.all(
+    selections.map(([field, inputs]) =>
+      setSelection(id, sheet, field, inputs, auth),
+    ),
+  ),
+);
+
+const api = {
+  createSpreadsheet,
+  getSpreadsheet,
+  createSheet,
+  deleteSheet,
+  getSheet,
+  getOrCreateSheet,
+  updateSheetProps,
+  duplicateSheet,
+  replaceRows,
+  safeReplaceRows,
+  getRows,
+  getHeader,
+  clearRows,
+  appendRows,
+  deleteRows,
+  getAndRemoveRowsByField,
+  formatHeader,
+  setSelection,
+  setSelections,
+};
+
+export default curry2("SheetsDo", async (G, {client, secret, tokens}) => {
   const auth = await authenticate(client, secret, tokens);
-  const api = {
-    createSpreadsheet: () => createSpreadsheet(auth),
-    getSpreadsheet: getSpreadsheet(auth),
-    createSheet: createSheet(auth),
-    deleteSheet: deleteSheet(auth),
-    getSheet: getSheet(auth),
-    getOrCreateSheet: getOrCreateSheet(auth),
-    updateSheetProps: updateSheetProps(auth),
-    duplicateSheet: duplicateSheet(auth),
-    replaceRows: replaceRows(auth),
-    safeReplaceRows: safeReplaceRows(auth),
-    getRows: getRows(auth),
-    getHeader: getHeader(auth),
-    clearRows: clearRows(auth),
-    appendRows: appendRows(auth),
-    deleteRows: deleteRows(auth),
-    getAndRemoveRowsByField: getAndRemoveRowsByField(auth),
-    setSelection: setSelection(auth),
-    formatHeader: formatHeader(auth),
-    tokens: auth.credentials,
+  const generator = G(api);
+  let data;
+  let history = [];
+
+  const chain = async nextG => {
+    const {done, value: func} = await nextG.next(data);
+    if (done) return ofP(func || data);
+    const startTime = process.hrtime();
+    const result = await func(auth);
+    const timeTook = process.hrtime(startTime);
+    // All curried function names have the format of <name>-<int> where
+    // <int> is the number of missing arguments. For a prettier output in
+    // the history strip -<int> from the name.
+    history = history.concat([
+      [func.name.replace(/-.*$/, ""), {took: timeTook[0]}],
+    ]);
+    data = result;
+    return chain(nextG);
   };
-  return [await f(api), auth.credentials];
+
+  return ofP(chain(generator)).then(result => [
+    result,
+    auth.credentials,
+    history,
+  ]);
 });

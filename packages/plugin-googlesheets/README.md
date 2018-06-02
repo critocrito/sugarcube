@@ -197,34 +197,44 @@ console.log(data);
 // ]
 ```
 
-### `withSession`
+### `SheetsDo`
 
 ```hs
-withSession :: (
-  f: Function,
+SheetsDo :: (
+  f: Generator,
   {client: String, secret: String, tokens: Object}
-): [Promise, Object]
+): [result, tokens, history]
 ```
 
-The module exports the `withSession` function, which creates a context to
-interact with the Google Sheets API. The context takes a function as a first
+The module exports the `SheetsDo` function, which creates a context to
+interact with the Google Sheets API. The context takes a generator as a first
 argument, which is executed within a single Google Sheets API session. It
 receives a complete API object as it's argument. The second argument is an
 object containing all parts required to authenticate the session.
 
-```js
-import {withSession, rowsToUnits} from "@sugarcube/plugin-googlesheets";
+`SheetsDo` returns a triplet consisting of the data returned in the generator
+or, if the generator doesn't return data, the result of the last yield, a set
+of tokens and an array containing the history of the interactions with the
+sheets API.
 
-const data = withSession(
-  async ({getRows}) => {
-    const rows = await getRows(id, sheet);
+```js
+import {SheetsDo, rowsToUnits} from "@sugarcube/plugin-googlesheets";
+
+const [data] = await SheetsDo(
+  function* ({getRows}) => {
+    const rows = yield getRows(id, sheet);
     return rowsToUnits(fields, rows);
   },
   {client, secret, tokens}
 );
 ```
 
-All functions within the session return a promise `F`.
+All functions within the session yield to the result of the operation. The
+generator manages the promise resolution and no special care has to be taken
+to the asynchronous nature of the operations.
+
+All operations are implemented in [`sheets.js`](./lib/sheets.js). See that
+file for a complete list of all API operations.
 
 #### `createSpreadsheet`
 

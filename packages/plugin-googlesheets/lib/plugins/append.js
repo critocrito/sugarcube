@@ -1,6 +1,6 @@
 import {merge, get, getOr, size} from "lodash/fp";
 import {plugin as p} from "@sugarcube/core";
-import withSession from "../sheets";
+import SheetsDo from "../sheets";
 import {unitsToRows, coerceSelectionLists} from "../utils";
 import {assertCredentials, assertSpreadsheet} from "../assertions";
 
@@ -29,34 +29,30 @@ const exportData = async (envelope, {log, cfg, cache}) => {
     throw new Error("Missing configuration: google.copy_from_sheet");
   }
 
-  const [, tokens] = await withSession(
-    async ({
+  const [, tokens, history] = await SheetsDo(
+    function* appendUnits({
       getOrCreateSheet,
       duplicateSheet,
       appendRows,
       getRows,
-      setSelection,
-    }) => {
-      const {sheetUrl} = await (copyFromSheet
+      setSelections,
+    }) {
+      const {sheetUrl} = yield copyFromSheet
         ? duplicateSheet(copyFromSpreadsheet, copyFromSheet, id, sheet)
-        : getOrCreateSheet(id, sheet));
+        : getOrCreateSheet(id, sheet);
 
-      const rows = await getRows(id, sheet);
+      const rows = yield getRows(id, sheet);
       const hasHeader = size(rows) > 0;
       const data = unitsToRows(fields, envelope.data);
       const dataNoHeader = data.slice(1);
 
-      const {updatedRange: range} = await appendRows(
+      const {updatedRange: range} = yield appendRows(
         id,
         sheet,
         hasHeader ? data.slice(1) : data,
       );
 
-      await Promise.all(
-        selectionLists.map(([field, inputs]) =>
-          setSelection(id, sheet, field, inputs),
-        ),
-      );
+      yield setSelections(id, sheet, selectionLists);
 
       log.info(`Appended ${size(dataNoHeader)} units to ${sheetUrl}.`);
       log.info(`Updated range ${range.replace(/^.*!/, "")} of ${sheet}.`);
@@ -64,6 +60,7 @@ const exportData = async (envelope, {log, cfg, cache}) => {
     {client, secret, tokens: cache.get("sheets.tokens")},
   );
 
+  history.forEach(([k, meta]) => log.debug(`${k}: ${JSON.stringify(meta)}.`));
   cache.update("sheets.tokens", merge(tokens));
 
   return envelope;

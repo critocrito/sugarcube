@@ -1,6 +1,6 @@
 import {merge, size, get, getOr} from "lodash/fp";
 import {envelope as env, plugin as p} from "@sugarcube/core";
-import withSession from "../sheets";
+import SheetsDo from "../sheets";
 import {rowsToUnits} from "../utils";
 import {assertCredentials, assertSpreadsheet, assertSheet} from "../assertions";
 
@@ -12,9 +12,9 @@ const importData = async (envelope, {log, cfg, cache}) => {
   const sheetFields = getOr([], "google.sheet_fields", cfg);
   const idFields = get("google.id_fields", cfg);
 
-  const [units, tokens] = await withSession(
-    async ({getRows}) => {
-      const rows = await getRows(id, sheet);
+  const [units, tokens, history] = await SheetsDo(
+    function* importUnits({getRows}) {
+      const rows = yield getRows(id, sheet);
       const data = rowsToUnits(sheetFields, rows);
       if (idFields) return data.map(merge({_sc_id_fields: idFields}));
       return data;
@@ -22,9 +22,11 @@ const importData = async (envelope, {log, cfg, cache}) => {
     {client, secret, tokens: cache.get("sheets.tokens")},
   );
 
+  history.forEach(([k, meta]) => log.debug(`${k}: ${JSON.stringify(meta)}.`));
+  cache.update("sheets.tokens", merge(tokens));
+
   log.info("Spreadsheet retrieved");
   log.info(`Updating ${size(units)} units from sheet`);
-  cache.update("sheets.tokens", merge(tokens));
 
   return env.concatData(units, envelope);
 };

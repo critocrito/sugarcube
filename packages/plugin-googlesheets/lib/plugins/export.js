@@ -1,6 +1,6 @@
 import {flow, merge, get, getOr, size} from "lodash/fp";
 import {plugin as p} from "@sugarcube/core";
-import withSession from "../sheets";
+import SheetsDo from "../sheets";
 import {
   unitsToRows,
   concatEnvelopeAndRows,
@@ -33,22 +33,22 @@ const exportData = async (envelope, {log, cfg, cache}) => {
     throw new Error("Missing configuration: google.copy_from_sheet");
   }
 
-  const [, tokens] = await withSession(
-    async ({
+  const [, tokens, history] = await SheetsDo(
+    function* exportUnits({
       getOrCreateSheet,
       duplicateSheet,
       getRows,
       replaceRows,
       safeReplaceRows,
-      setSelection,
-    }) => {
-      const {sheetUrl: url} = await (copyFromSheet
+      setSelections,
+    }) {
+      const {sheetUrl: url} = yield copyFromSheet
         ? duplicateSheet(copyFromSpreadsheet, copyFromSheet, id, sheet)
-        : getOrCreateSheet(id, sheet));
+        : getOrCreateSheet(id, sheet);
 
       log.info(`Units exported to ${url}.`);
 
-      const rows = await getRows(id, sheet);
+      const rows = yield getRows(id, sheet);
 
       log.info(
         `Merging ${size(envelope.data)} into ${size(rows.slice(1))} units.`,
@@ -62,24 +62,21 @@ const exportData = async (envelope, {log, cfg, cache}) => {
 
       // No need to safely update data if the sheet is empty.
       if (size(rows) === 0) {
-        await replaceRows(id, sheet, mergedRows);
+        yield replaceRows(id, sheet, mergedRows);
       } else {
-        const [, e] = await safeReplaceRows(id, sheet, mergedRows);
+        const [, e] = yield safeReplaceRows(id, sheet, mergedRows);
         if (e) {
           log.error(`Atomic data export failed.`);
           log.error(`Backup sheet ${e.sheet} is located at ${e.sheetUrl}.`);
           throw e;
         }
       }
-      await Promise.all(
-        selectionLists.map(([field, inputs]) =>
-          setSelection(id, sheet, field, inputs),
-        ),
-      );
+      yield setSelections(id, sheet, selectionLists);
     },
     {client, secret, tokens: cache.get("sheets.tokens")},
   );
 
+  history.forEach(([k, meta]) => log.debug(`${k}: ${JSON.stringify(meta)}.`));
   cache.update("sheets.tokens", merge(tokens));
 
   return envelope;

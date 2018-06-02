@@ -14,7 +14,7 @@ import queriesPlugin from "./plugins/queries";
 import appendPlugin from "./plugins/append";
 import movePlugin from "./plugins/move";
 
-import withSession from "./sheets";
+import SheetsDo from "./sheets";
 import {
   unitsToRows,
   rowsToUnits,
@@ -138,7 +138,7 @@ forEach(p => {
 
 export {
   plugins,
-  withSession,
+  SheetsDo,
   unitsToRows,
   rowsToUnits,
   rowsToQueries,
@@ -146,7 +146,7 @@ export {
 };
 export default {
   plugins,
-  withSession,
+  SheetsDo,
   unitsToRows,
   rowsToUnits,
   rowsToQueries,
