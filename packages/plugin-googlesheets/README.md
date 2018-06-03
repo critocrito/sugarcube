@@ -94,6 +94,20 @@ Import data from a Google Spreadsheet.
 - `google.spreadsheet_id`: The ID of the spreadsheet to import from.
 - `google.sheet`: The name of the sheet to use as import source. Defaults to
   *Sheet1*.
+- `google.sheet_fields`: Specify the field names, which should be imported from
+  the spreadsheet. Defaults to all fields.
+- `google.id_fields`: Specify a list of field names that are used to calculate
+  the `_sc_id_hash`. The `_sc_id_fields` field is populated with those fields.
+
+The `sheets_import` plugin can take optional queries of type
+`sheets_condition` which specifies which rows to import based on a field
+match. The format of the query term is `<field>:<value>`. Currently only exact
+matches are supported. When specified, only rows matching the field will be
+imported from the sheets.
+
+```sh
+sugarcube -Q sheets_condition:aa:23 -Q sheets_condition:bb:42 -p sheets_import
+```
 
 ### `sheets_queries`
 
@@ -170,6 +184,17 @@ provided if a new sheet should be create from a template.
   `<field-name>:opt1,opt2,opt3`. This will validate the input of
   `<field-name>` to be one of `opt1`, `opt2` or `opt3`. This option is an
   array and can be specified multiple times.
+
+The `sheets_move` plugin can take optional queries of type `sheets_condition`
+which specifies which rows to move based on a field match. The format of the
+query term is `<field>:<value>`. Currently only exact matches are
+supported. When specified, only rows matching the field will be moved to
+another sheet. Rows that don't match the conditions remain on the source
+sheets.
+
+```sh
+sugarcube -Q sheets_condition:aa:23 -Q sheets_condition:bb:42 -p sheets_move
+```
 
 ## API
 

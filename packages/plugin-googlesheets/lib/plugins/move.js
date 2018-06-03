@@ -1,8 +1,15 @@
-import {flow, merge, size, get, getOr} from "lodash/fp";
+import {flow, merge, size, tail, get, getOr} from "lodash/fp";
 import {envelope as env, plugin as p} from "@sugarcube/core";
 import SheetsDo from "../sheets";
-import {unitsToRows, concatRows, coerceSelectionLists} from "../utils";
+import {
+  unitsToRows,
+  concatRows,
+  coerceSelectionLists,
+  applyFilters,
+} from "../utils";
 import {assertCredentials, assertSpreadsheet, assertSheet} from "../assertions";
+
+const querySource = "sheets_condition";
 
 const moveData = async (envelope, {log, cfg, cache}) => {
   const client = get("google.client_id", cfg);
@@ -18,6 +25,8 @@ const moveData = async (envelope, {log, cfg, cache}) => {
   const selectionLists = coerceSelectionLists(
     get("google.selection_list", cfg),
   );
+  const queries = env.queriesByType(querySource, envelope);
+  const filters = queries.map(q => q.split(":"));
 
   if (copyFromSheet && !copyFromSpreadsheet) {
     throw new Error("Missing configuration: google.copy_from_spreadsheet");
@@ -31,6 +40,7 @@ const moveData = async (envelope, {log, cfg, cache}) => {
       getOrCreateSheet,
       duplicateSheet,
       getRows,
+      deleteRows,
       replaceRows,
       safeReplaceRows,
       setSelections,
@@ -41,6 +51,8 @@ const moveData = async (envelope, {log, cfg, cache}) => {
         log.warn("No data to move. Skip the move.");
         return [];
       }
+
+      const dataToMove = applyFilters(filters, rowsToMove);
 
       const {sheetUrl: targetUrl} = copyFromSheet
         ? yield duplicateSheet(
@@ -63,7 +75,7 @@ const moveData = async (envelope, {log, cfg, cache}) => {
         concatRows(existingRows),
         get("data"),
         unitsToRows(sheetFields),
-      ])(rowsToMove);
+      ])(dataToMove);
 
       // No need to safely update data if the sheet is empty.
       if (size(existingRows) === 0) {
@@ -76,16 +88,19 @@ const moveData = async (envelope, {log, cfg, cache}) => {
           throw e;
         }
       }
+      yield setSelections(toId, toSheet, selectionLists);
 
       // Clean existing sheet.
-      const [, e] = yield safeReplaceRows(id, sheet, rowsToMove.slice(0, 1));
-      if (e) {
-        log.error(`Atomic data replace of source failed.`);
-        log.error(`Backup sheet ${e.sheet} is located at ${e.sheetUrl}.`);
-        throw e;
-      }
-
-      yield setSelections(toId, toSheet, selectionLists);
+      const idHashIndex = rowsToMove[0].indexOf("_sc_id_hash");
+      const idsToMove = tail(dataToMove).map(r => r[idHashIndex]);
+      const indexesToDelete = tail(rowsToMove).reduce(
+        (memo, [idHash], index) => {
+          if (idsToMove.find(i => i === idHash)) return memo.concat(index + 1);
+          return memo;
+        },
+        [],
+      );
+      yield deleteRows(id, sheet, indexesToDelete);
 
       return mergedRows;
     },

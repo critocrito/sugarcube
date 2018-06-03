@@ -10,10 +10,13 @@ import {
   zipObjectDeep,
   concat,
   uniq,
+  overSome,
   toLower,
   isEmpty,
 } from "lodash/fp";
-import {envelope as env} from "@sugarcube/core";
+import {envelope as env, utils} from "@sugarcube/core";
+
+const {curry2} = utils;
 
 const requiredFields = ["_sc_id_hash", "_sc_content_hash"];
 const queryFields = ["type", "term"];
@@ -69,3 +72,20 @@ export const coerceSelectionLists = list =>
     const [field, options] = s.split(":");
     return [field, options.split(",")];
   });
+
+export const applyFilters = curry2("applyFilters", (filters, rows) => {
+  const [fields, ...data] = rows;
+  const matchFilters = overSome(
+    filters.map(([fieldName, match]) => row => {
+      const index = fields.indexOf(fieldName);
+      if (index === -1) return false;
+      if (row[index] === match) return true;
+      return false;
+    }),
+  );
+  const filteredData = data.reduce((memo, row) => {
+    if (matchFilters(row)) return memo.concat([row]);
+    return memo;
+  }, []);
+  return [fields].concat(filteredData);
+});
