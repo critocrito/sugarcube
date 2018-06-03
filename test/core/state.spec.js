@@ -1,6 +1,5 @@
 import {
   flow,
-  identity,
   replace,
   merge,
   get,
@@ -16,15 +15,13 @@ import {objArb} from "../../packages/test/lib/generators";
 
 const pathArb = jsc.suchthat(
   jsc.asciinestring.smap(
-    // Remove periods and any white space character, before forming the path.
     flow([replace(/\s*\.*/g, ""), split(""), join(".")]),
-    flow([replace(/\.*/g, ""), split("")]),
+    jsc.asciinestring.shrink,
   ),
-  // We filter out empty strings, they are not valid paths.
-  x => x !== "",
+  s => s !== "",
 );
 
-const stateArb = objArb.smap(o => state(o), identity);
+const stateArb = objArb.smap(o => state(o), s => objArb.shrink(s.get()));
 
 describe("state", () => {
   property("get === get", stateArb, s => isEqual(s.get(), s.get()));

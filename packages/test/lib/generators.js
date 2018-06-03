@@ -1,4 +1,4 @@
-import {map, take, concat, merge, identity} from "lodash/fp";
+import {map, take, concat, merge, identity, overEvery} from "lodash/fp";
 import {
   constant,
   elements,
@@ -15,19 +15,39 @@ import {data as ds, queries as qs} from "@sugarcube/core";
 
 const trueOrFalse = () => random(0, 1) === 0;
 
-export const objArb = suchthat(dict(string), o =>
+const isNonEmpty = s => {
+  if (s === "") return false;
+  return true;
+};
+
+const isValidUnicode = s => {
+  // Forbid unicode control characters, spaces and line tabulations.
+  // eslint-disable-next-line no-control-regex
+  if (/[\u0000-\u0020]/u.test(s)) return false;
+  if (/[\u007F-\u00A0]/u.test(s)) return false;
+  return true;
+};
+
+const isValidForm = s => {
+  // Keys don't start with white space
+  if (/^\s+/.test(s)) return false;
+  // Keys don't end with white space
+  if (/\s+$/.test(s)) return false;
+  // Disallow certain keys
+  if (/^-+|_+|\$+/.test(s)) return false;
+  return true;
+};
+
+export const isValidKey = overEvery([isNonEmpty, isValidUnicode, isValidForm]);
+
+export const isValidValue = overEvery([isNonEmpty, isValidUnicode]);
+
+export const keyArb = suchthat(nestring, isValidKey);
+
+export const objArb = suchthat(dict(nestring), o =>
   Object.keys(o).reduce((memo, k) => {
     if (!memo) return memo;
-    // Skip undefined and empty strings
-    if (!k) return false;
-    // Forbid unicode control characters and spaces
-    // eslint-disable-next-line no-control-regex
-    if (/[\u0000-\u0020]/u.test(k)) return false;
-    // Disallow certain keys
-    if (/^-+|_+/.test(k)) return false;
-    // Keys don't start with white space
-    if (/^\s*/.test(k)) return false;
-    return true;
+    return isValidKey(k) && isValidValue(o[k]);
   }, true),
 );
 
@@ -43,16 +63,16 @@ const generate = (arb, len) => {
 const randomSpec = () => {
   switch (random(0, 5)) {
     case 0: {
-      return {[nestring.generator(2)]: objArb};
+      return {[keyArb.generator(2)]: objArb};
     }
     case 1: {
-      return {[nestring.generator(2)]: array(string)};
+      return {[keyArb.generator(2)]: array(string)};
     }
     case 2: {
-      return {[nestring.generator(2)]: record(randomSpec())};
+      return {[keyArb.generator(2)]: record(randomSpec())};
     }
     default: {
-      return {[nestring.generator(2)]: string};
+      return {[keyArb.generator(2)]: string};
     }
   }
 };

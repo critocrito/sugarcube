@@ -28,6 +28,10 @@ rewrite your code to follow the coding standard.
 
 Run the tests with `npm run test`.
 
+Note: Sometimes a test is failing. This often happens in the tests regarding
+the state. This is related to `jsverify`. The error thrown is `TypeError:
+str.split is not a function`. It doesn't happen too often though.
+
 When committing to master, follow the [conventional
 commits](https://conventionalcommits.org/) guidelines.
 
