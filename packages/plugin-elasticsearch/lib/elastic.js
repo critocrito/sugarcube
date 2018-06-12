@@ -139,10 +139,19 @@ export const queryByIds = curry3("queryByIds", (index, ids, client) => {
   return query(index, body, ids.length, client);
 });
 
+export const queryOne = curry3("queryOne", async (index, id, client) => {
+  const {_version: version, _type: type, _source: data} = await client.get({
+    index,
+    id,
+    type: "_all",
+  });
+  return [data, {version, type}];
+});
+
 export const Elastic = {
   Do: curry2("ElasticDo", async (G, {host, port, mappings}) => {
     const client = connect(`${host}:${port}`);
-    const api = {bulk, query, queryByIds};
+    const api = {bulk, query, queryByIds, queryOne};
     const customMappings = stripUnderscores(mappings || {});
     const generator = G(api);
     let data;
