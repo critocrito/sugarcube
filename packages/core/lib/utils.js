@@ -23,7 +23,8 @@ const ncurry = n => {
       if (rest.length < n) return localCurry(name, f, ...rest);
       return f(...rest);
     };
-    const desc = `${name}-${n - args.length}`;
+    g.missing = n - args.length;
+    const desc = `${name}-${g.missing}`;
     Object.defineProperty(g, "name", {value: desc, configureable: true});
     return g;
   };
