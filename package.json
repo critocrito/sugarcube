@@ -6,7 +6,7 @@
     "commitmsg": "! git rev-parse --abbrev-ref HEAD | grep -q master || validate-commit-msg",
     "test-mocha": "cross-env NODE_ENV=test mocha -c -R progress -t 6000 -r babel-core/register -r babel-polyfill -r test/helpers.js test/**/*.spec.js",
     "test-ava": "cross-env NODE_ENV=test ava test/plugin-workflow/*.js",
-    "test": "npm run test-mocha && npm run test-ava",
+    "test": "npm run test-mocha",
     "test-e2e": "cd project && npm run test-parallel",
     "coverage": "cross-env NODE_ENV=test nyc npm test",
     "check": "eslint --print-config .eslintrc.json | eslint-config-prettier-check",
