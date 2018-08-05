@@ -9,16 +9,6 @@ import queries from "./queries";
 
 const {curry2, curry3, curry4} = utils;
 
-const types = {
-  ddg_search: "web-searches",
-  google_search: "web-searches",
-  facebook_api_feed: "feed",
-  twitter_feed: "feed",
-  twitter_search: "feed",
-  youtube_channel: "feed",
-  default: "units",
-};
-
 export const connect = host => new elastic.Client({host, log: "warning"});
 
 export const toHeader = (index, unit) => ({
@@ -37,18 +27,17 @@ export const createIndex = curry4(
         units: {properties: mapping},
       },
     };
-    const indexName = `${index}-${type}`;
 
-    if (await client.indices.exists({index: indexName})) return ofP(null);
-    return client.indices.create({index: indexName, body});
+    if (await client.indices.exists({index})) return ofP(null);
+    return client.indices.create({index, body});
   },
 );
 
 export const query = curry4("query", async (index, body, amount, client) => {
   const response = await client.search({
-    index: `${index}`,
-    size: amount,
+    index,
     body,
+    size: amount,
     requestTimeout: "90000",
   });
 
@@ -77,59 +66,31 @@ export const query = curry4("query", async (index, body, amount, client) => {
 export const bulk = curry4(
   "bulk",
   async (index, ops, client, customMappings) => {
-    const sorted = ops.index.reduce((memo, unit) => {
-      const type = types[unit._sc_source]
-        ? types[unit._sc_source]
-        : types.default;
-      // eslint-disable-next-line no-param-reassign
-      if (!memo[type]) memo[type] = [];
-      // eslint-disable-next-line no-param-reassign
-      memo[type] = memo[type].concat([
-        {index: toHeader(`${index}-${type}`, unit)},
-        stripUnderscores(unit),
-      ]);
-      return memo;
-    }, {});
-
-    await Promise.all(
-      map(
-        key =>
-          createIndex(
-            index,
-            key,
-            Object.assign(defaultMappings[key], customMappings),
-            client,
-          ),
-        Object.keys(sorted),
-      ),
+    const type = "units";
+    const toIndex = (ops.index || []).reduce(
+      (memo, unit) =>
+        memo.concat([{index: toHeader(index, unit)}, stripUnderscores(unit)]),
+      [],
     );
+    const body = toIndex;
+    const mappings = Object.assign({}, defaultMappings, customMappings);
 
-    const responses = await Promise.all(
-      map(
-        key => client.bulk({body: sorted[key], type: "units", refresh: true}),
-        Object.keys(sorted),
-      ),
-    );
+    await createIndex(index, type, mappings, client);
+    const response = await client.bulk({body, type, refresh: true});
 
-    return responses.reduce(
-      ([errors, meta], resp) => {
-        const took = meta.took + resp.took;
-        const [newErrors, stats] = resp.items.reduce(
-          (acc, item) => {
-            const path = `${item.index._index}.${item.index.result}`;
-            const count = getOr(0, path, acc[1]);
-            return [
-              item.index.error
-                ? acc[0].concat([{id: item.index._id, error: item.index.error}])
-                : acc[0],
-              merge(acc[1], set(path, count + 1, {})),
-            ];
-          },
-          [errors, meta.stats],
-        );
-        return [newErrors, {took, stats}];
+    const {took, items} = response;
+    return items.reduce(
+      (memo, item) => {
+        const path = `${item.index._index}.${item.index.result}`;
+        const count = getOr(0, path, memo[1]);
+        return [
+          item.index.error
+            ? memo[0].concat([{id: item.index._id, error: item.index.error}])
+            : memo[0],
+          merge(memo[1], set(path, count + 1, {})),
+        ];
       },
-      [[], {took: 0, stats: {}}],
+      [[], {took}],
     );
   },
 );

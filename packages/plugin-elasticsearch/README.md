@@ -25,7 +25,7 @@ Store data of the current envelope in Elasticsearch.
   `sugarcube`.
 - `elastic.omit_fields`: Omit those fields from being stored in
   Elasticsearch. Define multiple fields by separating them with a comma.
-- `elastic.mappings`: Supply a path to a JSON file that contains custom mapping definitions.
+- `elastic.mappings`: Supply a path to a JSON file that contains custom mapping definitions. Those custom mappings are merged into the default mappings, which can be found in [`./src/mappings.js`](./src/mappings.js).
 
 **Example:**
 

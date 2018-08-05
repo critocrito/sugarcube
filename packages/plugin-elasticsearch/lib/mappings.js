@@ -1,6 +1,4 @@
-import {mergeAll} from "lodash/fp";
-
-const base = {
+export default {
   $sc_downloads: {
     type: "nested",
   },
@@ -13,16 +11,33 @@ const base = {
   $sc_queries: {
     type: "nested",
   },
-};
-
-const webSearches = {
+  $sc_locations: {
+    type: "nested",
+    properties: {
+      location: {
+        type: "geo_point",
+      },
+    },
+  },
+  $sc_pubdates: {
+    properties: {
+      fetch: {
+        type: "date",
+      },
+      pipeline: {
+        type: "date",
+      },
+    },
+  },
+  $sc_elastic_score: {
+    type: "long",
+  },
+  // web searches
   href_text: {
     type: "text",
     index_options: "offsets",
   },
-};
-
-const feed = {
+  // social media
   message: {
     type: "text",
     index_options: "offsets",
@@ -31,10 +46,4 @@ const feed = {
     type: "text",
     index_options: "offsets",
   },
-};
-
-export default {
-  units: base,
-  "web-searches": mergeAll([base, webSearches]),
-  feed: mergeAll([base, feed]),
 };
