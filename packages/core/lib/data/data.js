@@ -1,5 +1,6 @@
 import {
   reduce,
+  keys,
   merge,
   mergeAll,
   uniq as loUniq,
@@ -7,6 +8,8 @@ import {
   constant,
   concat as loConcat,
   isEqual,
+  isString,
+  isArray,
 } from "lodash/fp";
 
 import ls from "./list";
@@ -122,7 +125,14 @@ const concatOne = curry2("concatOne", (a, b) => {
   const markers = {
     _sc_markers: loUniq(loConcat(a._sc_markers || [], b._sc_markers || [])),
   };
-  return mergeAll([a, b, lists, markers]);
+  // concat {a: "string"} and {a: ["other"]} into {a: ["string", "other"]}
+  const stringArrays = keys(a).reduce((memo, k) => {
+    if (!b[k]) return memo;
+    if ((isArray(a[k]) && isString(b[k])) || (isString(a[k]) && isArray(b[k])))
+      return merge(memo, {[k]: loUniq([].concat(a[k]).concat(b[k]))});
+    return memo;
+  }, {});
+  return mergeAll([a, b, stringArrays, lists, markers]);
 });
 
 /**

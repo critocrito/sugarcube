@@ -235,6 +235,40 @@ describe("data interface", () => {
       },
     );
   });
+
+  describe("data merging", () => {
+    it("concatOne a string into an array", () => {
+      const a = {key: "string"};
+      const b = {key: ["other"]};
+      const expected = {key: ["string", "other"]};
+      const results = data.concatOne(a, b);
+      results.key.should.eql(expected.key);
+    });
+
+    it("concatOne a string into an array", () => {
+      const a = {key: ["string"]};
+      const b = {key: "other"};
+      const expected = {key: ["string", "other"]};
+      const results = data.concatOne(a, b);
+      results.key.should.eql(expected.key);
+    });
+
+    it("concatOne doesn't special merge two arrays", () => {
+      const a = {key: ["string"]};
+      const b = {key: ["other"]};
+      const expected = {key: ["other"]};
+      const results = data.concatOne(a, b);
+      results.key.should.eql(expected.key);
+    });
+
+    it("concatOne doesn't special merge two strings", () => {
+      const a = {key: "string"};
+      const b = {key: "other"};
+      const expected = {key: "other"};
+      const results = data.concatOne(a, b);
+      results.key.should.eql(expected.key);
+    });
+  });
 });
 
 describe("data hashing", () => {
