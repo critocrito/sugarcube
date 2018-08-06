@@ -1,6 +1,6 @@
-import {size, get} from "lodash/fp";
+import {flow, size, get} from "lodash/fp";
 import fs from "fs";
-import {utils} from "@sugarcube/core";
+import {envelope as env, utils} from "@sugarcube/core";
 
 import {Elastic} from "../elastic";
 import {omitFromData} from "../utils";
@@ -17,12 +17,26 @@ const plugin = (envelope, {cfg, log}) => {
     : {};
 
   return Elastic.Do(
-    function* indexUnits({bulk}) {
-      const toIndex = omitFromData(omitFields, envelope.data);
+    function* indexUnits({bulk, queryByIds}) {
+      const ids = envelope.data.map(u => u._sc_id_hash);
+      const existing = yield queryByIds(index, ids);
+      const existingIds = existing.map(u => u._sc_id_hash);
+      const dataToIndex = env.filterData(
+        u => !existingIds.includes(u._sc_id_hash),
+        envelope,
+      );
+      const dataToUpdate = flow([
+        env.filterData(u => existingIds.includes(u._sc_id_hash)),
+        env.concatData(existing),
+      ])(envelope);
+
+      const toIndex = omitFromData(omitFields, dataToIndex.data);
+      const toUpdate = omitFromData(omitFields, dataToUpdate.data);
 
       log.info(`Indexing ${size(toIndex)} units.`);
+      log.info(`Updating ${size(toUpdate)} units.`);
 
-      const errors = yield bulk(index, {index: toIndex});
+      const errors = yield bulk(index, {index: toIndex, update: toUpdate});
 
       if (size(errors) > 0) {
         errors.forEach(e =>

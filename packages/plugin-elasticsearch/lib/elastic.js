@@ -72,7 +72,15 @@ export const bulk = curry4(
         memo.concat([{index: toHeader(index, unit)}, stripUnderscores(unit)]),
       [],
     );
-    const body = toIndex;
+    const toUpdate = (ops.update || []).reduce(
+      (memo, unit) =>
+        memo.concat([
+          {update: toHeader(index, unit)},
+          {doc: stripUnderscores(unit)},
+        ]),
+      [],
+    );
+    const body = toIndex.concat(toUpdate);
     const mappings = Object.assign({}, defaultMappings, customMappings);
 
     await createIndex(index, type, mappings, client);
@@ -81,12 +89,11 @@ export const bulk = curry4(
     const {took, items} = response;
     return items.reduce(
       (memo, item) => {
-        const path = `${item.index._index}.${item.index.result}`;
+        const i = item.index || item.update;
+        const path = `${i._index}.${i.result}`;
         const count = getOr(0, path, memo[1]);
         return [
-          item.index.error
-            ? memo[0].concat([{id: item.index._id, error: item.index.error}])
-            : memo[0],
+          i.error ? memo[0].concat([{id: i._id, error: i.error}]) : memo[0],
           merge(memo[1], set(path, count + 1, {})),
         ];
       },
