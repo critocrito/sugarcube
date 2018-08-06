@@ -268,6 +268,28 @@ describe("data interface", () => {
       const results = data.concatOne(a, b);
       results.key.should.eql(expected.key);
     });
+
+    it("concatOne takes the older fetch date from the right argument", () => {
+      const now = new Date();
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const a = {_sc_pubdates: {fetch: now, other: yesterday}};
+      const b = {_sc_pubdates: {fetch: yesterday, other: now}};
+      const expected = {_sc_pubdates: {fetch: yesterday, other: now}};
+      const results = data.concatOne(a, b);
+      results._sc_pubdates.should.eql(expected._sc_pubdates);
+    });
+
+    it("concatOne takes the older fetch date from the left argument", () => {
+      const now = new Date();
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const a = {_sc_pubdates: {fetch: yesterday, other: yesterday}};
+      const b = {_sc_pubdates: {fetch: now, other: now}};
+      const expected = {_sc_pubdates: {fetch: yesterday, other: now}};
+      const results = data.concatOne(a, b);
+      results._sc_pubdates.should.eql(expected._sc_pubdates);
+    });
   });
 });
 

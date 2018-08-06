@@ -1,6 +1,7 @@
 import {
   reduce,
   keys,
+  get,
   merge,
   mergeAll,
   uniq as loUniq,
@@ -125,6 +126,19 @@ const concatOne = curry2("concatOne", (a, b) => {
   const markers = {
     _sc_markers: loUniq(loConcat(a._sc_markers || [], b._sc_markers || [])),
   };
+
+  // the fetch date must be either a date object or an ISO8601 date
+  // string. Those string work the same in the lesser than clause.
+  let dates = {};
+  if (get("_sc_pubdates.fetch", a) && get("_sc_pubdates.fetch", b)) {
+    const leftDate = new Date(a._sc_pubdates.fetch);
+    const rightDate = new Date(b._sc_pubdates.fetch);
+    dates =
+      leftDate <= rightDate
+        ? {_sc_pubdates: {fetch: a._sc_pubdates.fetch}}
+        : {};
+  }
+
   // concat {a: "string"} and {a: ["other"]} into {a: ["string", "other"]}
   const stringArrays = keys(a).reduce((memo, k) => {
     if (!b[k]) return memo;
@@ -132,7 +146,8 @@ const concatOne = curry2("concatOne", (a, b) => {
       return merge(memo, {[k]: loUniq([].concat(a[k]).concat(b[k]))});
     return memo;
   }, {});
-  return mergeAll([a, b, stringArrays, lists, markers]);
+
+  return mergeAll([a, b, stringArrays, dates, lists, markers]);
 });
 
 /**
