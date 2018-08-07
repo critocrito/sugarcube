@@ -17,6 +17,7 @@ var getAsync = pify(customRequest);
 var tapP = dashp.tap;
 var collectP = dashp.collect;
 var flowP = dashp.flow;
+var delayP = dashp.delay;
 
 var sharedFields = ["href", "description", "title"];
 
@@ -25,13 +26,28 @@ var duckClean = function(dirtyContent) {
   return dirtyContent.replace(/\ \ \.*/g, "").replace(/\n/g, "");
 };
 
+let retryCount = 0;
+
 var goGoDuck = function(searchQuery) {
   var uri = "https://duckduckgo.com/html/?q=" + encodeURIComponent(searchQuery);
 
   return getAsync(uri).then(function(response) {
+    if (response.statusCode === 403) {
+      if (retryCount < 5) {
+        retryCount += 1;
+        const delayM = Math.floor(Math.random() * 10) + 5 * retryCount;
+        console.warn(
+          `Retrying (#${retryCount}) request with ${delayM} minutes timeout.`,
+        );
+        return flowP([delayP(delayM * 60 * 1000), goGoDuck], searchQuery);
+      }
+      console.warn(`Exceeded maximum retries of ${retryCount}.`);
+    }
+
     if (response.statusCode !== 200) {
       throw new Error("DuckDuckGo return " + response.statusCode);
     }
+
     var parsed_links = [];
     var ddgEntry = cheerio.load(response.body)("div .links_main");
 
