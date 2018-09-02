@@ -48,8 +48,15 @@ var goGoDuck = function(searchQuery) {
       throw new Error("DuckDuckGo return " + response.statusCode);
     }
 
-    var parsed_links = [];
-    var ddgEntry = cheerio.load(response.body)("div .links_main");
+    var parsedLinks = [];
+    var $ = cheerio.load(response.body);
+
+    var noResults = $("div.no-results");
+    if (noResults.length > 0) {
+      console.log(`No results for ${searchQuery}`);
+      return parsedLinks;
+    }
+    var ddgEntry = $("div.links_main");
 
     _.each(ddgEntry, function(div, i) {
       var completeSection = cheerio.load(div).html();
@@ -57,7 +64,7 @@ var goGoDuck = function(searchQuery) {
       var entryTitle = cheerio.load(div)(".result__title").text();
       var href = cheerio.load(div)(".result__a").attr("href");
 
-      parsed_links.push({
+      parsedLinks.push({
         href: href,
         description: duckClean(entryDesc),
         title: duckClean(entryTitle),
@@ -66,7 +73,7 @@ var goGoDuck = function(searchQuery) {
     });
     /* Remind, in this way I'm losing the association between source
      * of results and the actual responses.  */
-    return parsed_links;
+    return parsedLinks;
   });
   // TODO manage network error
 };
@@ -76,6 +83,7 @@ var mightyDucky = function(val, {log}) {
 
   return flowP(
     [
+      tapP(query => log.info(`Querying DDG for ${query}.`)),
       collectP(goGoDuck),
       function(results) {
         return _.reduce(
