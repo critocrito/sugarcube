@@ -16,6 +16,8 @@ const plugin = (envelope, {cfg, log}) => {
     ? JSON.parse(fs.readFileSync(get("elastic.mappings", cfg)))
     : {};
 
+  if (envelope.data.length === 0) return envelope;
+
   return Elastic.Do(
     function* indexUnits({bulk, queryByIds}) {
       const ids = envelope.data.map(u => u._sc_id_hash);
@@ -25,6 +27,7 @@ const plugin = (envelope, {cfg, log}) => {
         u => !existingIds.includes(u._sc_id_hash),
         envelope,
       );
+
       const dataToUpdate = flow([
         env.filterData(u => existingIds.includes(u._sc_id_hash)),
         env.concatData(existing),
