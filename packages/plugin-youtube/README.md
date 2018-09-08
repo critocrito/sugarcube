@@ -18,6 +18,27 @@ npm install --save @sugarcube/plugin-youtube
 
 This plugin exports the following plugins:
 
+### `youtube_video`
+
+Fetch details for an individual video by it's id.
+
+The Youtube API key must be set as well. You can do this by setting the
+`youtube.api_key` config option:
+
+```
+--youtube.api_key <key>
+```
+
+or setting it in the JSON configuration file:
+
+```
+{
+  "youtube": {
+    "api_key": "<key>"
+  }
+}
+```
+
 ### `youtube_channel`
 
 Fetch a list of videos from a channel. A query must be configured to supply

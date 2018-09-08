@@ -3,8 +3,8 @@ import {flowP, tapP} from "dashp";
 import {plugin as p, envelope as env} from "@sugarcube/core";
 import moment from "moment";
 
-import {Counter, assertCredentials} from "./utils";
-import {videoChannelPlaylist, videoChannel} from "./api";
+import {Counter, assertCredentials} from "../utils";
+import {videoChannelPlaylist, videoChannel} from "../api";
 
 const querySource = "youtube_channel";
 
@@ -78,11 +78,6 @@ plugin.source = {
   desc: "A Youtube channel ID.",
 };
 plugin.argv = {
-  "youtube.api_key": {
-    type: "string",
-    nargs: 1,
-    desc: "The youtube API key.",
-  },
   "youtube.published_after": {
     type: "string",
     nargs: 1,
