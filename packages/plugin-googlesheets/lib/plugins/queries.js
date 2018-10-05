@@ -25,9 +25,9 @@ const importQueries = (envelope, {log, cfg, cache}) => {
         const count = expanded.length;
 
         log.info(
-          `Expanded ${sheetUrl} to ${count} ${
-            count > 1 ? "queries" : "query"
-          }.`,
+          `Expanded ${sheetUrl} to ${count} ${count > 1
+            ? "queries"
+            : "query"}.`,
         );
 
         return expanded;
