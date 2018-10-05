@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-elasticsearch/compare/v0.9.0...v0.10.0) (2018-10-05)
+
+
+### Bug Fixes
+
+* **plugin-elasticsearch:** Don't export units if the envelope is empty. ([a022378](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-elasticsearch/commit/a022378))
+* **plugin-elasticsearch:** Strip and unstripify nested values. ([ef1f65b](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-elasticsearch/commit/ef1f65b))
+
+
+### Features
+
+* **plugin-elastic:** Retrieve highlights and score when querying. ([d1aa49b](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-elasticsearch/commit/d1aa49b))
+* **plugin-elasticsearch:** Added the queryOne operation. ([2753149](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-elasticsearch/commit/2753149))
+* **plugin-elasticsearch:** Provide custom mappings when creating an index. ([cb62a41](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-elasticsearch/commit/cb62a41))
+* **plugin-elasticsearch:** Update units on export. ([ed066ae](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-elasticsearch/commit/ed066ae))
+
+
+
+
+
 <a name="0.9.0"></a>
 # [0.9.0](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-elasticsearch/compare/v0.8.0...v0.9.0) (2018-03-30)
 
