@@ -4,7 +4,7 @@
   "description": "Send email notifications.",
   "main": "_dist/index.js",
   "license": "GPL-3.0",
-  "repository": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-mail",
+  "repository": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mail",
   "author": "Christo <christo@cryptodrunks.net>",
   "keywords": [
     "sugarcube",

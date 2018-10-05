@@ -4,40 +4,40 @@ All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 <a name="0.8.0"></a>
-# [0.8.0](https://gitlab.com/sugarcube/sugarcube/compare/v0.7.0...v0.8.0) (2018-03-03)
+# [0.8.0](https://github.com/critocrito/sugarcube/compare/v0.7.0...v0.8.0) (2018-03-03)
 
 
 ### Features
 
-* **tap:** Have fine grained control over what to print. ([6892c52](https://gitlab.com/sugarcube/sugarcube/commit/6892c52))
+* **tap:** Have fine grained control over what to print. ([6892c52](https://github.com/critocrito/sugarcube/commit/6892c52))
 
 
 
 
 <a name="0.5.0"></a>
-# [0.5.0](https://gitlab.com/sugarcube/sugarcube/compare/v0.4.0...v0.5.0) (2018-01-30)
+# [0.5.0](https://github.com/critocrito/sugarcube/compare/v0.4.0...v0.5.0) (2018-01-30)
 
 
 ### Features
 
-* **core:** Supply plugins with a persistent stats object. ([0374b99](https://gitlab.com/sugarcube/sugarcube/commit/0374b99))
+* **core:** Supply plugins with a persistent stats object. ([0374b99](https://github.com/critocrito/sugarcube/commit/0374b99))
 
 
 
 
 <a name="0.3.0"></a>
-# [0.3.0](https://gitlab.com/sugarcube/sugarcube/compare/v0.1.0...v0.3.0) (2017-12-05)
+# [0.3.0](https://github.com/critocrito/sugarcube/compare/v0.1.0...v0.3.0) (2017-12-05)
 
 
 ### Bug Fixes
 
-* Fixed the plugins that got broken by removing bluebird. ([73a9603](https://gitlab.com/sugarcube/sugarcube/commit/73a9603))
+* Fixed the plugins that got broken by removing bluebird. ([73a9603](https://github.com/critocrito/sugarcube/commit/73a9603))
 
 
 
 
 <a name="0.2.1"></a>
-## [0.2.1](https://gitlab.com/sugarcube/sugarcube/compare/v0.2.0...v0.2.1) (2017-10-22)
+## [0.2.1](https://github.com/critocrito/sugarcube/compare/v0.2.0...v0.2.1) (2017-10-22)
 
 
 
@@ -45,7 +45,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 **Note:** Version bump only for package @sugarcube/plugin-tap
 
 <a name="0.2.0"></a>
-# [0.2.0](https://gitlab.com/sugarcube/sugarcube/compare/v0.1.0...v0.2.0) (2017-10-22)
+# [0.2.0](https://github.com/critocrito/sugarcube/compare/v0.1.0...v0.2.0) (2017-10-22)
 
 
 
@@ -53,9 +53,9 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 **Note:** Version bump only for package @sugarcube/plugin-tap
 
 <a name="0.1.0"></a>
-# [0.1.0](https://gitlab.com/sugarcube/sugarcube/compare/v0.0.0...v0.1.0) (2017-10-08)
+# [0.1.0](https://github.com/critocrito/sugarcube/compare/v0.0.0...v0.1.0) (2017-10-08)
 
 
 ### Bug Fixes
 
-* Fixed the name of the tap plugin package. ([d874b99](https://gitlab.com/sugarcube/sugarcube/commit/d874b99))
+* Fixed the name of the tap plugin package. ([d874b99](https://github.com/critocrito/sugarcube/commit/d874b99))

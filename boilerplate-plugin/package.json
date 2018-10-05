@@ -4,7 +4,7 @@
   "description": "",
   "main": "_dist/index.js",
   "license": "GPL-3.0",
-  "repository": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-",
+  "repository": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-",
   "author": "Christo <christo@cryptodrunks.net>",
   "keywords": [
     "sugarcube",

@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 <a name="0.9.0"></a>
-# [0.9.0](https://gitlab.com/sugarcube/sugarcube/tree/master/packages/test/compare/v0.8.0...v0.9.0) (2018-03-30)
+# [0.9.0](https://github.com/critocrito/sugarcube/tree/master/packages/test/compare/v0.8.0...v0.9.0) (2018-03-30)
 
 
 
@@ -12,18 +12,18 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 **Note:** Version bump only for package @sugarcube/test
 
 <a name="0.8.0"></a>
-# [0.8.0](https://gitlab.com/sugarcube/sugarcube/tree/master/packages/test/compare/v0.7.0...v0.8.0) (2018-03-03)
+# [0.8.0](https://github.com/critocrito/sugarcube/tree/master/packages/test/compare/v0.7.0...v0.8.0) (2018-03-03)
 
 
 ### Features
 
-* **test:** Export an object arbitrary. ([bf562ed](https://gitlab.com/sugarcube/sugarcube/tree/master/packages/test/commit/bf562ed))
+* **test:** Export an object arbitrary. ([bf562ed](https://github.com/critocrito/sugarcube/tree/master/packages/test/commit/bf562ed))
 
 
 
 
 <a name="0.5.1"></a>
-## [0.5.1](https://gitlab.com/sugarcube/sugarcube/tree/master/packages/test/compare/v0.5.0...v0.5.1) (2018-01-30)
+## [0.5.1](https://github.com/critocrito/sugarcube/tree/master/packages/test/compare/v0.5.0...v0.5.1) (2018-01-30)
 
 
 
@@ -31,7 +31,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 **Note:** Version bump only for package @sugarcube/test
 
 <a name="0.5.0"></a>
-# [0.5.0](https://gitlab.com/sugarcube/sugarcube/tree/master/packages/test/compare/v0.4.0...v0.5.0) (2018-01-30)
+# [0.5.0](https://github.com/critocrito/sugarcube/tree/master/packages/test/compare/v0.4.0...v0.5.0) (2018-01-30)
 
 
 
@@ -39,7 +39,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 **Note:** Version bump only for package @sugarcube/test
 
 <a name="0.4.0"></a>
-# [0.4.0](https://gitlab.com/sugarcube/sugarcube/tree/master/packages/test/compare/v0.3.0...v0.4.0) (2018-01-12)
+# [0.4.0](https://github.com/critocrito/sugarcube/tree/master/packages/test/compare/v0.3.0...v0.4.0) (2018-01-12)
 
 
 
@@ -47,20 +47,20 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 **Note:** Version bump only for package @sugarcube/test
 
 <a name="0.3.0"></a>
-# [0.3.0](https://gitlab.com/sugarcube/sugarcube/tree/master/packages/test/compare/v0.1.0...v0.3.0) (2017-12-05)
+# [0.3.0](https://github.com/critocrito/sugarcube/tree/master/packages/test/compare/v0.1.0...v0.3.0) (2017-12-05)
 
 
 ### Features
 
-* **test:** Extracted core/test.generators code into separate package. ([92f4207](https://gitlab.com/sugarcube/sugarcube/tree/master/packages/test/commit/92f4207))
+* **test:** Extracted core/test.generators code into separate package. ([92f4207](https://github.com/critocrito/sugarcube/tree/master/packages/test/commit/92f4207))
 
 
 
 
 <a name="0.3.0"></a>
-# [0.3.0](https://gitlab.com/sugarcube/sugarcube/tree/master/packages/test/compare/v0.1.0...v0.3.0) (2017-12-05)
+# [0.3.0](https://github.com/critocrito/sugarcube/tree/master/packages/test/compare/v0.1.0...v0.3.0) (2017-12-05)
 
 
 ### Features
 
-* **test:** Extracted core/test.generators code into separate package. ([92f4207](https://gitlab.com/sugarcube/sugarcube/tree/master/packages/test/commit/92f4207))
+* **test:** Extracted core/test.generators code into separate package. ([92f4207](https://github.com/critocrito/sugarcube/tree/master/packages/test/commit/92f4207))

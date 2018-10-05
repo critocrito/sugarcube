@@ -4,7 +4,7 @@
   "description": "The SugarCube distribution.",
   "main": "_dist/index.js",
   "license": "GPL-3.0",
-  "repository": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/sugarcube",
+  "repository": "https://github.com/critocrito/sugarcube/tree/master/packages/sugarcube",
   "author": "Christo <christo@cryptodrunks.net>",
   "keywords": [
     "sugarcube",

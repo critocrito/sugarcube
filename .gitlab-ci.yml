@@ -1,9 +1,0 @@
-before_script:
-  - apt-get -qq update && apt-get -qq install -y default-jdk
-  - npm install
-  - npm run setup
-
-test:lts:
-  image: node:carbon
-  script:
-    - npm run test

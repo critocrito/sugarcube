@@ -3,9 +3,9 @@
   "version": "0.9.0",
   "description": "Import and Export units from google sheets",
   "main": "_dist/index.js",
-  "repository": "https://gitlab.com/sugarcube/sugarcube",
-  "bugs": "https://gitlab.com/sugarcube/sugarcube/issues",
-  "homepage": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-googlesheets",
+  "repository": "https://github.com/critocrito/sugarcube",
+  "bugs": "https://github.com/critocrito/sugarcube/issues",
+  "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-googlesheets#readme",
   "keywords": [
     "sugarcube",
     "sugarcube plugin",

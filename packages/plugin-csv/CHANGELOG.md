@@ -4,20 +4,20 @@ All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 <a name="0.9.0"></a>
-# [0.9.0](https://gitlab.com/sugarcube/sugarcube/compare/v0.8.0...v0.9.0) (2018-03-30)
+# [0.9.0](https://github.com/critocrito/sugarcube/compare/v0.8.0...v0.9.0) (2018-03-30)
 
 
 ### Features
 
-* **plugin-csv:** Added a queries export plugin. ([101fa6f](https://gitlab.com/sugarcube/sugarcube/commit/101fa6f))
-* **plugin-csv:** Optionally skip export if there is no data. ([15b7dec](https://gitlab.com/sugarcube/sugarcube/commit/15b7dec))
-* **plugin-csv:** Set the _sc_source fields on import. ([686de5a](https://gitlab.com/sugarcube/sugarcube/commit/686de5a))
+* **plugin-csv:** Added a queries export plugin. ([101fa6f](https://github.com/critocrito/sugarcube/commit/101fa6f))
+* **plugin-csv:** Optionally skip export if there is no data. ([15b7dec](https://github.com/critocrito/sugarcube/commit/15b7dec))
+* **plugin-csv:** Set the _sc_source fields on import. ([686de5a](https://github.com/critocrito/sugarcube/commit/686de5a))
 
 
 
 
 <a name="0.8.0"></a>
-# [0.8.0](https://gitlab.com/sugarcube/sugarcube/compare/v0.7.0...v0.8.0) (2018-03-03)
+# [0.8.0](https://github.com/critocrito/sugarcube/compare/v0.7.0...v0.8.0) (2018-03-03)
 
 
 
@@ -25,18 +25,18 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 **Note:** Version bump only for package @sugarcube/plugin-csv
 
 <a name="0.6.0"></a>
-# [0.6.0](https://gitlab.com/sugarcube/sugarcube/compare/v0.5.1...v0.6.0) (2018-02-01)
+# [0.6.0](https://github.com/critocrito/sugarcube/compare/v0.5.1...v0.6.0) (2018-02-01)
 
 
 ### Features
 
-* **plugin-csv:** Export the diff stats as csv files. ([85281e4](https://gitlab.com/sugarcube/sugarcube/commit/85281e4))
+* **plugin-csv:** Export the diff stats as csv files. ([85281e4](https://github.com/critocrito/sugarcube/commit/85281e4))
 
 
 
 
 <a name="0.5.1"></a>
-## [0.5.1](https://gitlab.com/sugarcube/sugarcube/compare/v0.5.0...v0.5.1) (2018-01-30)
+## [0.5.1](https://github.com/critocrito/sugarcube/compare/v0.5.0...v0.5.1) (2018-01-30)
 
 
 
@@ -44,18 +44,18 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 **Note:** Version bump only for package @sugarcube/plugin-csv
 
 <a name="0.5.0"></a>
-# [0.5.0](https://gitlab.com/sugarcube/sugarcube/compare/v0.4.0...v0.5.0) (2018-01-30)
+# [0.5.0](https://github.com/critocrito/sugarcube/compare/v0.4.0...v0.5.0) (2018-01-30)
 
 
 ### Features
 
-* **plugin-csv:** Added a csv_diff plugin to create stats. ([6acfa73](https://gitlab.com/sugarcube/sugarcube/commit/6acfa73))
+* **plugin-csv:** Added a csv_diff plugin to create stats. ([6acfa73](https://github.com/critocrito/sugarcube/commit/6acfa73))
 
 
 
 
 <a name="0.4.0"></a>
-# [0.4.0](https://gitlab.com/sugarcube/sugarcube/compare/v0.3.0...v0.4.0) (2018-01-12)
+# [0.4.0](https://github.com/critocrito/sugarcube/compare/v0.3.0...v0.4.0) (2018-01-12)
 
 
 
@@ -63,18 +63,18 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 **Note:** Version bump only for package @sugarcube/plugin-csv
 
 <a name="0.3.0"></a>
-# [0.3.0](https://gitlab.com/sugarcube/sugarcube/compare/v0.1.0...v0.3.0) (2017-12-05)
+# [0.3.0](https://github.com/critocrito/sugarcube/compare/v0.1.0...v0.3.0) (2017-12-05)
 
 
 ### Bug Fixes
 
-* Fixed the plugins that got broken by removing bluebird. ([73a9603](https://gitlab.com/sugarcube/sugarcube/commit/73a9603))
+* Fixed the plugins that got broken by removing bluebird. ([73a9603](https://github.com/critocrito/sugarcube/commit/73a9603))
 
 
 
 
 <a name="0.2.1"></a>
-## [0.2.1](https://gitlab.com/sugarcube/sugarcube/compare/v0.2.0...v0.2.1) (2017-10-22)
+## [0.2.1](https://github.com/critocrito/sugarcube/compare/v0.2.0...v0.2.1) (2017-10-22)
 
 
 
@@ -82,7 +82,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 **Note:** Version bump only for package @sugarcube/plugin-csv
 
 <a name="0.2.0"></a>
-# [0.2.0](https://gitlab.com/sugarcube/sugarcube/compare/v0.1.0...v0.2.0) (2017-10-22)
+# [0.2.0](https://github.com/critocrito/sugarcube/compare/v0.1.0...v0.2.0) (2017-10-22)
 
 
 
@@ -90,9 +90,9 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 **Note:** Version bump only for package @sugarcube/plugin-csv
 
 <a name="0.1.0"></a>
-# [0.1.0](https://gitlab.com/sugarcube/sugarcube/compare/v0.0.0...v0.1.0) (2017-10-08)
+# [0.1.0](https://github.com/critocrito/sugarcube/compare/v0.0.0...v0.1.0) (2017-10-08)
 
 
 ### Features
 
-* **plugin-csv:** Export CSV parser as function. ([b8e8373](https://gitlab.com/sugarcube/sugarcube/commit/b8e8373))
+* **plugin-csv:** Export CSV parser as function. ([b8e8373](https://github.com/critocrito/sugarcube/commit/b8e8373))

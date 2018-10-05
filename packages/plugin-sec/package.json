@@ -4,7 +4,7 @@
   "description": "Query the company filings of the U.S. SEC.",
   "main": "_dist/index.js",
   "license": "GPL-3.0",
-  "repository": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-sec",
+  "repository": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-sec",
   "author": "Christo <christo@cryptodrunks.net>",
   "keywords": [
     "sugarcube",

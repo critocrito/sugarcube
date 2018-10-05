@@ -1,0 +1,18 @@
+language: node_js
+node_js:
+  - "lts/*"
+addons:
+  apt:
+    update: true
+cache:
+  directories:
+    - "node_modules"
+before_install:
+  - sudo apt-get install -y default-jdk
+install:
+  - npm install
+  - npm run setup
+script:
+  - npm run build
+after_script:
+  - npm run coverage && nyc report --reporter=text-lcov | coveralls

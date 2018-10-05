@@ -4,9 +4,9 @@
   "description": "Persist data in MongoDB.",
   "main": "_dist/index.js",
   "license": "GPL-3.0",
-  "repository": "https://gitlab.com/sugarcube/sugarcube",
-  "bugs": "https://gitlab.com/sugarcube/sugarcube/issues",
-  "homepage": "https://gitlab.com/sugarcube/sugarcube/tree/master/packages/plugin-mongodb",
+  "repository": "https://github.com/critocrito/sugarcube",
+  "bugs": "https://github.com/critocrito/sugarcube/issues",
+  "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mongodb#readme",
   "author": "Christo <christo@cryptodrunks.net>",
   "keywords": [
     "sugarcube",
