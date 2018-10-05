@@ -66,7 +66,9 @@ const moveData = async (envelope, {log, cfg, cache}) => {
 
       log.info(`Moving ${rowsToMove.length} observations to ${targetUrl}.`);
       log.info(
-        `Merging ${rowsToMove.length} observations into ${existingRows.length} observations.`,
+        `Merging ${rowsToMove.length} observations into ${
+          existingRows.length
+        } observations.`,
       );
 
       const mergedRows = flow([
@@ -91,12 +93,13 @@ const moveData = async (envelope, {log, cfg, cache}) => {
       // Clean existing sheet.
       const idHashIndex = rowsToMove[0].indexOf("_sc_id_hash");
       const idsToMove = tail(dataToMove).map(r => r[idHashIndex]);
-      const indexesToDelete = tail(
-        rowsToMove,
-      ).reduce((memo, [idHash], index) => {
-        if (idsToMove.find(i => i === idHash)) return memo.concat(index + 1);
-        return memo;
-      }, []);
+      const indexesToDelete = tail(rowsToMove).reduce(
+        (memo, [idHash], index) => {
+          if (idsToMove.find(i => i === idHash)) return memo.concat(index + 1);
+          return memo;
+        },
+        [],
+      );
       yield deleteRows(id, sheet, indexesToDelete);
 
       return mergedRows;
