@@ -36,9 +36,9 @@ const listChannel = (envelope, {cfg, log}) => {
         videoChannelPlaylist(key),
         tapP(ds =>
           log.info(
-            `Received ${size(
-              ds,
-            )} videos for ${q}. (${counter.count()}/${counter.total})`,
+            `Received ${size(ds)} videos for ${q}. (${counter.count()}/${
+              counter.total
+            })`,
           ),
         ),
       ],
@@ -55,9 +55,9 @@ const listChannel = (envelope, {cfg, log}) => {
           videoChannel(key, pickBy(identity, range)),
           tapP(ds =>
             log.info(
-              `Received ${size(
-                ds,
-              )} videos for ${q}. (${counter.count()}/${counter.total})`,
+              `Received ${size(ds)} videos for ${q}. (${counter.count()}/${
+                counter.total
+              })`,
             ),
           ),
         ],

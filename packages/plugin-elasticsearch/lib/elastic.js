@@ -80,6 +80,7 @@ export const bulk = curry4(
         ]),
       [],
     );
+
     const body = toIndex.concat(toUpdate);
     const mappings = Object.assign({}, defaultMappings, customMappings);
 

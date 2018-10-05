@@ -23,7 +23,7 @@ import {
 } from "./entities";
 
 // The requests within a 15 minutes window in milliseconds.
-const rateLimit = requests => 15 * 60 / requests * 1000;
+const rateLimit = requests => ((15 * 60) / requests) * 1000;
 
 // FIXME: Refactor to uncouple everything from the logger.
 const apiErrors = curry((log, user, e) => {
