@@ -23,7 +23,7 @@ import {
 } from "./entities";
 
 // The requests within a 15 minutes window in milliseconds.
-const rateLimit = requests => ((15 * 60) / requests) * 1000;
+const rateLimit = requests => 15 * 60 / requests * 1000;
 
 // FIXME: Refactor to uncouple everything from the logger.
 const apiErrors = curry((log, user, e) => {
@@ -134,19 +134,19 @@ export const friends = (cfg, log, users) => {
 };
 
 export const search = curry((cfg, log, queries) => {
-  const modifiers = ["twitter.language", "twitter.geocode"].reduce(
-    (memo, key) => {
-      switch (key) {
-        case "twitter.language":
-          return get(key, cfg) ? merge(memo, {lang: get(key, cfg)}) : memo;
-        case "twitter.geocode":
-          return get(key, cfg) ? merge(memo, {geocode: get(key, cfg)}) : memo;
-        default:
-          return memo;
-      }
-    },
-    {},
-  );
+  const modifiers = [
+    "twitter.language",
+    "twitter.geocode",
+  ].reduce((memo, key) => {
+    switch (key) {
+      case "twitter.language":
+        return get(key, cfg) ? merge(memo, {lang: get(key, cfg)}) : memo;
+      case "twitter.geocode":
+        return get(key, cfg) ? merge(memo, {geocode: get(key, cfg)}) : memo;
+      default:
+        return memo;
+    }
+  }, {});
   const delay = rateLimit(180);
   const op = throttle(delay, request(cfg, "search/tweets.json"));
 
