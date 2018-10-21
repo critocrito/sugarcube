@@ -23,5 +23,8 @@
     "lodash": "^4.17.4",
     "pify": "^3.0.0",
     "request": "^2.81.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

@@ -24,5 +24,8 @@
     "moment": "^2.19.1",
     "pify": "^3.0.0",
     "request": "^2.81.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

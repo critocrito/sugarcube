@@ -26,5 +26,8 @@
     "lodash": "^4.17.4",
     "moment": "^2.19.1",
     "tika": "critocrito/node-tika"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

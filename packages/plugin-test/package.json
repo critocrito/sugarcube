@@ -17,5 +17,8 @@
     "@sugarcube/test": "^0.10.0",
     "dashp": "^0.9.0",
     "lodash": "^4.17.5"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

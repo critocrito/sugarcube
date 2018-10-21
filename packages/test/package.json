@@ -16,5 +16,8 @@
     "@sugarcube/core": "^0.10.0",
     "jsverify": "^0.8.3",
     "lodash": "^4.17.4"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

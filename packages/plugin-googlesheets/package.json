@@ -21,5 +21,8 @@
     "googleapis": "^27.0.0",
     "lodash": "^4.17.4",
     "pify": "^3.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

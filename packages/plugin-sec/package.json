@@ -22,5 +22,8 @@
     "moment": "^2.18.1",
     "request": "^2.83.0",
     "request-promise": "^4.2.2"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

@@ -23,5 +23,8 @@
     "lodash": "^4.17.4",
     "request": "^2.82.0",
     "request-promise": "^4.2.1"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

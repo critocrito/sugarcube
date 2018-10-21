@@ -19,5 +19,8 @@
     "@sugarcube/core": "^0.10.0",
     "lodash": "^4.17.4",
     "pify": "^3.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

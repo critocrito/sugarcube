@@ -23,5 +23,8 @@
     "csv-stringify": "^1.0.4",
     "dashp": "^0.9.0",
     "lodash": "^4.17.4"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

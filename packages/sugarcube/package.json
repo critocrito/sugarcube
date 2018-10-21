@@ -38,5 +38,8 @@
     "@sugarcube/plugin-youtube": "^0.10.0",
     "@sugarcube/test": "^0.10.0",
     "lodash": "^4.17.4"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

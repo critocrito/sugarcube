@@ -25,5 +25,8 @@
     "pify": "^3.0.0",
     "request": "^2.81.0",
     "scraptor": "^0.1.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
