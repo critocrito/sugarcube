@@ -25,61 +25,68 @@ const plugin = (envelope, {cfg, log}) => {
       () =>
         env.fmapDataAsync(
           unit =>
-            collectP(media => {
-              const {type, term, href} = media;
-              const source = href || term;
-              const idHash = media._sc_id_hash;
+            // Avoid live broadcasts, otherwise youtubedl gets "stuck".
+            unit.snippet != null && unit.snippet.liveBroadcastContent === "live"
+              ? unit
+              : collectP(media => {
+                  const {type, term, href} = media;
+                  const source = href || term;
+                  const idHash = media._sc_id_hash;
 
-              if (!includes(type, downloadTypes)) return media;
+                  if (!includes(type, downloadTypes)) return media;
 
-              const location = join(
-                dataDir,
-                unit._sc_id_hash,
-                "youtubedl",
-                `${idHash}.${videoFormat}`,
-              );
+                  const location = join(
+                    dataDir,
+                    unit._sc_id_hash,
+                    "youtubedl",
+                    `${idHash}.${videoFormat}`,
+                  );
 
-              // Download all videos.
-              return accessAsync(location) // eslint-disable-line promise/no-nesting
-                .then(() => log.info(`Video ${source} exists at ${location}.`))
-                .catch(e => {
-                  if (e.code === "ENOENT") {
-                    return flowP(
-                      [
-                        youtubeDl(debug, cmd, videoFormat, source),
-                        tapP(() =>
-                          log.info(`Downloaded ${source} to ${location}.`),
+                  // Download all videos.
+                  return accessAsync(location) // eslint-disable-line promise/no-nesting
+                    .then(() =>
+                      log.info(`Video ${source} exists at ${location}.`),
+                    )
+                    .catch(e => {
+                      if (e.code === "ENOENT") {
+                        return flowP(
+                          [
+                            youtubeDl(debug, cmd, videoFormat, source),
+                            tapP(() =>
+                              log.info(`Downloaded ${source} to ${location}.`),
+                            ),
+                          ],
+                          location,
+                        );
+                      }
+                      throw e;
+                    })
+                    .then(() =>
+                      Promise.all([md5sum(location), sha256sum(location)]),
+                    )
+                    .then(([md5, sha256]) =>
+                      unit._sc_downloads.push(
+                        Object.assign(
+                          {},
+                          {
+                            location,
+                            md5,
+                            sha256,
+                            type,
+                            term,
+                            href,
+                          },
+                          href ? {href} : {},
                         ),
-                      ],
-                      location,
-                    );
-                  }
-                  throw e;
-                })
-                .then(() =>
-                  Promise.all([md5sum(location), sha256sum(location)]),
-                )
-                .then(([md5, sha256]) =>
-                  unit._sc_downloads.push(
-                    Object.assign(
-                      {},
-                      {
-                        location,
-                        md5,
-                        sha256,
-                        type,
-                        term,
-                        href,
-                      },
-                      href ? {href} : {},
-                    ),
-                  ),
-                )
-                .catch(() =>
-                  log.warn(`Failed to download video ${source} to ${location}`),
-                )
-                .then(() => media);
-            }, unit._sc_media).then(ms => merge(unit, {_sc_media: ms})),
+                      ),
+                    )
+                    .catch(() =>
+                      log.warn(
+                        `Failed to download video ${source} to ${location}`,
+                      ),
+                    )
+                    .then(() => media);
+                }, unit._sc_media).then(ms => merge(unit, {_sc_media: ms})),
           envelope,
         ),
     ],
