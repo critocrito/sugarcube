@@ -42,7 +42,11 @@ const channels = flow([urlify("channels"), getJson]);
 const playlistItems = flow([urlify("playlistItems"), getJson]);
 
 const getplaylistid = (action, params) =>
-  action(params).then(r => r.items[0].contentDetails.relatedPlaylists.uploads);
+  action(params).then(r => {
+    if (r.items.length > 0)
+      return r.items[0].contentDetails.relatedPlaylists.uploads;
+    return null;
+  });
 
 export const channelSearch = curry((key, range, channelId) => {
   const parts = ["id", "snippet"];
@@ -108,7 +112,10 @@ export const videoChannel = curry((key, range, id) =>
 
 export const videoChannelPlaylist = curry((key, id) =>
   channelToPlaylist(key, id)
-    .then(playlistVideos(key))
+    .then(playlistId => {
+      if (playlistId != null) return playlistVideos(key, playlistId);
+      return [];
+    })
     .then(flatten),
 );
 
