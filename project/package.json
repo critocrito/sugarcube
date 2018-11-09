@@ -35,6 +35,7 @@
     "@sugarcube/plugin-tika": "file:../packages/plugin-tika",
     "@sugarcube/plugin-tor": "file:../packages/plugin-tor",
     "@sugarcube/plugin-twitter": "file:../packages/plugin-twitter",
+    "@sugarcube/plugin-workflow": "file:../packages/plugin-workflow",
     "@sugarcube/plugin-youtube": "file:../packages/plugin-youtube",
     "@sugarcube/sugarcube": "file:../packages/sugarcube"
   }

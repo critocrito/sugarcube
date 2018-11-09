@@ -87,14 +87,15 @@ const source = curry2("source", (name, envelope) =>
  * run();
  */
 const runner = curry3("runner", (plugins, cfg, queries) => {
-  const stats = state({});
   // FIXME: The signature of `runner` has to change to allow seed objects for
   //        cache. Using the `cfg` option is just a crutch.
+  const stats = state(cfg.stats ? cfg.stats : {});
   const cache = state(cfg.cache ? cfg.cache : {});
   const seed = generateSeed(8);
   const timestamp = now();
   const stream = Bacon.Bus();
   const marker = uid(seed, timestamp);
+  let endEarly = false;
 
   // The pipeline is a list of tuples, where the first element of the tuple
   // is a string indicating the name of the plugin, and the second element
@@ -112,25 +113,29 @@ const runner = curry3("runner", (plugins, cfg, queries) => {
   const run = () =>
     flowP(
       [
-        foldP(
-          (envelope, [name, plugin]) =>
-            liftManyA2(
-              [
-                start(stream, name),
-                plugin,
-                unitDefaults,
-                hashData,
-                source(name),
-                mark(marker),
-                dates(timestamp),
-                pluginStats(stream, name, stats),
-                end(stream, name),
-              ],
-              envelope,
-              {plugins, cache, stats, log, cfg: merge({marker}, cfg)},
-            ),
-          envelopeQueries(queries),
-        ),
+        foldP((envelope, [name, plugin]) => {
+          if (endEarly) return;
+          // eslint-disable-next-line consistent-return
+          return liftManyA2(
+            [
+              start(stream, name),
+              plugin,
+              env => {
+                endEarly = !!env.endEarly;
+                return env;
+              },
+              unitDefaults,
+              hashData,
+              source(name),
+              mark(marker),
+              dates(timestamp),
+              pluginStats(stream, name, stats),
+              end(stream, name),
+            ],
+            envelope,
+            {plugins, cache, stats, log, cfg: merge({marker}, cfg)},
+          );
+        }, envelopeQueries(queries)),
         caughtP(e => stream.error(e)),
         tapP(() => stream.push({type: "stats", stats: stats.get()})),
         tapP(() => stream.end()),

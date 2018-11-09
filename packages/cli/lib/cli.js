@@ -168,7 +168,6 @@ const argvOmit = [
   "q",
   "Q",
   "d",
-  "debug",
   "D",
   "features",
   "list-features",
