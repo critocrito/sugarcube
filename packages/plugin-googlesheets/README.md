@@ -119,6 +119,7 @@ and the second column is the query term. The plugin looks up the
 - `google.client_secret`: A secret that is used by this client.
 - `google.spreadsheet_id`: The ID of the spreadsheet to fetch from.
 - `google.query_default_type`: Specify a default query type if none is provided. The plugin looks up query types in a column named `type`. If this column is missing, or the cell is empty, us the value of this option instead.
+- `google.query_fields`: The `sheets_query` plugin will always look for columns named `type` and `term`. Using this option, additional fields can be added into the query extraction. This is useful to enhance queries with additional meta data. The fields `type` and `term` are always queried, so there is no need to specify them separately.
 
 ### `sheets_append`
 

@@ -1,6 +1,6 @@
-import {merge, get} from "lodash/fp";
+import {merge, get, getOr} from "lodash/fp";
 import {flowP, flatmapP, tapP} from "dashp";
-import {envelope as env, plugin as p} from "@sugarcube/core";
+import {envelope as env, plugin as p, utils as u} from "@sugarcube/core";
 import SheetsDo from "../sheets";
 import {rowsToQueries} from "../utils";
 import {assertCredentials, assertSpreadsheet} from "../assertions";
@@ -12,6 +12,7 @@ const importQueries = (envelope, {log, cfg, cache}) => {
   const secret = get("google.client_secret", cfg);
   const id = get("google.spreadsheet_id", cfg);
   const defaultType = get("google.query_default_type", cfg);
+  const queryFields = u.sToA(",", getOr([], "google.query_fields", cfg));
   const queries = env.queriesByType(querySource, envelope);
   let tokens;
 
@@ -22,7 +23,7 @@ const importQueries = (envelope, {log, cfg, cache}) => {
       function* fetchQueries({getSheet, getRows}) {
         const {sheetUrl} = yield getSheet(id, query);
         const rows = yield getRows(id, query);
-        const expanded = rowsToQueries(defaultType, rows);
+        const expanded = rowsToQueries(defaultType, queryFields, rows);
         const count = expanded.length;
 
         log.info(
@@ -64,10 +65,13 @@ plugin.desc = "Fetch queries from a Google Sheet.";
 
 plugin.argv = {
   "google.query_default_type": {
-    desc:
-      "Specify the default query type if none is provided in a type column.",
+    desc: "Specify the default query type if none is provided as a type.",
     nargs: 1,
     type: "string",
+  },
+  "google.query_fields": {
+    type: "string",
+    desc: "Additional fields to import into queries besides term and type.",
   },
 };
 

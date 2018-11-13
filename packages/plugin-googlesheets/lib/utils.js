@@ -17,7 +17,7 @@ import {
 } from "lodash/fp";
 import {envelope as env, utils} from "@sugarcube/core";
 
-const {curry2} = utils;
+const {curry2, curry3} = utils;
 
 const requiredFields = ["_sc_id_hash", "_sc_content_hash"];
 const queryFields = ["type", "term"];
@@ -55,17 +55,24 @@ export const unitsToRows = curry((fields, units) =>
 export const rowsToUnits = curry((fields, rows) => zipRows(keys(fields), rows));
 
 // Map google spreadsheet rows to SugarCube queries.
-export const rowsToQueries = curry2("rowsToQueries", (defaultType, rows) =>
-  flow([
-    zipRows(queryFields),
-    filter(row => row.term != null && row.term.length > 0),
-    map(row =>
-      Object.assign({}, row, {
-        term: row.term.trim(),
-        type: row.type == null ? defaultType : row.type,
-      }),
-    ),
-  ])(rows),
+export const rowsToQueries = curry3(
+  "rowsToQueries",
+  (defaultType, fields, rows) => {
+    const allFields = [
+      ...new Set([].concat(...queryFields).concat(...fields)),
+    ].map(q => q.toLocaleLowerCase());
+
+    return flow([
+      zipRows(allFields),
+      filter(row => row.term != null && row.term.length > 0),
+      map(row =>
+        Object.assign({}, row, {
+          term: row.term.trim(),
+          type: row.type == null ? defaultType : row.type,
+        }),
+      ),
+    ])(rows);
+  },
 );
 
 export const concatEnvelopeAndRows = curry(({data}, rows) => {
