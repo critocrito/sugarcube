@@ -15,7 +15,7 @@ import {
   toLower,
   isEmpty,
 } from "lodash/fp";
-import {envelope as env, utils} from "@sugarcube/core";
+import {envelope as env, queries as qs, utils} from "@sugarcube/core";
 
 const {curry2, curry3} = utils;
 
@@ -36,6 +36,8 @@ const fixBools = map(v => {
 });
 
 const keys = flow([concat(requiredFields), uniq]);
+const queryKeys = flow([concat(queryFields), map(toLower), uniq]);
+
 const zipRows = curry((fields, rows) =>
   flow([
     tail, // The body of the spreadsheet, without the header.
@@ -51,19 +53,22 @@ export const unitsToRows = curry((fields, units) =>
   concat([keys(fields)], map(at(keys(fields)), units)),
 );
 
+// Map SugarCube queries to google spreadheet rows.
+export const queriesToRows = curry((fields, queries) => {
+  const allFields = queryKeys(fields);
+  return concat([allFields], map(at(allFields), queries));
+});
+
 // Map google spreadsheet rows to SugarCube units.
 export const rowsToUnits = curry((fields, rows) => zipRows(keys(fields), rows));
 
 // Map google spreadsheet rows to SugarCube queries.
 export const rowsToQueries = curry3(
   "rowsToQueries",
-  (defaultType, fields, rows) => {
-    const allFields = [
-      ...new Set([].concat(...queryFields).concat(...fields)),
-    ].map(q => q.toLocaleLowerCase());
-
-    return flow([
-      zipRows(allFields),
+  (defaultType, fields, rows) =>
+    flow([
+      ([hs, ...rs]) => [map(toLower, hs)].concat(rs),
+      zipRows(queryKeys(fields)),
       filter(row => row.term != null && row.term.length > 0),
       map(row =>
         Object.assign({}, row, {
@@ -71,8 +76,8 @@ export const rowsToQueries = curry3(
           type: row.type == null ? defaultType : row.type,
         }),
       ),
-    ])(rows);
-  },
+      qs.hash,
+    ])(rows),
 );
 
 export const concatEnvelopeAndRows = curry(({data}, rows) => {
@@ -84,6 +89,15 @@ export const concatRows = curry((rowsA, rowsB) => {
   const unitsA = rowsToUnits(header(rowsA), rowsA);
   const unitsB = rowsToUnits(header(rowsB), rowsB);
   return env.concat(env.envelopeData(unitsA), env.envelopeData(unitsB));
+});
+
+export const concatQueriesRows = curry((defaultType, rowsA, rowsB) => {
+  const queriesA = rowsToQueries(defaultType, header(rowsA), rowsA);
+  const queriesB = rowsToQueries(defaultType, header(rowsB), rowsB);
+  return env.concat(
+    env.envelopeQueries(queriesA),
+    env.envelopeQueries(queriesB),
+  );
 });
 
 export const coerceSelectionLists = list =>
@@ -108,3 +122,14 @@ export const applyFilters = curry2("applyFilters", (filters, rows) => {
   }, []);
   return [fields].concat(filteredData);
 });
+
+export const intersectQueryRows = (defaultType, queryRows, queries) => {
+  const [fields] = queryRows;
+  const intersection = env.intersection(
+    env.envelopeQueries(
+      rowsToQueries(defaultType, queryKeys(fields), queryRows),
+    ),
+    env.envelopeQueries(queries),
+  );
+  return queriesToRows(fields, intersection.queries);
+};

@@ -13,6 +13,7 @@ import importPlugin from "./plugins/import";
 import queriesPlugin from "./plugins/queries";
 import appendPlugin from "./plugins/append";
 import movePlugin from "./plugins/move";
+import moveQueriesPlugin from "./plugins/move-queries";
 
 import SheetsDo from "./sheets";
 import {
@@ -28,6 +29,7 @@ const plugins = {
   sheets_queries: queriesPlugin,
   sheets_append: appendPlugin,
   sheets_move: movePlugin,
+  sheets_move_queries: moveQueriesPlugin,
 };
 
 const authPlugins = flow([
@@ -38,6 +40,7 @@ const authPlugins = flow([
     "sheets_queries",
     "sheets_append",
     "sheets_move",
+    "sheets_move_queries",
   ]),
   ps => pick(ps, plugins),
   values,
@@ -68,9 +71,28 @@ const fieldPlugins = flow([
   values,
 ])(plugins);
 
+const queryFieldPlugins = flow([
+  keys,
+  intersection(["sheets_query", "sheets_move_queries"]),
+  ps => pick(ps, plugins),
+  values,
+])(plugins);
+
+const queryDefaultTypePlugins = flow([
+  keys,
+  intersection(["sheets_query", "sheets_move_queries"]),
+  ps => pick(ps, plugins),
+  values,
+])(plugins);
+
 const selectionPlugins = flow([
   keys,
-  intersection(["sheets_export", "sheets_append", "sheets_move"]),
+  intersection([
+    "sheets_export",
+    "sheets_append",
+    "sheets_move",
+    "sheets_move_queries",
+  ]),
   ps => pick(ps, plugins),
   values,
 ])(plugins);
@@ -121,6 +143,33 @@ forEach(p => {
     p.argv,
   );
 }, fieldPlugins);
+
+forEach(p => {
+  // eslint-disable-next-line no-param-reassign
+  p.argv = merge(
+    {
+      "google.query_fields": {
+        type: "string",
+        desc: "Additional fields to import into queries besides term and type.",
+      },
+    },
+    p.argv,
+  );
+}, queryFieldPlugins);
+
+forEach(p => {
+  // eslint-disable-next-line no-param-reassign
+  p.argv = merge(
+    {
+      "google.query_default_type": {
+        desc: "Specify the default query type if none is provided as a type.",
+        nargs: 1,
+        type: "string",
+      },
+    },
+    p.argv,
+  );
+}, queryDefaultTypePlugins);
 
 forEach(p => {
   // eslint-disable-next-line no-param-reassign

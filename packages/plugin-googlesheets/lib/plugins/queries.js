@@ -47,7 +47,7 @@ const importQueries = (envelope, {log, cfg, cache}) => {
       tapP(rs => {
         const count = rs.length;
         log.info(`Fetched a total of ${count} quer${count > 1 ? "ies" : "y"}.`);
-        cache.update("sheets.tokens", merge(tokens));
+        if (tokens != null) cache.update("sheets.tokens", merge(tokens));
       }),
       rs => env.concatQueries(rs, envelope),
     ],
@@ -63,16 +63,6 @@ const plugin = p.liftManyA2([
 
 plugin.desc = "Fetch queries from a Google Sheet.";
 
-plugin.argv = {
-  "google.query_default_type": {
-    desc: "Specify the default query type if none is provided as a type.",
-    nargs: 1,
-    type: "string",
-  },
-  "google.query_fields": {
-    type: "string",
-    desc: "Additional fields to import into queries besides term and type.",
-  },
-};
+plugin.argv = {};
 
 export default plugin;
