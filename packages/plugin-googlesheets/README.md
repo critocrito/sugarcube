@@ -118,6 +118,7 @@ and the second column is the query term. The plugin looks up the
 - `google.client_id`: The identifier for this client.
 - `google.client_secret`: A secret that is used by this client.
 - `google.spreadsheet_id`: The ID of the spreadsheet to fetch from.
+- `google.query_default_type`: Specify a default query type if none is provided. The plugin looks up query types in a column named `type`. If this column is missing, or the cell is empty, us the value of this option instead.
 
 ### `sheets_append`
 

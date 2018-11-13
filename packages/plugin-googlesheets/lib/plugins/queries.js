@@ -11,6 +11,7 @@ const importQueries = (envelope, {log, cfg, cache}) => {
   const client = get("google.client_id", cfg);
   const secret = get("google.client_secret", cfg);
   const id = get("google.spreadsheet_id", cfg);
+  const defaultType = get("google.query_default_type", cfg);
   const queries = env.queriesByType(querySource, envelope);
   let tokens;
 
@@ -21,7 +22,7 @@ const importQueries = (envelope, {log, cfg, cache}) => {
       function* fetchQueries({getSheet, getRows}) {
         const {sheetUrl} = yield getSheet(id, query);
         const rows = yield getRows(id, query);
-        const expanded = rowsToQueries(rows);
+        const expanded = rowsToQueries(defaultType, rows);
         const count = expanded.length;
 
         log.info(
@@ -61,6 +62,13 @@ const plugin = p.liftManyA2([
 
 plugin.desc = "Fetch queries from a Google Sheet.";
 
-plugin.argv = {};
+plugin.argv = {
+  "google.query_default_type": {
+    desc:
+      "Specify the default query type if none is provided in a type column.",
+    nargs: 1,
+    type: "string",
+  },
+};
 
 export default plugin;

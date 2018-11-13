@@ -2,6 +2,7 @@ import {
   curry,
   flow,
   map,
+  filter,
   reject,
   pick,
   at,
@@ -54,7 +55,18 @@ export const unitsToRows = curry((fields, units) =>
 export const rowsToUnits = curry((fields, rows) => zipRows(keys(fields), rows));
 
 // Map google spreadsheet rows to SugarCube queries.
-export const rowsToQueries = zipRows(queryFields);
+export const rowsToQueries = curry2("rowsToQueries", (defaultType, rows) =>
+  flow([
+    zipRows(queryFields),
+    filter(row => row.term != null && row.term.length > 0),
+    map(row =>
+      Object.assign({}, row, {
+        term: row.term.trim(),
+        type: row.type == null ? defaultType : row.type,
+      }),
+    ),
+  ])(rows),
+);
 
 export const concatEnvelopeAndRows = curry(({data}, rows) => {
   const units = rowsToUnits(header(rows), rows);
