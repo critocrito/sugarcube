@@ -80,6 +80,6 @@ plugin.argv = {
   },
 };
 
-plugin.desc = "Multiplex the remainder of the pipeline in batches of queris.";
+plugin.desc = "Multiplex the remainder of the pipeline in batches of queries.";
 
 export default plugin;
