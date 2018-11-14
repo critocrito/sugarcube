@@ -143,9 +143,7 @@ const moveQueries = async (envelope, {log, cfg, cache}) => {
   return flowP(
     [
       flatmapP(moveQuerySheet),
-      tapP(rs => {
-        const count = rs.length;
-        log.info(`Fetched a total of ${count} quer${count > 1 ? "ies" : "y"}.`);
+      tapP(() => {
         if (tokens != null) cache.update("sheets.tokens", merge(tokens));
       }),
       () => envelope,
