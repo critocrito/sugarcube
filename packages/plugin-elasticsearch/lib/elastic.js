@@ -24,7 +24,7 @@ export const createIndex = curry4(
   async (index, type, mapping, client) => {
     const body = {
       mappings: {
-        units: {properties: mapping},
+        _doc: {properties: mapping},
       },
     };
 
@@ -66,7 +66,7 @@ export const query = curry4("query", async (index, body, amount, client) => {
 export const bulk = curry4(
   "bulk",
   async (index, ops, client, customMappings) => {
-    const type = "units";
+    const type = "_doc";
     const toIndex = (ops.index || []).reduce(
       (memo, unit) =>
         memo.concat([{index: toHeader(index, unit)}, stripUnderscores(unit)]),
