@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/cli",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "description": "A CLI to operate SugarCube data processes.",
   "main": "_dist/index.js",
   "bin": {
@@ -20,7 +20,7 @@
   "bugs": "https://github.com/critocrito/sugarcube/issues",
   "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/cli#readme",
   "dependencies": {
-    "@sugarcube/core": "^0.11.0",
+    "@sugarcube/core": "^0.12.0",
     "dotenv": "^4.0.0",
     "lodash": "^4.17.4",
     "source-map-support": "^0.5.3",
