@@ -2,7 +2,7 @@ import {size, get} from "lodash/fp";
 import {flowP, tapP} from "dashp";
 import {plugin as p, envelope as env} from "@sugarcube/core";
 import {videosList} from "../api";
-import {assertCredentials} from "../utils";
+import {assertCredentials, parseVideoQuery} from "../utils";
 
 const querySource = "youtube_video";
 
@@ -12,6 +12,7 @@ const fetchVideos = (envelope, {cfg, log}) => {
 
   return flowP(
     [
+      parseVideoQuery,
       videosList(key),
       tapP(units => log.info(`Fetched details for ${size(units)} videos.`)),
       units => env.concatData(units, envelope),

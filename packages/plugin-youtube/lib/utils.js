@@ -13,6 +13,25 @@ export function Counter(total) {
   };
 }
 
+export const parseVideoQuery = query => {
+  if (query.startsWith("http")) {
+    const u = new URL(query);
+    return u.searchParams.get("v");
+  }
+  return query;
+};
+
+export const parseChannelQuery = query => {
+  if (query.startsWith("http")) {
+    const u = new URL(query);
+    return u.pathname
+      .replace(/^\//, "")
+      .replace(/\/$/, "")
+      .split("/")[1];
+  }
+  return query;
+};
+
 export default {
   assertCredentials,
   Counter,

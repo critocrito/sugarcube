@@ -3,7 +3,7 @@ import {flowP, tapP} from "dashp";
 import {plugin as p, envelope as env} from "@sugarcube/core";
 import moment from "moment";
 
-import {Counter, assertCredentials} from "../utils";
+import {Counter, assertCredentials, parseChannelQuery} from "../utils";
 import {videoChannelPlaylist, videoChannel} from "../api";
 
 const querySource = "youtube_channel";
@@ -33,6 +33,7 @@ const listChannel = (envelope, {cfg, log}) => {
   const f = q =>
     flowP(
       [
+        parseChannelQuery,
         videoChannelPlaylist(key),
         tapP(ds =>
           log.info(
@@ -52,6 +53,7 @@ const listChannel = (envelope, {cfg, log}) => {
     const fe = q =>
       flowP(
         [
+          parseChannelQuery,
           videoChannel(key, pickBy(identity, range)),
           tapP(ds =>
             log.info(
