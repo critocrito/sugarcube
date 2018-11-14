@@ -11,7 +11,15 @@ const plugin = async (envelope, {cfg, log, cache, stats, plugins}) => {
   const continueOnError = get("workflow.multiplex_continue_on_error", cfg);
 
   const pipeline = remainderPipeline(cfg.plugins);
-  const queryChunks = chunk(batchSize, envelope.queries);
+  // Those queries should always be part of the pipeline, since plugins like
+  // sheets_move_queries need them.
+  const staticQueries = envelope.queries.filter(({type}) =>
+    ["sheets_query"].includes(type),
+  );
+  const queryChunks = chunk(
+    batchSize,
+    envelope.queries.filter(({type}) => !["sheets_query"].includes(type)),
+  );
   let abort = false;
 
   log.info(
@@ -23,7 +31,7 @@ const plugin = async (envelope, {cfg, log, cache, stats, plugins}) => {
     const run = runner(
       plugins,
       Object.assign({}, cfg, {cache, stats, plugins: pipeline}),
-      queries,
+      queries.concat(staticQueries),
     );
     run.stream.onValue(msg => {
       switch (msg.type) {
