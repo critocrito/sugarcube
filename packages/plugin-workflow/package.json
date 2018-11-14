@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/plugin-workflow",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "description": "Support investigation workflows for SugarCube.",
   "main": "_dist/index.js",
   "license": "GPL-3.0",
@@ -13,7 +13,7 @@
     "transformation"
   ],
   "dependencies": {
-    "@sugarcube/core": "^0.12.0",
+    "@sugarcube/core": "^0.13.0",
     "lodash": "^4.17.5"
   },
   "publishConfig": {
