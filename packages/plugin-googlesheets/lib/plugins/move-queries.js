@@ -24,7 +24,6 @@ const moveQueries = async (envelope, {log, cfg, cache}) => {
   );
   const copyFromSheet = get("google.copy_from_sheet", cfg);
   const copyFromSpreadsheet = get("google.copy_from_spreadsheet", cfg);
-  const skipEmpty = get("google.skip_empty", cfg);
   const toId = getOr(id, "google.to_spreadsheet_id", cfg);
   const toSheet = getOr(cfg.marker, "google.to_sheet", cfg);
   const selectionLists = coerceSelectionLists(
@@ -64,12 +63,23 @@ const moveQueries = async (envelope, {log, cfg, cache}) => {
               return r;
             })
             .filter(r => {
+              // Only move queries that are in the pipeline.
+              if (
+                envelope.queries.find(
+                  q =>
+                    q.type === r[allQueryTypeIndex] &&
+                    q.term === r[allQueryTermIndex],
+                ) == null
+              )
+                return false;
+              // Move queries if no restrictions on the type are set.
               if (queryTypesToMove.length === 0) return true;
+              // Move queries only if the type fits the restrictions.
               return queryTypesToMove.includes(r[allQueryTypeIndex]);
             }),
         );
 
-        if (skipEmpty && rowsToMove.length < 2) {
+        if (rowsToMove.length < 2) {
           log.warn("No queries to move. Skip the move.");
           return [];
         }
@@ -176,10 +186,6 @@ plugin.argv = {
   "google.copy_from_spreadsheet": {
     type: "string",
     desc: "Duplicate a sheet from this spreadsheet ID.",
-  },
-  "google.skip_empty": {
-    type: "boolean",
-    desc: "Skip export of empty data pipelines.",
   },
   "google.query_types_to_move": {
     desc: "Move only specified query types.",
