@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/plugin-csv",
-  "version": "0.13.0",
+  "version": "0.13.1",
   "description": "CSV based input and output for SugarCube.",
   "main": "_dist/index.js",
   "repository": "https://github.com/critocrito/sugarcube",
@@ -17,8 +17,8 @@
     "csv"
   ],
   "dependencies": {
-    "@sugarcube/core": "^0.13.0",
-    "@sugarcube/plugin-fs": "^0.13.0",
+    "@sugarcube/core": "^0.13.1",
+    "@sugarcube/plugin-fs": "^0.13.1",
     "csv-parse": "^1.2.4",
     "csv-stringify": "^1.0.4",
     "dashp": "^0.9.0",
