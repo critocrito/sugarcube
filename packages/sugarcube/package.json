@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/sugarcube",
-  "version": "0.13.1",
+  "version": "0.13.2",
   "description": "The SugarCube distribution.",
   "main": "_dist/index.js",
   "license": "GPL-3.0",
@@ -35,7 +35,7 @@
     "@sugarcube/plugin-tor": "^0.13.1",
     "@sugarcube/plugin-twitter": "^0.13.1",
     "@sugarcube/plugin-workflow": "^0.13.1",
-    "@sugarcube/plugin-youtube": "^0.13.1",
+    "@sugarcube/plugin-youtube": "^0.13.2",
     "@sugarcube/test": "^0.13.1",
     "lodash": "^4.17.4"
   },
