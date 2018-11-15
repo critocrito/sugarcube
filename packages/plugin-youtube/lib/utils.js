@@ -1,3 +1,4 @@
+import {URL} from "url";
 import {utils} from "@sugarcube/core";
 
 const {assertCfg} = utils.assertions;
