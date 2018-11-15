@@ -16,7 +16,10 @@ export function Counter(total) {
 export const parseVideoQuery = query => {
   if (query.startsWith("http")) {
     const u = new URL(query);
-    return u.searchParams.get("v");
+    // Accept youtube urls in the form of https://youtu.be and https://www.youtube.com
+    return u.hostname.startsWith("youtu.be")
+      ? u.pathname.split("/").filter(segment => segment.length > 0)[0]
+      : u.searchParams.get("v");
   }
   return query;
 };

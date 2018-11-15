@@ -92,7 +92,7 @@ export const videosList = curry((key, ids) => {
   ];
   const params = {
     part: join(",", parts),
-    id: join(",", ids),
+    id: join(",", Array.isArray(ids) ? ids : [ids]),
     maxResults: 50,
     key,
   };

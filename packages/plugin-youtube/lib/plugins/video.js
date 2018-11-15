@@ -1,4 +1,4 @@
-import {size, get} from "lodash/fp";
+import {get} from "lodash/fp";
 import {flowP, tapP} from "dashp";
 import {plugin as p, envelope as env} from "@sugarcube/core";
 import {videosList} from "../api";
@@ -8,17 +8,14 @@ const querySource = "youtube_video";
 
 const fetchVideos = (envelope, {cfg, log}) => {
   const key = get("youtube.api_key", cfg);
-  const videos = env.queriesByType(querySource, envelope);
 
-  return flowP(
-    [
-      parseVideoQuery,
-      videosList(key),
-      tapP(units => log.info(`Fetched details for ${size(units)} videos.`)),
-      units => env.concatData(units, envelope),
-    ],
-    videos,
-  );
+  const scrapeVideo = flowP([
+    parseVideoQuery,
+    tapP(query => log.info(`Fetch details for ${query}.`)),
+    videosList(key),
+  ]);
+
+  return env.flatMapQueriesAsync(scrapeVideo, querySource, envelope);
 };
 
 const plugin = p.liftManyA2([assertCredentials, fetchVideos]);
