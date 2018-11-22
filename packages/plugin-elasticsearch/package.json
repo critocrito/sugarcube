@@ -16,7 +16,7 @@
   ],
   "dependencies": {
     "@sugarcube/core": "^0.13.1",
-    "dashp": "^0.8.1",
+    "dashp": "^0.10.1",
     "elasticsearch": "^14.1.0",
     "glob": "^7.1.2",
     "lodash": "^4.17.4",

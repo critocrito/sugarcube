@@ -16,7 +16,7 @@
   ],
   "dependencies": {
     "baconjs": "^0.7.89",
-    "dashp": "^0.9.0",
+    "dashp": "^0.10.1",
     "lodash": "^4.17.4"
   },
   "publishConfig": {

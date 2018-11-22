@@ -18,7 +18,7 @@
   "dependencies": {
     "@sugarcube/core": "^0.13.1",
     "bluebird": "^3.5.1",
-    "dashp": "^0.9.0",
+    "dashp": "^0.10.1",
     "lodash": "^4.17.4",
     "moment": "^2.17.1",
     "mongodb": "^2.1.18"

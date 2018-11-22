@@ -21,7 +21,7 @@
     "@sugarcube/plugin-fs": "^0.13.1",
     "csv-parse": "^1.2.4",
     "csv-stringify": "^1.0.4",
-    "dashp": "^0.9.0",
+    "dashp": "^0.10.1",
     "lodash": "^4.17.4"
   },
   "publishConfig": {
