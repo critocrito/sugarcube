@@ -1,5 +1,5 @@
 import {get, chunk} from "lodash/fp";
-import {collectP, flowP, tapP, delayP} from "dashp";
+import {flatmapP, flowP, tapP, delayP} from "dashp";
 import {envelope as env, plugin as p} from "@sugarcube/core";
 import {videosList} from "../api";
 import {assertCredentials, parseVideoQuery} from "../utils";
@@ -15,7 +15,7 @@ const fetchVideos = async (envelope, {cfg, log}) => {
 
   log.info(`Querying for ${queries.length} videos.`);
 
-  const videos = await collectP(
+  const videos = await flatmapP(
     flowP([
       tapP(chunks => log.info(`Fetch details for ${chunks.length} videos.`)),
       videosList(key),
