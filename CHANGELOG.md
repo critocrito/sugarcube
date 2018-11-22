@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.14.0](https://github.com/critocrito/sugarcube/compare/v0.13.2...v0.14.0) (2018-11-22)
+
+
+### Bug Fixes
+
+* **plugin-youtube:** flatten video queries when done ([c40581d](https://github.com/critocrito/sugarcube/commit/c40581d))
+
+
+### Features
+
+* **plugin-media:** run youtube-dl in parallel ([6bac8e4](https://github.com/critocrito/sugarcube/commit/6bac8e4))
+* **plugin-youtube:** chunk video downloads in batches of 50 ([82e1fe6](https://github.com/critocrito/sugarcube/commit/82e1fe6))
+
+
+
+
+
 ## [0.13.2](https://github.com/critocrito/sugarcube/compare/v0.13.1...v0.13.2) (2018-11-15)
 
 

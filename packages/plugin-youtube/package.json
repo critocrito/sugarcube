@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/plugin-youtube",
-  "version": "0.13.2",
+  "version": "0.14.0",
   "description": "A SugarCube plugin to fetch videos from Youtube.",
   "main": "_dist/index.js",
   "license": "GPL-3.0",
@@ -17,7 +17,7 @@
     "youtube"
   ],
   "dependencies": {
-    "@sugarcube/core": "^0.13.1",
+    "@sugarcube/core": "^0.14.0",
     "dashp": "^0.10.1",
     "lodash": "^4.17.4",
     "moment": "^2.19.1",

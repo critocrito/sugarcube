@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/core",
-  "version": "0.13.1",
+  "version": "0.14.0",
   "description": "Monoidal data sequences.",
   "main": "_dist/index.js",
   "repository": "https://github.com/critocrito/sugarcube",

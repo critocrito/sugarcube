@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/plugin-telegram",
-  "version": "0.13.1",
+  "version": "0.14.0",
   "description": "Plugins to utilize the Telegram API.",
   "main": "_dist/index.js",
   "repository": "https://github.com/critocrito/sugarcube",
@@ -17,7 +17,7 @@
     "telegram"
   ],
   "dependencies": {
-    "@sugarcube/core": "^0.13.1",
+    "@sugarcube/core": "^0.14.0",
     "bluebird": "^3.5.1",
     "lodash": "^4.17.4",
     "telegraf": "^3.14.0"
