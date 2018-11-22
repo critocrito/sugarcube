@@ -1,5 +1,5 @@
-import {flow, map, merge, property, get, getOr, set} from "lodash/fp";
-import {ofP} from "dashp";
+import {flow, map, merge, property, get, getOr, set, chunk} from "lodash/fp";
+import {collectP, ofP} from "dashp";
 import elastic from "elasticsearch";
 import {utils} from "@sugarcube/core";
 
@@ -67,6 +67,7 @@ export const bulk = curry4(
   "bulk",
   async (index, ops, client, customMappings) => {
     const type = "_doc";
+    const batchSize = 500;
     const toIndex = (ops.index || []).reduce(
       (memo, unit) =>
         memo.concat([{index: toHeader(index, unit)}, stripUnderscores(unit)]),
@@ -81,31 +82,55 @@ export const bulk = curry4(
       [],
     );
 
-    const body = toIndex.concat(toUpdate);
     const mappings = Object.assign({}, defaultMappings, customMappings);
 
     await createIndex(index, type, mappings, client);
-    const response = await client.bulk({body, type, refresh: true});
+    const responses = await collectP(
+      body => client.bulk({body, type, refresh: true}),
+      chunk(batchSize, toIndex.concat(toUpdate)),
+    );
 
-    const {took, items} = response;
-    return items.reduce(
-      (memo, item) => {
-        const i = item.index || item.update;
-        const path = `${i._index}.${i.result}`;
-        const count = getOr(0, path, memo[1]);
-        return [
-          i.error ? memo[0].concat([{id: i._id, error: i.error}]) : memo[0],
-          merge(memo[1], set(path, count + 1, {})),
-        ];
+    return responses.reduce(
+      ([errors, meta], response) => {
+        const {took, items} = response;
+        return items.reduce(
+          (acc, item) => {
+            const i = item.index || item.update;
+            const path = `${i._index}.${i.result}`;
+            const count = getOr(0, path, acc[1]);
+            return [
+              i.error ? acc[0].concat([{id: i._id, error: i.error}]) : acc[0],
+              merge(acc[1], set(path, count + 1, {})),
+            ];
+          },
+          [errors, Object.assign({}, meta, {took: meta.took + took})],
+        );
       },
-      [[], {took}],
+      [[], {took: 0, batches: responses.length, batchSize}],
     );
   },
 );
 
-export const queryByIds = curry3("queryByIds", (index, ids, client) => {
-  const body = queries.byIds(ids);
-  return query(index, body, ids.length, client);
+export const queryByIds = curry3("queryByIds", async (index, ids, client) => {
+  const batchSize = 500;
+  const responses = await collectP(idsChunk => {
+    const body = queries.byIds(idsChunk);
+    return query(index, body, idsChunk.length, client);
+  }, chunk(batchSize, ids));
+
+  return responses.reduce(
+    ([data, meta], response) => {
+      const {took, total} = response[1];
+      return [
+        data.concat(response[0]),
+        Object.assign({}, meta, {
+          took: took + meta.took,
+          total: total + meta.total,
+        }),
+      ];
+    },
+    [[], {took: 0, total: 0, batches: responses.length, batchSize}],
+  );
 });
 
 export const queryOne = curry3("queryOne", async (index, id, client) => {
