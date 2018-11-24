@@ -53,4 +53,12 @@ describe("state", () => {
       return isEqual(get(p, s.get()), s.get(p));
     },
   );
+  it("chains updates in sequence", () => {
+    const s = state({a: 0, b: []});
+    s.get().should.eql({a: 0, b: []});
+    s.update(({a, b}) => ({a: a + 1, b: b.concat(a)}));
+    s.get().should.eql({a: 1, b: [0]});
+    s.update(({a, b}) => ({a: a + 1, b: b.concat(a)}));
+    s.get().should.eql({a: 2, b: [0, 1]});
+  });
 });

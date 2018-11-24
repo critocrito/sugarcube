@@ -1,7 +1,7 @@
 import {set, merge, getOr} from "lodash/fp";
 
 const State = st => ({
-  runState: x => st(x),
+  runState: st,
 
   map: f =>
     State(x => {
@@ -11,8 +11,8 @@ const State = st => ({
 
   chain: f =>
     State(s => {
-      const [l, r] = st(s);
-      return f(l).runState(r);
+      const [, r] = st(s);
+      return f(r).runState(r);
     }),
 });
 
