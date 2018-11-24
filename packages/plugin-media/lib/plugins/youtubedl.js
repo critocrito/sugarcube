@@ -12,7 +12,7 @@ const accessAsync = pify(fs.access);
 
 const downloadTypes = ["video"];
 
-const plugin = async (envelope, {cfg, log}) => {
+const plugin = async (envelope, {cfg, log, stats}) => {
   const dataDir = get("media.data_dir", cfg);
   const cmd = get("media.youtubedl_cmd", cfg);
   const videoFormat = get("media.download_format", cfg);
@@ -99,9 +99,20 @@ const plugin = async (envelope, {cfg, log}) => {
                   ),
                 ),
               )
-              .catch(() =>
-                log.warn(`Failed to download video ${source} to ${location}`),
-              )
+              .catch(e => {
+                const failed = {
+                  type: unit._sc_source,
+                  term: source,
+                  plugin: "media_youtubedl",
+                  reason: e.message,
+                };
+                stats.update(
+                  "failed",
+                  units =>
+                    Array.isArray(units) ? units.concat(failed) : [failed],
+                );
+                log.warn(`Failed to download video ${source} to ${location}`);
+              })
               .then(() => media);
           }, unit._sc_media).then(ms => merge(unit, {_sc_media: ms})),
     envelope.data,

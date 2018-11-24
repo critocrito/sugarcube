@@ -8,7 +8,7 @@ import {videoChannelPlaylist, videoChannel} from "../api";
 
 const querySource = "youtube_channel";
 
-const listChannel = (envelope, {cfg, log}) => {
+const listChannel = (envelope, {cfg, log, stats}) => {
   const key = get("youtube.api_key", cfg);
   const counter = new Counter(
     size(filter(q => q.type === querySource, envelope.queries)),
@@ -35,13 +35,27 @@ const listChannel = (envelope, {cfg, log}) => {
       [
         parseChannelQuery,
         videoChannelPlaylist(key),
-        tapP(ds =>
+        tapP(ds => {
+          if (ds.length === 0) {
+            // We assume the query failed if it doesn't yield any result.
+            const fail = {
+              type: querySource,
+              term: q,
+              plugin: "youtube_channel",
+              reason: "Youtube channel didn't yield any results.",
+            };
+            stats.update(
+              "failed",
+              queries =>
+                Array.isArray(queries) ? queries.concat(fail) : [fail],
+            );
+          }
           log.info(
             `Received ${size(ds)} videos for ${q}. (${counter.count()}/${
               counter.total
             })`,
-          ),
-        ),
+          );
+        }),
       ],
       q,
     );
