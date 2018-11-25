@@ -1,4 +1,4 @@
-import {get} from "lodash/fp";
+import {get, getOr} from "lodash/fp";
 import {flowP, tapP, caughtP} from "dashp";
 import dot from "dot";
 import {envelope as env, plugin as p} from "@sugarcube/core";
@@ -15,27 +15,31 @@ const dots = dot.process({
 
 const querySource = "mail_recipient";
 
-const mailDiffStats = (envelope, {cfg, log, stats}) => {
-  const recipients = env.queriesByType(querySource, envelope);
-  // We only allow one sender.
-  const sender = cfg.mail.from;
-  const noEncrypt = get("mail.no-encrypt", cfg);
-  const {added, removed, shared, meta} = stats.get("diff");
+const mailFailedStats = async (envelope, {cfg, log, stats}) => {
+  const failures = Array.isArray(stats.get("failed"))
+    ? stats.get("failed")
+    : [];
 
-  if (added.count === 0 && removed.count === 0) {
-    log.info("No new stats. Skipping mailing.");
-    return Promise.resolve(envelope);
+  if (failures.length === 0) {
+    log.info("No failures to report. Skipping mailing.");
+    return envelope;
   }
 
-  const subject = "Message from SugarCube.";
-  const body = dots.diff_stats(
-    Object.assign({}, {recipients, added, removed, shared, meta}),
-  );
+  const project = getOr("unknown-project", "project", cfg);
+  const marker = get("marker", cfg);
+  const noEncrypt = get("mail.no-encrypt", cfg);
+  const sender = get("mail.from", cfg);
+  const isDebug = get("mail.debug", cfg);
+  const recipients = env.queriesByType(querySource, envelope);
+  const subject = `[${project}]: Failed queries for ${marker}.`;
+  const body = dots.failed_stats(Object.assign({}, {recipients, failures}));
   const transporter = createTransporter(cfg.mail);
 
-  if (cfg.mail.debug) log.info(["Email text:", "", body].join("\n"));
+  log.info(`Mailing ${failures.length} failures.`);
 
-  return Promise.all(
+  if (isDebug) log.info(["Email text:", "", body].join("\n"));
+
+  await Promise.all(
     recipients.map(recipient => {
       log.info(`Mailing diff stats to ${recipient}.`);
 
@@ -43,7 +47,7 @@ const mailDiffStats = (envelope, {cfg, log, stats}) => {
         [
           to => mail(transporter, sender, to, body, subject, !noEncrypt),
           tapP(info => {
-            if (cfg.mail.debug) {
+            if (isDebug) {
               log.info(
                 ["Emailing the following:", "", info.message.toString()].join(
                   "\n",
@@ -61,12 +65,13 @@ const mailDiffStats = (envelope, {cfg, log, stats}) => {
         recipient,
       );
     }),
-  ).then(() => envelope);
+  );
+  return envelope;
 };
 
-const plugin = p.liftManyA2([assertFrom, mailDiffStats]);
+const plugin = p.liftManyA2([assertFrom, mailFailedStats]);
 
-plugin.desc = "Mail diff stats to one or more recipient.";
+plugin.desc = "Mail failed stats to one or more recipient.";
 
 plugin.argv = {};
 

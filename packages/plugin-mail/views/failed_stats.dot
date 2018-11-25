@@ -1,0 +1,11 @@
+Hey,
+
+Unfortunately some queries didn't succeed.
+
+{{~it.failures :fail}}
+- {{=fail.term}} ({{=fail.type}}) in {{=fail.plugin}}
+  {{=fail.reason}}
+{{~}}
+
+Sincerely,
+S. Cube

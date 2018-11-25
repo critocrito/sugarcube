@@ -10,33 +10,7 @@ npm install --save @sugarcube/plugin-mail
 
 ## Usage
 
-## `mail_diff_stats` plugin
-
-This plugin sends statistics of type `diff`. It will send an email to every
-recipient supplied using the `mail_recipient` query type. Skip the emailing if
-there are no `added` of `removed` stats available.
-
-The following example diffs two csv files, and mails in debug mode the diff
-statistics to two recipients.
-
-```
-$(npm bin)/sugarcube -d \
-  -Q mail_recipient:one@example.com \
-  -Q mail_recipient:two@example.com \
-  -Q glob_pattern:data/dump-$(date -d "today" +%Y-%m-%d).csv \
-  -Q diff_glob_pattern:data/dump-$(date -d "yesterday" +%Y-%m-%d).csv \
-  -p csv_import,csv_diff,mail_diff_stats \
-  --csv.id_fields name \
-  --mail.from three@example.com \
-  --mail.debug
-```
-
-Every email is encrypted using gpg before sending. The `gpg` binary must be
-installed and the recipient's public key imported into the users keyring and
-be trusted. The email won't send if the encryption fails. To disable the
-encryption use the `--mail.no-encrypt` option.
-
-FIXME: Not tested on Windows, how would it work there with the `gpg` binary?
+All mail plugins use the following configuration options:
 
 **Configuration**:
 
@@ -49,7 +23,9 @@ Uses `mail_recipient` as query type.
 
 - `mail.no-encrypt`
 
-  Disable the gpg encryption for this run. Emails will be send in clear text.
+  Disable the gpg encryption for this run. Emails will be send in clear text. Every email is encrypted using gpg before sending. The `gpg` binary must be installed and the recipient's public key imported into the users keyring and be trusted. The email won't send if the encryption fails.
+
+  **FIXME**: Not tested on Windows, how would it work there with the `gpg` binary?
 
 - `mail.from`
 
@@ -70,3 +46,28 @@ Uses `mail_recipient` as query type.
 - `mail.smtp_port`
 
   Configure the port of the SMTP server in use.
+
+## `mail_failed_stats` plugin
+
+This plugin emails any failed queries that occur during a pipeline run. It looks up the list of queries in the `failed` attribute of the stats object. It will send an email to qvery recipient supplied using the `mail_recipient` query type. If there are no failed queries, the email sending will be skipped.
+
+## `mail_diff_stats` plugin
+
+This plugin sends statistics of type `diff`. It will send an email to every
+recipient supplied using the `mail_recipient` query type. Skip the emailing if
+there are no `added` of `removed` stats available.
+
+The following example diffs two csv files, and mails in debug mode the diff
+statistics to two recipients.
+
+```
+$(npm bin)/sugarcube -d \
+  -Q mail_recipient:one@example.com \
+  -Q mail_recipient:two@example.com \
+  -Q glob_pattern:data/dump-$(date -d "today" +%Y-%m-%d).csv \
+  -Q diff_glob_pattern:data/dump-$(date -d "yesterday" +%Y-%m-%d).csv \
+  -p csv_import,csv_diff,mail_diff_stats \
+  --csv.id_fields name \
+  --mail.from three@example.com \
+  --mail.debug
+```

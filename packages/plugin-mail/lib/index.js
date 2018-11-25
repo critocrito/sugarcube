@@ -1,8 +1,10 @@
 import {merge, values, forEach} from "lodash/fp";
 import mailDiffStats from "./plugins/diff-stats";
+import mailFailedStats from "./plugins/failed-stats";
 
 export const plugins = {
   mail_diff_stats: mailDiffStats,
+  mail_failed_stats: mailFailedStats,
 };
 
 forEach(p => {
@@ -33,6 +35,11 @@ forEach(p => {
       "mail.smtp_port": {
         type: "number",
         nargs: 1,
+      },
+      "mail.no-encrypt": {
+        type: "boolean",
+        default: false,
+        desc: "Encrypt all emails.",
       },
     },
     p.argv,
