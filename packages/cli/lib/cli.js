@@ -14,12 +14,16 @@ import {
   isEmpty,
 } from "lodash/fp";
 import fs from "fs";
+import path from "path";
 import dotenv from "dotenv";
 import {runner, createFeatureDecisions} from "@sugarcube/core";
 
 import {mapFiles, parseConfigFile, parseConfigFileWithExtends} from "./";
 import {info, warn, error, debug} from "./logger";
 import {modules} from "./packages";
+
+// eslint-disable-next-line import/no-dynamic-require
+const {name: project} = require(path.resolve(process.cwd(), "package.json"));
 
 const haltAndCough = curry((d, e) => {
   error(e.message);
@@ -183,7 +187,7 @@ const argvOmit = [
 ];
 const config = flow([
   omit(argvOmit),
-  cfg => merge(cfg, {queries, cache, plugins}),
+  cfg => merge(cfg, {project, queries, cache, plugins}),
 ])(argv);
 
 // Now we have our queries and config, we can create a sugarcube run, and
