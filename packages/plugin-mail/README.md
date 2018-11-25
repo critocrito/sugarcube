@@ -51,6 +51,10 @@ Uses `mail_recipient` as query type.
 
 This plugin emails any failed queries that occur during a pipeline run. It looks up the list of queries in the `failed` attribute of the stats object. It will send an email to qvery recipient supplied using the `mail_recipient` query type. If there are no failed queries, the email sending will be skipped.
 
+## `mail_pipeline_stats` plugin
+
+A pipeline run collects a lot of instrumentation details during a run. This plugin creates a run report and emails it. It will send an email to qvery recipient supplied using the `mail_recipient` query type.
+
 ## `mail_diff_stats` plugin
 
 This plugin sends statistics of type `diff`. It will send an email to every
