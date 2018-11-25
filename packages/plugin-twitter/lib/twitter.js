@@ -37,38 +37,28 @@ const apiErrors = curry((log, user, e) => {
   throw e;
 });
 
-export const feed = curry((cfg, log, users) => {
+export const parseApiErrors = e => {
+  if (e[0] && e[0].code === 34) return e[0].message;
+  return e.message;
+};
+
+export const feed = curry((cfg, user) => {
   const count = cfg.twitter.tweet_count;
   const retweets = cfg.twitter.tweet_count;
 
   const delay = rateLimit(1500);
   const op = throttle(delay, request(cfg, "statuses/user_timeline.json"));
 
-  return foldP(
-    (memo, user) => {
-      const params = merge(
-        {
-          count,
-          include_rts: retweets,
-        },
-        isNaN(parseInt(10, user))
-          ? {screen_name: user.replace(/^@/, "")}
-          : {user_id: user},
-      );
-
-      return flowP(
-        [
-          op,
-          tapP(rs => log.info(`Fetched ${size(rs)} tweets for ${user}.`)),
-          caughtP(apiErrors(log, user)),
-          flow([tweetTransform, concat(memo)]),
-        ],
-        params,
-      ).catch(apiErrors(log, user));
+  const params = merge(
+    {
+      count,
+      include_rts: retweets,
     },
-    [],
-    users,
+    isNaN(parseInt(10, user))
+      ? {screen_name: user.replace(/^@/, "")}
+      : {user_id: user},
   );
+  return flowP([op, tweetTransform], params);
 });
 
 export const followers = (cfg, log, users) => {

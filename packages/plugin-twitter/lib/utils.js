@@ -91,7 +91,7 @@ export const recurse = curry((maxDepth, key, fn) => {
             const nextDepth = depth + 1;
             const target = result[key];
 
-            // eslint-disable-next-line promise/avoid-new
+            // eslint-disable-next-line promise/no-nesting
             return iter(merge(params, {[key]: target}), nextDepth, target).then(
               r =>
                 concat(
