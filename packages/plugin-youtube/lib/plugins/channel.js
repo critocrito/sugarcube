@@ -1,7 +1,9 @@
 import {size, get, pickBy, identity, filter} from "lodash/fp";
 import {flowP, tapP} from "dashp";
 import {plugin as p, envelope as env} from "@sugarcube/core";
-import moment from "moment";
+import parse from "date-fns/parse";
+import format from "date-fns/format";
+import subDays from "date-fns/sub_days";
 
 import {Counter, assertCredentials, parseChannelQuery} from "../utils";
 import {videoChannelPlaylist, videoChannel, channelExists} from "../api";
@@ -10,27 +12,41 @@ const querySource = "youtube_channel";
 
 const listChannel = (envelope, {cfg, log, stats}) => {
   const key = get("youtube.api_key", cfg);
+  const publishedBefore = get("youtube.published_before", cfg);
+  const publishedAfter = get("youtube.published_after", cfg);
+  const pastDays = get("youtube.past_days", cfg);
+  let range;
   const counter = new Counter(
     size(filter(q => q.type === querySource, envelope.queries)),
   );
 
-  const range = {
-    publishedBefore: get("youtube.published_before", cfg)
-      ? moment(get("youtube.published_before", cfg), "YYYY-MM-DD").format(
-          "YYYY-MM-DDTHH:mm:ssZ",
-        )
-      : undefined,
-    publishedAfter: get("youtube.past_days", cfg)
-      ? moment()
-          .subtract(get("youtube.past_days", cfg), "d")
-          .format("YYYY-MM-DDTHH:mm:ssZ") ||
-        moment(get("youtube.published_after", cfg), "YYYY-MM-DD").format(
-          "YYYY-MM-DDTHH:mm:ssZ",
-        )
-      : undefined,
-  };
+  if (publishedBefore != null || publishedAfter != null || pastDays != null) {
+    const till = publishedBefore == null ? new Date() : parse(publishedBefore);
+    let from;
+    // pastDays takes precedence over publishedAfter
+    if (pastDays != null) {
+      from = subDays(till, pastDays);
+    } else if (publishedAfter != null) {
+      from = parse(publishedAfter);
+    }
+    if (from >= till) {
+      log.warn(
+        `published_before is before published_after. Did you mean to switch them around?`,
+      );
+    } else {
+      range = Object.assign(
+        {},
+        {publishedBefore: format(till)},
+        from ? {publishedAfter: format(from)} : {},
+      );
+    }
+  }
 
-  const f = query =>
+  const op = range
+    ? videoChannel(key, pickBy(identity, range))
+    : videoChannelPlaylist(key);
+
+  const retrieveChannel = query =>
     flowP(
       [
         parseChannelQuery,
@@ -48,62 +64,28 @@ const listChannel = (envelope, {cfg, log, stats}) => {
               queries =>
                 Array.isArray(queries) ? queries.concat(fail) : [fail],
             );
+            log.warn(`Channel ${q} doesn't exists`);
           }
-          return exists ? videoChannelPlaylist(key, query) : [];
+          return exists
+            ? flowP([
+                op,
+                tapP(ds =>
+                  log.info(
+                    `Received ${size(
+                      ds,
+                    )} videos for ${query}. (${counter.count()}/${
+                      counter.total
+                    })`,
+                  ),
+                ),
+              ])(query)
+            : [];
         },
-        tapP(ds =>
-          log.info(
-            `Received ${size(ds)} videos for ${query}. (${counter.count()}/${
-              counter.total
-            })`,
-          ),
-        ),
       ],
       query,
     );
 
-  if (range.publishedBefore || range.publishedAfter) {
-    log.info(`Fetching videos before ${range.publishedBefore}`);
-    log.info(`Fetching videos after ${range.publishedAfter}`);
-
-    const fe = query =>
-      flowP(
-        [
-          parseChannelQuery,
-          async q => {
-            const exists = await channelExists(key, q);
-            if (!exists) {
-              const fail = {
-                type: querySource,
-                term: q,
-                plugin: "youtube_channel",
-                reason: "Youtube channel doesn't exist.",
-              };
-              stats.update(
-                "failed",
-                queries =>
-                  Array.isArray(queries) ? queries.concat(fail) : [fail],
-              );
-            }
-            return exists
-              ? videoChannel(key, pickBy(identity, range), query)
-              : [];
-          },
-          tapP(ds =>
-            log.info(
-              `Received ${size(ds)} videos for ${query}. (${counter.count()}/${
-                counter.total
-              })`,
-            ),
-          ),
-        ],
-        query,
-      );
-
-    return env.flatMapQueriesAsync(fe, querySource, envelope);
-  }
-
-  return env.flatMapQueriesAsync(f, querySource, envelope);
+  return env.flatMapQueriesAsync(retrieveChannel, querySource, envelope);
 };
 
 const plugin = p.liftManyA2([assertCredentials, listChannel]);

@@ -1,11 +1,11 @@
 import {merge} from "lodash/fp";
-import moment from "moment";
+import parse from "date-fns/parse";
 
 export const video = item =>
   merge(item, {
     _sc_id_fields: ["id"],
     _sc_content_fields: ["snippet.title", "snippet.description"],
-    _sc_pubdates: {source: moment.utc(item.snippet.publishedAt).toDate()},
+    _sc_pubdates: {source: parse(item.snippet.publishedAt)},
     _sc_media: [
       {
         type: "thumbnail",
@@ -30,7 +30,7 @@ export const playlistVideo = item =>
     playlist_id: item.id,
     _sc_id_fields: ["id"],
     _sc_content_fields: ["snippet.title", "snippet.description"],
-    _sc_pubdates: {source: moment.utc(item.snippet.publishedAt).toDate()},
+    _sc_pubdates: {source: parse(item.snippet.publishedAt)},
     _sc_media: [
       {
         type: "thumbnail",

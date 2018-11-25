@@ -19,8 +19,8 @@
   "dependencies": {
     "@sugarcube/core": "^0.14.0",
     "dashp": "^0.10.1",
+    "date-fns": "^1.29.0",
     "lodash": "^4.17.4",
-    "moment": "^2.19.1",
     "pify": "^3.0.0",
     "request": "^2.78.0"
   },
