@@ -5,15 +5,6 @@ const {assertCfg} = utils.assertions;
 
 export const assertCredentials = assertCfg(["youtube.api_key"]);
 
-export function Counter(total) {
-  this.beginning = 0;
-  this.total = total;
-  this.count = () => {
-    this.beginning += 1;
-    return this.beginning;
-  };
-}
-
 export const parseVideoQuery = query => {
   if (query.startsWith("http")) {
     const u = new URL(query);
@@ -36,7 +27,4 @@ export const parseChannelQuery = query => {
   return query;
 };
 
-export default {
-  assertCredentials,
-  Counter,
-};
+export default {assertCredentials};

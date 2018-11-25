@@ -1,11 +1,11 @@
-import {size, get, pickBy, identity, filter} from "lodash/fp";
+import {size, get, pickBy, identity} from "lodash/fp";
 import {flowP, tapP} from "dashp";
 import {plugin as p, envelope as env} from "@sugarcube/core";
 import parse from "date-fns/parse";
 import format from "date-fns/format";
 import subDays from "date-fns/sub_days";
 
-import {Counter, assertCredentials, parseChannelQuery} from "../utils";
+import {assertCredentials, parseChannelQuery} from "../utils";
 import {videoChannelPlaylist, videoChannel, channelExists} from "../api";
 
 const querySource = "youtube_channel";
@@ -16,9 +16,6 @@ const listChannel = (envelope, {cfg, log, stats}) => {
   const publishedAfter = get("youtube.published_after", cfg);
   const pastDays = get("youtube.past_days", cfg);
   let range;
-  const counter = new Counter(
-    size(filter(q => q.type === querySource, envelope.queries)),
-  );
 
   if (publishedBefore != null || publishedAfter != null || pastDays != null) {
     const till = publishedBefore == null ? new Date() : parse(publishedBefore);
@@ -69,15 +66,9 @@ const listChannel = (envelope, {cfg, log, stats}) => {
           return exists
             ? flowP([
                 op,
-                tapP(ds =>
-                  log.info(
-                    `Received ${size(
-                      ds,
-                    )} videos for ${query}. (${counter.count()}/${
-                      counter.total
-                    })`,
-                  ),
-                ),
+                tapP(ds => {
+                  log.info(`Received ${size(ds)} videos for ${query}.`);
+                }),
               ])(query)
             : [];
         },
