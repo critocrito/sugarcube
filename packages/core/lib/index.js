@@ -8,6 +8,7 @@ import plugin from "./data/plugin";
 import utilsA from "./utils";
 import assert from "./assert";
 import crypto from "./crypto";
+import {state} from "./state";
 import createFeatureDecisions from "./features";
 
 const utils = merge(utilsA, {assertions: assert});
@@ -21,6 +22,7 @@ export {
   utils,
   assert,
   crypto,
+  state,
   createFeatureDecisions,
 };
 
@@ -33,5 +35,6 @@ export default {
   utils,
   assert,
   crypto,
+  state,
   createFeatureDecisions,
 };

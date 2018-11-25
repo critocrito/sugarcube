@@ -3,14 +3,18 @@ import {envelope as env, runner} from "@sugarcube/core";
 
 const remainderPipeline = plugins => {
   const index = plugins.indexOf("workflow_multiplex");
-  return plugins.slice(index + 1);
+  const endIndex = plugins.indexOf("workflow_multiplex_end");
+  return endIndex === -1
+    ? [plugins.slice(index + 1), []]
+    : [plugins.slice(index + 1, endIndex), plugins.slice(endIndex + 1)];
 };
 
 const plugin = async (envelope, {cfg, log, cache, stats, plugins}) => {
   const batchSize = get("workflow.multiplex_size", cfg);
   const continueOnError = get("workflow.multiplex_continue_on_error", cfg);
 
-  const pipeline = remainderPipeline(cfg.plugins);
+  const [pipeline, tailPipeline] = remainderPipeline(cfg.plugins);
+
   // Those queries should always be part of the pipeline, since plugins like
   // sheets_move_queries need them.
   const staticQueries = envelope.queries.filter(({type}) =>
@@ -66,11 +70,52 @@ const plugin = async (envelope, {cfg, log, cache, stats, plugins}) => {
     return memo.then(async () => {
       // eslint-disable-next-line promise/always-return
       if (abort) return;
-      log.info(`Starting the batch ${batch}.`);
+      log.info(`Starting batch ${batch}.`);
       await run();
-      log.info(`Finished the batch ${batch}.`);
+      log.info(`Finished batch ${batch}.`);
     });
   }, Promise.resolve());
+
+  log.info("Finished the workflow_multiplex plugin");
+
+  if (tailPipeline.length === 0)
+    return Object.assign({endEarly: true}, env.empty());
+
+  const run = runner(
+    plugins,
+    Object.assign({}, cfg, {cache, stats, plugins: tailPipeline}),
+    envelope.queries,
+  );
+  run.stream.onValue(msg => {
+    switch (msg.type) {
+      case "log_info":
+        log.info(msg.msg);
+        break;
+      case "log_warn":
+        log.warn(msg.msg);
+        break;
+      case "log_error":
+        log.error(msg.msg);
+        break;
+      case "log_debug":
+        if (cfg.debug) log.debug(msg.msg);
+        break;
+      case "plugin_start":
+        log.info(`Starting the ${msg.plugin} plugin.`);
+        break;
+      case "plugin_end":
+        log.info(`Finished the ${msg.plugin} plugin.`);
+        break;
+      default:
+        break;
+    }
+  });
+  run.stream.onError(e => {
+    log.error(e.message);
+    if (cfg.debug) log.error(e);
+  });
+
+  await run();
 
   return Object.assign({endEarly: true}, env.empty());
 };

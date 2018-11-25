@@ -2,7 +2,7 @@ Hey,
 
 Here you have a roundup of the pipeline run:
 
-The run acquired in total {{=it.report.total}} observations, of which {{=it.report.created}} were new.
+The run acquired in total {{=it.total}} observations, of which {{=it.created}} were new.
 
 Here a more detailed breakdown of the pipeline:
 {{~it.plugins :p}}

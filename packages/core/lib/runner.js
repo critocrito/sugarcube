@@ -1,4 +1,4 @@
-import {flow, map, zip, merge, size} from "lodash/fp";
+import {flow, map, zip, merge} from "lodash/fp";
 import Bacon from "baconjs";
 import {flowP, caughtP, tapP, foldP} from "dashp";
 
@@ -12,28 +12,37 @@ import {now, curry2, curry3, curry4} from "./utils";
 // The following functions provide funtionalities that should be run every
 // time a plugin is run. The plugin runner composes them with the plugin.
 const pluginStats = curry4("pluginStats", (stream, name, stats, envelope) => {
-  const total = size(envelope.data);
-  stream.push({type: "plugin_stats", plugin: name, total});
-  stats.update("pipeline", st => merge(st, {total}));
+  stream.push({type: "plugin_stats", plugin: name});
   return envelope;
 });
 
 const start = curry4("start", (stream, name, stats, envelope) => {
+  const epoch = Date.now();
   stream.push({type: "plugin_start", ts: now(), plugin: name});
-  stats.update(`pipeline.plugins.${name}`, merge({start: Date.now()}));
+  stats.update(`pipeline.plugins.${name}`, st =>
+    Object.assign({}, st, {
+      start: Array.isArray(st.start) ? st.start.concat(epoch) : [epoch],
+    }),
+  );
   return envelope;
 });
 
 const end = curry4("end", (stream, name, stats, envelope) => {
-  const endTime = Date.now();
-  const duration = endTime - stats.get(`pipeline.plugins.${name}.start`);
+  const epoch = Date.now();
+  const duration =
+    epoch - stats.get(`pipeline.plugins.${name}.start`).slice(-1)[0];
   // eslint-disable-next-line camelcase
   const total = filterData(({_sc_source}) => _sc_source === name, envelope).data
     .length;
   stream.push({type: "plugin_end", ts: now(), plugin: name});
-  stats.update(
-    `pipeline.plugins.${name}`,
-    merge({end: endTime, duration, total}),
+  stats.update(`pipeline.plugins.${name}`, st =>
+    Object.assign({}, st, {
+      total: Array.isArray(st.total) ? st.total.concat(total) : [total],
+      end: Array.isArray(st.end) ? st.end.concat(epoch) : [epoch],
+      duration: Array.isArray(st.duration)
+        ? st.duration.concat(duration)
+        : [duration],
+    }),
   );
   return envelope;
 });

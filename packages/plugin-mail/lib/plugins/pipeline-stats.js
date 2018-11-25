@@ -2,7 +2,6 @@ import {get, getOr} from "lodash/fp";
 import {flowP, tapP, caughtP} from "dashp";
 import dot from "dot";
 import distanceInWords from "date-fns/distance_in_words";
-import format from "date-fns/format";
 import {envelope as env, plugin as p} from "@sugarcube/core";
 
 import {createTransporter, mail} from "../utils";
@@ -18,23 +17,26 @@ const dots = dot.process({
 const querySource = "mail_recipient";
 
 const mailFailedStats = async (envelope, {cfg, log, stats}) => {
-  const report = stats.get("pipeline");
   const project = getOr("unknown-project", "project", cfg);
   const marker = get("marker", cfg);
   const noEncrypt = get("mail.no-encrypt", cfg);
   const sender = get("mail.from", cfg);
   const isDebug = get("mail.debug", cfg);
   const recipients = env.queriesByType(querySource, envelope);
-  const subject = `[${project}]: Report for ${report.name} (${marker}).`;
+
+  // report stats
+  const report = stats.get("pipeline");
+  const created = report.created.reduce((memo, c) => memo + c, 0);
   const plugins = Object.keys(report.plugins || {})
-    .filter(key => !/^(tap|mail)/.test(key))
+    .filter(key => !/^(tap|mail|workflow)/.test(key))
     .map(key => {
       const stat = report.plugins[key];
+      const start = stat.start[0];
+      const end = stat.duration.reduce((memo, d) => memo + d, start);
       return Object.assign({}, stat, {
         name: key,
-        start: format(new Date(stat.start)),
-        end: format(new Date(stat.end)),
-        duration: distanceInWords(new Date(stat.start), new Date(stat.end)),
+        total: stat.total.reduce((memo, t) => memo + t, 0),
+        duration: distanceInWords(new Date(start), new Date(end)),
       });
     })
     .sort((a, b) => {
@@ -42,8 +44,13 @@ const mailFailedStats = async (envelope, {cfg, log, stats}) => {
       if (a.order < b.order) return -1;
       return 0;
     });
+  // FIXME: Until the pipeline can calculate it's own total
+  const total = report.total.reduce((memo, t) => memo + t, 0);
+
+  // Create the actual email.
+  const subject = `[${project}]: Report for ${report.name} (${marker}).`;
   const body = dots.pipeline_stats(
-    Object.assign({}, {recipients, report, plugins}),
+    Object.assign({}, {recipients, report, total, created, plugins}),
   );
   const transporter = createTransporter(cfg.mail);
 
