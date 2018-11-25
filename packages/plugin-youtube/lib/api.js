@@ -60,6 +60,16 @@ export const channelSearch = curry((key, range, channelId) => {
   return page(search, merge(params, range));
 });
 
+export const channelExists = curry(async (key, id) => {
+  const params = {
+    part: "id",
+    id,
+    key,
+  };
+  const {pageInfo} = await channels(params);
+  return pageInfo.totalResults > 0;
+});
+
 const channelToPlaylist = curry((key, id) => {
   const params = {
     part: "contentDetails",

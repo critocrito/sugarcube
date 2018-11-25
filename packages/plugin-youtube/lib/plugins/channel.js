@@ -4,7 +4,7 @@ import {plugin as p, envelope as env} from "@sugarcube/core";
 import moment from "moment";
 
 import {Counter, assertCredentials, parseChannelQuery} from "../utils";
-import {videoChannelPlaylist, videoChannel} from "../api";
+import {videoChannelPlaylist, videoChannel, channelExists} from "../api";
 
 const querySource = "youtube_channel";
 
@@ -30,19 +30,18 @@ const listChannel = (envelope, {cfg, log, stats}) => {
       : undefined,
   };
 
-  const f = q =>
+  const f = query =>
     flowP(
       [
         parseChannelQuery,
-        videoChannelPlaylist(key),
-        tapP(ds => {
-          if (ds.length === 0) {
-            // We assume the query failed if it doesn't yield any result.
+        async q => {
+          const exists = await channelExists(key, q);
+          if (!exists) {
             const fail = {
               type: querySource,
               term: q,
               plugin: "youtube_channel",
-              reason: "Youtube channel didn't yield any results.",
+              reason: "Youtube channel doesn't exist.",
             };
             stats.update(
               "failed",
@@ -50,34 +49,55 @@ const listChannel = (envelope, {cfg, log, stats}) => {
                 Array.isArray(queries) ? queries.concat(fail) : [fail],
             );
           }
+          return exists ? videoChannelPlaylist(key, query) : [];
+        },
+        tapP(ds =>
           log.info(
-            `Received ${size(ds)} videos for ${q}. (${counter.count()}/${
+            `Received ${size(ds)} videos for ${query}. (${counter.count()}/${
               counter.total
             })`,
-          );
-        }),
+          ),
+        ),
       ],
-      q,
+      query,
     );
 
   if (range.publishedBefore || range.publishedAfter) {
     log.info(`Fetching videos before ${range.publishedBefore}`);
     log.info(`Fetching videos after ${range.publishedAfter}`);
 
-    const fe = q =>
+    const fe = query =>
       flowP(
         [
           parseChannelQuery,
-          videoChannel(key, pickBy(identity, range)),
+          async q => {
+            const exists = await channelExists(key, q);
+            if (!exists) {
+              const fail = {
+                type: querySource,
+                term: q,
+                plugin: "youtube_channel",
+                reason: "Youtube channel doesn't exist.",
+              };
+              stats.update(
+                "failed",
+                queries =>
+                  Array.isArray(queries) ? queries.concat(fail) : [fail],
+              );
+            }
+            return exists
+              ? videoChannel(key, pickBy(identity, range), query)
+              : [];
+          },
           tapP(ds =>
             log.info(
-              `Received ${size(ds)} videos for ${q}. (${counter.count()}/${
+              `Received ${size(ds)} videos for ${query}. (${counter.count()}/${
                 counter.total
               })`,
             ),
           ),
         ],
-        q,
+        query,
       );
 
     return env.flatMapQueriesAsync(fe, querySource, envelope);
