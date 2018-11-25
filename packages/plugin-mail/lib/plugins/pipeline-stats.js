@@ -1,6 +1,8 @@
 import {get, getOr} from "lodash/fp";
 import {flowP, tapP, caughtP} from "dashp";
 import dot from "dot";
+import distanceInWords from "date-fns/distance_in_words";
+import format from "date-fns/format";
 import {envelope as env, plugin as p} from "@sugarcube/core";
 
 import {createTransporter, mail} from "../utils";
@@ -16,32 +18,42 @@ const dots = dot.process({
 const querySource = "mail_recipient";
 
 const mailFailedStats = async (envelope, {cfg, log, stats}) => {
-  const failures = Array.isArray(stats.get("failed"))
-    ? stats.get("failed")
-    : [];
-
-  if (failures.length === 0) {
-    log.info("No failures to report. Skipping mailing.");
-    return envelope;
-  }
-
+  const report = stats.get("pipeline");
   const project = getOr("unknown-project", "project", cfg);
   const marker = get("marker", cfg);
   const noEncrypt = get("mail.no-encrypt", cfg);
   const sender = get("mail.from", cfg);
   const isDebug = get("mail.debug", cfg);
   const recipients = env.queriesByType(querySource, envelope);
-  const subject = `[${project}]: Failed queries for ${marker}.`;
-  const body = dots.failed_stats(Object.assign({}, {recipients, failures}));
+  const subject = `[${project}]: Report for ${report.name} (${marker}).`;
+  const plugins = Object.keys(report.plugins || {})
+    .filter(key => !/^(tap|mail)/.test(key))
+    .map(key => {
+      const stat = report.plugins[key];
+      return Object.assign({}, stat, {
+        name: key,
+        start: format(new Date(stat.start)),
+        end: format(new Date(stat.end)),
+        duration: distanceInWords(new Date(stat.start), new Date(stat.end)),
+      });
+    })
+    .sort((a, b) => {
+      if (a.order > b.order) return 1;
+      if (a.order < b.order) return -1;
+      return 0;
+    });
+  const body = dots.pipeline_stats(
+    Object.assign({}, {recipients, report, plugins}),
+  );
   const transporter = createTransporter(cfg.mail);
 
-  log.info(`Mailing ${failures.length} failures.`);
+  log.info(`Mailing the report for ${report.name} (${marker}).`);
 
   if (isDebug) log.info(["Email text:", "", body].join("\n"));
 
   await Promise.all(
     recipients.map(recipient => {
-      log.info(`Mailing failed stats to ${recipient}.`);
+      log.info(`Mailing pipeline stats to ${recipient}.`);
 
       return flowP(
         [

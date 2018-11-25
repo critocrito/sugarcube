@@ -1,10 +1,12 @@
 import {merge, values, forEach} from "lodash/fp";
 import mailDiffStats from "./plugins/diff-stats";
 import mailFailedStats from "./plugins/failed-stats";
+import mailPipelineStats from "./plugins/pipeline-stats";
 
 export const plugins = {
   mail_diff_stats: mailDiffStats,
   mail_failed_stats: mailFailedStats,
+  mail_pipeline_stats: mailPipelineStats,
 };
 
 forEach(p => {

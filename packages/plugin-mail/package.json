@@ -16,6 +16,7 @@
   "dependencies": {
     "@sugarcube/core": "^0.14.0",
     "dashp": "^0.10.1",
+    "date-fns": "^1.29.0",
     "dot": "^1.1.2",
     "gpg": "^0.6.0",
     "lodash": "^4.17.4",
