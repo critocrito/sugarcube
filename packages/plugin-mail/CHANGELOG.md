@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.15.0](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mail/compare/v0.14.0...v0.15.0) (2018-11-25)
+
+
+### Features
+
+* **plugin-mail:** email failed stats ([0dd699f](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mail/commit/0dd699f))
+* **plugin-mail:** mail a report of the pipeline run ([a7d1e95](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mail/commit/a7d1e95))
+* instrument the pipeline and deliver a mail report ([6018451](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mail/commit/6018451))
+
+
+
+
+
 # [0.14.0](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mail/compare/v0.13.2...v0.14.0) (2018-11-22)
 
 **Note:** Version bump only for package @sugarcube/plugin-mail

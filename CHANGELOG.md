@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.15.0](https://github.com/critocrito/sugarcube/compare/v0.14.0...v0.15.0) (2018-11-25)
+
+
+### Bug Fixes
+
+* **core:** chain updates of state correctly ([cce3dbd](https://github.com/critocrito/sugarcube/commit/cce3dbd))
+* **plugin-youtube:** handle date ranges correctly when fetching channels ([c7c5930](https://github.com/critocrito/sugarcube/commit/c7c5930))
+
+
+### Features
+
+* **cli:** set a human friendly name for a pipeline ([9ed7ae0](https://github.com/critocrito/sugarcube/commit/9ed7ae0))
+* instrument the pipeline and deliver a mail report ([6018451](https://github.com/critocrito/sugarcube/commit/6018451))
+* track failed channel queries and youtubedl downloads ([ab2a541](https://github.com/critocrito/sugarcube/commit/ab2a541))
+* **cli:** include the project name in the pipeline config ([f7f1228](https://github.com/critocrito/sugarcube/commit/f7f1228))
+* **core:** added instrumentation to the pipeline run ([5019fe2](https://github.com/critocrito/sugarcube/commit/5019fe2))
+* **plugin-elasticsearch:** added instrumentation to the complement plugins ([a263c7c](https://github.com/critocrito/sugarcube/commit/a263c7c))
+* **plugin-elasticsearch:** added the supplement plugin alias ([cd0069d](https://github.com/critocrito/sugarcube/commit/cd0069d))
+* **plugin-mail:** email failed stats ([0dd699f](https://github.com/critocrito/sugarcube/commit/0dd699f))
+* **plugin-mail:** mail a report of the pipeline run ([a7d1e95](https://github.com/critocrito/sugarcube/commit/a7d1e95))
+* **plugin-twitter:** track failed twitter users when fetching timelines ([f8a0d94](https://github.com/critocrito/sugarcube/commit/f8a0d94))
+* **plugin-youtube:** properly test for the existence of channels ([59855d6](https://github.com/critocrito/sugarcube/commit/59855d6))
+
+
+
+
+
 # [0.14.0](https://github.com/critocrito/sugarcube/compare/v0.13.2...v0.14.0) (2018-11-22)
 
 

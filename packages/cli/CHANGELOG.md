@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.15.0](https://github.com/critocrito/sugarcube/compare/v0.14.0...v0.15.0) (2018-11-25)
+
+
+### Features
+
+* **cli:** include the project name in the pipeline config ([f7f1228](https://github.com/critocrito/sugarcube/commit/f7f1228))
+* **cli:** set a human friendly name for a pipeline ([9ed7ae0](https://github.com/critocrito/sugarcube/commit/9ed7ae0))
+
+
+
+
+
 # [0.14.0](https://github.com/critocrito/sugarcube/compare/v0.13.2...v0.14.0) (2018-11-22)
 
 **Note:** Version bump only for package @sugarcube/cli
