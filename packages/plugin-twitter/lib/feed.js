@@ -16,7 +16,7 @@ const feedPlugin = (envelope, {log, cfg, stats}) => {
     flowP(
       [
         feed(cfg),
-        tapP(rs => log.info(`Fetched ${size(rs)} tweets for all queries.`)),
+        tapP(rs => log.info(`Fetched ${size(rs)} tweets for ${user}.`)),
         caughtP(e => {
           const reason = parseApiErrors(e);
           const fail = {
