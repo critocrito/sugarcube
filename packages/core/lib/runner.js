@@ -3,7 +3,7 @@ import Bacon from "baconjs";
 import {flowP, caughtP, tapP, foldP} from "dashp";
 
 import {liftManyA2} from "./data/plugin";
-import {envelopeQueries, fmapData} from "./data/envelope";
+import {envelopeQueries, fmapData, filterData} from "./data/envelope";
 import ds from "./data/data";
 import {state} from "./state";
 import {uid, generateSeed} from "./crypto";
@@ -12,17 +12,29 @@ import {now, curry2, curry3, curry4} from "./utils";
 // The following functions provide funtionalities that should be run every
 // time a plugin is run. The plugin runner composes them with the plugin.
 const pluginStats = curry4("pluginStats", (stream, name, stats, envelope) => {
-  stream.push({type: "plugin_stats", plugin: name, size: size(envelope.data)});
+  const total = size(envelope.data);
+  stream.push({type: "plugin_stats", plugin: name, total});
+  stats.update("pipeline", st => merge(st, {total}));
   return envelope;
 });
 
-const start = curry3("start", (stream, name, envelope) => {
+const start = curry4("start", (stream, name, stats, envelope) => {
   stream.push({type: "plugin_start", ts: now(), plugin: name});
+  stats.update(`pipeline.plugins.${name}`, merge({start: Date.now()}));
   return envelope;
 });
 
-const end = curry3("end", (stream, name, envelope) => {
+const end = curry4("end", (stream, name, stats, envelope) => {
+  const endTime = Date.now();
+  const duration = endTime - stats.get(`pipeline.plugins.${name}.start`);
+  // eslint-disable-next-line camelcase
+  const total = filterData(({_sc_source}) => _sc_source === name, envelope).data
+    .length;
   stream.push({type: "plugin_end", ts: now(), plugin: name});
+  stats.update(
+    `pipeline.plugins.${name}`,
+    merge({end: endTime, duration, total}),
+  );
   return envelope;
 });
 
@@ -109,6 +121,17 @@ const runner = curry3("runner", (plugins, cfg, queries) => {
   //     [['twitter_search', f1], ['mongodb_store', f2]]
   const pipeline = flow([map(p => plugins[p]), zip(cfg.plugins)])(cfg.plugins);
 
+  stats.update(
+    "pipeline",
+    merge({
+      plugins: pipeline.reduce(
+        (memo, [p], order) => Object.assign(memo, {[p]: {order}}),
+        {},
+      ),
+      name: cfg.name,
+    }),
+  );
+
   const log = {
     info: msg => stream.push({type: "log_info", msg}),
     warn: msg => stream.push({type: "log_warn", msg}),
@@ -124,7 +147,7 @@ const runner = curry3("runner", (plugins, cfg, queries) => {
           // eslint-disable-next-line consistent-return
           return liftManyA2(
             [
-              start(stream, name),
+              start(stream, name, stats),
               plugin,
               env => {
                 endEarly = !!env.endEarly;
@@ -136,7 +159,7 @@ const runner = curry3("runner", (plugins, cfg, queries) => {
               mark(marker),
               dates(timestamp),
               pluginStats(stream, name, stats),
-              end(stream, name),
+              end(stream, name, stats),
             ],
             envelope,
             {plugins, cache, stats, log, cfg: merge({marker}, cfg)},
