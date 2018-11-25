@@ -1,9 +1,9 @@
-import {size, get} from "lodash/fp";
+import {size, get, merge} from "lodash/fp";
 import {envelope as env} from "@sugarcube/core";
 
 import {Elastic} from "../elastic";
 
-const plugin = async (envelope, {cfg, log}) => {
+const plugin = async (envelope, {cfg, log, stats}) => {
   const host = get("elastic.host", cfg);
   const port = get("elastic.port", cfg);
   const index = get("elastic.index", cfg);
@@ -12,6 +12,15 @@ const plugin = async (envelope, {cfg, log}) => {
     function* complement({queryByIds}) {
       const ids = envelope.data.map(u => u._sc_id_hash);
       const existing = yield queryByIds(index, ids);
+
+      stats.update(
+        "pipeline",
+        merge({
+          created: ids.length - existing.length,
+          complemented: existing.length,
+        }),
+      );
+
       log.info(`Complementing ${size(existing)} existing units.`);
       return existing;
     },
