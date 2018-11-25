@@ -10,6 +10,7 @@ const plugins = {
   elastic_export: exportPlugin,
   elastic_complement: complementPlugin,
   elastic_complement_left: complementLeftPlugin,
+  elastic_supplement: complementLeftPlugin,
 };
 
 forEach(p => {

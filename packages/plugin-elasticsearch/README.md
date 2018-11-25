@@ -11,7 +11,7 @@ npm install --save @sugarcube/plugin-elasticsearch
 
 ## Usage
 
-## `elastic_export` plugin
+### `elastic_export` plugin
 
 Store data of the current envelope in Elasticsearch.
 
@@ -52,7 +52,7 @@ sugarcube -Q ddg_search:Keith\ Johnstone \
 
 Indexes are created the first time an export happens. In order to change the mappings of an existing index see [this](https://www.elastic.co/blog/changing-mapping-with-zero-downtime), [this](https://www.elastic.co/blog/reindex-is-coming) and [this](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-reindex.html).
 
-## `elastic_import` plugin
+### `elastic_import` plugin
 
 Search for units in Elasticsearch and import them into the pipeline. Search
 bodies can be defined in JSON files and imported using the `glob_pattern`
@@ -128,7 +128,7 @@ I can then call this script like that:
 ./pipelines.sh
 ```
 
-## `elastic_complement` plugin
+### `elastic_complement` plugin
 
 Complement data in the pipeline with existing data stored in
 Elasticsearch. This merges new data into existing data.
@@ -152,7 +152,7 @@ sugarcube -Q ddg_search:Keith\ Johnstone \
           -p ddg_search,elastic_complement,elastic_export
 ```
 
-## `elastic_complement_left` plugin
+### `elastic_complement_left` plugin
 
 Complement data in the pipeline with existing data stored in
 Elasticsearch. This merges existing data into new data.
@@ -175,6 +175,10 @@ data before exporting it again to Elasticsearch.
 sugarcube -Q ddg_search:Keith\ Johnstone \
           -p ddg_search,elastic_complement_left,elastic_export
 ```
+
+### `elastic_supplement` plugin
+
+This is an alias for the `elastic_complement_left` plugin.
 
 ## Indexes
 
