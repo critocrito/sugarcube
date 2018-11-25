@@ -111,6 +111,8 @@ const yargs = require("yargs")
   .default("C", "./.sugarcube_cache.json")
   .alias("C", "cache")
   .describe("C", "Location of the cache file.")
+  .option("name")
+  .describe("name", "A human friendly name for this pipeline.")
   .help("h")
   .alias("h", "help")
   .version();
