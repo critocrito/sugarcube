@@ -9,6 +9,15 @@ import {mkdirP, sha256sum, md5sum} from "@sugarcube/plugin-fs";
 import {youtubeDl} from "../utils";
 
 const accessAsync = pify(fs.access);
+const unlinkAsync = pify(fs.unlink);
+
+const cleanUp = async location => {
+  try {
+    await accessAsync(location);
+    await unlinkAsync(location);
+    // eslint-disable-next-line no-empty
+  } catch (e) {}
+};
 
 const downloadTypes = ["video"];
 
@@ -99,7 +108,7 @@ const plugin = async (envelope, {cfg, log, stats}) => {
                   ),
                 ),
               )
-              .catch(e => {
+              .catch(async e => {
                 const failed = {
                   type: unit._sc_source,
                   term: source,
@@ -108,10 +117,13 @@ const plugin = async (envelope, {cfg, log, stats}) => {
                 };
                 stats.update(
                   "failed",
-                  units =>
-                    Array.isArray(units) ? units.concat(failed) : [failed],
+                  fails =>
+                    Array.isArray(fails) ? fails.concat(failed) : [failed],
                 );
-                log.warn(`Failed to download video ${source} to ${location}`);
+                log.warn(
+                  `Failed to download video ${source} to ${location}. Removing stale artifact.`,
+                );
+                await cleanUp(location);
               })
               .then(() => media);
           }, unit._sc_media).then(ms => merge(unit, {_sc_media: ms})),

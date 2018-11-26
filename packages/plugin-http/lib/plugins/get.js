@@ -11,6 +11,15 @@ import {assertDir, download} from "../utils";
 
 const {sToA} = utils;
 const accessAsync = pify(fs.access);
+const unlinkAsync = pify(fs.unlink);
+
+const cleanUp = async location => {
+  try {
+    await accessAsync(location);
+    await unlinkAsync(location);
+    // eslint-disable-next-line no-empty
+  } catch (e) {}
+};
 
 const curlGet = (envelope, {log, cfg, stats}) => {
   const dataDir = get("http.data_dir", cfg);
@@ -66,7 +75,7 @@ const curlGet = (envelope, {log, cfg, stats}) => {
               ),
             ),
             () => media,
-            caughtP(e => {
+            caughtP(async e => {
               const failed = {
                 type: unit._sc_source,
                 term: source,
@@ -79,8 +88,11 @@ const curlGet = (envelope, {log, cfg, stats}) => {
                   Array.isArray(fails) ? fails.concat(failed) : [failed],
               );
               log.warn(
-                `Failed to download ${media.type} ${source} to ${location}`,
+                `Failed to download ${
+                  media.type
+                } ${source} to ${location}. Cleaning up stale artifact.`,
               );
+              await cleanUp(location);
             }),
           ],
           null,
