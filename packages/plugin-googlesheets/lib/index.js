@@ -91,6 +91,7 @@ const selectionPlugins = flow([
     "sheets_export",
     "sheets_append",
     "sheets_move",
+    "sheets_queries",
     "sheets_move_queries",
   ]),
   ps => pick(ps, plugins),

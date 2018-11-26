@@ -2,7 +2,7 @@ import {merge, get, getOr} from "lodash/fp";
 import {flowP, flatmapP, tapP} from "dashp";
 import {envelope as env, plugin as p, utils as u} from "@sugarcube/core";
 import SheetsDo from "../sheets";
-import {rowsToQueries} from "../utils";
+import {rowsToQueries, coerceSelectionLists} from "../utils";
 import {assertCredentials, assertSpreadsheet} from "../assertions";
 
 const querySource = "sheets_query";
@@ -13,6 +13,9 @@ const importQueries = (envelope, {log, cfg, cache}) => {
   const id = get("google.spreadsheet_id", cfg);
   const defaultType = get("google.query_default_type", cfg);
   const queryFields = u.sToA(",", getOr([], "google.query_fields", cfg));
+  const selectionLists = coerceSelectionLists(
+    get("google.selection_list", cfg),
+  );
   const queries = env.queriesByType(querySource, envelope);
   let tokens;
 
@@ -20,9 +23,21 @@ const importQueries = (envelope, {log, cfg, cache}) => {
 
   const querySheet = async query => {
     const [qs, t, history] = await SheetsDo(
-      function* fetchQueries({getSheet, getRows}) {
+      function* fetchQueries({
+        getSheet,
+        getRows,
+        safeReplaceRows,
+        setSelections,
+      }) {
+        const now = new Date();
         const {sheetUrl} = yield getSheet(id, query);
         const rows = yield getRows(id, query);
+
+        if (rows.length < 2) {
+          log.warn(`The ${query} sheet didn't yield any queries.`);
+          return [];
+        }
+
         const expanded = rowsToQueries(defaultType, queryFields, rows);
         const count = expanded.length;
 
@@ -31,6 +46,30 @@ const importQueries = (envelope, {log, cfg, cache}) => {
             count > 1 ? "queries" : "query"
           }.`,
         );
+
+        // Update the last access field
+        const header = rows[0].includes("last access")
+          ? rows[0]
+          : rows[0].concat("last access");
+        const lastAccessIndex = header.indexOf("last access");
+        const rowsToMerge = [header].concat(
+          rows.slice(1).map(row =>
+            row
+              .slice(0, lastAccessIndex)
+              .concat(now)
+              .concat(row.slice(lastAccessIndex + 1)),
+          ),
+        );
+
+        const [, e] = yield safeReplaceRows(id, query, rowsToMerge);
+        if (e) {
+          log.error(`Atomic data replace of target failed.`);
+          log.error(`Backup sheet ${e.sheet} is located at ${e.sheetUrl}.`);
+          throw e;
+        }
+
+        // Set data validations for selections.
+        yield setSelections(id, query, selectionLists);
 
         return expanded;
       },
