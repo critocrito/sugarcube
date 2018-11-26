@@ -17,6 +17,7 @@ import fs from "fs";
 import path from "path";
 import dotenv from "dotenv";
 import {runner, createFeatureDecisions} from "@sugarcube/core";
+import v8 from "v8";
 
 import {mapFiles, parseConfigFile, parseConfigFileWithExtends} from "./";
 import {info, warn, error, debug} from "./logger";
@@ -165,6 +166,11 @@ if (fs.existsSync(argv.cache)) {
   cache = JSON.parse(fs.readFileSync(argv.cache).toString());
 } else {
   cache = {};
+}
+
+if (argv.debug) {
+  const limitMb = v8.getHeapStatistics().total_available_size / 1024 / 1024;
+  debug(`Memory limit set to ${Math.round(limitMb)} MB.`);
 }
 
 const argvOmit = [
