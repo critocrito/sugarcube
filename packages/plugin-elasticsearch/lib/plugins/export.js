@@ -21,6 +21,8 @@ const plugin = (envelope, {cfg, log}) => {
   return Elastic.Do(
     function* indexUnits({bulk, queryByIds}) {
       const ids = envelope.data.map(u => u._sc_id_hash);
+      // FIXME: replace queryByIds with a more performant operation (no need
+      //        to fetch the whole document).
       const existing = yield queryByIds(index, ids);
       const existingIds = existing.map(u => u._sc_id_hash);
       const dataToIndex = env.filterData(

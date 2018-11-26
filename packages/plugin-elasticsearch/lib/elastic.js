@@ -37,36 +37,69 @@ export const query = curry4(
   "query",
   async (index, body, amount, client, customMappings) => {
     const mappings = Object.assign({}, defaultMappings, customMappings);
-
     await createIndex(index, mappings, client);
 
-    const response = await client.search({
-      index,
-      body,
-      size: amount,
-      requestTimeout: "90000",
-    });
+    let allData = [];
+    let meta = {took: 0, total: 0};
+    const responseQueue = [];
 
-    const data = map(u => {
-      const source = flow([property("_source"), unstripify])(u);
-      return Object.assign(
-        {},
-        source,
-        {_sc_elastic_score: get("_score", u)},
-        get("highlight", u)
-          ? {
-              _sc_elastic_highlights: flow([get("highlight"), unstripify])(u),
-            }
-          : {},
+    responseQueue.push(
+      await client.search({
+        index,
+        body,
+        size: 250,
+        scroll: "30s",
+        requestTimeout: "90000",
+      }),
+    );
+
+    while (responseQueue.length) {
+      const response = responseQueue.shift();
+
+      allData = allData.concat(
+        map(u => {
+          const source = flow([property("_source"), unstripify])(u);
+          return Object.assign(
+            {},
+            source,
+            {_sc_elastic_score: get("_score", u)},
+            get("highlight", u)
+              ? {
+                  _sc_elastic_highlights: flow([get("highlight"), unstripify])(
+                    u,
+                  ),
+                }
+              : {},
+          );
+        }, get("hits.hits", response)),
       );
-    }, get("hits.hits", response));
 
-    const meta = merge(response.timed_out ? {timedOut: true} : {}, {
-      took: get("took", response),
-      total: get("hits.total", response),
-    });
+      meta = Object.assign(
+        {},
+        meta,
+        response.timed_out ? {timedOut: true} : {},
+        {
+          took: get("took", response) + meta.took,
+          total: get("hits.total", response),
+        },
+      );
 
-    return [data, meta];
+      if (
+        response.hits.total === allData.length ||
+        (amount != null && amount >= allData.length)
+      ) {
+        break;
+      }
+      responseQueue.push(
+        // eslint-disable-next-line no-await-in-loop
+        await client.scroll({
+          scrollId: response._scroll_id,
+          scroll: "30s",
+        }),
+      );
+    }
+
+    return [allData, meta];
   },
 );
 

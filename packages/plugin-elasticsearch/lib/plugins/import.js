@@ -48,9 +48,7 @@ const plugin = async (envelope, {cfg, log}) => {
               .map(f => f.replace(/^_sc/, "$sc")),
           });
         const units = yield query(index, body, amount);
-        log.info(
-          `Fetched ${size(units)}/${amount} units for ${JSON.stringify(body)}.`,
-        );
+        log.info(`Fetched ${size(units)} units for ${JSON.stringify(body)}.`);
         results = results.concat(units);
       }
       return results;
@@ -66,7 +64,6 @@ plugin.argv = {
   "elastic.amount": {
     type: "number",
     nargs: 1,
-    default: 1000,
     desc: "The amount of units to fetch.",
   },
   "elastic.include_fields": {
