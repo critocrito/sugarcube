@@ -12,7 +12,7 @@ import {
 import pify from "pify";
 import request from "request";
 import {parse, format} from "url";
-import {collectP} from "dashp";
+import {flatmapP} from "dashp";
 
 import {video, playlistVideo} from "./entities";
 
@@ -111,13 +111,11 @@ export const videosList = curry((key, ids) => {
 });
 
 export const videoChannel = curry((key, range, id) =>
-  channelSearch(key, range, id)
-    .then(rs => {
-      const ids = map(property("id.videoId"), rs);
-      // There is a limit on how many video ids can be queried at once.
-      return collectP(videosList(key), chunk(50, ids));
-    })
-    .then(flatten),
+  channelSearch(key, range, id).then(rs => {
+    const ids = map(property("id.videoId"), rs);
+    // There is a limit on how many video ids can be queried at once.
+    return flatmapP(videosList(key), chunk(50, ids));
+  }),
 );
 
 export const videoChannelPlaylist = curry((key, id) =>

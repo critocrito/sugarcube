@@ -25,28 +25,11 @@ export const video = item =>
   });
 
 export const playlistVideo = item =>
-  merge(item, {
-    id: item.contentDetails.videoId,
-    playlist_id: item.id,
-    _sc_id_fields: ["id"],
-    _sc_content_fields: ["snippet.title", "snippet.description"],
-    _sc_pubdates: {source: parse(item.snippet.publishedAt)},
-    _sc_media: [
-      {
-        type: "thumbnail",
-        term: item.snippet.thumbnails.high.url,
-        width: item.snippet.thumbnails.high.width,
-        height: item.snippet.thumbnails.high.height,
-      },
-      {
-        type: "video",
-        term: `https://www.youtube.com/watch?v=${item.contentDetails.videoId}`,
-      },
-      {
-        type: "url",
-        term: `https://www.youtube.com/watch?v=${item.contentDetails.videoId}`,
-      },
-    ],
-  });
+  video(
+    merge(item, {
+      id: item.contentDetails.videoId,
+      playlist_id: item.id,
+    }),
+  );
 
 export default {video, playlistVideo};
