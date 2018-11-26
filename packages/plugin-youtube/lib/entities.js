@@ -8,7 +8,7 @@ export const video = item =>
     _sc_pubdates: {source: parse(item.snippet.publishedAt)},
     _sc_media: [
       {
-        type: "thumbnail",
+        type: "image",
         term: item.snippet.thumbnails.high.url,
         width: item.snippet.thumbnails.high.width,
         height: item.snippet.thumbnails.high.height,
