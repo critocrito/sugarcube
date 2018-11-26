@@ -1,5 +1,5 @@
 import {merge, get, includes} from "lodash/fp";
-import {flowP, tapP, collectP} from "dashp";
+import {flowP, tapP, collectP, caughtP} from "dashp";
 import pify from "pify";
 import fs from "fs";
 import url from "url";
@@ -12,7 +12,7 @@ import {assertDir, download} from "../utils";
 const {sToA} = utils;
 const accessAsync = pify(fs.access);
 
-const curlGet = (envelope, {log, cfg}) => {
+const curlGet = (envelope, {log, cfg, stats}) => {
   const dataDir = get("http.data_dir", cfg);
   const getTypes = sToA(",", get("http.get_types", cfg));
 
@@ -66,6 +66,22 @@ const curlGet = (envelope, {log, cfg}) => {
               ),
             ),
             () => media,
+            caughtP(e => {
+              const failed = {
+                type: unit._sc_source,
+                term: source,
+                plugin: "http_get",
+                reason: e.message,
+              };
+              stats.update(
+                "failed",
+                fails =>
+                  Array.isArray(fails) ? fails.concat(failed) : [failed],
+              );
+              log.warn(
+                `Failed to download ${media.type} ${source} to ${location}`,
+              );
+            }),
           ],
           null,
         );
@@ -82,7 +98,7 @@ plugin.argv = {
   "http.get_types": {
     type: "string",
     nargs: 1,
-    default: "image,file,pdf,video",
+    default: "image,file,pdf",
     desc: "Fetch files of those media types.",
   },
 };
