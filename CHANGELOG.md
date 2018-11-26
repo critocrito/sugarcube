@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.16.0](https://github.com/critocrito/sugarcube/compare/v0.15.0...v0.16.0) (2018-11-26)
+
+
+### Bug Fixes
+
+* **plugin-elasticsearch:** make sure to always create the index before accessing it ([41727d1](https://github.com/critocrito/sugarcube/commit/41727d1))
+* **plugin-twitter:** edited log output for feeds ([6dda5a0](https://github.com/critocrito/sugarcube/commit/6dda5a0))
+* **plugin-youtube:** treat thumbnails as images ([d6e2077](https://github.com/critocrito/sugarcube/commit/d6e2077))
+
+
+### Features
+
+* **cli:** print the memory limit in debug mode ([02f4337](https://github.com/critocrito/sugarcube/commit/02f4337))
+* **plugin-facebook:** catch failures for api pages and populate the failed stats ([a922914](https://github.com/critocrito/sugarcube/commit/a922914))
+* **plugin-googlesheets:** support last access fields when fetching queries ([eadaf13](https://github.com/critocrito/sugarcube/commit/eadaf13))
+* **plugin-http:** catch failures for http downloads and populate the failed stats ([c7f541a](https://github.com/critocrito/sugarcube/commit/c7f541a))
+* **plugin-mail:** include the pipeline name in the failed stats subject ([58a9273](https://github.com/critocrito/sugarcube/commit/58a9273))
+* **plugin-youtube:** catch failures for videos and populate the failed stats ([2c5b773](https://github.com/critocrito/sugarcube/commit/2c5b773))
+* cleaning up failed downloads for media_youtubedl and http_get ([2e8d14f](https://github.com/critocrito/sugarcube/commit/2e8d14f))
+
+
+
+
+
 # [0.15.0](https://github.com/critocrito/sugarcube/compare/v0.14.0...v0.15.0) (2018-11-25)
 
 

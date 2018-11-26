@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.16.0](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-elasticsearch/compare/v0.15.0...v0.16.0) (2018-11-26)
+
+
+### Bug Fixes
+
+* **plugin-elasticsearch:** make sure to always create the index before accessing it ([41727d1](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-elasticsearch/commit/41727d1))
+
+
+
+
+
 # [0.15.0](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-elasticsearch/compare/v0.14.0...v0.15.0) (2018-11-25)
 
 

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.16.0](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mail/compare/v0.15.0...v0.16.0) (2018-11-26)
+
+
+### Features
+
+* **plugin-mail:** include the pipeline name in the failed stats subject ([58a9273](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mail/commit/58a9273))
+
+
+
+
+
 # [0.15.0](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mail/compare/v0.14.0...v0.15.0) (2018-11-25)
 
 

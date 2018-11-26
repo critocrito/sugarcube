@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.16.0](https://github.com/critocrito/sugarcube/compare/v0.15.0...v0.16.0) (2018-11-26)
+
+
+### Features
+
+* **cli:** print the memory limit in debug mode ([02f4337](https://github.com/critocrito/sugarcube/commit/02f4337))
+
+
+
+
+
 # [0.15.0](https://github.com/critocrito/sugarcube/compare/v0.14.0...v0.15.0) (2018-11-25)
 
 

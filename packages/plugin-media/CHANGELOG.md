@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.16.0](https://github.com/critocrito/sugarcube/compare/v0.15.0...v0.16.0) (2018-11-26)
+
+
+### Features
+
+* cleaning up failed downloads for media_youtubedl and http_get ([2e8d14f](https://github.com/critocrito/sugarcube/commit/2e8d14f))
+
+
+
+
+
 # [0.15.0](https://github.com/critocrito/sugarcube/compare/v0.14.0...v0.15.0) (2018-11-25)
 
 

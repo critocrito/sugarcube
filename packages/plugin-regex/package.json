@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/plugin-regex",
-  "version": "0.15.0",
+  "version": "0.16.0",
   "description": "Match fields for regular expressions.",
   "main": "_dist/index.js",
   "license": "GPL-3.0",
@@ -13,7 +13,7 @@
     "transformation"
   ],
   "dependencies": {
-    "@sugarcube/core": "^0.15.0",
+    "@sugarcube/core": "^0.16.0",
     "lodash": "^4.17.4"
   },
   "publishConfig": {
