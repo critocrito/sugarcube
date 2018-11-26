@@ -54,14 +54,13 @@ const listChannel = (envelope, {cfg, log, stats}) => {
               type: querySource,
               term: q,
               plugin: "youtube_channel",
-              reason: "Youtube channel doesn't exist.",
+              reason: "Youtube channel does not exist.",
             };
             stats.update(
               "failed",
-              queries =>
-                Array.isArray(queries) ? queries.concat(fail) : [fail],
+              fails => (Array.isArray(fails) ? fails.concat(fail) : [fail]),
             );
-            log.warn(`Channel ${q} doesn't exists`);
+            log.warn(`Channel ${q} does not exist.`);
           }
           return exists
             ? flowP([
