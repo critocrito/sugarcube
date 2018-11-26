@@ -19,9 +19,9 @@ export const toHeader = (index, unit) => ({
 export const toMsg = (index, unit) =>
   stripUnderscores((toHeader(index, unit), {body: unit}));
 
-export const createIndex = curry4(
+export const createIndex = curry3(
   "createIndex",
-  async (index, type, mapping, client) => {
+  async (index, mapping, client) => {
     const body = {
       mappings: {
         _doc: {properties: mapping},
@@ -36,10 +36,9 @@ export const createIndex = curry4(
 export const query = curry4(
   "query",
   async (index, body, amount, client, customMappings) => {
-    const type = "_doc";
     const mappings = Object.assign({}, defaultMappings, customMappings);
 
-    await createIndex(index, type, mappings, client);
+    await createIndex(index, mappings, client);
 
     const response = await client.search({
       index,
@@ -74,7 +73,6 @@ export const query = curry4(
 export const bulk = curry4(
   "bulk",
   async (index, ops, client, customMappings) => {
-    const type = "_doc";
     const batchSize = 500;
     const toIndex = (ops.index || []).reduce(
       (memo, unit) =>
@@ -92,9 +90,9 @@ export const bulk = curry4(
 
     const mappings = Object.assign({}, defaultMappings, customMappings);
 
-    await createIndex(index, type, mappings, client);
+    await createIndex(index, mappings, client);
     const responses = await collectP(
-      body => client.bulk({body, type, refresh: true}),
+      body => client.bulk({body, type: "_doc", refresh: true}),
       chunk(batchSize, toIndex.concat(toUpdate)),
     );
 
