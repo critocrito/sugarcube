@@ -1,1 +1,1 @@
-../packages/cli/bin/sugarcube
+node_modules/.bin/sugarcube

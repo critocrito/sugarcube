@@ -4,7 +4,7 @@
   "description": "A CLI to operate SugarCube data processes.",
   "main": "_dist/index.js",
   "bin": {
-    "sugarcube": "bin/sugarcube"
+    "sugarcube": "bin/sugarcube.js"
   },
   "repository": "https://github.com/critocrito/sugarcube",
   "keywords": [
