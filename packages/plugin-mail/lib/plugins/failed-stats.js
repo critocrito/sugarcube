@@ -26,12 +26,13 @@ const mailFailedStats = async (envelope, {cfg, log, stats}) => {
   }
 
   const project = getOr("unknown-project", "project", cfg);
+  const name = get("name", stats.get("pipeline"));
   const marker = get("marker", cfg);
   const noEncrypt = get("mail.no-encrypt", cfg);
   const sender = get("mail.from", cfg);
   const isDebug = get("mail.debug", cfg);
   const recipients = env.queriesByType(querySource, envelope);
-  const subject = `[${project}]: Failed queries for ${marker}.`;
+  const subject = `[${project}]: Failed queries for ${name} (${marker}).`;
   const body = dots.failed_stats(Object.assign({}, {recipients, failures}));
   const transporter = createTransporter(cfg.mail);
 
