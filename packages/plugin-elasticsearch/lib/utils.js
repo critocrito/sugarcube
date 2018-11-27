@@ -1,30 +1,47 @@
-/* eslint-disable no-use-before-define */
-import {omit, merge, isPlainObject, isArray} from "lodash/fp";
-import {utils} from "@sugarcube/core";
+/* eslint-disable no-use-before-define, no-plusplus, no-continue */
+import {omit, isPlainObject, isArray} from "lodash/fp";
 
-const {curry2} = utils;
+const mapUnitKeys = (fn, unit) => {
+  const mapArrays = ary => {
+    const newAry = [];
+    for (let i = 0; i < ary.length; i++) {
+      const value = ary[i];
+      if (isPlainObject(value)) {
+        newAry.push(mapUnitKeys(fn, value));
+      } else if (isArray(value)) {
+        newAry.push(mapArrays(value));
+      } else {
+        newAry.push(value);
+      }
+    }
+    return newAry;
+  };
 
-const mapUnitKeys = curry2("mapUnitKeys", (fn, unit) => {
-  const mapArrays = ary =>
-    ary.map(value => {
-      if (isPlainObject(value)) return mapUnitKeys(fn, value);
-      if (isArray(value)) return mapArrays(value);
-      return value;
-    });
+  const keys = Object.keys(unit);
+  const obj = {};
 
-  return Object.keys(unit).reduce((memo, key) => {
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i];
     const newKey = fn(key);
 
-    if (isPlainObject(unit[key]))
-      return merge(memo, {[newKey]: mapUnitKeys(fn, unit[key])});
-    if (isArray(unit[key]))
-      return merge(memo, {[newKey]: mapArrays(unit[key])});
-    return merge(memo, {[newKey]: unit[key]});
-  }, {});
-});
+    if (isPlainObject(unit[key])) {
+      obj[newKey] = mapUnitKeys(fn, unit[key]);
+      continue;
+    }
+    if (isArray(unit[key])) {
+      obj[newKey] = mapArrays(unit[key]);
+      continue;
+    }
+    obj[newKey] = unit[key];
+  }
 
-export const stripUnderscores = mapUnitKeys(key => key.replace(/^[_]+/, "$"));
-export const unstripify = mapUnitKeys(key => key.replace(/^[$$]/, "_"));
+  return obj;
+};
+
+export const stripUnderscores = unit =>
+  mapUnitKeys(key => key.replace(/^[_]+/, "$"), unit);
+export const unstripify = unit =>
+  mapUnitKeys(key => key.replace(/^[$$]/, "_"), unit);
 
 export const omitFromData = (fields, data) => {
   const FIELD_NAME = /^_sc_elastic/;

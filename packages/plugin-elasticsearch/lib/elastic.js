@@ -1,4 +1,5 @@
-import {flow, map, merge, property, get, getOr, set, chunk} from "lodash/fp";
+/* eslint-disable no-plusplus */
+import {chunk} from "lodash/fp";
 import {collectP, ofP} from "dashp";
 import elastic from "elasticsearch";
 import {utils} from "@sugarcube/core";
@@ -39,7 +40,7 @@ export const query = curry4(
     const mappings = Object.assign({}, defaultMappings, customMappings);
     await createIndex(index, mappings, client);
 
-    let allData = [];
+    const allData = [];
     let meta = {took: 0, total: 0};
     const responseQueue = [];
 
@@ -47,46 +48,42 @@ export const query = curry4(
       await client.search({
         index,
         body,
-        size: 250,
-        scroll: "30s",
+        size: 2000,
+        scroll: "60s",
         requestTimeout: "90000",
       }),
     );
 
     while (responseQueue.length) {
       const response = responseQueue.shift();
-
-      allData = allData.concat(
-        map(u => {
-          const source = flow([property("_source"), unstripify])(u);
-          return Object.assign(
-            {},
-            source,
-            {_sc_elastic_score: get("_score", u)},
-            get("highlight", u)
+      while (response.hits.hits.length) {
+        const unit = response.hits.hits.shift();
+        allData.push(
+          Object.assign(
+            unstripify(unit._source),
+            {_sc_elastic_score: unit.score},
+            unit.highlight != null
               ? {
-                  _sc_elastic_highlights: flow([get("highlight"), unstripify])(
-                    u,
-                  ),
+                  _sc_elastic_highlights: unstripify(unit.highlight),
                 }
               : {},
-          );
-        }, get("hits.hits", response)),
-      );
+          ),
+        );
+      }
 
       meta = Object.assign(
         {},
         meta,
         response.timed_out ? {timedOut: true} : {},
         {
-          took: get("took", response) + meta.took,
-          total: get("hits.total", response),
+          took: meta.took + response.took,
+          total: response.hits.total,
         },
       );
 
       if (
-        response.hits.total === allData.length ||
-        (amount != null && amount >= allData.length)
+        (amount != null && allData.length >= amount) ||
+        response.hits.total === allData.length
       ) {
         break;
       }
@@ -107,46 +104,61 @@ export const bulk = curry4(
   "bulk",
   async (index, ops, client, customMappings) => {
     const batchSize = 500;
-    const toIndex = (ops.index || []).reduce(
-      (memo, unit) =>
-        memo.concat([{index: toHeader(index, unit)}, stripUnderscores(unit)]),
-      [],
-    );
-    const toUpdate = (ops.update || []).reduce(
-      (memo, unit) =>
-        memo.concat([
-          {update: toHeader(index, unit)},
-          {doc: stripUnderscores(unit)},
-        ]),
-      [],
-    );
+    const toIndex = [];
+    const toUpdate = [];
 
+    for (let i = 0; i < (ops.index || []).length; i++) {
+      const unit = ops.index[i];
+      toIndex.push({index: toHeader(index, unit)});
+      toIndex.push(stripUnderscores(unit));
+    }
+
+    for (let i = 0; i < (ops.update || []).length; i++) {
+      const unit = ops.update[i];
+      toUpdate.push({update: toHeader(index, unit)});
+      toUpdate.push({doc: stripUnderscores(unit)});
+    }
+
+    // Ensure the index is created.
     const mappings = Object.assign({}, defaultMappings, customMappings);
-
     await createIndex(index, mappings, client);
-    const responses = await collectP(
-      body => client.bulk({body, type: "_doc", refresh: true}),
-      chunk(batchSize, toIndex.concat(toUpdate)),
+
+    // Run the bulk requests
+    const responseQueue = [];
+    const errors = [];
+    let meta = {took: 0, batches: 0, batchSize};
+    const [firstChunk, ...chunks] = chunk(batchSize, toIndex.concat(toUpdate));
+
+    responseQueue.push(
+      await client.bulk({body: firstChunk, type: "_doc", refresh: true}),
     );
 
-    return responses.reduce(
-      ([errors, meta], response) => {
-        const {took, items} = response;
-        return items.reduce(
-          (acc, item) => {
-            const i = item.index || item.update;
-            const path = `${i._index}.${i.result}`;
-            const count = getOr(0, path, acc[1]);
-            return [
-              i.error ? acc[0].concat([{id: i._id, error: i.error}]) : acc[0],
-              merge(acc[1], set(path, count + 1, {})),
-            ];
-          },
-          [errors, Object.assign({}, meta, {took: meta.took + took})],
-        );
-      },
-      [[], {took: 0, batches: responses.length, batchSize}],
-    );
+    while (responseQueue.length) {
+      const response = responseQueue.shift();
+      const {took, items} = response;
+
+      for (let i = 0; i < (items || []).length; i++) {
+        const item = items[i];
+        const op = item.index || item.update;
+        const count = meta[`${op.result}`] || 0;
+        if (i.error != null) errors.push({id: op._id, error: op.error});
+        meta = Object.assign({}, meta, {
+          took: meta.took + took,
+          [`${op.result}`]: count + 1,
+        });
+      }
+      if (chunks.length === 0) {
+        break;
+      }
+      const nextChunk = chunks.shift();
+
+      responseQueue.push(
+        // eslint-disable-next-line no-await-in-loop
+        await client.bulk({body: nextChunk, type: "_doc", refresh: true}),
+      );
+    }
+
+    return [errors, meta];
   },
 );
 
