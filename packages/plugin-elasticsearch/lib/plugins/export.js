@@ -1,4 +1,4 @@
-import {flow, size, get} from "lodash/fp";
+import {size, get} from "lodash/fp";
 import fs from "fs";
 import {envelope as env, utils} from "@sugarcube/core";
 
@@ -19,21 +19,18 @@ const plugin = (envelope, {cfg, log}) => {
   if (envelope.data.length === 0) return envelope;
 
   return Elastic.Do(
-    function* indexUnits({bulk, queryByIds}) {
+    function* indexUnits({bulk, queryExisting}) {
       const ids = envelope.data.map(u => u._sc_id_hash);
-      // FIXME: replace queryByIds with a more performant operation (no need
-      //        to fetch the whole document).
-      const existing = yield queryByIds(index, ids);
-      const existingIds = existing.map(u => u._sc_id_hash);
+      const existingIds = yield queryExisting(index, ids);
+
       const dataToIndex = env.filterData(
         u => !existingIds.includes(u._sc_id_hash),
         envelope,
       );
-
-      const dataToUpdate = flow([
-        env.filterData(u => existingIds.includes(u._sc_id_hash)),
-        env.concatData(existing),
-      ])(envelope);
+      const dataToUpdate = env.filterData(
+        u => existingIds.includes(u._sc_id_hash),
+        envelope,
+      );
 
       const toIndex = omitFromData(omitFields, dataToIndex.data);
       const toUpdate = omitFromData(omitFields, dataToUpdate.data);

@@ -151,10 +151,10 @@ export const bulk = curry4(
 );
 
 export const queryByIds = curry3("queryByIds", async (index, ids, client) => {
-  const batchSize = 500;
+  const batchSize = 2500;
   const responses = await collectP(idsChunk => {
     const body = queries.byIds(idsChunk);
-    return query(index, body, idsChunk.length, client);
+    return query(index, body, null, client);
   }, chunk(batchSize, ids));
 
   return responses.reduce(
@@ -181,10 +181,35 @@ export const queryOne = curry3("queryOne", async (index, id, client) => {
   return [data, {version, type}];
 });
 
+export const queryExisting = curry3(
+  "querryExisting",
+  async (index, ids, client) => {
+    const batchSize = 5000;
+    const responses = await collectP(idsChunk => {
+      const body = queries.existing(idsChunk);
+      return query(index, body, null, client);
+    }, chunk(batchSize, ids));
+
+    return responses.reduce(
+      ([data, meta], response) => {
+        const {took, total} = response[1];
+        return [
+          data.concat(response[0].map(unit => unit._sc_id_hash)),
+          Object.assign({}, meta, {
+            took: took + meta.took,
+            total: total + meta.total,
+          }),
+        ];
+      },
+      [[], {took: 0, total: 0, batches: responses.length, batchSize}],
+    );
+  },
+);
+
 export const Elastic = {
   Do: curry2("ElasticDo", async (G, {host, port, mappings}) => {
     const client = connect(`${host}:${port}`);
-    const api = {bulk, query, queryByIds, queryOne};
+    const api = {bulk, query, queryByIds, queryOne, queryExisting};
     const customMappings = stripUnderscores(mappings || {});
     const generator = G(api);
     let data;
