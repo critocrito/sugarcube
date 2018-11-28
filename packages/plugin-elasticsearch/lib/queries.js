@@ -14,4 +14,19 @@ const existing = ids =>
     byIds(ids),
   );
 
-export default {byIds, existing};
+const reindex = (fromIndex, fromHost, fromPort, toIndex) => ({
+  source: {
+    remote: {
+      host: `http://${fromHost}:${fromPort}`,
+      socket_timeout: "1m",
+      connect_timeout: "1m",
+    },
+    size: 500,
+    index: fromIndex,
+  },
+  dest: {
+    index: toIndex,
+  },
+});
+
+export default {byIds, existing, reindex};

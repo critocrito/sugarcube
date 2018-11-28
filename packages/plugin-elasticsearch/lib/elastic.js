@@ -8,7 +8,7 @@ import {unstripify, stripUnderscores} from "./utils";
 import defaultMappings from "./mappings";
 import queries from "./queries";
 
-const {curry2, curry3, curry4} = utils;
+const {curry2, curry3, curry4, curry6} = utils;
 
 export const connect = host => new elastic.Client({host, log: "warning"});
 
@@ -31,6 +31,20 @@ export const createIndex = curry3(
 
     if (await client.indices.exists({index})) return ofP(null);
     return client.indices.create({index, body});
+  },
+);
+
+export const reindex = curry6(
+  "reindex",
+  async (index, host, port, toIndex, client, customMappings) => {
+    const mappings = Object.assign({}, defaultMappings, customMappings);
+    await createIndex(toIndex, mappings, client);
+    await client.reindex({
+      body: queries.reindex(index, host, port, toIndex),
+      refresh: true,
+      waitForCompletion: false,
+    });
+    return [null, {}];
   },
 );
 
@@ -221,7 +235,7 @@ export const queryExisting = curry3(
 export const Elastic = {
   Do: curry2("ElasticDo", async (G, {host, port, mappings}) => {
     const client = connect(`${host}:${port}`);
-    const api = {bulk, query, queryByIds, queryOne, queryExisting};
+    const api = {bulk, query, queryByIds, queryOne, queryExisting, reindex};
     const customMappings = stripUnderscores(mappings || {});
     const generator = G(api);
     let data;

@@ -3,6 +3,8 @@ import importPlugin from "./plugins/import";
 import exportPlugin from "./plugins/export";
 import complementPlugin from "./plugins/complement";
 import complementLeftPlugin from "./plugins/complement-left";
+import reindexPlugin from "./plugins/reindex";
+
 import {Elastic} from "./elastic";
 
 const plugins = {
@@ -11,6 +13,7 @@ const plugins = {
   elastic_complement: complementPlugin,
   elastic_complement_left: complementLeftPlugin,
   elastic_supplement: complementLeftPlugin,
+  elastic_reindex: reindexPlugin,
 };
 
 forEach(p => {
