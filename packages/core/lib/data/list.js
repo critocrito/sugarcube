@@ -1,15 +1,7 @@
-import {
-  map,
-  reduce,
-  filter as loFilter,
-  merge,
-  constant,
-  uniqBy,
-  isEqual,
-} from "lodash/fp";
+import {map, reduce, merge, constant, uniqBy, isEqual} from "lodash/fp";
 import {collectP} from "dashp";
 
-import {curry3, arrayify, concatManyWith, equalsManyWith} from "../utils";
+import {arrayify, concatManyWith, equalsManyWith} from "../utils";
 import {hashKeys} from "../crypto";
 
 const hashListId = hashKeys(["type", "term"]);
@@ -18,40 +10,32 @@ const listId = l => l._sc_id_hash || hashListId(l);
 
 // A single List
 // Setoid
-const equalsOne = curry3("equalsOne", (f, a, b) => f(listId(a), listId(b)))(
-  isEqual,
-);
-const identicalOne = curry3("identicalOne", (f, a, b) => f(a, b))(isEqual);
+const equalsOne = (a, b) => isEqual(listId(a), listId(b));
+const identicalOne = (a, b) => isEqual(a, b);
 
 // Monoid
 const emptyOne = constant({});
-const concatOne = curry3("concatOne", (f, a, b) => f(a, b))(merge);
+const concatOne = (a, b) => merge(a, b);
 
 // A list of lists
 // Setoid
-const equals = curry3("equals", (f, a, b) => f(a, b))(
-  equalsManyWith(equalsOne),
-);
-const identical = curry3("identical", (f, a, b) => f(a, b))(
-  equalsManyWith(identicalOne),
-);
+const equals = (a, b) => equalsManyWith(equalsOne, a, b);
+const identical = (a, b) => equalsManyWith(identicalOne, a, b);
 
 // Monoid
 const empty = constant([]);
-const concat = curry3("concat", (f, a, b) => f(a, b))(
-  concatManyWith(listId, equalsOne, concatOne),
-);
+const concat = (a, b) => concatManyWith(listId, concatOne, a, b);
 
 // Functor
-const fmap = curry3("fmap", (f, g, xs) => f(g, xs))(map);
-const fmapAsync = curry3("fmapAsync", (f, g, xs) => f(g, xs))(collectP);
+const fmap = (g, xs) => xs.map(g);
+const fmapAsync = (g, xs) => collectP(g, xs);
 
 // Applicative
 const pure = arrayify;
 const apply = (fs, xs) => map(x => reduce((memo, f) => f(memo), x, fs), xs);
 
 // Combinators
-const filter = curry3("filter", (f, g, xs) => f(g, xs))(loFilter);
+const filter = (g, xs) => xs.filter(g);
 const uniq = xs => uniqBy(listId, xs);
 
 // Hashing

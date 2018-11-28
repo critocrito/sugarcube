@@ -1,14 +1,8 @@
 import {
   flow,
-  map,
-  concat,
   merge,
   cloneDeep,
   partialRight,
-  keyBy,
-  keys,
-  intersection,
-  xor,
   isEqualWith,
   isString,
   isArray,
@@ -40,6 +34,9 @@ export const curry2 = ncurry(2);
 export const curry3 = ncurry(3);
 export const curry4 = ncurry(4);
 export const curry5 = ncurry(5);
+export const curry6 = ncurry(6);
+export const curry7 = ncurry(7);
+export const curry8 = ncurry(8);
 
 export const now = () => new Date();
 
@@ -60,32 +57,40 @@ export const printf = (x, opts = {}) => {
 export const stringify = s => (isString(s) ? s : JSON.stringify(s));
 export const arrayify = a => (isArray(a) ? a : [a]);
 
-export const concatManyWith = curry5(
-  "concatManyWith",
-  (idField, identical, merger, xs, ys) => {
-    const x = keyBy(idField, xs);
-    const y = keyBy(idField, ys);
-    const kx = keys(x);
-    const ky = keys(y);
+export const concatManyWith = (idField, merger, xs, ys) => {
+  if (xs.length === 0) return ys;
+  if (ys.length === 0) return xs;
 
-    const same = intersection(kx, ky);
-    const different = xor(kx, ky);
+  const obj = new Map();
 
-    const merged = map(
-      id => (identical(x[id], y[id]) ? x[id] : merger(x[id], y[id])),
-      same,
-    );
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0; i < xs.length; i++) {
+    const unit = xs[i];
+    const id = idField(unit);
+    if (obj.has(id)) {
+      obj.set(id, merger(obj.get(id), unit));
+    } else {
+      obj.set(id, Object.assign({_sc_id_hash: id}, unit));
+    }
+  }
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0; i < ys.length; i++) {
+    const unit = ys[i];
+    const id = idField(unit);
+    if (obj.has(id)) {
+      obj.set(id, merger(obj.get(id), unit));
+    } else {
+      obj.set(id, Object.assign({_sc_id_hash: id}, unit));
+    }
+  }
+  return Array.from(obj.values());
+};
 
-    const notmerged = map(id => x[id] || y[id], different);
-    return concat(merged, notmerged);
-  },
-);
-
-export const equalsManyWith = curry3("equalsManyWith", (cmp, xs, ys) => {
+export const equalsManyWith = (cmp, xs, ys) => {
   if (xs.length !== ys.length) return false;
   if (xs.length === 0) return true;
   return isEqualWith(cmp, xs, ys);
-});
+};
 
 export const isFunction = f => typeof f === "function";
 
@@ -112,6 +117,9 @@ export default {
   curry3,
   curry4,
   curry5,
+  curry6,
+  curry7,
+  curry8,
   now,
   tap,
   printf,

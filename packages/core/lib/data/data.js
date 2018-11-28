@@ -7,14 +7,13 @@ import {
   uniq as loUniq,
   uniqBy,
   constant,
-  concat as loConcat,
   isEqual,
   isString,
   isArray,
 } from "lodash/fp";
 
 import ls from "./list";
-import {now, curry2, curry3, concatManyWith, equalsManyWith} from "../utils";
+import {now, curry3, concatManyWith, equalsManyWith} from "../utils";
 import {hashWithField} from "../crypto";
 
 const listFields = [
@@ -75,7 +74,7 @@ const contentId = u => u._sc_content_hash || hashUnitContent(u);
  * @returns {boolean} Returns `true` if the two units have the same identity,
  * otherwise `false`.
  */
-const equalsOne = curry2("equalsOne", (a, b) => isEqual(dataId(a), dataId(b)));
+const equalsOne = (a, b) => isEqual(dataId(a), dataId(b));
 /**
  * Compare two units for value equality. This means two units have the same
  * value.
@@ -116,7 +115,7 @@ const emptyOne = () => {
  * @param {Unit} b The target unit to merge.
  * @return {Unit} The result of concatenationg b into a.
  */
-const concatOne = curry2("concatOne", (a, b) => {
+const concatOne = (a, b) => {
   const lists = reduce(
     (memo, h) =>
       merge(memo, {[h]: ls.concat(a[h] || ls.empty(), b[h] || ls.empty())}),
@@ -124,7 +123,9 @@ const concatOne = curry2("concatOne", (a, b) => {
     listFields,
   );
   const markers = {
-    _sc_markers: loUniq(loConcat(a._sc_markers || [], b._sc_markers || [])),
+    _sc_markers: [
+      ...new Set((a._sc_markers || []).concat(b._sc_markers || [])),
+    ],
   };
 
   // the fetch date must be either a date object or an ISO8601 date
@@ -148,7 +149,7 @@ const concatOne = curry2("concatOne", (a, b) => {
   }, {});
 
   return mergeAll([a, b, stringArrays, dates, lists, markers]);
-});
+};
 
 /**
  * Calculate the hashes for identity, content and the element of the list
@@ -178,9 +179,7 @@ const hashOne = u => {
  * @returns {boolean} Returns `true` if both lists of units are equal,
  * otherwise `false`.
  */
-const equals = curry3("equals", (f, a, b) => f(a, b))(
-  equalsManyWith(equalsOne),
-);
+const equals = (a, b) => equalsManyWith(equalsOne, a, b);
 /**
  * Test two lists of units for value equality. They are equal if each unit is
  * equivalent to the other unit at the same index.
@@ -191,9 +190,7 @@ const equals = curry3("equals", (f, a, b) => f(a, b))(
  * @returns {boolean} Returns `true` if both lists of units have equal value,
  * otherwise `false`.
  */
-const identical = curry3("identical", (f, a, b) => f(a, b))(
-  equalsManyWith(identicalOne),
-);
+const identical = (a, b) => equalsManyWith(identicalOne, a, b);
 
 /**
  * Create an empty list of units. This forms the identity element for a
@@ -214,9 +211,7 @@ const empty = constant([]);
  * @param {Unit} b The target unit to merge.
  * @return {Unit} The result of concatenationg b into a.
  */
-const concat = curry3("concat", (f, a, b) => f(a, b))(
-  concatManyWith(dataId, equalsOne, concatOne),
-);
+const concat = (a, b) => concatManyWith(dataId, concatOne, a, b);
 
 /**
  * Map a function over a list of units. This is equivalent as `Array.map`.

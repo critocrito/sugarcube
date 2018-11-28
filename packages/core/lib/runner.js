@@ -7,16 +7,16 @@ import {envelopeQueries, fmapData, filterData} from "./data/envelope";
 import ds from "./data/data";
 import {state} from "./state";
 import {uid, generateSeed} from "./crypto";
-import {now, curry2, curry3, curry4} from "./utils";
+import {now, curry3} from "./utils";
 
 // The following functions provide funtionalities that should be run every
 // time a plugin is run. The plugin runner composes them with the plugin.
-const pluginStats = curry4("pluginStats", (stream, name, stats, envelope) => {
+const pluginStats = (stream, name, stats, envelope) => {
   stream.push({type: "plugin_stats", plugin: name});
   return envelope;
-});
+};
 
-const start = curry4("start", (stream, name, stats, envelope) => {
+const start = (stream, name, stats, envelope) => {
   const epoch = Date.now();
   stream.push({type: "plugin_start", ts: now(), plugin: name});
   stats.update(`pipeline.plugins.${name}`, st =>
@@ -25,9 +25,9 @@ const start = curry4("start", (stream, name, stats, envelope) => {
     }),
   );
   return envelope;
-});
+};
 
-const end = curry4("end", (stream, name, stats, envelope) => {
+const end = (stream, name, stats, envelope) => {
   const epoch = Date.now();
   const duration =
     epoch - stats.get(`pipeline.plugins.${name}.start`).slice(-1)[0];
@@ -45,23 +45,17 @@ const end = curry4("end", (stream, name, stats, envelope) => {
     }),
   );
   return envelope;
-});
+};
 
-const mark = curry2("mark", (marker, envelope) =>
-  fmapData(ds.concatOne({_sc_markers: [marker]}), envelope),
-);
-
-const dates = curry2("dates", (date, envelope) =>
-  fmapData(ds.concatOne({_sc_pubdates: {pipeline: date}}), envelope),
-);
-
-const unitDefaults = fmapData(ds.concatOne(ds.emptyOne()));
-
-const hashData = fmapData(ds.hashOne);
-
-const source = curry2("source", (name, envelope) =>
-  fmapData(ds.concatOne({_sc_source: name}), envelope),
-);
+const mangleData = (source, marker, date, envelope) =>
+  fmapData(unit => {
+    const toMerge = Object.assign(ds.emptyOne(), ds.hashOne(unit), {
+      _sc_source: source,
+      _sc_pubdates: {fetch: date},
+      _sc_markers: [marker],
+    });
+    return ds.concatOne(toMerge, unit);
+  }, envelope);
 
 /**
  * A runable sugarcube pipeline.
@@ -156,19 +150,15 @@ const runner = curry3("runner", (plugins, cfg, queries) => {
           // eslint-disable-next-line consistent-return
           return liftManyA2(
             [
-              start(stream, name, stats),
+              e => start(stream, name, stats, e),
               plugin,
-              env => {
-                endEarly = !!env.endEarly;
-                return env;
+              e => {
+                endEarly = !!e.endEarly;
+                return e;
               },
-              unitDefaults,
-              hashData,
-              source(name),
-              mark(marker),
-              dates(timestamp),
-              pluginStats(stream, name, stats),
-              end(stream, name, stats),
+              e => mangleData(name, marker, timestamp, e),
+              e => pluginStats(stream, name, stats, e),
+              e => end(stream, name, stats, e),
             ],
             envelope,
             {plugins, cache, stats, log, cfg: merge({marker}, cfg)},

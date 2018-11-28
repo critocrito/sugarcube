@@ -1,14 +1,12 @@
 import {
   flow,
   map,
-  flatMap,
   differenceWith,
   intersectionWith,
   property,
-  identity,
   isEqual,
 } from "lodash/fp";
-import {spreadP, collectP} from "dashp";
+import {flatmapP, spreadP} from "dashp";
 
 import ls from "./list";
 import ds from "./data";
@@ -321,11 +319,15 @@ export const queriesByType = curry2("queriesByType", (type, e) => {
 
 export const flatMapQueriesAsync = curry3(
   "flatMapQueriesAsync",
-  (f, source, e) =>
-    collectP(
-      q => f(q.term).then(ds.fmap(ds.concatOne({_sc_queries: [q]}))),
-      filterQueries(({type}) => type === source, e).queries,
-    ).then(d => concatData(flatMap(identity, d), e)),
+  async (f, source, e) => {
+    const qs = filterQueries(({type}) => type === source, e).queries;
+    const result = await flatmapP(async q => {
+      const data = await f(q.term);
+      if (data == null || data.length === 0) return [];
+      return ds.fmap(b => ds.concatOne({_sc_queries: [q]}, b), data);
+    }, qs);
+    return concatData(result, e);
+  },
 );
 
 export default {
