@@ -25,8 +25,13 @@ export const createIndex = curry3(
   async (index, mapping, client) => {
     const body = mapping;
 
-    if (await client.indices.exists({index})) return ofP(null);
-    return client.indices.create({index, body});
+    const aliasExists = await client.indices.existsAlias({name: index});
+    const indexExists = await client.indices.exists({index});
+
+    if (aliasExists || indexExists) return ofP(null);
+
+    await client.indices.create({index: `${index}-1`, body});
+    return client.indices.putAlias({index: `${index}-1`, name: index});
   },
 );
 
@@ -223,7 +228,7 @@ export const queryOne = curry3(
 );
 
 export const queryExisting = curry3(
-  "querryExisting",
+  "queryExisting",
   async (index, ids, client, customMappings) => {
     const batchSize = 5000;
 
