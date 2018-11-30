@@ -21,6 +21,7 @@ const listFields = [
   "_sc_media",
   "_sc_downloads",
   "_sc_queries",
+  "_sc_locations",
 ];
 
 const hashUnitId = hashWithField("_sc_id_fields");

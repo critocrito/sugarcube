@@ -49,11 +49,14 @@ const end = (stream, name, stats, envelope) => {
 
 const mangleData = (source, marker, date, envelope) =>
   fmapData(unit => {
-    const toMerge = Object.assign(ds.emptyOne(), ds.hashOne(unit), {
-      _sc_source: source,
-      _sc_pubdates: {fetch: date},
-      _sc_markers: [marker],
-    });
+    const toMerge = Object.assign(
+      ds.hashOne(Object.assign(ds.emptyOne(), unit)),
+      {
+        _sc_source: source,
+        _sc_pubdates: {fetch: date},
+        _sc_markers: [marker],
+      },
+    );
     return ds.concatOne(toMerge, unit);
   }, envelope);
 
