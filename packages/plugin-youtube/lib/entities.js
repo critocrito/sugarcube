@@ -1,11 +1,29 @@
 import {merge} from "lodash/fp";
 import parse from "date-fns/parse";
 
-export const video = item =>
-  merge(item, {
+export const video = item => {
+  let locations = [];
+  if (
+    item.recordingDetails != null ||
+    item.recordingDetails.location != null ||
+    item.recordingDetails.location.longitude != null ||
+    item.recordingDetails.location.latitude != null
+  ) {
+    const {longitude, latitude} = item.recordingDetails.location;
+    const location = {
+      location: {longitude, latitude},
+      type: "recording",
+      term: [longitude, latitude],
+      description: item.recordingDetails.locationDescription,
+    };
+    locations = [location];
+  }
+
+  return merge(item, {
     _sc_id_fields: ["id"],
     _sc_content_fields: ["snippet.title", "snippet.description"],
     _sc_pubdates: {source: parse(item.snippet.publishedAt)},
+    _sc_locations: locations,
     _sc_media: [
       {
         type: "image",
@@ -23,6 +41,7 @@ export const video = item =>
       },
     ],
   });
+};
 
 export const playlistVideo = item =>
   video(
