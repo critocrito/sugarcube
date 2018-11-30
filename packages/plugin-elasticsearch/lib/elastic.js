@@ -181,27 +181,30 @@ export const bulk = curry4(
   },
 );
 
-export const queryByIds = curry3("queryByIds", async (index, ids, client, customMappings) => {
-  const batchSize = 2500;
-  const responses = await collectP(idsChunk => {
-    const body = queries.byIds(idsChunk);
-    return query(index, body, null, client, customMappings);
-  }, chunk(batchSize, ids));
+export const queryByIds = curry3(
+  "queryByIds",
+  async (index, ids, client, customMappings) => {
+    const batchSize = 2500;
+    const responses = await collectP(idsChunk => {
+      const body = queries.byIds(idsChunk);
+      return query(index, body, null, client, customMappings);
+    }, chunk(batchSize, ids));
 
-  return responses.reduce(
-    ([data, meta], response) => {
-      const {took, total} = response[1];
-      return [
-        data.concat(response[0]),
-        Object.assign({}, meta, {
-          took: took + meta.took,
-          total: total + meta.total,
-        }),
-      ];
-    },
-    [[], {took: 0, total: 0, batches: responses.length, batchSize}],
-  );
-});
+    return responses.reduce(
+      ([data, meta], response) => {
+        const {took, total} = response[1];
+        return [
+          data.concat(response[0]),
+          Object.assign({}, meta, {
+            took: took + meta.took,
+            total: total + meta.total,
+          }),
+        ];
+      },
+      [[], {took: 0, total: 0, batches: responses.length, batchSize}],
+    );
+  },
+);
 
 export const queryOne = curry3(
   "queryOne",
