@@ -1,5 +1,5 @@
 /* eslint-disable no-plusplus */
-import {chunk} from "lodash/fp";
+import {chunk, merge} from "lodash/fp";
 import {collectP, ofP} from "dashp";
 import elastic from "elasticsearch";
 import {utils} from "@sugarcube/core";
@@ -23,11 +23,7 @@ export const toMsg = (index, unit) =>
 export const createIndex = curry3(
   "createIndex",
   async (index, mapping, client) => {
-    const body = {
-      mappings: {
-        _doc: {properties: mapping},
-      },
-    };
+    const body = mapping;
 
     if (await client.indices.exists({index})) return ofP(null);
     return client.indices.create({index, body});
@@ -37,7 +33,7 @@ export const createIndex = curry3(
 export const reindex = curry6(
   "reindex",
   async (index, host, port, toIndex, client, customMappings) => {
-    const mappings = Object.assign({}, defaultMappings, customMappings);
+    const mappings = merge(defaultMappings, customMappings);
     await createIndex(toIndex, mappings, client);
     await client.reindex({
       body: queries.reindex(index, host, port, toIndex),
@@ -51,7 +47,7 @@ export const reindex = curry6(
 export const query = curry4(
   "query",
   async (index, body, amount, client, customMappings) => {
-    const mappings = Object.assign({}, defaultMappings, customMappings);
+    const mappings = merge(defaultMappings, customMappings);
     await createIndex(index, mappings, client);
 
     const allData = [];
@@ -134,7 +130,7 @@ export const bulk = curry4(
     }
 
     // Ensure the index is created.
-    const mappings = Object.assign({}, defaultMappings, customMappings);
+    const mappings = merge(defaultMappings, customMappings);
     await createIndex(index, mappings, client);
 
     // Run the bulk requests
@@ -153,12 +149,21 @@ export const bulk = curry4(
 
       for (let i = 0; i < (items || []).length; i++) {
         const item = items[i];
-        const op = item.index || item.update;
-        const count = meta[`${op.result}`] || 0;
-        if (i.error != null) errors.push({id: op._id, error: op.error});
+        const op = item.index || item.update || item.create || item.delete;
+        const result = op.result || "error";
+        const count = meta[result] || 0;
+
+        if (op.error != null)
+          errors.push({
+            id: op._id,
+            error: `${op.error.type}: ${op.error.reason} (${
+              op.error.caused_by != null ? op.error.caused_by.reason : ""
+            })`,
+          });
+
         meta = Object.assign({}, meta, {
           took: meta.took + took,
-          [`${op.result}`]: count + 1,
+          [result]: count + 1,
         });
       }
       if (chunks.length === 0) {
@@ -176,11 +181,11 @@ export const bulk = curry4(
   },
 );
 
-export const queryByIds = curry3("queryByIds", async (index, ids, client) => {
+export const queryByIds = curry3("queryByIds", async (index, ids, client, customMappings) => {
   const batchSize = 2500;
   const responses = await collectP(idsChunk => {
     const body = queries.byIds(idsChunk);
-    return query(index, body, null, client);
+    return query(index, body, null, client, customMappings);
   }, chunk(batchSize, ids));
 
   return responses.reduce(
@@ -198,22 +203,30 @@ export const queryByIds = curry3("queryByIds", async (index, ids, client) => {
   );
 });
 
-export const queryOne = curry3("queryOne", async (index, id, client) => {
-  const {_version: version, _type: type, _source: data} = await client.get({
-    index,
-    id,
-    type: "_all",
-  });
-  return [data, {version, type}];
-});
+export const queryOne = curry3(
+  "queryOne",
+  async (index, id, client, customMappings) => {
+    // Ensure the index is created.
+    const mappings = merge(defaultMappings, customMappings);
+    await createIndex(index, mappings, client);
+
+    const {_version: version, _type: type, _source: data} = await client.get({
+      index,
+      id,
+      type: "_all",
+    });
+    return [data, {version, type}];
+  },
+);
 
 export const queryExisting = curry3(
   "querryExisting",
-  async (index, ids, client) => {
+  async (index, ids, client, customMappings) => {
     const batchSize = 5000;
+
     const responses = await collectP(idsChunk => {
       const body = queries.existing(idsChunk);
-      return query(index, body, null, client);
+      return query(index, body, null, client, customMappings);
     }, chunk(batchSize, ids));
 
     return responses.reduce(

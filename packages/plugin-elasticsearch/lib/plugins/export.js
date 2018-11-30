@@ -42,9 +42,7 @@ const plugin = (envelope, {cfg, log}) => {
 
       if (size(errors) > 0) {
         errors.forEach(e =>
-          log.error(
-            `Unit ${e.id} threw an error (${e.error.type}): ${e.error.reason}`,
-          ),
+          log.error(`Unit ${e.id} threw an error: ${e.error}`),
         );
         throw new Error(`Indexing units threw an error.`);
       }

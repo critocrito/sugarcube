@@ -22,6 +22,11 @@ const mapUnitKeys = (fn, unit) => {
 
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i];
+    if (/^(_|\$)sc_elastic_score$/.test(key)) continue;
+    if (/_doc/.test(key)) {
+      obj[key] = unit[key];
+      continue;
+    }
     const newKey = fn(key);
 
     if (isPlainObject(unit[key])) {
