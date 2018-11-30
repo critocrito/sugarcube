@@ -12,7 +12,7 @@ export const video = item => {
     const {longitude, latitude} = item.recordingDetails.location;
     const location = {
       location: {lon: longitude, lat: latitude},
-      type: "recording",
+      type: "youtube_recording",
       term: [longitude, latitude],
       description: item.recordingDetails.locationDescription,
     };
