@@ -1,4 +1,4 @@
-import {size} from "lodash/fp";
+import {get, size} from "lodash/fp";
 import {flowP, tapP} from "dashp";
 import {envelope as env, plugin as p} from "@sugarcube/core";
 
@@ -7,8 +7,14 @@ import {assertDb} from "../utils";
 
 const querySource = "mongodb_unit";
 
-const fetchUnits = (envelope, {log}) => {
+const fetchUnits = (envelope, {log, cfg}) => {
+  const fromUri = get("mongodb.from_uri", cfg);
   const queries = env.queriesByType(querySource, envelope);
+
+  if (fromUri) {
+    log.info(`Fetching data from ${fromUri}.`);
+    db.initialize(fromUri);
+  }
 
   return flowP(
     [
