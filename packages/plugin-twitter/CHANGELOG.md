@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.17.0](https://github.com/critocrito/sugarcube/compare/v0.16.0...v0.17.0) (2018-12-01)
+
+
+### Features
+
+* **plugin-twitter:** store coordinates location ([46b9def](https://github.com/critocrito/sugarcube/commit/46b9def))
+
+
+
+
+
 # [0.16.0](https://github.com/critocrito/sugarcube/compare/v0.15.0...v0.16.0) (2018-11-26)
 
 

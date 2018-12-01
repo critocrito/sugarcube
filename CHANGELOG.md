@@ -3,6 +3,37 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.17.0](https://github.com/critocrito/sugarcube/compare/v0.16.0...v0.17.0) (2018-12-01)
+
+
+### Bug Fixes
+
+* **core:** temp fix for failing unit test when concatenating ([1bf4580](https://github.com/critocrito/sugarcube/commit/1bf4580))
+* **plugin-youtube:** don't throw on non existing location ([2d3a260](https://github.com/critocrito/sugarcube/commit/2d3a260))
+* **plugin-youtube:** rename location field names ([d7cdeb5](https://github.com/critocrito/sugarcube/commit/d7cdeb5))
+
+
+### Features
+
+* **core:** make _sc_locations a fixed field ([9d23eef](https://github.com/critocrito/sugarcube/commit/9d23eef))
+* **plugin-elasticsearch:** added the reindex plugin ([288aef6](https://github.com/critocrito/sugarcube/commit/288aef6))
+* **plugin-elasticsearch:** create an alias for a numbered index ([31f3f34](https://github.com/critocrito/sugarcube/commit/31f3f34))
+* **plugin-elasticsearch:** properly handle custom mappings and fixes ([710f762](https://github.com/critocrito/sugarcube/commit/710f762))
+* **plugin-elasticsearch:** set locations mapping ([d201869](https://github.com/critocrito/sugarcube/commit/d201869))
+* **plugin-elasticsearch:** use the scroll API for imports ([7f8cd1f](https://github.com/critocrito/sugarcube/commit/7f8cd1f))
+* **plugin-twitter:** store coordinates location ([46b9def](https://github.com/critocrito/sugarcube/commit/46b9def))
+* **plugin-youtube:** store recording location when provided ([54e5ac8](https://github.com/critocrito/sugarcube/commit/54e5ac8))
+
+
+### Performance Improvements
+
+* **core:** improved pipeline runner and data concatenation ([0d840b2](https://github.com/critocrito/sugarcube/commit/0d840b2))
+* **plugin-elasticsearch:** improved import/export ([999174c](https://github.com/critocrito/sugarcube/commit/999174c))
+
+
+
+
+
 # [0.16.0](https://github.com/critocrito/sugarcube/compare/v0.15.0...v0.16.0) (2018-11-26)
 
 

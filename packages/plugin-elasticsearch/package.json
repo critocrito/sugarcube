@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/plugin-elasticsearch",
-  "version": "0.16.0",
+  "version": "0.17.0",
   "description": "",
   "main": "_dist/index.js",
   "license": "GPL-3.0",
@@ -15,7 +15,7 @@
     "data storage"
   ],
   "dependencies": {
-    "@sugarcube/core": "^0.16.0",
+    "@sugarcube/core": "^0.17.0",
     "dashp": "^0.10.1",
     "elasticsearch": "^14.1.0",
     "glob": "^7.1.2",

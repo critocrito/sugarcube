@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.17.0](https://github.com/critocrito/sugarcube/compare/v0.16.0...v0.17.0) (2018-12-01)
+
+
+### Bug Fixes
+
+* **plugin-youtube:** don't throw on non existing location ([2d3a260](https://github.com/critocrito/sugarcube/commit/2d3a260))
+* **plugin-youtube:** rename location field names ([d7cdeb5](https://github.com/critocrito/sugarcube/commit/d7cdeb5))
+
+
+### Features
+
+* **plugin-youtube:** store recording location when provided ([54e5ac8](https://github.com/critocrito/sugarcube/commit/54e5ac8))
+
+
+
+
+
 # [0.16.0](https://github.com/critocrito/sugarcube/compare/v0.15.0...v0.16.0) (2018-11-26)
 
 
