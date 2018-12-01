@@ -58,8 +58,7 @@ export const stringify = s => (isString(s) ? s : JSON.stringify(s));
 export const arrayify = a => (isArray(a) ? a : [a]);
 
 export const concatManyWith = (idField, merger, xs, ys) => {
-  if (xs.length === 0) return ys;
-  if (ys.length === 0) return xs;
+  if (xs.length === 0 && ys.length === 0) return [];
 
   const obj = new Map();
 
@@ -70,7 +69,7 @@ export const concatManyWith = (idField, merger, xs, ys) => {
     if (obj.has(id)) {
       obj.set(id, merger(obj.get(id), unit));
     } else {
-      obj.set(id, Object.assign({_sc_id_hash: id}, unit));
+      obj.set(id, Object.assign({}, {_sc_id_hash: id}, unit));
     }
   }
   // eslint-disable-next-line no-plusplus
@@ -80,7 +79,7 @@ export const concatManyWith = (idField, merger, xs, ys) => {
     if (obj.has(id)) {
       obj.set(id, merger(obj.get(id), unit));
     } else {
-      obj.set(id, Object.assign({_sc_id_hash: id}, unit));
+      obj.set(id, Object.assign({}, {_sc_id_hash: id}, unit));
     }
   }
   return Array.from(obj.values());
