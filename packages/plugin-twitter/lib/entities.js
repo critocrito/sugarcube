@@ -78,6 +78,17 @@ const mentionEntities = map(mention =>
   ),
 );
 
+const coordinatesEntities = ({coordinates}) => {
+  if (coordinates == null) return [];
+  return [
+    {
+      location: {lon: coordinates[0], lat: coordinates[1]},
+      type: "tweet_location",
+      term: coordinates,
+    },
+  ];
+};
+
 const pubDates = unit => {
   const createdAt = twitterDate(unit.created_at);
   return createdAt.isValid() ? {source: createdAt.toDate()} : {};
@@ -126,6 +137,7 @@ const tweet = t => {
     getOr([], "entities.user_mentions"),
     mentionEntities,
   ])(t);
+  const lfLocations = coordinatesEntities(t.coordinates || {});
 
   return merge(
     {
@@ -138,6 +150,7 @@ const tweet = t => {
         lfUrls,
         lfMedia,
       ]),
+      _sc_locations: lfLocations,
       _sc_media: flatten([lfMedia, lfUrls]),
       user: userEntity(t.user),
       urls: getOr([], "entities.url", t),
