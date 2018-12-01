@@ -38,6 +38,12 @@ const listChannel = (envelope, {cfg, log, stats}) => {
       );
     }
   }
+  if (range)
+    log.info(
+      `Limiting queries from ${range.publishedAfter} till ${
+        range.publishedBefore
+      }`,
+    );
 
   const op = range
     ? videoChannel(key, pickBy(identity, range))
