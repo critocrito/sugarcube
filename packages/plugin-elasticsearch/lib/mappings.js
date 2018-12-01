@@ -116,6 +116,22 @@ export default {
         $sc_locations: {
           type: "nested",
           properties: {
+            $sc_id_hash: {
+              type: "keyword",
+              ignore_above: 64,
+            },
+            type: {
+              type: "keyword",
+              ignore_above: 256,
+            },
+            term: {
+              type: "text",
+              fields: {
+                keyword: {
+                  type: "keyword",
+                },
+              },
+            },
             location: {
               type: "geo_point",
             },
