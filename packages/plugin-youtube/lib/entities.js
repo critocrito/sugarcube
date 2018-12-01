@@ -4,9 +4,9 @@ import parse from "date-fns/parse";
 export const video = item => {
   let locations = [];
   if (
-    item.recordingDetails != null ||
-    item.recordingDetails.location != null ||
-    item.recordingDetails.location.longitude != null ||
+    item.recordingDetails != null &&
+    item.recordingDetails.location != null &&
+    item.recordingDetails.location.longitude != null &&
     item.recordingDetails.location.latitude != null
   ) {
     const {longitude, latitude} = item.recordingDetails.location;
