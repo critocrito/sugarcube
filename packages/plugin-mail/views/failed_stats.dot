@@ -1,6 +1,6 @@
 Hey,
 
-Unfortunately some queries didn't succeed.
+Unfortunately {{=it.failures.length}} queries didn't succeed.
 
 {{~it.failures :fail}}
 - {{=fail.term}} ({{=fail.type}}) in {{=fail.plugin}}
