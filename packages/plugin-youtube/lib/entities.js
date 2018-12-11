@@ -18,12 +18,17 @@ export const video = item => {
     };
     locations = [location];
   }
+  const language =
+    item.snippet != null && item.snippet.defaultLanguage != null
+      ? item.snippet.defaultLanguage
+      : null;
 
   return merge(item, {
     _sc_id_fields: ["id"],
     _sc_content_fields: ["snippet.title", "snippet.description"],
     _sc_pubdates: {source: parse(item.snippet.publishedAt)},
     _sc_locations: locations,
+    _sc_language: language,
     _sc_media: [
       {
         type: "image",
