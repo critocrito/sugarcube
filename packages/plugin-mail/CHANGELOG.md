@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.18.0](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mail/compare/v0.17.0...v0.18.0) (2018-12-11)
+
+
+### Features
+
+* **plugin-mail:** print the number of failures in the error report ([f5e188c](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mail/commit/f5e188c))
+
+
+
+
+
 # [0.17.0](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mail/compare/v0.16.0...v0.17.0) (2018-12-01)
 
 **Note:** Version bump only for package @sugarcube/plugin-mail

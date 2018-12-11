@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.18.0](https://github.com/critocrito/sugarcube/compare/v0.17.0...v0.18.0) (2018-12-11)
+
+
+### Features
+
+* **plugin-twitter:** set language on tweets if available ([cf49a74](https://github.com/critocrito/sugarcube/commit/cf49a74))
+
+
+
+
+
 # [0.17.0](https://github.com/critocrito/sugarcube/compare/v0.16.0...v0.17.0) (2018-12-01)
 
 
