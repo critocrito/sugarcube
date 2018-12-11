@@ -138,6 +138,7 @@ const tweet = t => {
     mentionEntities,
   ])(t);
   const lfLocations = coordinatesEntities(t.coordinates || {});
+  const language = t.lang != null ? t.lang : null;
 
   return merge(
     {
@@ -152,6 +153,7 @@ const tweet = t => {
       ]),
       _sc_locations: lfLocations,
       _sc_media: flatten([lfMedia, lfUrls]),
+      _sc_language: language,
       user: userEntity(t.user),
       urls: getOr([], "entities.url", t),
       medias: getOr([], "extended_entities.media", t),
