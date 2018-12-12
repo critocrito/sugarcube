@@ -1,5 +1,5 @@
-import {merge, includes, get} from "lodash/fp";
-import dashp, {flowP, collectP, tapP} from "dashp";
+import {includes, get} from "lodash/fp";
+import dashp, {collectP} from "dashp";
 import pify from "pify";
 import {join} from "path";
 import fs from "fs";
@@ -25,7 +25,6 @@ const plugin = async (envelope, {cfg, log, stats}) => {
   const dataDir = get("media.data_dir", cfg);
   const cmd = get("media.youtubedl_cmd", cfg);
   const videoFormat = get("media.download_format", cfg);
-  const debug = get("media.youtubedl_debug", cfg);
   const parallel = get("media.youtubedl_parallel", cfg);
 
   let mod;
@@ -52,83 +51,94 @@ const plugin = async (envelope, {cfg, log, stats}) => {
   }
 
   const mapper = dashp[`flatmapP${mod}`];
+  let counter = 0;
 
   // ensure the download directory.
   await mkdirP(dataDir);
-  const data = await mapper(
-    unit =>
-      // Avoid live broadcasts, otherwise youtubedl gets "stuck".
-      unit.snippet != null && unit.snippet.liveBroadcastContent === "live"
-        ? unit
-        : collectP(media => {
-            const {type, term, href} = media;
-            const source = href || term;
-            const idHash = media._sc_id_hash;
 
-            if (!includes(type, downloadTypes)) return media;
+  const data = await mapper(async unit => {
+    // Avoid live broadcasts, otherwise youtubedl gets "stuck".
+    if (unit.snippet != null && unit.snippet.liveBroadcastContent === "live")
+      return unit;
 
-            const location = join(
-              dataDir,
-              unit._sc_id_hash,
-              "youtubedl",
-              `${idHash}.${videoFormat}`,
+    const medias = await collectP(async media => {
+      const {type, term, href} = media;
+      const source = href || term;
+      const idHash = media._sc_id_hash;
+
+      if (!includes(type, downloadTypes)) return media;
+
+      const location = join(
+        dataDir,
+        unit._sc_id_hash,
+        "youtubedl",
+        `${idHash}.${videoFormat}`,
+      );
+
+      try {
+        await accessAsync(location);
+
+        log.info(`Video ${source} exists at ${location}.`);
+
+        // We just skip the rest if a video already exists.
+        return media;
+      } catch (e) {
+        if (e.code === "ENOENT") {
+          try {
+            await youtubeDl(cmd, videoFormat, source, location);
+          } catch (ee) {
+            const failed = {
+              type: unit._sc_source,
+              term: source,
+              plugin: "media_youtubedl",
+              reason: ee.message,
+            };
+            stats.update(
+              "failed",
+              fails => (Array.isArray(fails) ? fails.concat(failed) : [failed]),
             );
 
-            // Download all videos.
-            return accessAsync(location) // eslint-disable-line promise/no-nesting
-              .then(() => log.info(`Video ${source} exists at ${location}.`))
-              .catch(e => {
-                if (e.code === "ENOENT") {
-                  return flowP(
-                    [
-                      youtubeDl(debug, cmd, videoFormat, source),
-                      tapP(() =>
-                        log.info(`Downloaded ${source} to ${location}.`),
-                      ),
-                    ],
-                    location,
-                  );
-                }
-                throw e;
-              })
-              .then(() => Promise.all([md5sum(location), sha256sum(location)]))
-              .then(([md5, sha256]) =>
-                unit._sc_downloads.push(
-                  Object.assign(
-                    {},
-                    {
-                      location,
-                      md5,
-                      sha256,
-                      type,
-                      term,
-                      href,
-                    },
-                    href ? {href} : {},
-                  ),
-                ),
-              )
-              .catch(async e => {
-                const failed = {
-                  type: unit._sc_source,
-                  term: source,
-                  plugin: "media_youtubedl",
-                  reason: e.message,
-                };
-                stats.update(
-                  "failed",
-                  fails =>
-                    Array.isArray(fails) ? fails.concat(failed) : [failed],
-                );
-                log.warn(
-                  `Failed to download video ${source} to ${location}. Removing stale artifact.`,
-                );
-                await cleanUp(location);
-              })
-              .then(() => media);
-          }, unit._sc_media).then(ms => merge(unit, {_sc_media: ms})),
-    envelope.data,
-  );
+            log.warn(`Failed to download video ${source}: ${ee.message}`);
+
+            await cleanUp(location);
+
+            return media;
+          }
+        } else {
+          throw e;
+        }
+      }
+
+      log.info(`Downloaded ${source} to ${location}.`);
+
+      const [md5, sha256] = await Promise.all([
+        md5sum(location),
+        sha256sum(location),
+      ]);
+      unit._sc_downloads.push(
+        Object.assign(
+          {},
+          {
+            location,
+            md5,
+            sha256,
+            type,
+            term,
+            href,
+          },
+          href ? {href} : {},
+        ),
+      );
+
+      counter += 1;
+      if (counter % 100 === 0)
+        log.debug(`Checked ${counter} out of ${envelope.data.length} units.`);
+
+      return media;
+    }, unit._sc_media);
+
+    return Object.assign({}, unit, {_sc_media: medias});
+  }, envelope.data.slice(0, 100));
 
   return env.envelope(data, envelope.queries);
 };
@@ -153,10 +163,6 @@ plugin.argv = {
     nargs: 1,
     default: "youtube-dl",
     desc: "The path to the youtube-dl command.",
-  },
-  "media.youtubedl_debug": {
-    type: "boolean",
-    desc: "Log the youtube-dl output and debug symbols to the console.",
   },
   "media.youtubedl_parallel": {
     type: "number",

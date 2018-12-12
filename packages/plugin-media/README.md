@@ -12,21 +12,13 @@ Extract exif data from image urls in `_sc_media` fields.
 
 ### `media_youtubedl` plugin
 
-Download all videos of type `video` that are stored in `_sc_media`. SHA256 and
-MD5 sums are calculated for those downloads. It also downloads thumbnails and
-subtitle files if available. The plugin uses the external `youtube-dl` program
-to actually download. This makes it
-[compatible](https://rg3.github.io/youtube-dl/supportedsites.html) with a
-variety of websites.
+Download all videos of type `video` that are stored in `_sc_media`. SHA256 and MD5 sums are calculated for those downloads. It also downloads thumbnails and subtitle files if available. The plugin uses the external `youtube-dl` program to actually download. This makes it [compatible](https://rg3.github.io/youtube-dl/supportedsites.html) with a variety of websites.
 
 **Configuration Options**:
 
-- `media.data_dir`: Download all videos into this directory. Defaults to
-  `data`.
-- `media.download_format`: Download videos in this video format. Defaults to
-  `mp4`.
-- `media.youtubedl_cmd`: The path to the `youtube-dl` command. Defaults to
-  `youtube-dl`, with no specific path supplied.
+- `media.data_dir`: Download all videos into this directory. Defaults to `data`.
+- `media.download_format`: Download videos in this video format. Defaults to `mp4`.
+- `media.youtubedl_cmd`: The path to the `youtube-dl` command. Defaults to `youtube-dl`, with no specific path supplied.
 - `media.youtubedl_parallel`: Specify how many videos to fetch at the same time. It defaults to 1 and can be set between 1 and 8.
 
 **Example:**
