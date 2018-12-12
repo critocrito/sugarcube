@@ -29,11 +29,20 @@ variety of websites.
   `youtube-dl`, with no specific path supplied.
 - `media.youtubedl_parallel`: Specify how many videos to fetch at the same time. It defaults to 1 and can be set between 1 and 8.
 
-## Example
+**Example:**
 
 ```
 $(npm bin)/sugarcube -q queries.json -c config.json -p twitter_feed,media_youtubedl
 ```
+
+### `media_youtubedl_check`
+
+Check any video in `_sc_media** if it is still available.
+
+**Configuration Options:**
+
+- `media.youtubedl_cmd`: The path to the `youtube-dl` command. Defaults to `youtube-dl`, with no specific path supplied.
+- `media.youtubedl_parallel`: Specify how many videos to fetch at the same time. It defaults to 1 and can be set between 1 and 8.
 
 ## License
 

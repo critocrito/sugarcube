@@ -27,6 +27,27 @@ export const youtubeDl = curry((debug, cmd, videoFormat, href, target) => {
   });
 });
 
+export const youtubeDlCheck = (cmd, href) => {
+  const args = ["-s", href];
+
+  // eslint-disable-next-line promise/avoid-new
+  return new Promise(async (resolve, reject) => {
+    const promise = spawn(cmd, args);
+    const errMsg = [];
+
+    promise.childProcess.stderr.on("data", d => errMsg.push(d.toString()));
+
+    try {
+      await promise;
+      resolve();
+    } catch (e) {
+      const msg = errMsg.map(m => m.trim().replace(/\n$/, "")).join(" ");
+      reject(new Error(msg));
+    }
+  });
+};
+
 export default {
   youtubeDl,
+  youtubeDlCheck,
 };
