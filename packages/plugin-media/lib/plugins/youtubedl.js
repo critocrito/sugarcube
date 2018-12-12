@@ -138,7 +138,7 @@ const plugin = async (envelope, {cfg, log, stats}) => {
     }, unit._sc_media);
 
     return Object.assign({}, unit, {_sc_media: medias});
-  }, envelope.data.slice(0, 100));
+  }, envelope.data);
 
   return env.envelope(data, envelope.queries);
 };
