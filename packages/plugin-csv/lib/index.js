@@ -4,6 +4,7 @@ import importPlugin from "./plugins/import";
 import diffPlugin from "./plugins/diff";
 import diffExportPlugin from "./plugins/diff-export";
 import queriesExportPlugin from "./plugins/queries-export";
+import exportFailedStatsPlugin from "./plugins/export-failed-stats";
 import {parse, parseMany} from "./parse";
 
 const plugins = {
@@ -12,6 +13,7 @@ const plugins = {
   csv_diff: diffPlugin,
   csv_diff_stats_export: diffExportPlugin,
   csv_export_queries: queriesExportPlugin,
+  csv_export_failed: exportFailedStatsPlugin,
 };
 
 const importPlugins = [importPlugin, diffPlugin];
