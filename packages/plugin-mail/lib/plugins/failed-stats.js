@@ -1,9 +1,10 @@
 import {get, getOr} from "lodash/fp";
-import {flowP, tapP, caughtP} from "dashp";
+import fs from "fs";
+import path from "path";
 import dot from "dot";
 import {envelope as env, plugin as p} from "@sugarcube/core";
 
-import {createTransporter, mail} from "../utils";
+import {createTransporter, encrypt, encryptFile} from "../utils";
 import {assertFrom} from "../assertions";
 
 dot.log = false;
@@ -24,12 +25,17 @@ const mailFailedStats = async (envelope, {cfg, log, stats}) => {
     log.info("No failures to report. Skipping mailing.");
     return envelope;
   }
+  let statsFile;
+
+  try {
+    statsFile = fs.createReadStream(stats.get("failed_stats_csv"));
+  } catch (e) {} // eslint-disable-line no-empty
 
   const project = getOr("unknown-project", "project", cfg);
   const name = get("name", stats.get("pipeline"));
   const marker = get("marker", cfg);
   const noEncrypt = get("mail.no-encrypt", cfg);
-  const sender = get("mail.from", cfg);
+  const from = get("mail.from", cfg);
   const isDebug = get("mail.debug", cfg);
   const recipients = env.queriesByType(querySource, envelope);
   const subject = `[${project}]: Failed queries for ${name} (${marker}).`;
@@ -38,33 +44,43 @@ const mailFailedStats = async (envelope, {cfg, log, stats}) => {
 
   log.info(`Mailing ${failures.length} failures.`);
 
-  if (isDebug) log.info(["Email text:", "", body].join("\n"));
-
   await Promise.all(
-    recipients.map(recipient => {
-      log.info(`Mailing failed stats to ${recipient}.`);
+    recipients.map(async to => {
+      const text = !noEncrypt ? await encrypt(to, body) : body;
+      let attachments = [];
+      let info;
 
-      return flowP(
-        [
-          to => mail(transporter, sender, to, body, subject, !noEncrypt),
-          tapP(info => {
-            if (isDebug) {
-              log.info(
-                ["Emailing the following:", "", info.message.toString()].join(
-                  "\n",
-                ),
-              );
-            } else {
-              log.info(`Accepted mail for: ${info.accepted.join(", ")}`);
-            }
-          }),
-          caughtP(e => {
-            log.warn(`Failed to send to ${recipient}.`);
-            log.warn(e);
-          }),
-        ],
-        recipient,
-      );
+      log.info(`Mailing failed stats to ${to}.`);
+
+      if (statsFile != null) {
+        const content = !noEncrypt
+          ? await encryptFile(to, statsFile)
+          : statsFile;
+        const filename = path.basename(
+          `${stats.get("failed_stats_csv")}${!noEncrypt ? ".gpg" : ""}`,
+        );
+        attachments = [{filename, content}];
+      }
+
+      try {
+        info = await transporter.sendMail({
+          from,
+          subject,
+          to,
+          text,
+          attachments,
+        });
+      } catch (e) {
+        log.warn(`Failed to send to ${to}.`);
+        log.warn(e);
+        return;
+      }
+
+      log.info(`Accepted mail for: ${info.accepted.join(", ")}`);
+      if (isDebug)
+        log.info(
+          ["Emailing the following:", "", info.message.toString()].join("\n"),
+        );
     }),
   );
   return envelope;

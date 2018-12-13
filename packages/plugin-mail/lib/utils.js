@@ -1,4 +1,3 @@
-import {flowP} from "dashp";
 import nodemailer from "nodemailer";
 import gpg from "gpg";
 
@@ -28,11 +27,24 @@ export const encrypt = (to, text) =>
     }),
   );
 
-export const mail = (transporter, from, to, message, subject, toEncrypt) =>
-  flowP(
-    [
-      () => (toEncrypt ? encrypt(to, message) : message),
-      text => transporter.sendMail({from, subject, to, text}),
-    ],
-    null,
+export const encryptFile = (to, stream) =>
+  // eslint-disable-next-line promise/avoid-new
+  new Promise((resolve, reject) =>
+    gpg.encryptStream(stream, [`-r ${to}`, "--armor"], (e, encrypted) => {
+      if (e) reject(e);
+      if (encrypted) resolve(encrypted.toString());
+      reject();
+    }),
   );
+
+export const mail = async (
+  transporter,
+  from,
+  to,
+  message,
+  subject,
+  toEncrypt,
+) => {
+  const text = toEncrypt ? await encrypt(to, message) : message;
+  transporter.sendMail({from, subject, to, text});
+};
