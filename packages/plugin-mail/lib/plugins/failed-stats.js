@@ -25,11 +25,6 @@ const mailFailedStats = async (envelope, {cfg, log, stats}) => {
     log.info("No failures to report. Skipping mailing.");
     return envelope;
   }
-  let statsFile;
-
-  try {
-    statsFile = fs.createReadStream(stats.get("failed_stats_csv"));
-  } catch (e) {} // eslint-disable-line no-empty
 
   const project = getOr("unknown-project", "project", cfg);
   const name = get("name", stats.get("pipeline"));
@@ -44,45 +39,64 @@ const mailFailedStats = async (envelope, {cfg, log, stats}) => {
 
   log.info(`Mailing ${failures.length} failures.`);
 
-  await Promise.all(
-    recipients.map(async to => {
-      const text = !noEncrypt ? await encrypt(to, body) : body;
-      let attachments = [];
-      let info;
+  const mailReport = async to => {
+    let text;
+    let content;
+    let attachments = [];
+    let info;
+    let statsFile;
 
-      log.info(`Mailing failed stats to ${to}.`);
+    log.info(`Mailing failed stats to ${to}.`);
 
-      if (statsFile != null) {
-        const content = !noEncrypt
-          ? await encryptFile(to, statsFile)
-          : statsFile;
-        const filename = path.basename(
-          `${stats.get("failed_stats_csv")}${!noEncrypt ? ".gpg" : ""}`,
-        );
-        attachments = [{filename, content}];
-      }
+    try {
+      text = !noEncrypt ? await encrypt(to, body) : body;
+    } catch (e) {
+      log.error(`Failed to encrypt message to ${to}.`);
+      log.error(e);
+      return;
+    }
 
+    try {
+      statsFile = fs.createReadStream(stats.get("failed_stats_csv"));
+    } catch (e) {} // eslint-disable-line no-empty
+
+    if (statsFile != null) {
       try {
-        info = await transporter.sendMail({
-          from,
-          subject,
-          to,
-          text,
-          attachments,
-        });
+        content = !noEncrypt ? await encryptFile(to, statsFile) : statsFile;
       } catch (e) {
-        log.warn(`Failed to send to ${to}.`);
-        log.warn(e);
+        log.error(`Failed to encrypt attachment to ${to}.`);
+        log.error(e);
         return;
       }
+      const filename = path.basename(
+        `${stats.get("failed_stats_csv")}${!noEncrypt ? ".gpg" : ""}`,
+      );
+      attachments = [{filename, content}];
+    }
 
-      log.info(`Accepted mail for: ${info.accepted.join(", ")}`);
-      if (isDebug)
-        log.info(
-          ["Emailing the following:", "", info.message.toString()].join("\n"),
-        );
-    }),
-  );
+    try {
+      info = await transporter.sendMail({
+        from,
+        subject,
+        to,
+        text,
+        attachments,
+      });
+    } catch (e) {
+      log.warn(`Failed to send to ${to}.`);
+      log.warn(e);
+      return;
+    }
+
+    log.info(`Accepted mail for: ${info.accepted.join(", ")}`);
+    if (isDebug)
+      log.info(
+        ["Emailing the following:", "", info.message.toString()].join("\n"),
+      );
+  };
+
+  await Promise.all(recipients.map(mailReport));
+
   return envelope;
 };
 
