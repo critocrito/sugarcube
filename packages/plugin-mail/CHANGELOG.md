@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.19.1](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mail/compare/v0.19.0...v0.19.1) (2018-12-13)
+
+
+### Bug Fixes
+
+* **plugin-mail:** send failed stats to more than one recipient ([cad4089](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mail/commit/cad4089))
+
+
+
+
+
 # [0.19.0](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mail/compare/v0.18.0...v0.19.0) (2018-12-13)
 
 
