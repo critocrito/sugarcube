@@ -8,6 +8,8 @@ const plugin = async (envelope, {cfg, log, stats}) => {
   const port = get("elastic.port", cfg);
   const index = get("elastic.index", cfg);
 
+  log.info(`Using ${host}:${port}/${index}.`);
+
   return Elastic.Do(
     function* complement({queryByIds}) {
       const ids = envelope.data.map(u => u._sc_id_hash);

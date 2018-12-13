@@ -18,6 +18,8 @@ const plugin = (envelope, {cfg, log}) => {
 
   if (envelope.data.length === 0) return envelope;
 
+  log.info(`Using ${host}:${port}/${index}.`);
+
   return Elastic.Do(
     function* indexUnits({bulk, queryExisting}) {
       const ids = envelope.data.map(u => u._sc_id_hash);

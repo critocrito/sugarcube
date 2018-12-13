@@ -14,10 +14,10 @@ const reindexPlugin = (envelope, {log, cfg}) => {
     ? JSON.parse(fs.readFileSync(get("elastic.mappings", cfg)))
     : {};
 
+  log.info(`Reindexing ${index} to http://${toHost}:${toPort}/${toIndex}`);
+
   return Elastic.Do(
     function* reindexIndex({reindex}) {
-      log.info(`Reindexing ${index} to http://${toHost}:${toPort}/${toIndex}`);
-
       yield reindex(index, host, port, toIndex);
     },
     {host: toHost, port: toPort, mappings},

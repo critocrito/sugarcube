@@ -33,6 +33,7 @@ const plugin = async (envelope, {cfg, log}) => {
 
   log.info(`Read ${size(files)} bodies from file.`);
   log.info(`Read ${size(queries)} bodies from queries.`);
+  log.info(`Using ${host}:${port}/${index}.`);
 
   const bodies = [files, queries].reduce(concat, []);
 
