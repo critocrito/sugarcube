@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/plugin-tap",
-  "version": "0.18.0",
+  "version": "0.19.0",
   "description": "K-combinators for sugarcube.",
   "main": "_dist/index.js",
   "keywords": [
@@ -16,7 +16,7 @@
   "author": "Christo <christo@cryptodrunks.net>",
   "license": "GPL-3.0",
   "dependencies": {
-    "@sugarcube/core": "^0.18.0",
+    "@sugarcube/core": "^0.19.0",
     "lodash": "^4.17.4",
     "pify": "^3.0.0"
   },

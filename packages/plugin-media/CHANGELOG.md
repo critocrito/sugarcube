@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.19.0](https://github.com/critocrito/sugarcube/compare/v0.18.0...v0.19.0) (2018-12-13)
+
+
+### Bug Fixes
+
+* **plugin-media:** remove development artifact ([ec6f39e](https://github.com/critocrito/sugarcube/commit/ec6f39e))
+
+
+### Features
+
+* **plugin-media:** add a plugin to check the vailability of videos ([131bc15](https://github.com/critocrito/sugarcube/commit/131bc15))
+
+
+
+
+
 # [0.18.0](https://github.com/critocrito/sugarcube/compare/v0.17.0...v0.18.0) (2018-12-11)
 
 **Note:** Version bump only for package @sugarcube/plugin-media
