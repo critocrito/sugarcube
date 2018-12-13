@@ -22,7 +22,6 @@
   "dependencies": {
     "@sugarcube/core": "^0.18.0",
     "@sugarcube/plugin-fs": "^0.18.0",
-    "child-process-promise": "^2.2.1",
     "dashp": "^0.10.1",
     "gm": "^1.23.0",
     "lodash": "^4.17.4",
