@@ -31,9 +31,9 @@ const plugin = async (envelope, {cfg, log}) => {
     map(query => JSON.parse(query)),
   ])(envelope);
 
-  log.info(`Read ${size(files)} bodies from file.`);
-  log.info(`Read ${size(queries)} bodies from queries.`);
-  log.info(`Using ${host}:${port}/${index}.`);
+  log.debug(`Read ${size(files)} bodies from file.`);
+  log.debug(`Read ${size(queries)} bodies from queries.`);
+  log.debug(`Using ${host}:${port}/${index}.`);
 
   const bodies = [files, queries].reduce(concat, []);
 
@@ -49,9 +49,10 @@ const plugin = async (envelope, {cfg, log}) => {
               .map(f => f.replace(/^_sc/, "$sc")),
           });
         const units = yield query(index, body, amount);
-        log.info(`Fetched ${size(units)} units for ${JSON.stringify(body)}.`);
+        log.debug(`Query: ${body}`);
         results = results.concat(units);
       }
+      log.info(`Fetched ${size(results)} units for ${size(bodies)} queries.`);
       return results;
     },
     {host, port},
