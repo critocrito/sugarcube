@@ -7,12 +7,17 @@ const doit = (cmd, args) =>
     const run = spawn(cmd, args);
     const errMsg = [];
 
+    const makeError = messages => {
+      const msg = messages.map(m => m.trim().replace(/\n$/, "")).join(" ");
+      return new Error(msg);
+    };
+
     run.stderr.on("data", d => errMsg.push(d.toString()));
-    run.on("error", () => {
-      const msg = errMsg.map(m => m.trim().replace(/\n$/, "")).join(" ");
-      reject(new Error(msg));
+    run.on("error", () => reject(makeError(errMsg)));
+    run.on("close", code => {
+      if (code === 0) resolve();
+      reject(makeError(errMsg));
     });
-    run.on("close", () => resolve());
   });
 
 export const youtubeDl = (cmd, videoFormat, href, target) => {
