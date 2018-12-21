@@ -113,7 +113,9 @@ const plugin = async (envelope, {cfg, log, stats}) => {
 
         log.warn(`Failed to download video ${source}: ${ee.message}`);
 
-        await cleanUp(location);
+        // If we force a download and it fails, but the download exists
+        // already, better to keep the old one around.
+        if (downloadExists && !forceDownload) await cleanUp(location);
 
         return media;
       }
