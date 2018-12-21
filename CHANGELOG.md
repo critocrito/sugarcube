@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.20.0](https://github.com/critocrito/sugarcube/compare/v0.19.3...v0.20.0) (2018-12-21)
+
+
+### Features
+
+* **plugin-media:** force a video download even if it already exists ([00705e3](https://github.com/critocrito/sugarcube/commit/00705e3))
+
+
+
+
+
 ## [0.19.3](https://github.com/critocrito/sugarcube/compare/v0.19.2...v0.19.3) (2018-12-21)
 
 

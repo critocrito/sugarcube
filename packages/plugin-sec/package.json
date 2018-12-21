@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/plugin-sec",
-  "version": "0.19.0",
+  "version": "0.20.0",
   "description": "Query the company filings of the U.S. SEC.",
   "main": "_dist/index.js",
   "license": "GPL-3.0",
@@ -15,7 +15,7 @@
     "securities and exchange commission"
   ],
   "dependencies": {
-    "@sugarcube/core": "^0.19.0",
+    "@sugarcube/core": "^0.20.0",
     "cheerio": "^1.0.0-rc.2",
     "dashp": "^0.10.1",
     "lodash": "^4.17.4",
