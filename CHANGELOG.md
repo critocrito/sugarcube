@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.19.3](https://github.com/critocrito/sugarcube/compare/v0.19.2...v0.19.3) (2018-12-21)
+
+
+### Bug Fixes
+
+* **plugin-media:** handle youtubedl exiting on failure ([239c126](https://github.com/critocrito/sugarcube/commit/239c126))
+
+
+
+
+
 ## [0.19.2](https://github.com/critocrito/sugarcube/compare/v0.19.1...v0.19.2) (2018-12-19)
 
 **Note:** Version bump only for package sugarcube
