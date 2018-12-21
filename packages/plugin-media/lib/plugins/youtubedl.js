@@ -26,6 +26,7 @@ const plugin = async (envelope, {cfg, log, stats}) => {
   const cmd = get("media.youtubedl_cmd", cfg);
   const videoFormat = get("media.download_format", cfg);
   const parallel = get("media.youtubedl_parallel", cfg);
+  const forceDownload = get("media.youtubedl_force_download", cfg);
 
   let mod;
   switch (parallel) {
@@ -75,38 +76,46 @@ const plugin = async (envelope, {cfg, log, stats}) => {
         `${idHash}.${videoFormat}`,
       );
 
+      let downloadExists = false;
+
       try {
         await accessAsync(location);
-
-        log.info(`Video ${source} exists at ${location}.`);
-
-        // We just skip the rest if a video already exists.
-        return media;
+        downloadExists = true;
       } catch (e) {
-        if (e.code === "ENOENT") {
-          try {
-            await youtubeDl(cmd, videoFormat, source, location);
-          } catch (ee) {
-            const failed = {
-              type: unit._sc_source,
-              term: source,
-              plugin: "media_youtubedl",
-              reason: ee.message,
-            };
-            stats.update(
-              "failed",
-              fails => (Array.isArray(fails) ? fails.concat(failed) : [failed]),
-            );
-
-            log.warn(`Failed to download video ${source}: ${ee.message}`);
-
-            await cleanUp(location);
-
-            return media;
-          }
-        } else {
+        if (e.code !== "ENOENT") {
           throw e;
         }
+      }
+
+      if (downloadExists && !forceDownload) {
+        log.info(
+          `Video ${source} exists at ${location}. Not forcing a download.`,
+        );
+        return media;
+      }
+
+      if (downloadExists && forceDownload)
+        log.info(`Forcing a re-download of ${source}.`);
+
+      try {
+        await youtubeDl(cmd, videoFormat, source, location);
+      } catch (ee) {
+        const failed = {
+          type: unit._sc_source,
+          term: source,
+          plugin: "media_youtubedl",
+          reason: ee.message,
+        };
+        stats.update(
+          "failed",
+          fails => (Array.isArray(fails) ? fails.concat(failed) : [failed]),
+        );
+
+        log.warn(`Failed to download video ${source}: ${ee.message}`);
+
+        await cleanUp(location);
+
+        return media;
       }
 
       log.info(`Downloaded ${source} to ${location}.`);
@@ -170,6 +179,11 @@ plugin.argv = {
     desc:
       "Specify the number of parallel youtubedl downloads. Can be between 1 and 8.",
     default: 1,
+  },
+  "media.youtubedl_force_download": {
+    type: "boolean",
+    desc: "Force a redownload of he video.",
+    default: false,
   },
 };
 

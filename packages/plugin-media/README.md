@@ -20,6 +20,7 @@ Download all videos of type `video` that are stored in `_sc_media`. SHA256 and M
 - `media.download_format`: Download videos in this video format. Defaults to `mp4`.
 - `media.youtubedl_cmd`: The path to the `youtube-dl` command. Defaults to `youtube-dl`, with no specific path supplied.
 - `media.youtubedl_parallel`: Specify how many videos to fetch at the same time. It defaults to 1 and can be set between 1 and 8.
+- `media.youtubedl_force_download`: Set this flag to `true` for force a download of the video, even if it already exists.
 
 **Example:**
 
