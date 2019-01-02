@@ -82,17 +82,15 @@ const mailFailedStats = async (envelope, {cfg, log, stats}) => {
         text,
         attachments,
       });
+      if (isDebug)
+        log.info(
+          ["Emailing the following:", "", info.message.toString()].join("\n"),
+        );
+      log.info(`Accepted mail for: ${info.accepted.join(", ")}`);
     } catch (e) {
       log.warn(`Failed to send to ${to}.`);
       log.warn(e);
-      return;
     }
-
-    log.info(`Accepted mail for: ${info.accepted.join(", ")}`);
-    if (isDebug)
-      log.info(
-        ["Emailing the following:", "", info.message.toString()].join("\n"),
-      );
   };
 
   await Promise.all(recipients.map(mailReport));
