@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.20.1](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mail/compare/v0.20.0...v0.20.1) (2019-01-02)
+
+
+### Bug Fixes
+
+* **plugin-mail:** log mail progress in a safe way ([26d9f33](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mail/commit/26d9f33))
+* **plugin-mail:** prevent exceptions when sending mails ([9d4b8d1](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mail/commit/9d4b8d1))
+
+
+
+
+
 # [0.20.0](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mail/compare/v0.19.3...v0.20.0) (2018-12-21)
 
 **Note:** Version bump only for package @sugarcube/plugin-mail

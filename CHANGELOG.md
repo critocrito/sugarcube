@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.20.1](https://github.com/critocrito/sugarcube/compare/v0.20.0...v0.20.1) (2019-01-02)
+
+
+### Bug Fixes
+
+* **core:** avoid a stack overflow when updating state a lot ([f9bd78d](https://github.com/critocrito/sugarcube/commit/f9bd78d))
+* **plugin-mail:** log mail progress in a safe way ([26d9f33](https://github.com/critocrito/sugarcube/commit/26d9f33))
+* **plugin-mail:** prevent exceptions when sending mails ([9d4b8d1](https://github.com/critocrito/sugarcube/commit/9d4b8d1))
+
+
+
+
+
 # [0.20.0](https://github.com/critocrito/sugarcube/compare/v0.19.3...v0.20.0) (2018-12-21)
 
 
