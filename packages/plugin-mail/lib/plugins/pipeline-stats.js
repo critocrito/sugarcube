@@ -66,15 +66,13 @@ const mailFailedStats = async (envelope, {cfg, log, stats}) => {
         [
           to => mail(transporter, sender, to, body, subject, !noEncrypt),
           tapP(info => {
-            if (isDebug) {
+            if (isDebug)
               log.info(
                 ["Emailing the following:", "", info.message.toString()].join(
                   "\n",
                 ),
               );
-            } else {
-              log.info(`Accepted mail for: ${info.accepted.join(", ")}`);
-            }
+            log.info(`Accepted mail for: ${info.accepted.join(", ")}`);
           }),
           caughtP(e => {
             log.warn(`Failed to send to ${recipient}.`);
