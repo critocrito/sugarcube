@@ -61,4 +61,13 @@ describe("state", () => {
     s.update(({a, b}) => ({a: a + 1, b: b.concat(a)}));
     s.get().should.eql({a: 2, b: [0, 1]});
   });
+  it("can sequence a lot of updates", () => {
+    const iterations = 100000;
+    const f = ({count}) => ({count: count + 1});
+    const s = state({count: 0});
+
+    [...Array(iterations).keys()].forEach(() => s.update(f));
+
+    s.get().should.eql({count: iterations});
+  });
 });
