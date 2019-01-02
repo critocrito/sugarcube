@@ -46,5 +46,5 @@ export const mail = async (
   toEncrypt,
 ) => {
   const text = toEncrypt ? await encrypt(to, message) : message;
-  transporter.sendMail({from, subject, to, text});
+  return transporter.sendMail({from, subject, to, text});
 };
