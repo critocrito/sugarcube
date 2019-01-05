@@ -24,9 +24,20 @@ const mailFailedStats = async (envelope, {cfg, log, stats}) => {
   const isDebug = get("mail.debug", cfg);
   const recipients = env.queriesByType(querySource, envelope);
 
-  // report stats
+  // report stats.
   const report = stats.get("pipeline");
+
+  // FIXME: Until the pipeline can calculate it's own total.
+  const total = report.total.reduce((memo, t) => memo + t, 0);
   const created = report.created.reduce((memo, c) => memo + c, 0);
+
+  // We skip the report if no observatons were collected.
+  if (total === 0 || created === 0) {
+    log.warn("Skipping the report since we have no observations to report.");
+    return envelope;
+  }
+
+  // Stats for each plugin.
   const plugins = Object.keys(report.plugins || {})
     .filter(key => !/^(tap|mail|workflow)/.test(key))
     .map(key => {
@@ -44,8 +55,6 @@ const mailFailedStats = async (envelope, {cfg, log, stats}) => {
       if (a.order < b.order) return -1;
       return 0;
     });
-  // FIXME: Until the pipeline can calculate it's own total
-  const total = report.total.reduce((memo, t) => memo + t, 0);
 
   // Create the actual email.
   const subject = `[${project}]: Report for ${report.name} (${marker}).`;
