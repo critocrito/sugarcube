@@ -143,7 +143,9 @@ const plugin = async (envelope, {cfg, log, stats}) => {
 
       counter += 1;
       if (counter % 100 === 0)
-        log.debug(`Checked ${counter} out of ${envelope.data.length} units.`);
+        log.debug(
+          `Downloaded ${counter} out of ${envelope.data.length} units.`,
+        );
 
       return media;
     }, unit._sc_media);
