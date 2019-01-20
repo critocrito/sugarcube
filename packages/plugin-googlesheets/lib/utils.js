@@ -109,6 +109,7 @@ export const coerceSelectionLists = list =>
   });
 
 export const applyFilters = curry2("applyFilters", (filters, rows) => {
+  if (filters.length === 0) return rows;
   const [fields, ...data] = rows;
   const matchFilters = overSome(
     filters.map(([fieldName, match]) => row => {
