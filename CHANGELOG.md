@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.21.0](https://github.com/critocrito/sugarcube/compare/v0.20.1...v0.21.0) (2019-01-20)
+
+
+### Bug Fixes
+
+* **plugin-googlesheets:** only apply import filters when provided ([a6bb047](https://github.com/critocrito/sugarcube/commit/a6bb047))
+* **plugin-googlesheets:** treat empty strings as null on import ([03ced54](https://github.com/critocrito/sugarcube/commit/03ced54))
+* **plugin-mail:** validate inputs to be arrays ([936a69b](https://github.com/critocrito/sugarcube/commit/936a69b))
+* **plugin-media:** change counter debug log when downloading videos ([bbbbbcb](https://github.com/critocrito/sugarcube/commit/bbbbbcb))
+
+
+### Features
+
+* **plugin-googlesheets:** create auxiliary sheets when exporting to a spreadsheet ([b44eba4](https://github.com/critocrito/sugarcube/commit/b44eba4))
+
+
+
+
+
 ## [0.20.1](https://github.com/critocrito/sugarcube/compare/v0.20.0...v0.20.1) (2019-01-02)
 
 

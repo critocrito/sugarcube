@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/plugin-mail",
-  "version": "0.20.1",
+  "version": "0.21.0",
   "description": "Send email notifications.",
   "main": "_dist/index.js",
   "license": "GPL-3.0",
@@ -14,7 +14,7 @@
     "mail"
   ],
   "dependencies": {
-    "@sugarcube/core": "^0.20.1",
+    "@sugarcube/core": "^0.21.0",
     "dashp": "^0.10.1",
     "date-fns": "^1.29.0",
     "dot": "^1.1.2",
