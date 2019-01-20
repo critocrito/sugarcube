@@ -28,8 +28,8 @@ const mailFailedStats = async (envelope, {cfg, log, stats}) => {
   const report = stats.get("pipeline");
 
   // FIXME: Until the pipeline can calculate it's own total.
-  const total = report.total.reduce((memo, t) => memo + t, 0);
-  const created = report.created.reduce((memo, c) => memo + c, 0);
+  const total = (report.total || []).reduce((memo, t) => memo + t, 0);
+  const created = (report.created || []).reduce((memo, c) => memo + c, 0);
 
   // We skip the report if no observatons were collected.
   if (total === 0 || created === 0) {
@@ -46,7 +46,7 @@ const mailFailedStats = async (envelope, {cfg, log, stats}) => {
       const end = stat.duration.reduce((memo, d) => memo + d, start);
       return Object.assign({}, stat, {
         name: key,
-        total: stat.total.reduce((memo, t) => memo + t, 0),
+        total: (stat.total || []).reduce((memo, t) => memo + t, 0),
         duration: distanceInWords(new Date(start), new Date(end)),
       });
     })
