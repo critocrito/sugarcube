@@ -30,6 +30,8 @@ const fixBools = map(v => {
       return true;
     case "FALSE":
       return false;
+    case "":
+      return null;
     default:
       return v;
   }
