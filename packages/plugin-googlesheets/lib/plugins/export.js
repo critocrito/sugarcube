@@ -1,5 +1,5 @@
 import {flow, merge, get, getOr, size} from "lodash/fp";
-import {plugin as p} from "@sugarcube/core";
+import {plugin as p, utils} from "@sugarcube/core";
 import SheetsDo from "../sheets";
 import {
   unitsToRows,
@@ -13,13 +13,17 @@ const exportData = async (envelope, {log, cfg, cache}) => {
   const secret = get("google.client_secret", cfg);
   const id = get("google.spreadsheet_id", cfg);
   const fields = getOr([], "google.sheet_fields", cfg);
-  const copyFromSheet = get("google.copy_from_sheet", cfg);
+  const copyFromSheets = utils.sToA(",", get("google.copy_from_sheet", cfg));
   const copyFromSpreadsheet = get("google.copy_from_spreadsheet", cfg);
   const skipEmpty = get("google.skip_empty", cfg);
-  const sheet = getOr(cfg.marker, "google.sheet", cfg);
+  const sheets = utils.sToA(",", getOr(cfg.marker, "google.sheet", cfg));
   const selectionLists = coerceSelectionLists(
     get("google.selection_list", cfg),
   );
+
+  // We treat the first sheet as the sheet to export data to.
+  const [sheet] = sheets;
+  const [copyFromSheet] = copyFromSheets;
 
   if (skipEmpty && size(envelope.data) === 0) {
     log.info("Data pipeline is empty. Skip the export.");
@@ -36,15 +40,26 @@ const exportData = async (envelope, {log, cfg, cache}) => {
   const [, tokens, history] = await SheetsDo(
     function* exportUnits({
       getOrCreateSheet,
-      duplicateSheet,
+      duplicateSheets,
       getRows,
       replaceRows,
       safeReplaceRows,
       setSelections,
     }) {
-      const {sheetUrl: url} = yield copyFromSheet
-        ? duplicateSheet(copyFromSpreadsheet, copyFromSheet, id, sheet)
-        : getOrCreateSheet(id, sheet);
+      let url;
+      if (copyFromSheet == null) {
+        const newSheet = yield getOrCreateSheet(id, sheet);
+        url = newSheet.sheetUrl;
+      } else {
+        const duplicates = yield duplicateSheets(
+          copyFromSpreadsheet,
+          copyFromSheets,
+          id,
+          sheets,
+        );
+        // The first one is the actual data spreadsheet.
+        url = duplicates[0].sheetUrl;
+      }
 
       log.info(`Units exported to ${url}.`);
 

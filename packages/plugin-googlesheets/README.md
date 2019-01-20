@@ -75,7 +75,19 @@ provided if a new sheet should be create from a template.
 - `google.copy_from_spreadsheet`: Specify the spreadsheet ID to copy the
   template from. Requires `google.copy_from_sheet` as well.
 - `google.copy_from_sheet`: Specify a sheet name to copy the template
-  from. Requires `google.copy_from_spreadsheet` as well.
+  from. Requires `google.copy_from_spreadsheet` as well. Multiple sheets can be specified as an array. The first is assumed to be the template for the data sheet, and any subsequent source sheet as a supporting sheet.
+
+  The following configuration snippet exports data to a spreadsheet where three sheets are copied from a template sheet. The `template` sheet is renamed to `Collection`, the `meta` sheet will be renamed to `Meta` and the `locations` sheet keeps it's name.
+  ```
+  {
+    "google": {
+      "sheet": "Collection,Meta",
+      "copy_from_sheet": ["template", "meta", "locations"],
+      ...
+    }
+  }
+  ```
+
 - `google.skip_empty` Use this option to only export data pipelines that contain
   any data.
 - `google.selection_list`: Enable a drop down selection list for a field. It

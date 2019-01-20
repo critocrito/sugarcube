@@ -127,6 +127,32 @@ const duplicateSheet = curry5(
   },
 );
 
+const duplicateSheets = curry5(
+  "duplicateSheets",
+  async (id, sourceSheets, toId, toSheets, auth) => {
+    // The sourcesheets are copied in reverse order because google sheets
+    // fails on data validations where a validation relies on the range input of
+    // another sheet, if that sheet does not exist yet. I assume here that
+    // auxiliary sheets can support the data sheet as a source for data validations.
+    const results = [];
+
+    for (let index = sourceSheets.length - 1; index >= 0; index -= 1) {
+      const sheet = sourceSheets[index];
+      // Either there is a name set for this new sheet, or we take the name of
+      // the template sheet.
+      const toSheet = toSheets[index] == null ? sheet : toSheets[index];
+      // eslint-disable-next-line no-await-in-loop
+      const newSheet = await duplicateSheet(id, sheet, toId, toSheet, auth);
+      results.push(newSheet);
+    }
+
+    // Return the results in the correct order of the input sheets.
+    results.reverse();
+
+    return results;
+  },
+);
+
 const getRows = curry3("getRows", (id, sheet, auth) =>
   flowP3([getValuesRequest, valuesGet, getOr([], "data.values")])(
     auth,
@@ -271,6 +297,7 @@ const api = {
   getOrCreateSheet,
   updateSheetProps,
   duplicateSheet,
+  duplicateSheets,
   replaceRows,
   safeReplaceRows,
   getRows,
