@@ -30,7 +30,7 @@ const plugin = async (envelope, {cfg, log, stats}) => {
         });
       });
 
-      log.info(`Left complementing ${size(existing)} existing units.`);
+      log.info(`Supplementing ${size(existing)} existing units.`);
       return existing;
     },
     {host, port},
