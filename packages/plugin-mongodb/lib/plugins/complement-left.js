@@ -9,7 +9,7 @@ const complement = (envelope, {log}) =>
   db
     .complementData(env.filterData(unitExists, envelope))
     .then(rs => {
-      log.info(`Supplementing   ${size(rs)} units.`);
+      log.info(`Supplementing ${size(rs)} units.`);
       return rs;
     })
     .then(rs => env.concatDataLeft(rs, envelope));
