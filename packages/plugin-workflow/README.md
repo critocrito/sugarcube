@@ -21,6 +21,26 @@ sugarcube -p test_generate,workflow_merge,tap_printf \
           -Q workflow_merge:'{"hello": "world"}'
 ```
 
+### `workflow_merge_query` plugin
+
+Merge any fields from the query object into units acquired for this query. This allows to annotate data with data stored alongside the query sources. This plugin will skip the merge if the unit already has a value set for this field. This behavior can be changed by setting the `--overflow.overwrite_query_merge` flag.
+
+**Example:**
+
+```
+sugarcube -p sheets_queries,youtube_video,workflow_merge_query \
+          --google.query_fields last_access,cid.incident_code,notes \
+          --workflow.merge_query_fields cid.incident_code,notes
+```
+
+The above example fetches queries from a Google spreadsheet and along the query `type` and `term` fetches the fields `last_access`, `cid.incident_code` and `notes`. The `cid.incident_code` and `notes` fields are merged into the data units found for this `type` and `term`.
+
+
+**Configuration:**
+
+- `workflow.merge_query_fields`: An array of field names that should be merged into the unit.
+- `workflow.overwrite_query_merge`: Set to `true` to merge fields even if a value is already set on the unit for this field. Defaults to `false`.
+
 ### `workflow_multiplex` plugin
 
 Break all queries into batches with a size configured by `workflow.multiplex_size` and run the remainder of the pipeline once for each batch. This allows to break the whole pipeline into smaller executions. This helps to deal with data processes that would yield a huge number of observations.
