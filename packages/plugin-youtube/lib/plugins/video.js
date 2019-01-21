@@ -41,7 +41,19 @@ const fetchVideos = async (envelope, {cfg, log, stats}) => {
             log.warn(`Video ${term} does not exist.`),
           );
         }
-        return results;
+        // Merge the query into the data unit.
+        return results.map(r => {
+          const query = envelope.queries.find(
+            ({type, term}) =>
+              type === querySource && parseVideoQuery(term) === r.id,
+          );
+          if (query == null) return r;
+          return Object.assign(r, {
+            _sc_queries: Array.isArray(r._sc_queries)
+              ? r._sc_queries.concat(query)
+              : [query],
+          });
+        });
       },
       delayP(1000),
     ]),
