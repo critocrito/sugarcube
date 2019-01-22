@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/plugin-test",
-  "version": "0.21.0",
+  "version": "0.22.0",
   "description": "Plugins useful for testing SugarCube.",
   "main": "_dist/index.js",
   "license": "GPL-3.0",
@@ -13,8 +13,8 @@
     "transformation"
   ],
   "dependencies": {
-    "@sugarcube/core": "^0.21.0",
-    "@sugarcube/test": "^0.21.0",
+    "@sugarcube/core": "^0.22.0",
+    "@sugarcube/test": "^0.22.0",
     "dashp": "^0.10.1",
     "lodash": "^4.17.5"
   },

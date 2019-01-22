@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.22.0](https://github.com/critocrito/sugarcube/compare/v0.21.0...v0.22.0) (2019-01-22)
+
+
+### Bug Fixes
+
+* **plugin-elasticsearch:** use supplement instead of complement left in the logs ([c998c32](https://github.com/critocrito/sugarcube/commit/c998c32))
+* **plugin-mongodb:** remove superfluous spaces in a log message ([8eb6396](https://github.com/critocrito/sugarcube/commit/8eb6396))
+
+
+### Features
+
+* **plugin-workflow:** add plugin to merge fields from queries into a unit ([c54cdb2](https://github.com/critocrito/sugarcube/commit/c54cdb2))
+* **plugin-youtube:** merge query into the video unit ([7b11a51](https://github.com/critocrito/sugarcube/commit/7b11a51))
+
+
+
+
+
 # [0.21.0](https://github.com/critocrito/sugarcube/compare/v0.20.1...v0.21.0) (2019-01-20)
 
 

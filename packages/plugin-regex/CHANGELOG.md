@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.22.0](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-regex/compare/v0.21.0...v0.22.0) (2019-01-22)
+
+**Note:** Version bump only for package @sugarcube/plugin-regex
+
+
+
+
+
 # [0.21.0](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-regex/compare/v0.20.1...v0.21.0) (2019-01-20)
 
 **Note:** Version bump only for package @sugarcube/plugin-regex

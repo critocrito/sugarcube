@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.22.0](https://github.com/critocrito/sugarcube/compare/v0.21.0...v0.22.0) (2019-01-22)
+
+
+### Features
+
+* **plugin-youtube:** merge query into the video unit ([7b11a51](https://github.com/critocrito/sugarcube/commit/7b11a51))
+
+
+
+
+
 # [0.21.0](https://github.com/critocrito/sugarcube/compare/v0.20.1...v0.21.0) (2019-01-20)
 
 **Note:** Version bump only for package @sugarcube/plugin-youtube
