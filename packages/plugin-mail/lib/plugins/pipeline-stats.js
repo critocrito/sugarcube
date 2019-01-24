@@ -43,7 +43,7 @@ const mailFailedStats = async (envelope, {cfg, log, stats}) => {
     .map(key => {
       const stat = report.plugins[key];
       const start = stat.start[0];
-      const end = stat.duration.reduce((memo, d) => memo + d, start);
+      const end = (stat.duration || []).reduce((memo, d) => memo + d, start);
       return Object.assign({}, stat, {
         name: key,
         total: (stat.total || []).reduce((memo, t) => memo + t, 0),
