@@ -7,7 +7,6 @@ import {
   get,
   join,
   split,
-  parseInt,
   size,
   property,
   isNaN,
@@ -58,16 +57,11 @@ export const feed = curry((cfg, user) => {
 
   const delay = rateLimit(1500);
   const op = throttle(delay, request(cfg, "statuses/user_timeline.json"));
-
-  const params = merge(
-    {
-      count,
-      include_rts: retweets,
-    },
-    isNaN(parseInt(10, user))
-      ? {screen_name: user.replace(/^@/, "")}
-      : {user_id: user},
-  );
+  const params = {
+    count,
+    include_rts: retweets,
+    [isNaN(Number(user)) ? "screen_name" : "user_id"]: user,
+  };
   return flowP([op, tweetTransform], params);
 });
 
