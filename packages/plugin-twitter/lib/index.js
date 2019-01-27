@@ -3,12 +3,14 @@ import feedPlugin from "./feed";
 import followersPlugin from "./followers";
 import friendsPlugin from "./friends";
 import searchPlugin from "./search";
+import tweetsPlugin from "./plugins/tweets";
 
 const plugins = {
   twitter_feed: feedPlugin,
   twitter_followers: followersPlugin,
   twitter_friends: friendsPlugin,
   twitter_search: searchPlugin,
+  twitter_tweets: tweetsPlugin,
 };
 
 const recursivePlugins = [followersPlugin, friendsPlugin];

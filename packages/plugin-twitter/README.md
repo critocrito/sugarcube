@@ -16,6 +16,10 @@ This plugin exports the following plugins:
 
 Fetch the tweets of a twitter user account.
 
+### `twitter_tweets`
+
+Fetch individual tweets by the Tweet ID.
+
 ### `twitter_friends` data source
 
 Fetch the friends of a twitter user account.

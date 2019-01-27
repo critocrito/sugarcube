@@ -42,6 +42,16 @@ export const parseApiErrors = e => {
   return e.message;
 };
 
+export const tweets = curry((cfg, tweetIds) => {
+  const delay = rateLimit(300);
+  const op = throttle(delay, request(cfg, "statuses/lookup.json"));
+  const params = {
+    id: tweetIds.join(","),
+    map: true,
+  };
+  return flowP([op], params);
+});
+
 export const feed = curry((cfg, user) => {
   const count = cfg.twitter.tweet_count;
   const retweets = cfg.twitter.tweet_count;
