@@ -4,12 +4,15 @@ import {envelope as env, plugin as p} from "@sugarcube/core";
 
 import {tweets, parseApiErrors} from "../twitter";
 import {tweetTransform} from "../entities";
+import {parseTweetId} from "../utils";
 import {assertCredentials} from "../assertions";
 
 const querySource = "twitter_tweet";
 
 const tweetsPlugin = async (envelope, {log, cfg, stats}) => {
-  const tweetIds = env.queriesByType(querySource, envelope);
+  const tweetIds = env
+    .queriesByType(querySource, envelope)
+    .map(term => parseTweetId(term));
 
   log.info(`Querying Twitter for ${tweetIds.length} tweets.`);
 
@@ -69,7 +72,8 @@ const tweetsPlugin = async (envelope, {log, cfg, stats}) => {
         results =>
           results.map(r => {
             const query = envelope.queries.find(
-              ({type, term}) => type === querySource && term === r.tweet_id,
+              ({type, term}) =>
+                type === querySource && parseTweetId(term) === r.tweet_id,
             );
             if (query == null) return r;
             return Object.assign(r, {

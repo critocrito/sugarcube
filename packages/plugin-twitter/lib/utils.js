@@ -15,6 +15,8 @@ import {
   flatten,
   keys,
 } from "lodash/fp";
+import {URL} from "url";
+import {basename} from "path";
 import {foldP, delay} from "dashp";
 import pify from "pify";
 import Twitter from "twitter";
@@ -120,6 +122,14 @@ export const recurse = curry((maxDepth, key, fn) => {
   return params => iter(params, 0, params[key]);
 });
 
+export const parseTweetId = id => {
+  if (id.startsWith("http")) {
+    const u = new URL(id);
+    return basename(u.pathname);
+  }
+  return id;
+};
+
 export default {
   paramsString,
   twitterDate,
@@ -127,4 +137,5 @@ export default {
   cursorify,
   throttle,
   recurse,
+  parseTweetId,
 };
