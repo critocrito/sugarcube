@@ -130,6 +130,15 @@ export const parseTweetId = id => {
   return id;
 };
 
+export const parseTwitterUser = user => {
+  if (Number.isInteger(user)) return user.toString();
+  if (user.startsWith("http")) {
+    const u = new URL(user);
+    return basename(u.pathname);
+  }
+  return user.replace(/^@/, "");
+};
+
 export default {
   paramsString,
   twitterDate,
@@ -138,4 +147,5 @@ export default {
   throttle,
   recurse,
   parseTweetId,
+  parseTwitterUser,
 };

@@ -1,14 +1,17 @@
 import {size} from "lodash/fp";
-import {flowP, tapP, caughtP} from "dashp";
+import {flowP, flatmapP, tapP, caughtP} from "dashp";
 import {envelope as env, plugin as p} from "@sugarcube/core";
 
 import {feed, parseApiErrors} from "./twitter";
+import {parseTwitterUser} from "./utils";
 import {assertCredentials} from "./assertions";
 
 const querySource = "twitter_user";
 
-const feedPlugin = (envelope, {log, cfg, stats}) => {
-  const users = env.queriesByType(querySource, envelope);
+const feedPlugin = async (envelope, {log, cfg, stats}) => {
+  const users = env
+    .queriesByType(querySource, envelope)
+    .map(term => parseTwitterUser(term));
 
   log.debug(`Fetching the tweets for ${users.join(", ")}`);
 
@@ -17,6 +20,23 @@ const feedPlugin = (envelope, {log, cfg, stats}) => {
       [
         feed(cfg),
         tapP(rs => log.info(`Fetched ${size(rs)} tweets for ${user}.`)),
+        // Merge the query into the data unit.
+        results =>
+          results.map(r => {
+            const query = envelope.queries.find(
+              ({type, term}) =>
+                type === querySource &&
+                (parseTwitterUser(term) === r.user.screen_name ||
+                  parseTwitterUser(term) === r.user.user_id),
+            );
+            if (query == null) return r;
+            return Object.assign(r, {
+              _sc_queries: Array.isArray(r._sc_queries)
+                ? r._sc_queries.concat(query)
+                : [query],
+            });
+          }),
+
         caughtP(e => {
           const reason = parseApiErrors(e);
           const fail = {
@@ -30,12 +50,16 @@ const feedPlugin = (envelope, {log, cfg, stats}) => {
             queries => (Array.isArray(queries) ? queries.concat(fail) : [fail]),
           );
           log.warn(`Failed to fetch ${user}: ${reason}`);
+          return [];
         }),
       ],
       user,
     );
+  const results = await flatmapP(fetchTimeline, users);
 
-  return env.flatMapQueriesAsync(fetchTimeline, querySource, envelope);
+  log.info(`Fetched ${results.length} tweets for ${users.length} users.`);
+
+  return env.concatData(results, envelope);
 };
 
 const plugin = p.liftManyA2([assertCredentials, feedPlugin]);
