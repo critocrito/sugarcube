@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.23.0](https://github.com/critocrito/sugarcube/compare/v0.22.0...v0.23.0) (2019-01-28)
+
+
+### Bug Fixes
+
+* **plugin-elasticsearch:** log query as JSON on import ([e15029a](https://github.com/critocrito/sugarcube/commit/e15029a))
+* **plugin-mail:** avoid exception on missing stat.duration field ([9712e01](https://github.com/critocrito/sugarcube/commit/9712e01))
+* **plugin-twitter:** parse twitter users starting with a number as screen names ([c29e2b8](https://github.com/critocrito/sugarcube/commit/c29e2b8))
+
+
+### Features
+
+* **plugin-twitter:** add plugin to fetch individual tweets ([352eaa5](https://github.com/critocrito/sugarcube/commit/352eaa5))
+* **plugin-twitter:** allow full urls as tweet query ([a9f8246](https://github.com/critocrito/sugarcube/commit/a9f8246))
+* **plugin-twitter:** parse twitter users from full url's ([3ae4c23](https://github.com/critocrito/sugarcube/commit/3ae4c23))
+
+
+
+
+
 # [0.22.0](https://github.com/critocrito/sugarcube/compare/v0.21.0...v0.22.0) (2019-01-22)
 
 
