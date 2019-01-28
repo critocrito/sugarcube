@@ -49,7 +49,7 @@ const plugin = async (envelope, {cfg, log}) => {
               .map(f => f.replace(/^_sc/, "$sc")),
           });
         const units = yield query(index, body, amount);
-        log.debug(`Query: ${body}`);
+        log.debug(`Query: ${JSON.stringify(body)}`);
         results = results.concat(units);
       }
       log.info(`Fetched ${size(results)} units for ${size(bodies)} queries.`);
