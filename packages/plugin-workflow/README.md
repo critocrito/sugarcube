@@ -80,3 +80,17 @@ sugarcube -p workflow_multiplex,youtube_channel,media_youtubedl,workflow_multipl
 ```
 
 The above example will multiplex the `youtube_channel,media_youtubedl` bits into batches of one query per batch. After all batches finished, the pipeline resumes all plugins after `workflow_multiplex_end`. In this case the `mail_report_stats` plugin is called a single time.
+
+### `workflow_omit` plugin
+
+Omit individual fields from all units. The fields can be specified on the command line using a comma separated string or as an array in the JSON config file.
+
+**Configuration:**
+
+- `workflow.omit_fields`: Specify the name of the fields to omit.
+
+**Example:**
+
+```
+sugarcube -p workflow_omit --workflow.omit_fields a,b,c
+```
