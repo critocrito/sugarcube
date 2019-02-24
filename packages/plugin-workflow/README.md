@@ -94,3 +94,17 @@ Omit individual fields from all units. The fields can be specified on the comman
 ```
 sugarcube -p workflow_omit --workflow.omit_fields a,b,c
 ```
+
+### `workflow_pick` plugin
+
+Pick the list of attributes from every unit and drop the rest.
+
+**Configuration:**
+
+- `workflow.pick_fields`: Specify the name of the fields to pick.
+
+**Example:**
+
+```
+sugarcube -p workflow_pick --workflow.pick_fields a,b,c
+```
