@@ -42,7 +42,43 @@ export const youtubeDlCheck = (cmd, href) => {
   return doit(cmd, args);
 };
 
+export const mosaicSceneChange = (cmd, source, dest, force = false) => {
+  const args = [
+    "-i",
+    source,
+    "-frames:v",
+    "1",
+    "-vf",
+    // prettier-ignore
+    // eslint-disable-next-line no-useless-escape
+    "select='gt(scene\,0.4)',scale=160:120,tile",
+    dest,
+  ];
+
+  return doit(cmd, force ? ["-y"].concat(args) : args);
+};
+
+export const mosaicNthFrame = (cmd, source, dest, force = false) => {
+  const args = [
+    "-ss",
+    "00:00:05",
+    "-i",
+    source,
+    "-frames",
+    "1",
+    "-vf",
+    // prettier-ignore
+    // eslint-disable-next-line no-useless-escape
+    "select='not(mod(n\,400))',scale=160:120,tile=4x3",
+    dest,
+  ];
+
+  return doit(cmd, force ? ["-y"].concat(args) : args);
+};
+
 export default {
   youtubeDl,
   youtubeDlCheck,
+  mosaicSceneChange,
+  mosaicNthFrame,
 };
