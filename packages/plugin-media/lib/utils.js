@@ -1,24 +1,5 @@
-import {spawn} from "child_process";
 import {retry} from "dashp";
-
-const doit = (cmd, args) =>
-  // eslint-disable-next-line promise/avoid-new
-  new Promise((resolve, reject) => {
-    const run = spawn(cmd, args);
-    const errMsg = [];
-
-    const makeError = messages => {
-      const msg = messages.map(m => m.trim().replace(/\n$/, "")).join(" ");
-      return new Error(msg);
-    };
-
-    run.stderr.on("data", d => errMsg.push(d.toString()));
-    run.on("error", () => reject(makeError(errMsg)));
-    run.on("close", code => {
-      if (code === 0) resolve();
-      reject(makeError(errMsg));
-    });
-  });
+import {runCmd} from "@sugarcube/utils";
 
 export const youtubeDl = (cmd, videoFormat, href, target) => {
   const args = [
@@ -33,13 +14,13 @@ export const youtubeDl = (cmd, videoFormat, href, target) => {
     target,
   ];
 
-  return retry(() => doit(cmd, args));
+  return retry(() => runCmd(cmd, args));
 };
 
 export const youtubeDlCheck = (cmd, href) => {
   const args = ["-s", href];
 
-  return doit(cmd, args);
+  return runCmd(cmd, args);
 };
 
 export const mosaicSceneChange = (cmd, source, dest, force = false) => {
@@ -55,7 +36,7 @@ export const mosaicSceneChange = (cmd, source, dest, force = false) => {
     dest,
   ];
 
-  return doit(cmd, force ? ["-y"].concat(args) : args);
+  return runCmd(cmd, force ? ["-y"].concat(args) : args);
 };
 
 export const mosaicNthFrame = (cmd, source, dest, force = false) => {
@@ -73,7 +54,7 @@ export const mosaicNthFrame = (cmd, source, dest, force = false) => {
     dest,
   ];
 
-  return doit(cmd, force ? ["-y"].concat(args) : args);
+  return runCmd(cmd, force ? ["-y"].concat(args) : args);
 };
 
 export default {

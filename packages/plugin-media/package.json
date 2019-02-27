@@ -22,6 +22,7 @@
   "dependencies": {
     "@sugarcube/core": "^0.23.0",
     "@sugarcube/plugin-fs": "^0.23.0",
+    "@sugarcube/utils": "^0.23.0",
     "dashp": "^0.10.1",
     "gm": "^1.23.0",
     "lodash": "^4.17.4",

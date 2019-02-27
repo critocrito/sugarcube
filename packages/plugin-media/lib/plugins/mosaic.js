@@ -34,7 +34,7 @@ const plugin = async (envelope, {log, cfg, stats}) => {
       mod = 8;
       break;
     default:
-      log.info(`Run ${parallel} downloads concurrently.`);
+      log.info(`Run ${parallel} generations concurrently.`);
       mod = parallel;
   }
 

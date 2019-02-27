@@ -1,8 +1,8 @@
 import {curry} from "lodash/fp";
 import request from "request";
 import fs from "fs";
-import {spawn} from "child-process-promise";
 import {mkdirP} from "@sugarcube/plugin-fs";
+import {runCmd} from "@sugarcube/utils";
 
 export const assertDir = (envelope, {cfg}) => {
   const dir = cfg.http.data_dir;
@@ -35,13 +35,7 @@ export const wget = curry((cmd, target, term) => {
     term,
   ];
 
-  const p = spawn(cmd, args);
-  const {childProcess} = p;
-  // If I don't do that, the process gets stuck.
-  childProcess.stdout.on("data", d => d.toString());
-  childProcess.stderr.on("data", d => d.toString());
-
-  return Promise.resolve(p);
+  return runCmd(cmd, args);
 });
 
 export default {
