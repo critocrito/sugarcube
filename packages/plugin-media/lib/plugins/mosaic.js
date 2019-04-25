@@ -11,7 +11,7 @@ const accessAsync = pify(fs.access);
 
 const plugin = async (envelope, {log, cfg, stats}) => {
   const cmd = get("media.ffmpeg_cmd", cfg);
-  const parallel = get("media.youtubedl_parallel", cfg);
+  const parallel = get("media.mosaic_parallel", cfg);
   const forceGeneration = get("media.mosaic_force", cfg);
   const strategy = get("media.mosaic_strategy", cfg);
 
@@ -24,7 +24,7 @@ const plugin = async (envelope, {log, cfg, stats}) => {
       mod = "";
       break;
     case parallel === 1 ? parallel : null:
-      log.info(`Run a single download at a time.`);
+      log.info(`Run a single mosaic generation at a time.`);
       mod = "";
       break;
     case parallel > 8 ? parallel : null:
