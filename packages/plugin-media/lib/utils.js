@@ -1,7 +1,7 @@
 import {retry} from "dashp";
 import {runCmd} from "@sugarcube/utils";
 
-export const youtubeDl = (cmd, videoFormat, href, target) => {
+export const youtubeDl = (cmd, videoFormat, href, target, sourceIp) => {
   const args = [
     href,
     "-f",
@@ -10,15 +10,17 @@ export const youtubeDl = (cmd, videoFormat, href, target) => {
     "1",
     "--write-all-thumbnails",
     "--all-subs",
-    "-o",
-    target,
-  ];
+  ]
+    .concat(sourceIp == null ? [] : ["--source-address", sourceIp])
+    .concat(["-o", target]);
 
   return retry(() => runCmd(cmd, args));
 };
 
-export const youtubeDlCheck = (cmd, href) => {
-  const args = ["-s", href];
+export const youtubeDlCheck = (cmd, href, sourceIp) => {
+  const args = ["-s", href].concat(
+    sourceIp == null ? [] : ["--source-address", sourceIp],
+  );
 
   return runCmd(cmd, args);
 };

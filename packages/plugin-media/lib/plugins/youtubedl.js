@@ -27,6 +27,7 @@ const plugin = async (envelope, {cfg, log, stats}) => {
   const videoFormat = get("media.download_format", cfg);
   const parallel = get("media.youtubedl_parallel", cfg);
   const forceDownload = get("media.youtubedl_force_download", cfg);
+  const sourceAddress = get("media.youtubedl_source_address", cfg);
 
   let mod;
   switch (parallel) {
@@ -98,7 +99,7 @@ const plugin = async (envelope, {cfg, log, stats}) => {
         log.info(`Forcing a re-download of ${source}.`);
 
       try {
-        await youtubeDl(cmd, videoFormat, source, location);
+        await youtubeDl(cmd, videoFormat, source, location, sourceAddress);
       } catch (ee) {
         const failed = {
           type: unit._sc_source,
@@ -188,6 +189,10 @@ plugin.argv = {
     type: "boolean",
     desc: "Force a redownload of he video.",
     default: false,
+  },
+  "media.youtubedl_source_address": {
+    type: "string",
+    desc: "Bind YoutubeDL to this source IP address.",
   },
 };
 

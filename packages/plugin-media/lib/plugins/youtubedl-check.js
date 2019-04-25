@@ -5,6 +5,7 @@ import {youtubeDlCheck} from "../utils";
 const plugin = async (envelope, {log, cfg, stats}) => {
   const cmd = get("media.youtubedl_cmd", cfg);
   const parallel = get("media.youtubedl_parallel", cfg);
+  const sourceAddress = get("media.youtubedl_source_address", cfg);
 
   let mod;
   switch (parallel) {
@@ -39,7 +40,7 @@ const plugin = async (envelope, {log, cfg, stats}) => {
 
     await collectP(async url => {
       try {
-        await youtubeDlCheck(cmd, url);
+        await youtubeDlCheck(cmd, url, sourceAddress);
       } catch (e) {
         const failed = {
           type: unit._sc_source,
@@ -77,6 +78,10 @@ plugin.argv = {
     desc:
       "Specify the number of parallel youtubedl downloads. Can be between 1 and 8.",
     default: 1,
+  },
+  "media.youtubedl_source_address": {
+    type: "string",
+    desc: "Bind YoutubeDL to this source IP address.",
   },
 };
 
