@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.24.0](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-workflow/compare/v0.23.0...v0.24.0) (2019-04-25)
+
+
+### Features
+
+* **plugin-workflow:** add omit plugin ([1a6baa8](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-workflow/commit/1a6baa8))
+* **plugin-workflow:** add pick plugin ([00cba66](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-workflow/commit/00cba66))
+
+
+
+
+
 # [0.23.0](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-workflow/compare/v0.22.0...v0.23.0) (2019-01-28)
 
 **Note:** Version bump only for package @sugarcube/plugin-workflow

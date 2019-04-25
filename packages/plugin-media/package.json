@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/plugin-media",
-  "version": "0.23.0",
+  "version": "0.24.0",
   "description": "Media related plugins.",
   "main": "_dist/index.js",
   "repository": "https://github.com/critocrito/sugarcube",
@@ -20,9 +20,9 @@
     "media"
   ],
   "dependencies": {
-    "@sugarcube/core": "^0.23.0",
-    "@sugarcube/plugin-fs": "^0.23.0",
-    "@sugarcube/utils": "^0.23.0",
+    "@sugarcube/core": "^0.24.0",
+    "@sugarcube/plugin-fs": "^0.24.0",
+    "@sugarcube/utils": "^0.24.0",
     "dashp": "^0.10.1",
     "gm": "^1.23.0",
     "lodash": "^4.17.4",

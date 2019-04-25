@@ -1,6 +1,6 @@
 {
-  "name": "@sugarcube/utils",
-  "version": "0.23.0",
+    "name": "@sugarcube/utils",
+    "version": "0.24.0",
     "description": "Common utilities used by SugarCube.",
     "main": "_dist/index.js",
     "license": "GPL-3.0",

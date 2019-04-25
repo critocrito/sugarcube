@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/plugin-http",
-  "version": "0.23.0",
+  "version": "0.24.0",
   "description": "HTTP related plugins for sugarcube.",
   "main": "_dist/index.js",
   "repository": "https://github.com/critocrito/sugarcube",
@@ -17,9 +17,9 @@
     "http"
   ],
   "dependencies": {
-    "@sugarcube/core": "^0.23.0",
-    "@sugarcube/plugin-fs": "^0.23.0",
-    "@sugarcube/utils": "^0.23.0",
+    "@sugarcube/core": "^0.24.0",
+    "@sugarcube/plugin-fs": "^0.24.0",
+    "@sugarcube/utils": "^0.24.0",
     "dashp": "^0.10.1",
     "lodash": "^4.17.4",
     "pify": "^3.0.0",

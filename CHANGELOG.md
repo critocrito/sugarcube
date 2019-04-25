@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.24.0](https://github.com/critocrito/sugarcube/compare/v0.23.0...v0.24.0) (2019-04-25)
+
+
+### Bug Fixes
+
+* **plugin-media:** respect the mosaic_parallel option ([9da966f](https://github.com/critocrito/sugarcube/commit/9da966f))
+
+
+### Features
+
+* **plugin-media:** add the mosaic plugin ([2695d56](https://github.com/critocrito/sugarcube/commit/2695d56))
+* **plugin-workflow:** add omit plugin ([1a6baa8](https://github.com/critocrito/sugarcube/commit/1a6baa8))
+* **plugin-workflow:** add pick plugin ([00cba66](https://github.com/critocrito/sugarcube/commit/00cba66))
+* **utils:** use a runCmd utility for calling host commands ([3c5fd8f](https://github.com/critocrito/sugarcube/commit/3c5fd8f))
+
+
+
+
+
 # [0.23.0](https://github.com/critocrito/sugarcube/compare/v0.22.0...v0.23.0) (2019-01-28)
 
 

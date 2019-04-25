@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/plugin-facebook",
-  "version": "0.23.0",
+  "version": "0.24.0",
   "description": "Fetch data from facebook for sugarcube.",
   "main": "_dist/index.js",
   "repository": "https://github.com/critocrito/sugarcube",
@@ -17,7 +17,7 @@
     "facebook"
   ],
   "dependencies": {
-    "@sugarcube/core": "^0.23.0",
+    "@sugarcube/core": "^0.24.0",
     "dashp": "^0.10.1",
     "date-fns": "^1.29.0",
     "lodash": "^4.17.4",
