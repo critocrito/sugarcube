@@ -15,6 +15,14 @@ npm install --save @sugarcube/plugin-fs
 The query type is `glob_pattern`. It expands the glob pattern and turns every
 file into an unit.
 
+### `fs_media_type` plugin
+
+Populate the `_sc_media` field from a location field of the unit. Successive plugins can therefore operate on files that were imported using `fs_unfold`.
+
+**Configuration:**
+
+- `fs.location_field`: Specify the name of the field that contains the file path. Defaults to `location`.
+
 ## API
 
 ### unfold
