@@ -6,7 +6,11 @@ import stringify from "csv-stringify";
 const exportFailedStatsPlugin = (envelope, {log, cfg, stats}) => {
   const dataDir = get("csv.data_dir", cfg);
   const delimiter = get("csv.delimiter", cfg);
-  const filename = path.join(dataDir, `failed-stats-${cfg.marker}.csv`);
+  const label = get("csv.label", cfg);
+  const filename = path.join(
+    dataDir,
+    `failed-stats-${label == null ? "" : `${label}-`}${cfg.marker}.csv`,
+  );
   const failedStats = stats.get("failed");
 
   if (!Array.isArray(failedStats) || failedStats.length === 0) {
@@ -40,6 +44,11 @@ exportFailedStatsPlugin.argv = {
     default: "./data",
     nargs: 1,
     desc: "The file name to write the CSV to.",
+  },
+  "csv.label": {
+    type: "string",
+    nargs: 1,
+    desc: "Add a label to the export file name.",
   },
 };
 
