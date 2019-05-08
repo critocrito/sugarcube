@@ -8,7 +8,7 @@ Plugins for SugarCube for side effect only.
 npm install --save @sugarcube/plugin-tap
 ```
 
-## Usage
+## Plugins
 
 ### `tap_printf` plugin
 
@@ -53,3 +53,7 @@ Write the data part of the envelope to a file.
 
 - `tap.filename` :: Specify the name of the output file. Defaults to
   `data-<marker>.json`.
+
+## License
+
+[GPL3](./LICENSE) @ [Christo](christo@cryptodrunks.net)

@@ -8,7 +8,7 @@ Match the contents of a field again regular expression queries.
 npm install --save @sugarcube/plugin-regex
 ```
 
-## Usage
+## Plugins
 
 ## `regex_match` plugin
 
@@ -23,3 +23,7 @@ using logical OR.
 ```
 sugarcube -Q google_search:Keith\ Johnstone,regex_pattern:company -p google_search,regex_match,tap_printf --regex.field description
 ```
+
+## License
+
+[GPL3](./LICENSE) @ [Christo](christo@cryptodrunks.net)

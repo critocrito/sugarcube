@@ -9,7 +9,7 @@ SugarCube data.
 npm install --save @sugarcube/plugin-elasticsearch
 ```
 
-## Usage
+## Plugins
 
 ### `elastic_export` plugin
 
@@ -278,3 +278,7 @@ Elastic.Do(function* bulkIndex({bulk}) {
   if (errors.length > 0) { // ... deal with errrors }
 });
 ```
+
+## License
+
+[GPL3](./LICENSE) @ [Christo](christo@cryptodrunks.net)

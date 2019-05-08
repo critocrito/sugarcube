@@ -3,7 +3,7 @@
 A plugin to handle operations based around adding or updating unit data in
 google sheets.
 
-## Usage
+## Installation
 
 ```
 npm install --save @sugarcube/plugin-googlesheets
@@ -53,7 +53,7 @@ case of the CLI interface the tokens are stored in `.sugarcube_cache.json`.
 
 ## Plugins
 
-### `sheets_export`
+### `sheets_export` plugin
 
 Export data to a Google spreadsheet. This plugin merges existing data with new
 data. Duplicates are removed. If a sheet doesn't exist yet, a new one will be
@@ -97,7 +97,7 @@ provided if a new sheet should be create from a template.
   `<field-name>` to be one of `opt1`, `opt2` or `opt3`. This option is an
   array and can be specified multiple times.
 
-### `sheets_import`
+### `sheets_import` plugin
 
 Import data from a Google Spreadsheet.
 
@@ -121,7 +121,7 @@ imported from the sheets.
 sugarcube -Q sheets_condition:aa:23 -Q sheets_condition:bb:42 -p sheets_import
 ```
 
-### `sheets_queries`
+### `sheets_queries` plugin
 
 Fetch queries from a Google spreadsheet. The first column is the query type,
 and the second column is the query term. The plugin looks up the
@@ -133,7 +133,7 @@ and the second column is the query term. The plugin looks up the
 - `google.query_default_type`: Specify a default query type if none is provided. The plugin looks up query types in a column named `type`. If this column is missing, or the cell is empty, us the value of this option instead.
 - `google.query_fields`: The `sheets_query` plugin will always look for columns named `type` and `term`. Using this option, additional fields can be added into the query extraction. This is useful to enhance queries with additional meta data. The fields `type` and `term` are always queried, so there is no need to specify them separately.
 
-### `sheets_append`
+### `sheets_append` plugin
 
 Append data to a Google spreadsheet. This plugin is similar to
 `sheets_export`, only that data isn't merged, but just appended to the end of
@@ -167,7 +167,7 @@ fields is controlled by the order of fields declared in `google.sheet_fields`.
   `<field-name>` to be one of `opt1`, `opt2` or `opt3`. This option is an
   array and can be specified multiple times.
 
-### `sheets_move`
+### `sheets_move` plugin
 
 Move data from one spreadsheet to another. If a sheet doesn't exist yet, a new
 one will be created. Before any values are exported a backup of the target
@@ -210,7 +210,7 @@ sheets.
 sugarcube -Q sheets_condition:aa:23 -Q sheets_condition:bb:42 -p sheets_move
 ```
 
-### `sheets_move_queries`
+### `sheets_move_queries` plugin
 
 Move queries in the pipeline from one sheet to another. The plugin will look up queries defined through the `sheets_queries` query type, and move the queries to a spreadsheet defined with `google.to_spreadsheet_id` and `google.to_sheet`.
 
@@ -631,3 +631,7 @@ concatEnvelopeAndRows :: (envelope: Envelope, rows: Rows): Envelope
 
 Concat the data of an envelope and rows to return a new envelope with the two
 sets merged.
+
+## License
+
+[GPL3](./LICENSE) @ [Christo](christo@cryptodrunks.net)

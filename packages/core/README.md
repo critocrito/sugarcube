@@ -20,3 +20,7 @@ SugarCube is licensed under the [GPL3](LICENSE).
 
 Please see the [contribution policy](Contributing.md) for more information on
 how to contribute.
+
+## License
+
+[GPL3](./LICENSE) @ [Christo](christo@cryptodrunks.net)

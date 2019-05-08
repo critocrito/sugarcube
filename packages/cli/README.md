@@ -24,3 +24,7 @@ NODE_OPTIONS=--max_old_space_size=4096 $(npm bin)/sugarcube -h
 ```
 
 The above example increases the memory limit to 4GB.
+
+## License
+
+[GPL3](./LICENSE) @ [Christo](christo@cryptodrunks.net)

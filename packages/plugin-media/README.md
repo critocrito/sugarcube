@@ -60,4 +60,4 @@ $(npm bin)/sugarcube -p youtube_video,media_youtubedl,media_mosaic \
 
 ## License
 
-This code is licensed under the GPL3 license.
+[GPL3](./LICENSE) @ [Christo](christo@cryptodrunks.net)

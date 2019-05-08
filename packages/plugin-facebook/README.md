@@ -15,7 +15,7 @@ You'll need the `app_id` and the `app_secret`.
 
 ## Plugins
 
-### `facebook_api_user`
+### `facebook_api_user` plugin
 
 Fetch data about a user. It uses `facebook_user` as query type.
 
@@ -36,7 +36,7 @@ You need the `userid`, the username won't work. To get it:
 - **facebook.app_id**
 - **facebook.app_secret**
 
-### `facebook_api_page`
+### `facebook_api_page` plugin
 
 Fetch data about a Facebook page. It uses `facebook_page` as query type.
 
@@ -50,7 +50,7 @@ Fetch data about a Facebook page. It uses `facebook_page` as query type.
 - **facebook.app_id**
 - **facebook.app_secret**
 
-### `facebook_api_feed`
+### `facebook_api_feed` plugin
 
 Fetch the feed of a Facebook page. It uses `facebook_page` as query type. This
 works currently for pages only.
@@ -90,3 +90,7 @@ $(npm bin)/sugarcube -c configs/facebook.json \
                      --media.data_dir data \
                      -d
 ```
+
+## License
+
+[GPL3](./LICENSE) @ [Christo](christo@cryptodrunks.net)

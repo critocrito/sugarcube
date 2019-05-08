@@ -48,3 +48,7 @@ sugarcube -Q google_search:Keith\ Johnstone \
 
 - `tika.data_dir`: Specify the target directory where to store all
   files. Defaults to `./data/tika_location`.
+
+## License
+
+[GPL3](./LICENSE) @ [Christo](christo@cryptodrunks.net)

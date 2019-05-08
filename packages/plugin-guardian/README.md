@@ -10,7 +10,7 @@ to specify a valid Email. The API key will be send to you.
 
 ## Plugins
 
-- `guardian_search`
+- `guardian_search` plugin
 
 This plugin searches the Guardian archive. The query type is
 `guardian_search`.
@@ -18,3 +18,7 @@ This plugin searches the Guardian archive. The query type is
 ```
 $(npm bin)/sugarcube -Q guardian_search:Keith\ Johnstone -p guardian_search
 ```
+
+## License
+
+[GPL3](./LICENSE) @ [Christo](christo@cryptodrunks.net)

@@ -4,7 +4,7 @@ Plugins based on HTTP requests.
 
 ## Plugins
 
-### `http_get`
+### `http_get` plugin
 
 Fetch images, files, pdf's and videos from `_sc_data`. Downloaded targets are
 added to the `_sc_downloads` collection.
@@ -19,7 +19,7 @@ added to the `_sc_downloads` collection.
 
   Fetch files of this media type. Separate different types using a comma.
 
-### `http_wget`
+### `http_wget` plugin
 
 Fetch whole web pages from `_sc_media`. Downloaded targets are added to the
 `_sc_downloads` collection.
@@ -34,7 +34,7 @@ Fetch whole web pages from `_sc_media`. Downloaded targets are added to the
 
   Specify the path to the `wget` command.
 
-### `http_screenshot`
+### `http_screenshot` plugin
 
 Fetch every URL in `_sc_media` in a headless browser and make a
 screenshot. The format of the screenshot is JPEG. Downloaded targets are added
@@ -56,3 +56,7 @@ $(npm bin)/sugarcube -d \
                      -q feeds.json \
                      -p twitter_feed,http_wget,http_screenshot
 ```
+
+## License
+
+[GPL3](./LICENSE) @ [Christo](christo@cryptodrunks.net)

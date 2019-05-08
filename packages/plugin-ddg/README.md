@@ -10,11 +10,11 @@ Search on DuckDuckGo.
 npm install --save @sugarcube/plugin-ddg
 ```
 
-## Usage
+## Plugins
 
 This plugin exports a single transformation plugin:
 
-### `ddg_search` transformation
+### `ddg_search` plugin
 
 ```
 $(npm bin)/sugarcube -c cfg.json -p ddg_search
@@ -30,3 +30,7 @@ It looks for the query terms of type `ddg_search`, e.g.:
   "term": "Some Search Term"
 }]
 ```
+
+## License
+
+[GPL3](./LICENSE) @ [Christo](christo@cryptodrunks.net)

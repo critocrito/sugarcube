@@ -8,7 +8,7 @@ A collection of plugins that support investigation workflows.
 npm install --save @sugarcube/plugin-workflow
 ```
 
-## Usage
+## Plugins
 
 ### `workflow_merge` plugin
 
@@ -108,3 +108,7 @@ Pick the list of attributes from every unit and drop the rest.
 ```
 sugarcube -p workflow_pick --workflow.pick_fields a,b,c
 ```
+
+## License
+
+[GPL3](./LICENSE) @ [Christo](christo@cryptodrunks.net)

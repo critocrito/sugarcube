@@ -8,7 +8,7 @@ Convert sugarcube data from and to csv.
 npm install --save @sugarcube/plugin-csv
 ```
 
-## Usage
+## Plugins
 
 ### `csv_export` plugin
 
@@ -96,3 +96,7 @@ Export any failure stats of a pipeline run to a CSV file. The file is named `fai
 - `csv.delimiter`: Specify the csv delimiter. Defaults to `,`.
 - `csv.data_dir`: Specify the directory location to write the file to. Defaults to `./data`.
 - `csv.label`: Specify an additional label to add to the file name of the exported CSV file.
+
+## License
+
+[GPL3](./LICENSE) @ [Christo](christo@cryptodrunks.net)

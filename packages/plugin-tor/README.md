@@ -2,7 +2,7 @@
 
 ## Plugins
 
-- `tor_check`
+### `tor_check` plugin
 
 ```
 $(npm bin)/sugarcube -p tor_check
@@ -44,3 +44,7 @@ $(npm bin)/sugarcube -p tor_check
 Unfortunately, because of the way torsocks works, plugins can't make
 connections to `localhost`. This affects just a few plugins, e.g. MongoDB. It
 *could* work if the MongoDB server is not listening to localhost.
+
+## License
+
+[GPL3](./LICENSE) @ [Christo](christo@cryptodrunks.net)

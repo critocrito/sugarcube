@@ -8,7 +8,7 @@ Interact with the file system.
 npm install --save @sugarcube/plugin-fs
 ```
 
-## Usage
+## Plugins
 
 ### `fs_unfold` plugin
 
@@ -37,3 +37,7 @@ Unfold a glob pattern into a list of file objects.
 
 Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)>>** A list of file objects. Contains
 location, sha256 and md5 sums.
+
+## License
+
+[GPL3](./LICENSE) @ [Christo](christo@cryptodrunks.net)

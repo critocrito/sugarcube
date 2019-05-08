@@ -19,11 +19,9 @@ A Youtube API key is required to use these plugins. To obtain one follow those s
 npm install --save @sugarcube/plugin-youtube
 ```
 
-## Usage
+## Plugins
 
-This module exports the following plugins:
-
-### `youtube_video`
+### `youtube_video` plugin
 
 Fetch details for an individual video by it's id. It uses the `youtube_video` query type. The query can be specified either as the video id (e.g. `oMOSiag3dxg`) or as the full URL to the video (e.g. `https://www.youtube.com/watch?v=oMOSiag3dxg`).
 
@@ -43,7 +41,7 @@ or setting it in the JSON configuration file:
 }
 ```
 
-### `youtube_channel`
+### `youtube_channel` plugin
 
 Fetch a list of videos from a channel. A query must be configured to supply one or more channel ids.
 
@@ -100,4 +98,4 @@ $(npm bin)/sugarcube -c config.json \
 
 ## License
 
-This code is licensed under the GPL3 license.
+[GPL3](./LICENSE) @ [Christo](christo@cryptodrunks.net)

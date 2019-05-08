@@ -8,7 +8,7 @@ Search the U.S. Securities and Exchange Commission filings.
 npm install --save @sugarcube/plugin-sec
 ```
 
-## Usage
+## Plugins
 
 ## `sec_search` plugin
 
@@ -18,3 +18,7 @@ type is `sec_search`;
 ```
 sugarcube -Q sec_search:"Social Media" -p sec_search,tap_printf
 ```
+
+## License
+
+[GPL3](./LICENSE) @ [Christo](christo@cryptodrunks.net)
