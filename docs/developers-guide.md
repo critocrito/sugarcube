@@ -1,3 +1,7 @@
+---
+path: "/api/development"
+title: "developers Guide"
+---
 # The SugarCube guide for developers
 
 SugarCube is written in JavaScript and runs on NodeJS. Packages can be

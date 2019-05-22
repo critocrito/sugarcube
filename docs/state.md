@@ -1,3 +1,7 @@
+---
+path: "/api/state"
+title: "State API"
+---
 # State
 
 ## API

@@ -1,0 +1,54 @@
+---
+path: "/plugins/tor_check"
+title: "tor_check plugin"
+author: "Christo <christo@cryptodrunks.net>"
+version: "0.24.0"
+bugs: "https://github.com/critocrito/sugarcube/issues"
+license: "GPL-3.0"
+homepage: "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-tor#readme"
+tags: ["sugarcube","sugarcube plugin","sugarcube-plugin","data","transformation","tor"]
+---
+
+### Installation
+    npm install --save @sugarcube/plugin-tor
+
+
+### Usage
+    $(npm bin)/sugarcube -p tor_check
+    2017-03-22T20:24:28.417Z - info: Starting the tor_check plugin.
+    2017-03-22T20:24:28.672Z - info:
+
+          Sorry. You are not using Tor.
+
+
+    2017-03-22T20:24:28.673Z - info: Finished the tor_check plugin.
+    2017-03-22T20:24:28.673Z - info: Finished the LSD.
+
+    torsocks $(npm bin)/sugarcube -p tor_check
+    1490214275 WARNING torsocks[21685]: [syscall] Unsupported syscall number 293. Denying the call (in tsocks_syscall() at syscall.c:488)
+    1490214275 WARNING torsocks[21685]: [syscall] Unsupported syscall number 292. Denying the call (in tsocks_syscall() at syscall.c:488)
+    2017-03-22T20:24:38.162Z - info: Starting the tor_check plugin.
+    2017-03-22T20:24:39.372Z - info:
+
+          Congratulations. This browser is configured to use Tor.
+
+
+    2017-03-22T20:24:39.374Z - info: Finished the tor_check plugin.
+    2017-03-22T20:24:39.374Z - info: Finished the LSD.
+
+    torsocks on
+    Tor mode activated. Every command will be torified for this shell.
+
+    $(npm bin)/sugarcube -p tor_check
+    2017-03-22T20:24:50.320Z - info: Starting the tor_check plugin.
+    2017-03-22T20:24:50.564Z - info:
+
+          Sorry. You are not using Tor.
+
+
+    2017-03-22T20:24:50.565Z - info: Finished the tor_check plugin.
+    2017-03-22T20:24:50.566Z - info: Finished the LSD.
+
+Unfortunately, because of the way torsocks works, plugins can't make
+connections to `localhost`. This affects just a few plugins, e.g. MongoDB. It
+_could_ work if the MongoDB server is not listening to localhost.

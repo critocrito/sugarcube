@@ -1,3 +1,7 @@
+---
+path: "/api"
+title: "SugarCube API"
+---
 # The SugarCube API
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->

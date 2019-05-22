@@ -1,3 +1,7 @@
+---
+path: "/tutorial"
+title: "SugarCube Tutorial"
+---
 # Ultimately SugarCube
 
 Commands, that can be typed in a shell, have in this tutorial the `$` symbol
