@@ -2,6 +2,12 @@
 
 Plugins based on HTTP requests.
 
+## Installation
+
+```
+npm install --save @sugarcube/plugin-http
+```
+
 ## Plugins
 
 ### `http_get` plugin

@@ -1,10 +1,12 @@
 {
   "name": "@sugarcube/plugin-",
-  "version": "0.23.0",
+  "version": "0.24.0",
   "description": "",
   "main": "_dist/index.js",
   "license": "GPL-3.0",
-  "repository": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-",
+  "repository": "https://github.com/critocrito/sugarcube",
+  "bugs": "https://github.com/critocrito/sugarcube/issues",
+  "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-#readme",
   "author": "Christo <christo@cryptodrunks.net>",
   "keywords": [
     "sugarcube",

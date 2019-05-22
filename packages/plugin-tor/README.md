@@ -1,5 +1,11 @@
 # `@sugarcube/plugin-tor`
 
+## Installation
+
+```
+npm install --save @sugarcube/plugin-tor
+```
+
 ## Plugins
 
 ### `tor_check` plugin

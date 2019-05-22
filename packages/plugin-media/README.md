@@ -2,6 +2,12 @@
 
 Operations on media files and URL's.
 
+## Installation
+
+```
+npm install --save @sugarcube/plugin-media
+```
+
 ## Plugins
 
 ### `media_exif` plugin

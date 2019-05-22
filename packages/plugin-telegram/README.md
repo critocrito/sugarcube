@@ -1,5 +1,11 @@
 # `@sugarcube/plugin-telegram`
 
+## Installation
+
+```
+npm install --save @sugarcube/plugin-telegram
+```
+
 I had to do the following steps to make this work:
 
 1. Send a message to @BotFather: /newbot

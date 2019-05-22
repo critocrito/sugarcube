@@ -1,8 +1,15 @@
 # `@sugarcube/plugin-facebook`
 
 Query the Facebook
-[GraphAPI](https://developers.facebook.com/docs/graph-api). It requires you to
-register your app.
+[GraphAPI](https://developers.facebook.com/docs/graph-api).
+
+## Installation
+
+```
+npm install --save @sugarcube/plugin-facebook
+```
+
+It requires you to register your app.
 
 - Login to your Facebook account.
 - Register as a Facebook [developer](https://developer.facebook.com).

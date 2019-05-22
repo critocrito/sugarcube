@@ -2,6 +2,8 @@
   "name": "@sugarcube/plugin-regex",
   "description": "Match fields for regular expressions.",
   "license": "GPL-3.0",
+  "bugs": "https://github.com/critocrito/sugarcube/issues",
+  "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-regex#readme",
   "author": "Christo <christo@cryptodrunks.net>",
   "repository": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-regex",
   "version": "0.25.0",

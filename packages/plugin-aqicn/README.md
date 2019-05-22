@@ -2,7 +2,7 @@
 
 Scrape `http://aqicn.org/`.
 
-## Usage
+## Installation
 
 ```
 npm install --save @sugarcube/plugin-aqicn

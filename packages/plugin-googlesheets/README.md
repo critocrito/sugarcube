@@ -9,7 +9,7 @@ google sheets.
 npm install --save @sugarcube/plugin-googlesheets
 ```
 
-## Authentication
+### Authentication
 
 This plugin uses the Google API Oauth. In order to use this plugin you need
 the following:

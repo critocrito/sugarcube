@@ -3,6 +3,14 @@
 Use the [Apache Tika](https://tika.apache.org/) toolkit to detect and extract
 metadata and text from over a thousand different file types.
 
+## Installation
+
+```
+npm install --save @sugarcube/plugin-tika
+```
+
+To use this plugin you need as well Java installed.
+
 ## Plugins
 
 ### `tika_parse` plugin

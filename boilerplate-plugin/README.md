@@ -8,6 +8,6 @@ Plugins for SugarCube ...
 npm install --save @sugarcube/plugin-
 ```
 
-## Usage
+## Plugins
 
-## `module_name` plugin
+### `module_name` plugin
