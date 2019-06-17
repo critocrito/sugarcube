@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.25.0](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-fs/compare/v0.24.0...v0.25.0) (2019-06-17)
+
+
+### Bug Fixes
+
+* **plugin-fs:** synced package lock file ([937744b](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-fs/commit/937744b))
+
+
+### Features
+
+* **plugin-fs:** populate media from a file location ([21de55f](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-fs/commit/21de55f))
+
+
+
+
+
 # [0.24.0](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-fs/compare/v0.23.0...v0.24.0) (2019-04-25)
 
 **Note:** Version bump only for package @sugarcube/plugin-fs

@@ -1,22 +1,22 @@
 {
   "name": "@sugarcube/test",
-  "version": "0.24.0",
   "description": "Test helpers and strategies for SugarCube.",
-  "main": "_dist/index.js",
   "license": "GPL-3.0",
-  "repository": "https://github.com/critocrito/sugarcube/tree/master/packages/test",
   "author": "Christo <christo@cryptodrunks.net>",
-  "keywords": [
-    "sugarcube",
-    "data",
-    "transformation",
-    "testing"
-  ],
+  "repository": "https://github.com/critocrito/sugarcube/tree/master/packages/test",
+  "version": "0.25.0",
+  "main": "_dist/index.js",
   "dependencies": {
-    "@sugarcube/core": "^0.24.0",
+    "@sugarcube/core": "^0.25.0",
     "jsverify": "^0.8.3",
     "lodash": "^4.17.4"
   },
+  "keywords": [
+    "data",
+    "sugarcube",
+    "testing",
+    "transformation"
+  ],
   "publishConfig": {
     "access": "public"
   }

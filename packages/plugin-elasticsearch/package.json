@@ -1,27 +1,27 @@
 {
   "name": "@sugarcube/plugin-elasticsearch",
-  "version": "0.24.0",
   "description": "",
-  "main": "_dist/index.js",
   "license": "GPL-3.0",
-  "repository": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-elasticsearch",
   "author": "Christo <christo@cryptodrunks.net>",
-  "keywords": [
-    "sugarcube",
-    "sugarcube-plugin",
-    "data",
-    "transformation",
-    "elasticsearch",
-    "data storage"
-  ],
+  "repository": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-elasticsearch",
+  "version": "0.25.0",
+  "main": "_dist/index.js",
   "dependencies": {
-    "@sugarcube/core": "^0.24.0",
+    "@sugarcube/core": "^0.25.0",
     "dashp": "^0.10.1",
     "elasticsearch": "^14.1.0",
     "glob": "^7.1.2",
     "lodash": "^4.17.4",
     "pify": "^3.0.0"
   },
+  "keywords": [
+    "data",
+    "data storage",
+    "elasticsearch",
+    "sugarcube",
+    "sugarcube-plugin",
+    "transformation"
+  ],
   "publishConfig": {
     "access": "public"
   }

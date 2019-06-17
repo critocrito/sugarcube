@@ -1,29 +1,29 @@
 {
   "name": "@sugarcube/plugin-facebook",
-  "version": "0.24.0",
   "description": "Fetch data from facebook for sugarcube.",
-  "main": "_dist/index.js",
+  "license": "GPL-3.0",
+  "author": "Christo <christo@cryptodrunks.net>",
+  "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-facebook#readme",
   "repository": "https://github.com/critocrito/sugarcube",
   "bugs": "https://github.com/critocrito/sugarcube/issues",
-  "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-facebook#readme",
-  "author": "Christo <christo@cryptodrunks.net>",
-  "license": "GPL-3.0",
-  "keywords": [
-    "sugarcube",
-    "sugarcube plugin",
-    "sugarcube-plugin",
-    "data",
-    "transformation",
-    "facebook"
-  ],
+  "version": "0.25.0",
+  "main": "_dist/index.js",
   "dependencies": {
-    "@sugarcube/core": "^0.24.0",
+    "@sugarcube/core": "^0.25.0",
     "dashp": "^0.10.1",
     "date-fns": "^1.29.0",
     "lodash": "^4.17.4",
     "request": "^2.82.0",
     "request-promise": "^4.2.1"
   },
+  "keywords": [
+    "data",
+    "facebook",
+    "sugarcube",
+    "sugarcube plugin",
+    "sugarcube-plugin",
+    "transformation"
+  ],
   "publishConfig": {
     "access": "public"
   }

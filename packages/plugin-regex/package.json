@@ -1,21 +1,21 @@
 {
   "name": "@sugarcube/plugin-regex",
-  "version": "0.24.0",
   "description": "Match fields for regular expressions.",
-  "main": "_dist/index.js",
   "license": "GPL-3.0",
-  "repository": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-regex",
   "author": "Christo <christo@cryptodrunks.net>",
-  "keywords": [
-    "sugarcube",
-    "sugarcube-plugin-regex",
-    "data",
-    "transformation"
-  ],
+  "repository": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-regex",
+  "version": "0.25.0",
+  "main": "_dist/index.js",
   "dependencies": {
-    "@sugarcube/core": "^0.24.0",
+    "@sugarcube/core": "^0.25.0",
     "lodash": "^4.17.4"
   },
+  "keywords": [
+    "data",
+    "sugarcube",
+    "sugarcube-plugin-regex",
+    "transformation"
+  ],
   "publishConfig": {
     "access": "public"
   }

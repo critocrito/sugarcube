@@ -1,32 +1,32 @@
 {
   "name": "@sugarcube/plugin-tika",
-  "version": "0.24.0",
   "description": "Parse files and metadata using Tika.",
-  "main": "_dist/index.js",
+  "license": "GPL-3.0",
+  "author": "Christo <christo@cryptodrunks.net>",
+  "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-tika#readme",
   "repository": "https://github.com/critocrito/sugarcube",
   "bugs": "https://github.com/critocrito/sugarcube/issues",
-  "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-tika#readme",
-  "author": "Christo <christo@cryptodrunks.net>",
-  "license": "GPL-3.0",
-  "keywords": [
-    "sugarcube",
-    "sugarcube plugin",
-    "sugarcube-plugin",
-    "data",
-    "transformation",
-    "tika",
-    "documents",
-    "documents parsing",
-    "pdf extraction"
-  ],
+  "version": "0.25.0",
+  "main": "_dist/index.js",
   "dependencies": {
-    "@sugarcube/core": "^0.24.0",
-    "@sugarcube/plugin-fs": "^0.24.0",
+    "@sugarcube/core": "^0.25.0",
+    "@sugarcube/plugin-fs": "^0.25.0",
     "dashp": "^0.10.1",
     "lodash": "^4.17.4",
     "moment": "^2.19.1",
     "tika": "critocrito/node-tika#forked-master"
   },
+  "keywords": [
+    "data",
+    "documents",
+    "documents parsing",
+    "pdf extraction",
+    "sugarcube",
+    "sugarcube plugin",
+    "sugarcube-plugin",
+    "tika",
+    "transformation"
+  ],
   "publishConfig": {
     "access": "public"
   }

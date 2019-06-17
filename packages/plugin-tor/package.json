@@ -1,29 +1,29 @@
 {
   "name": "@sugarcube/plugin-tor",
-  "version": "0.24.0",
   "description": "Use SugarCube using the Tor project.",
-  "main": "_dist/index.js",
+  "license": "GPL-3.0",
+  "author": "Christo <christo@cryptodrunks.net>",
+  "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-tor#readme",
   "repository": "https://github.com/critocrito/sugarcube",
   "bugs": "https://github.com/critocrito/sugarcube/issues",
-  "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-tor#readme",
-  "author": "Christo <christo@cryptodrunks.net>",
-  "license": "GPL-3.0",
-  "keywords": [
-    "sugarcube",
-    "sugarcube plugin",
-    "sugarcube-plugin",
-    "data",
-    "transformation",
-    "tor"
-  ],
+  "version": "0.25.0",
+  "main": "_dist/index.js",
   "dependencies": {
-    "@sugarcube/core": "^0.24.0",
+    "@sugarcube/core": "^0.25.0",
     "cheerio": "^1.0.0-rc.2",
     "dashp": "^0.10.1",
     "lodash": "^4.17.4",
     "pify": "^3.0.0",
     "request": "^2.81.0"
   },
+  "keywords": [
+    "data",
+    "sugarcube",
+    "sugarcube plugin",
+    "sugarcube-plugin",
+    "tor",
+    "transformation"
+  ],
   "publishConfig": {
     "access": "public"
   }

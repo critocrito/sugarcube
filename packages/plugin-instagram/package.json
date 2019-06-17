@@ -1,28 +1,28 @@
 {
   "name": "@sugarcube/plugin-instagram",
-  "version": "0.24.0",
   "description": "A SugarCube plugin to query Instagram.",
-  "main": "_dist/index.js",
+  "license": "GPL-3.0",
+  "author": "Christo <christo@cryptodrunks.net>",
+  "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-instagram#readme",
   "repository": "https://github.com/critocrito/sugarcube",
   "bugs": "https://github.com/critocrito/sugarcube/issues",
-  "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-instagram#readme",
-  "author": "Christo <christo@cryptodrunks.net>",
-  "license": "GPL-3.0",
-  "keywords": [
-    "sugarcube",
-    "sugarcube plugin",
-    "sugarcube-plugin",
-    "data",
-    "transformation",
-    "instagram"
-  ],
+  "version": "0.25.0",
+  "main": "_dist/index.js",
   "dependencies": {
-    "@sugarcube/core": "^0.24.0",
+    "@sugarcube/core": "^0.25.0",
     "dashp": "^0.10.1",
     "lodash": "^4.17.4",
     "request": "^2.81.0",
     "request-promise": "^4.2.1"
   },
+  "keywords": [
+    "data",
+    "instagram",
+    "sugarcube",
+    "sugarcube plugin",
+    "sugarcube-plugin",
+    "transformation"
+  ],
   "publishConfig": {
     "access": "public"
   }

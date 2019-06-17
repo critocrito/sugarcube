@@ -1,20 +1,13 @@
 {
   "name": "@sugarcube/plugin-mail",
-  "version": "0.24.0",
   "description": "Send email notifications.",
-  "main": "_dist/index.js",
   "license": "GPL-3.0",
-  "repository": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mail",
   "author": "Christo <christo@cryptodrunks.net>",
-  "keywords": [
-    "sugarcube",
-    "sugarcube-plugin",
-    "data",
-    "transformation",
-    "mail"
-  ],
+  "repository": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mail",
+  "version": "0.25.0",
+  "main": "_dist/index.js",
   "dependencies": {
-    "@sugarcube/core": "^0.24.0",
+    "@sugarcube/core": "^0.25.0",
     "dashp": "^0.10.1",
     "date-fns": "^1.29.0",
     "dot": "^1.1.2",
@@ -22,6 +15,13 @@
     "lodash": "^4.17.4",
     "nodemailer": "^4.4.2"
   },
+  "keywords": [
+    "data",
+    "mail",
+    "sugarcube",
+    "sugarcube-plugin",
+    "transformation"
+  ],
   "publishConfig": {
     "access": "public"
   }

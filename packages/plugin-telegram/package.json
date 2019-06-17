@@ -1,27 +1,27 @@
 {
   "name": "@sugarcube/plugin-telegram",
-  "version": "0.24.0",
   "description": "Plugins to utilize the Telegram API.",
-  "main": "_dist/index.js",
+  "license": "GPL-3.0",
+  "author": "Christo <christo@cryptodrunks.net>",
+  "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-telegram#readme",
   "repository": "https://github.com/critocrito/sugarcube",
   "bugs": "https://github.com/critocrito/sugarcube/issues",
-  "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-telegram#readme",
-  "author": "Christo <christo@cryptodrunks.net>",
-  "license": "GPL-3.0",
-  "keywords": [
-    "sugarcube",
-    "sugarcube plugin",
-    "sugarcube-plugin",
-    "data",
-    "transformation",
-    "telegram"
-  ],
+  "version": "0.25.0",
+  "main": "_dist/index.js",
   "dependencies": {
-    "@sugarcube/core": "^0.24.0",
+    "@sugarcube/core": "^0.25.0",
     "bluebird": "^3.5.1",
     "lodash": "^4.17.4",
     "telegraf": "^3.14.0"
   },
+  "keywords": [
+    "data",
+    "sugarcube",
+    "sugarcube plugin",
+    "sugarcube-plugin",
+    "telegram",
+    "transformation"
+  ],
   "publishConfig": {
     "access": "public"
   }

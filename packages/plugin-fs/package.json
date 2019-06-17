@@ -1,19 +1,13 @@
 {
   "name": "@sugarcube/plugin-fs",
-  "version": "0.24.0",
   "description": "Operate on the file system.",
-  "main": "_dist/index.js",
   "license": "GPL-3.0",
-  "repository": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-fs",
   "author": "Christo <christo@cryptodrunks.net>",
-  "keywords": [
-    "sugarcube",
-    "sugarcube-plugin",
-    "data",
-    "transformation"
-  ],
+  "repository": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-fs",
+  "version": "0.25.0",
+  "main": "_dist/index.js",
   "dependencies": {
-    "@sugarcube/core": "^0.24.0",
+    "@sugarcube/core": "^0.25.0",
     "dashp": "^0.10.1",
     "file-type": "^10.11.0",
     "glob": "^7.1.2",
@@ -21,6 +15,12 @@
     "pify": "^3.0.0",
     "read-chunk": "^3.2.0"
   },
+  "keywords": [
+    "data",
+    "sugarcube",
+    "sugarcube-plugin",
+    "transformation"
+  ],
   "publishConfig": {
     "access": "public"
   }

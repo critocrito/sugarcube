@@ -1,19 +1,19 @@
 {
-    "name": "@sugarcube/utils",
-    "version": "0.24.0",
-    "description": "Common utilities used by SugarCube.",
-    "main": "_dist/index.js",
-    "license": "GPL-3.0",
-    "repository": "https://github.com/critocrito/sugarcube/tree/master/packages/utils",
-    "author": "Christo <christo@cryptodrunks.net>",
-    "keywords": [
-        "sugarcube",
-        "utilities",
-        "data",
-        "transformation"
-    ],
-    "dependencies": {
-        "dashp": "^0.10.1",
-        "lodash": "^4.17.11"
-    }
+  "name": "@sugarcube/utils",
+  "description": "Common utilities used by SugarCube.",
+  "license": "GPL-3.0",
+  "author": "Christo <christo@cryptodrunks.net>",
+  "repository": "https://github.com/critocrito/sugarcube/tree/master/packages/utils",
+  "version": "0.25.0",
+  "main": "_dist/index.js",
+  "dependencies": {
+    "dashp": "^0.10.1",
+    "lodash": "^4.17.11"
+  },
+  "keywords": [
+    "data",
+    "sugarcube",
+    "transformation",
+    "utilities"
+  ]
 }

@@ -1,21 +1,13 @@
 {
   "name": "@sugarcube/plugin-sec",
-  "version": "0.24.0",
   "description": "Query the company filings of the U.S. SEC.",
-  "main": "_dist/index.js",
   "license": "GPL-3.0",
-  "repository": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-sec",
   "author": "Christo <christo@cryptodrunks.net>",
-  "keywords": [
-    "sugarcube",
-    "sugarcube-plugin",
-    "data",
-    "transformation",
-    "sec",
-    "securities and exchange commission"
-  ],
+  "repository": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-sec",
+  "version": "0.25.0",
+  "main": "_dist/index.js",
   "dependencies": {
-    "@sugarcube/core": "^0.24.0",
+    "@sugarcube/core": "^0.25.0",
     "cheerio": "^1.0.0-rc.2",
     "dashp": "^0.10.1",
     "lodash": "^4.17.4",
@@ -23,6 +15,14 @@
     "request": "^2.83.0",
     "request-promise": "^4.2.2"
   },
+  "keywords": [
+    "data",
+    "sec",
+    "securities and exchange commission",
+    "sugarcube",
+    "sugarcube-plugin",
+    "transformation"
+  ],
   "publishConfig": {
     "access": "public"
   }

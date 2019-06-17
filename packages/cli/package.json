@@ -1,26 +1,18 @@
 {
   "name": "@sugarcube/cli",
-  "version": "0.24.0",
   "description": "A CLI to operate SugarCube data processes.",
+  "license": "GPL-3.0",
+  "author": "Christo <christo@cryptodrunks.net>",
+  "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/cli#readme",
+  "repository": "https://github.com/critocrito/sugarcube",
+  "bugs": "https://github.com/critocrito/sugarcube/issues",
+  "version": "0.25.0",
   "main": "_dist/index.js",
   "bin": {
     "sugarcube": "bin/sugarcube.js"
   },
-  "repository": "https://github.com/critocrito/sugarcube",
-  "keywords": [
-    "sugarcube",
-    "sugarcube ui",
-    "sugarcube interface",
-    "data",
-    "transformation",
-    "cli"
-  ],
-  "author": "Christo <christo@cryptodrunks.net>",
-  "license": "GPL-3.0",
-  "bugs": "https://github.com/critocrito/sugarcube/issues",
-  "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/cli#readme",
   "dependencies": {
-    "@sugarcube/core": "^0.24.0",
+    "@sugarcube/core": "^0.25.0",
     "dotenv": "^4.0.0",
     "lodash": "^4.17.4",
     "source-map-support": "^0.5.3",
@@ -28,6 +20,14 @@
     "winston": "^2.3.1",
     "yargs": "^11.0.0"
   },
+  "keywords": [
+    "cli",
+    "data",
+    "sugarcube",
+    "sugarcube interface",
+    "sugarcube ui",
+    "transformation"
+  ],
   "publishConfig": {
     "access": "public"
   }

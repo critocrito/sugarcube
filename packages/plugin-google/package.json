@@ -1,25 +1,16 @@
 {
   "name": "@sugarcube/plugin-google",
-  "version": "0.24.0",
   "description": "A plugin for SugarCube to interact with some google services.",
-  "main": "_dist/index.js",
-  "repository": "https://github.com/critocrito/sugarcube",
-  "author": "Christo <christo@cryptodrunks.net>",
   "license": "GPL-3.0",
-  "bugs": "https://github.com/critocrito/sugarcube/issues",
+  "author": "Christo <christo@cryptodrunks.net>",
   "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-google#readme",
-  "keywords": [
-    "sugarcube",
-    "sugarcube plugin",
-    "sugarcube-plugin",
-    "data",
-    "transformation",
-    "google",
-    "search"
-  ],
+  "repository": "https://github.com/critocrito/sugarcube",
+  "bugs": "https://github.com/critocrito/sugarcube/issues",
+  "version": "0.25.0",
+  "main": "_dist/index.js",
   "dependencies": {
-    "@sugarcube/core": "^0.24.0",
-    "@sugarcube/plugin-fs": "^0.24.0",
+    "@sugarcube/core": "^0.25.0",
+    "@sugarcube/plugin-fs": "^0.25.0",
     "babel-polyfill": "^6.23.0",
     "cheerio": "^1.0.0-rc.2",
     "dashp": "^0.10.1",
@@ -28,6 +19,15 @@
     "nightmare": "^2.10.0",
     "nightmare-upload": "^0.1.1"
   },
+  "keywords": [
+    "data",
+    "google",
+    "search",
+    "sugarcube",
+    "sugarcube plugin",
+    "sugarcube-plugin",
+    "transformation"
+  ],
   "publishConfig": {
     "access": "public"
   }

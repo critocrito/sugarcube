@@ -1,23 +1,23 @@
 {
   "name": "@sugarcube/plugin-test",
-  "version": "0.24.0",
   "description": "Plugins useful for testing SugarCube.",
-  "main": "_dist/index.js",
   "license": "GPL-3.0",
-  "repository": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-test",
   "author": "Christo <christo@cryptodrunks.net>",
-  "keywords": [
-    "sugarcube",
-    "sugarcube-plugin",
-    "data",
-    "transformation"
-  ],
+  "repository": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-test",
+  "version": "0.25.0",
+  "main": "_dist/index.js",
   "dependencies": {
-    "@sugarcube/core": "^0.24.0",
-    "@sugarcube/test": "^0.24.0",
+    "@sugarcube/core": "^0.25.0",
+    "@sugarcube/test": "^0.25.0",
     "dashp": "^0.10.1",
     "lodash": "^4.17.5"
   },
+  "keywords": [
+    "data",
+    "sugarcube",
+    "sugarcube-plugin",
+    "transformation"
+  ],
   "publishConfig": {
     "access": "public"
   }

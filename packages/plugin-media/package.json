@@ -1,34 +1,34 @@
 {
   "name": "@sugarcube/plugin-media",
-  "version": "0.24.0",
   "description": "Media related plugins.",
-  "main": "_dist/index.js",
+  "license": "GPL-3.0",
+  "author": "Christo <christo@cryptodrunks.net>",
+  "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-media#readme",
   "repository": "https://github.com/critocrito/sugarcube",
   "bugs": "https://github.com/critocrito/sugarcube/issues",
-  "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-media#readme",
-  "author": "Christo <christo@cryptodrunks.net>",
-  "license": "GPL-3.0",
-  "keywords": [
-    "sugarcube",
-    "sugarcube plugin",
-    "sugarcube-plugin",
-    "@sugarcube/plugin",
-    "data",
-    "transformation",
-    "exif",
-    "images",
-    "media"
-  ],
+  "version": "0.25.0",
+  "main": "_dist/index.js",
   "dependencies": {
-    "@sugarcube/core": "^0.24.0",
-    "@sugarcube/plugin-fs": "^0.24.0",
-    "@sugarcube/utils": "^0.24.0",
+    "@sugarcube/core": "^0.25.0",
+    "@sugarcube/plugin-fs": "^0.25.0",
+    "@sugarcube/utils": "^0.25.0",
     "dashp": "^0.10.1",
     "gm": "^1.23.0",
     "lodash": "^4.17.4",
     "pify": "^3.0.0",
     "request": "^2.81.0"
   },
+  "keywords": [
+    "@sugarcube/plugin",
+    "data",
+    "exif",
+    "images",
+    "media",
+    "sugarcube",
+    "sugarcube plugin",
+    "sugarcube-plugin",
+    "transformation"
+  ],
   "publishConfig": {
     "access": "public"
   }

@@ -1,29 +1,29 @@
 {
   "name": "@sugarcube/plugin-csv",
-  "version": "0.24.0",
   "description": "CSV based input and output for SugarCube.",
-  "main": "_dist/index.js",
+  "license": "GPL-3.0",
+  "author": "Christo <christo@cryptodrunks.net>",
+  "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-csv#readme",
   "repository": "https://github.com/critocrito/sugarcube",
   "bugs": "https://github.com/critocrito/sugarcube/issues",
-  "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-csv#readme",
-  "author": "Christo <christo@cryptodrunks.net>",
-  "license": "GPL-3.0",
-  "keywords": [
-    "sugarcube",
-    "sugarcube plugin",
-    "sugarcube-plugin",
-    "data",
-    "transformation",
-    "csv"
-  ],
+  "version": "0.25.0",
+  "main": "_dist/index.js",
   "dependencies": {
-    "@sugarcube/core": "^0.24.0",
-    "@sugarcube/plugin-fs": "^0.24.0",
+    "@sugarcube/core": "^0.25.0",
+    "@sugarcube/plugin-fs": "^0.25.0",
     "csv-parse": "^1.2.4",
     "csv-stringify": "^1.0.4",
     "dashp": "^0.10.1",
     "lodash": "^4.17.4"
   },
+  "keywords": [
+    "csv",
+    "data",
+    "sugarcube",
+    "sugarcube plugin",
+    "sugarcube-plugin",
+    "transformation"
+  ],
   "publishConfig": {
     "access": "public"
   }
