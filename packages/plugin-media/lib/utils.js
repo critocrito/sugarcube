@@ -59,9 +59,16 @@ export const mosaicNthFrame = (cmd, source, dest, force = false) => {
   return runCmd(cmd, force ? ["-y"].concat(args) : args);
 };
 
+export const ffmpeg = (cmd, source, dest, force = false) => {
+  const args = ["-i", source, dest];
+
+  return runCmd(cmd, force ? ["-y"].concat(args) : args);
+};
+
 export default {
   youtubeDl,
   youtubeDlCheck,
   mosaicSceneChange,
   mosaicNthFrame,
+  ffmpeg,
 };

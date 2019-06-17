@@ -58,6 +58,24 @@ $(npm bin)/sugarcube -p youtube_video,media_youtubedl,media_mosaic \
                      --media.mosaic_force
 ```
 
+### `media_file_import` plugin
+
+Import media files into the data collection. This is a natural fit with the `fs_unfold` plugin.
+
+**Configuration Options:**
+
+- `media.data_dir`: Import all videos into this directory. Defaults to `data`.
+- `media.import_video_format`: Import videos in this video format. Defaults to `mp4`.
+- `media.ffmpeg_cmd`: The path to the `ffmpeg` command which is used to import videos. Defaults to `ffmpeg`, with no specific path supplied.
+- `media.import_parallel`: Specify how many files to import at the same time. It defaults to 1 and can be set between 1 and 8.
+- `media.force_import`: Set this flag to `true` for force an import of the file, even if it already exists.
+
+**Example:**
+
+```
+$(npm bin)/sugarcube -Q glob_pattern:~/files/* -p fs_unfold,media_file_import
+```
+
 ## License
 
 [GPL3](./LICENSE) @ [Christo](christo@cryptodrunks.net)
