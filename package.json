@@ -12,7 +12,7 @@
     "coverage": "cross-env NODE_ENV=test nyc npm test",
     "fix": "npm run lint -- --fix",
     "lint": "eslint packages/**/lib/**/*.js test/**/*.js boilerplate-plugin/lib/**/*.js",
-    "prerelease": "npm run test && npm run test-e2e",
+    "prerelease": "npm run test && npm run test:e2e",
     "release": "npm run build && lerna publish --conventional-commits -m \"chore(release): Bumped to version %s.\"",
     "setup": "npm run clean-mods && make setup && npm run compile",
     "test": "npm run test:mocha",
