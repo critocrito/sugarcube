@@ -1,6 +1,6 @@
 {
   "*.js": [
-    "eslint packages/**/lib/**/*.js test/**/*.js boilerplate-plugin/lib/**/*.js scripts/**/*.js --fix",
+    "eslint packages/**/lib/**/*.js test/**/*.js boilerplate-plugin/lib/**/*.js --fix",
     "git add"
   ],
   "**/package.json": ["prettier-package-json --write", "git add"],
