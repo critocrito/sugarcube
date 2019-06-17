@@ -3,7 +3,7 @@ import {flowP, tapP, collectP, caughtP} from "dashp";
 import pify from "pify";
 import fs from "fs";
 import url from "url";
-import {join, basename} from "path";
+import {join, extname} from "path";
 import {envelope as env, plugin as p, utils} from "@sugarcube/core";
 import {mkdirP, sha256sum, md5sum} from "@sugarcube/plugin-fs";
 
@@ -34,7 +34,10 @@ const curlGet = (envelope, {log, cfg, stats}) => {
         const source = href || term;
         const idHash = media._sc_id_hash;
         const dir = join(dataDir, unit._sc_id_hash, type, idHash);
-        const location = join(dir, basename(url.parse(source).pathname));
+        const location = join(
+          dir,
+          `${idHash}${extname(url.parse(source).pathname)}`,
+        );
 
         return flowP(
           [
