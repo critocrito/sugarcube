@@ -76,6 +76,33 @@ const curlGet = async (envelope, {log, cfg, stats}) => {
           stats.update("failed", fails =>
             Array.isArray(fails) ? fails.concat(failed) : [failed],
           );
+          log.warn(`Failed to access ${location}.`);
+          return null;
+        }
+      }
+
+      await mkdirP(dir);
+
+      let md5;
+      let sha256;
+
+      try {
+        await download(source, location);
+        [md5, sha256] = await Promise.all([
+          md5sum(location),
+          sha256sum(location),
+        ]);
+      } catch (e) {
+        if (e.code !== "ENOENT") {
+          const failed = {
+            type: unit._sc_source,
+            term: source,
+            plugin: "http_get",
+            reason: e.message,
+          };
+          stats.update("failed", fails =>
+            Array.isArray(fails) ? fails.concat(failed) : [failed],
+          );
           log.warn(
             `Failed to download ${media.type} ${source} to ${location}. Cleaning up stale artifact.`,
           );
@@ -83,13 +110,6 @@ const curlGet = async (envelope, {log, cfg, stats}) => {
           return null;
         }
       }
-
-      await mkdirP(dir);
-      await download(source, location);
-      const [md5, sha256] = await Promise.all([
-        md5sum(location),
-        sha256sum(location),
-      ]);
 
       log.info(`Fetched ${source} to ${location}.`);
 
