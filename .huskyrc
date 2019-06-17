@@ -1,0 +1,6 @@
+{
+  "hooks": {
+    "commit-msg": "! git rev-parse --abbrev-ref HEAD | grep -q master || validate-commit-msg",
+    "pre-commit": "! git rev-parse --abbrev-ref HEAD | grep -q master || lint-staged"
+  }
+}
