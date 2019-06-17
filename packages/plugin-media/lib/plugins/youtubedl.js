@@ -107,9 +107,8 @@ const plugin = async (envelope, {cfg, log, stats}) => {
           plugin: "media_youtubedl",
           reason: ee.message,
         };
-        stats.update(
-          "failed",
-          fails => (Array.isArray(fails) ? fails.concat(failed) : [failed]),
+        stats.update("failed", fails =>
+          Array.isArray(fails) ? fails.concat(failed) : [failed],
         );
 
         log.warn(`Failed to download video ${source}: ${ee.message}`);

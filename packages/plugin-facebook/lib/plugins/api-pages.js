@@ -26,9 +26,8 @@ const apiPages = (envelope, {log, cfg, stats}) => {
         plugin: "facebook_api_pages",
         reason: e.message,
       };
-      stats.update(
-        "failed",
-        fails => (Array.isArray(fails) ? fails.concat(fail) : [fail]),
+      stats.update("failed", fails =>
+        Array.isArray(fails) ? fails.concat(fail) : [fail],
       );
       log.warn(`Facebook page ${q} returned an error: ${e.message}`);
     }

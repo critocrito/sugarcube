@@ -66,9 +66,7 @@ const moveData = async (envelope, {log, cfg, cache}) => {
 
       log.info(`Moving ${rowsToMove.length} observations to ${targetUrl}.`);
       log.info(
-        `Merging ${rowsToMove.length} observations into ${
-          existingRows.length
-        } observations.`,
+        `Merging ${rowsToMove.length} observations into ${existingRows.length} observations.`,
       );
 
       const mergedRows = flow([

@@ -39,9 +39,8 @@ const plugin = (envelope, {cfg, log, stats}) => {
         plugin: "fs_media_type",
         reason: `Unsupported category for mime type: ${mime}`,
       };
-      stats.update(
-        "failed",
-        fails => (Array.isArray(fails) ? fails.concat(failed) : [failed]),
+      stats.update("failed", fails =>
+        Array.isArray(fails) ? fails.concat(failed) : [failed],
       );
     }
 

@@ -57,10 +57,8 @@ const tweetsPlugin = async (envelope, {log, cfg, stats}) => {
         // Handle any failed tweets.
         ([results, fails]) => {
           if (fails.length > 0) {
-            stats.update(
-              "failed",
-              failed =>
-                Array.isArray(failed) ? failed.concat(fails) : [fails],
+            stats.update("failed", failed =>
+              Array.isArray(failed) ? failed.concat(fails) : [fails],
             );
             fails.forEach(({term, reason}) =>
               log.warn(`Failed to fetch tweet ${term}: ${reason}`),
@@ -92,10 +90,8 @@ const tweetsPlugin = async (envelope, {log, cfg, stats}) => {
               plugin: "twitter_tweet",
               reason,
             };
-            stats.update(
-              "failed",
-              queries =>
-                Array.isArray(queries) ? queries.concat(fail) : [fail],
+            stats.update("failed", queries =>
+              Array.isArray(queries) ? queries.concat(fail) : [fail],
             );
             log.warn(`Failed to fetch tweet ${id}: ${reason}`);
           });

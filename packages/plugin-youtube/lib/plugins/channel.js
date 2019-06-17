@@ -40,9 +40,7 @@ const listChannel = (envelope, {cfg, log, stats}) => {
   }
   if (range)
     log.info(
-      `Limiting queries from ${range.publishedAfter} till ${
-        range.publishedBefore
-      }`,
+      `Limiting queries from ${range.publishedAfter} till ${range.publishedBefore}`,
     );
 
   const op = range
@@ -62,9 +60,8 @@ const listChannel = (envelope, {cfg, log, stats}) => {
               plugin: "youtube_channel",
               reason: "Youtube channel does not exist.",
             };
-            stats.update(
-              "failed",
-              fails => (Array.isArray(fails) ? fails.concat(fail) : [fail]),
+            stats.update("failed", fails =>
+              Array.isArray(fails) ? fails.concat(fail) : [fail],
             );
             log.warn(`Channel ${q} does not exist.`);
           }

@@ -24,9 +24,7 @@ const diffPlugin = (envelope, {cfg, log, stats}) => {
       parseMany(delimiter),
       tapP(xs =>
         log.info(
-          `Diffing ${xs.length} from CSV with ${
-            envelope.data.length
-          } from envelope.`,
+          `Diffing ${xs.length} from CSV with ${envelope.data.length} from envelope.`,
         ),
       ),
       xs => {
@@ -53,9 +51,7 @@ const diffPlugin = (envelope, {cfg, log, stats}) => {
         log.info(`${removed.data.length} units removed.`);
         log.info(`${shared.data.length} units shared.`);
         log.info(
-          `Diffing: ${diff.meta.count}/${envelope.data.length} (${
-            diff.meta.pipeline
-          }).`,
+          `Diffing: ${diff.meta.count}/${envelope.data.length} (${diff.meta.pipeline}).`,
         );
 
         return envelope;

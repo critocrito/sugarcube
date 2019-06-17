@@ -1,8 +1,19 @@
 {
-  "extends": [
-    "@sugarcube/eslint-config-sugarcube"
-  ],
   "parser": "babel-eslint",
+  "env": {
+    "es6": true,
+    "node": true,
+    "mocha": true
+  },
+  "plugins": ["import", "promise", "lodash-fp", "prettier"],
+  "extends": [
+    "airbnb-base",
+    "plugin:lodash-fp/recommended",
+    "plugin:promise/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "prettier"
+  ],
   "rules": {
     "comma-dangle": [
       "error",
@@ -14,6 +25,10 @@
         "functions": "always-multiline"
       }
     ],
+    "no-underscore-dangle": "off",
+    "arrow-parens": "off",
+    "object-curly-spacing": "off",
+    "no-console": "warn",
     "prettier/prettier": [
       "error",
       {
@@ -21,10 +36,11 @@
         "bracketSpacing": false
       }
     ],
+    "import/prefer-default-export": "off",
     "import/no-extraneous-dependencies": [
       "error",
       {
-	"devDependencies": ["test/**/*.js", "scripts/**/*.js"]
+        "devDependencies": ["test/**/*.js", "scripts/**/*.js"]
       }
     ]
   }

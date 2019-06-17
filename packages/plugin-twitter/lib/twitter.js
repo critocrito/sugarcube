@@ -29,7 +29,8 @@ const apiErrors = curry((log, user, e) => {
   if (/401/.test(e.message)) {
     log.warn(`Failed to fetch ${user}: ${e.message}`);
     return [];
-  } else if (e[0] && e[0].code === 34) {
+  }
+  if (e[0] && e[0].code === 34) {
     log.warn(`Failed to fetch ${user}: ${e[0].message}`);
     return [];
   }

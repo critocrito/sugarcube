@@ -7,6 +7,7 @@ const babylon = require("babylon");
 const traverse = require("babel-traverse").default;
 const {unfold} = require("../packages/plugin-fs");
 
+// eslint-disable-next-line import/order
 const yargs = require("yargs")
   .usage("Usage: $0 <dependency> [--report|-r]")
   .example("./scripts/$0 [-r] dashp", "Print a report for the use of dashp.")

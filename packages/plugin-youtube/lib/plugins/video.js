@@ -33,9 +33,8 @@ const fetchVideos = async (envelope, {cfg, log, stats}) => {
                 : memo,
             [],
           );
-          stats.update(
-            "failed",
-            fails => (Array.isArray(fails) ? fails.concat(missing) : missing),
+          stats.update("failed", fails =>
+            Array.isArray(fails) ? fails.concat(missing) : missing,
           );
           missing.forEach(({term}) =>
             log.warn(`Video ${term} does not exist.`),

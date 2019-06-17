@@ -73,14 +73,11 @@ const curlGet = async (envelope, {log, cfg, stats}) => {
             plugin: "http_get",
             reason: e.message,
           };
-          stats.update(
-            "failed",
-            fails => (Array.isArray(fails) ? fails.concat(failed) : [failed]),
+          stats.update("failed", fails =>
+            Array.isArray(fails) ? fails.concat(failed) : [failed],
           );
           log.warn(
-            `Failed to download ${
-              media.type
-            } ${source} to ${location}. Cleaning up stale artifact.`,
+            `Failed to download ${media.type} ${source} to ${location}. Cleaning up stale artifact.`,
           );
           await cleanUp(location);
           return null;

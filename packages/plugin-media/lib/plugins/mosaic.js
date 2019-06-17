@@ -62,9 +62,8 @@ const plugin = async (envelope, {log, cfg, stats}) => {
               ? `Video at ${location} doesn't exits`
               : e.message,
         };
-        stats.update(
-          "failed",
-          fails => (Array.isArray(fails) ? fails.concat(failed) : [failed]),
+        stats.update("failed", fails =>
+          Array.isArray(fails) ? fails.concat(failed) : [failed],
         );
         if (e.code !== "ENOENT") {
           throw e;
@@ -106,9 +105,8 @@ const plugin = async (envelope, {log, cfg, stats}) => {
           plugin: "media_mosaic",
           reason: ee.message,
         };
-        stats.update(
-          "failed",
-          fails => (Array.isArray(fails) ? fails.concat(failed) : [failed]),
+        stats.update("failed", fails =>
+          Array.isArray(fails) ? fails.concat(failed) : [failed],
         );
 
         log.warn(

@@ -48,9 +48,8 @@ const plugin = async (envelope, {log, cfg, stats}) => {
           plugin: "media_youtubedl_check",
           reason: e.message,
         };
-        stats.update(
-          "failed",
-          fails => (Array.isArray(fails) ? fails.concat(failed) : [failed]),
+        stats.update("failed", fails =>
+          Array.isArray(fails) ? fails.concat(failed) : [failed],
         );
         log.warn(`Check for ${url} failed: ${e.message}`);
       }

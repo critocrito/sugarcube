@@ -45,9 +45,8 @@ const feedPlugin = async (envelope, {log, cfg, stats}) => {
             plugin: "twitter_feed",
             reason,
           };
-          stats.update(
-            "failed",
-            queries => (Array.isArray(queries) ? queries.concat(fail) : [fail]),
+          stats.update("failed", queries =>
+            Array.isArray(queries) ? queries.concat(fail) : [fail],
           );
           log.warn(`Failed to fetch ${user}: ${reason}`);
           return [];

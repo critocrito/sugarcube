@@ -19,7 +19,7 @@ import dotenv from "dotenv";
 import {runner, createFeatureDecisions} from "@sugarcube/core";
 import v8 from "v8";
 
-import {mapFiles, parseConfigFile, parseConfigFileWithExtends} from "./";
+import {mapFiles, parseConfigFile, parseConfigFileWithExtends} from ".";
 import {info, warn, error, debug} from "./logger";
 import {modules} from "./packages";
 

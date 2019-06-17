@@ -25,24 +25,18 @@ const plugin = (envelope, {cfg, log}) => {
 
           if (!overwrite && oldValue != null) {
             log.info(
-              `Not overwriting ${oldValue} with ${newValue} for field ${field} in ${
-                query.type
-              }/${unit._sc_id_hash}`,
+              `Not overwriting ${oldValue} with ${newValue} for field ${field} in ${query.type}/${unit._sc_id_hash}`,
             );
             return acc;
           }
 
           if (overwrite && oldValue != null) {
             log.info(
-              `Overwriting ${oldValue} with ${newValue} for field ${field} in ${
-                query.type
-              }/${unit._sc_id_hash}`,
+              `Overwriting ${oldValue} with ${newValue} for field ${field} in ${query.type}/${unit._sc_id_hash}`,
             );
           } else {
             log.info(
-              `Merging ${newValue} for field ${field} in ${query.type}/${
-                unit._sc_id_hash
-              }`,
+              `Merging ${newValue} for field ${field} in ${query.type}/${unit._sc_id_hash}`,
             );
           }
 
