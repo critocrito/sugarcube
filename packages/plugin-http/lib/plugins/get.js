@@ -1,5 +1,5 @@
-import {merge, get, includes} from "lodash/fp";
-import {flowP, tapP, collectP, caughtP} from "dashp";
+import {get, includes} from "lodash/fp";
+import {collectP} from "dashp";
 import pify from "pify";
 import fs from "fs";
 import url from "url";
@@ -21,88 +21,100 @@ const cleanUp = async location => {
   } catch (e) {}
 };
 
-const curlGet = (envelope, {log, cfg, stats}) => {
+const curlGet = async (envelope, {log, cfg, stats}) => {
   const dataDir = get("http.data_dir", cfg);
   const getTypes = sToA(",", get("http.get_types", cfg));
 
-  return env.fmapDataAsync(
-    unit =>
-      collectP(media => {
-        if (!includes(media.type, getTypes)) return media;
+  return env.fmapDataAsync(async unit => {
+    const downloads = await collectP(async media => {
+      if (!includes(media.type, getTypes)) return null;
 
-        const {type, term, href} = media;
-        const source = href || term;
-        const idHash = media._sc_id_hash;
-        const dir = join(dataDir, unit._sc_id_hash, type, idHash);
-        const location = join(
-          dir,
-          `${idHash}${extname(url.parse(source).pathname)}`,
-        );
+      const {type, term, href} = media;
+      const source = href || term;
+      const idHash = media._sc_id_hash;
 
-        return flowP(
-          [
-            () =>
-              accessAsync(location)
-                .then(() =>
-                  log.info(`Media at ${source} exists at ${location}`),
-                )
-                .catch(e => {
-                  if (e.code === "ENOENT") {
-                    return flowP(
-                      [
-                        () => mkdirP(dir),
-                        () => download(source, location),
-                        tapP(() =>
-                          log.info(`Fetched ${source} to ${location}.`),
-                        ),
-                      ],
-                      null,
-                    );
-                  }
-                  throw e;
-                }),
-            () => Promise.all([md5sum(location), sha256sum(location)]),
-            tapP(([md5, sha256]) =>
-              unit._sc_downloads.push(
-                Object.assign(
-                  {},
-                  {
-                    dir,
-                    md5,
-                    sha256,
-                    type,
-                    term,
-                  },
-                  href ? {href} : {},
-                ),
-              ),
-            ),
-            () => media,
-            caughtP(async e => {
-              const failed = {
-                type: unit._sc_source,
-                term: source,
-                plugin: "http_get",
-                reason: e.message,
-              };
-              stats.update(
-                "failed",
-                fails =>
-                  Array.isArray(fails) ? fails.concat(failed) : [failed],
-              );
-              log.warn(
-                `Failed to download ${
-                  media.type
-                } ${source} to ${location}. Cleaning up stale artifact.`,
-              );
-              await cleanUp(location);
-            }),
-          ],
-          null,
-        );
-      }, unit._sc_media).then(ms => merge(unit, {_sc_media: ms})),
-    envelope,
-  );
+      // In the past we stored files in oldDir. To simplify we introduce the
+      // new style location based on dir.
+      const dir = join(dataDir, unit._sc_id_hash, type);
+      const location = join(
+        dir,
+        `${idHash}${extname(url.parse(source).pathname)}`,
+      );
+      const oldDir = join(dataDir, unit._sc_id_hash, type, idHash);
+      const oldLocation = join(
+        oldDir,
+        `${idHash}${extname(url.parse(source).pathname)}`,
+      );
+
+      // We maintain backwards compatibility with the old location where to
+      // store files. If the new style location fails, try the old style
+      // location as well. And only if that one fails as well download the
+      // file to the new style location. By making sure to test the old style
+      // location first we ensure to use the new style location in the failure
+      // stat.
+      try {
+        try {
+          await accessAsync(oldLocation);
+          log.info(`Media ${source} exists at ${oldLocation}.`);
+          return null;
+        } catch (ee) {
+          if (ee.code === "ENOENT") {
+            await accessAsync(location);
+            log.info(`Media ${source} exists at ${location}.`);
+            return null;
+          }
+          throw ee;
+        }
+      } catch (e) {
+        if (e.code !== "ENOENT") {
+          const failed = {
+            type: unit._sc_source,
+            term: source,
+            plugin: "http_get",
+            reason: e.message,
+          };
+          stats.update(
+            "failed",
+            fails => (Array.isArray(fails) ? fails.concat(failed) : [failed]),
+          );
+          log.warn(
+            `Failed to download ${
+              media.type
+            } ${source} to ${location}. Cleaning up stale artifact.`,
+          );
+          await cleanUp(location);
+          return null;
+        }
+      }
+
+      await mkdirP(dir);
+      await download(source, location);
+      const [md5, sha256] = await Promise.all([
+        md5sum(location),
+        sha256sum(location),
+      ]);
+
+      log.info(`Fetched ${source} to ${location}.`);
+
+      return Object.assign(
+        {},
+        {
+          location,
+          md5,
+          sha256,
+          type,
+          term,
+        },
+        href ? {href} : {},
+      );
+    }, unit._sc_media);
+
+    return Object.assign(unit, {
+      _sc_downloads: unit._sc_downloads.concat(
+        downloads.filter(d => d != null),
+      ),
+    });
+  }, envelope);
 };
 
 const plugin = p.liftManyA2([assertDir, curlGet]);
