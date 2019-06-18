@@ -6,10 +6,10 @@
   "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-ddg#readme",
   "repository": "https://github.com/critocrito/sugarcube",
   "bugs": "https://github.com/critocrito/sugarcube/issues",
-  "version": "0.25.0",
+  "version": "0.25.1",
   "main": "lib/index.js",
   "dependencies": {
-    "@sugarcube/core": "^0.25.0",
+    "@sugarcube/core": "^0.25.1",
     "cheerio": "^1.0.0-rc.2",
     "dashp": "^0.10.1",
     "lodash": "^4.17.4",

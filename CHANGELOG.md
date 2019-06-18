@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.25.1](https://github.com/critocrito/sugarcube/compare/v0.25.0...v0.25.1) (2019-06-18)
+
+
+### Bug Fixes
+
+* minor improvements to docs generation ([62d2e99](https://github.com/critocrito/sugarcube/commit/62d2e99))
+* **plugin-http:** accept old image locations based on filenames ([ce32cb8](https://github.com/critocrito/sugarcube/commit/ce32cb8))
+
+
+
+
+
 # [0.25.0](https://github.com/critocrito/sugarcube/compare/v0.24.0...v0.25.0) (2019-06-17)
 
 

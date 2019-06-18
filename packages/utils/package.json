@@ -4,7 +4,7 @@
   "license": "GPL-3.0",
   "author": "Christo <christo@cryptodrunks.net>",
   "repository": "https://github.com/critocrito/sugarcube/tree/master/packages/utils",
-  "version": "0.25.0",
+  "version": "0.25.1",
   "main": "_dist/index.js",
   "dependencies": {
     "dashp": "^0.10.1",

@@ -6,7 +6,7 @@
   "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/core#readme",
   "repository": "https://github.com/critocrito/sugarcube",
   "bugs": "https://github.com/critocrito/sugarcube/issues",
-  "version": "0.25.0",
+  "version": "0.25.1",
   "main": "_dist/index.js",
   "dependencies": {
     "baconjs": "^0.7.89",

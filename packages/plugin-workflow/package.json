@@ -2,14 +2,14 @@
   "name": "@sugarcube/plugin-workflow",
   "description": "Support investigation workflows for SugarCube.",
   "license": "GPL-3.0",
-  "bugs": "https://github.com/critocrito/sugarcube",
-  "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-workflow#readme",
   "author": "Christo <christo@cryptodrunks.net>",
+  "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-workflow#readme",
   "repository": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-workflow",
-  "version": "0.25.0",
+  "bugs": "https://github.com/critocrito/sugarcube",
+  "version": "0.25.1",
   "main": "_dist/index.js",
   "dependencies": {
-    "@sugarcube/core": "^0.25.0",
+    "@sugarcube/core": "^0.25.1",
     "lodash": "^4.17.5"
   },
   "keywords": [
