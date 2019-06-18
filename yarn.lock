@@ -726,6 +726,11 @@
     unique-filename "^1.1.1"
     which "^1.3.1"
 
+"@istanbuljs/nyc-config-babel@^2.1.1":
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@istanbuljs/nyc-config-babel/-/nyc-config-babel-2.1.1.tgz#45e9a3174d6e2d9a132304f35c38131839ec4ebb"
+  integrity sha512-cWcUCqHOYB+Mpumsv03uaE7rMvtmJn7pZ3llc+9gyqMFC93IVcUuuJ/mknoWsiuajcEjRCqKmhGaiAaXG6kzLA==
+
 "@lerna/add@3.15.0":
   version "3.15.0"
   resolved "https://registry.yarnpkg.com/@lerna/add/-/add-3.15.0.tgz#10be562f43cde59b60f299083d54ac39520ec60a"

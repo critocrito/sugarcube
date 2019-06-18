@@ -1,7 +1,11 @@
 {
-  "require": ["@babel/register"],
-  "sourceMap": false,
-  "instrument": false,
-  "reporter": ["lcov", "text"],
-  "exclude": ["node_modules", "_dist", "test"]
+  "extends": "@istanbuljs/nyc-config-babel",
+  "exclude": [
+    "**/_dist",
+    "test",
+    "scripts",
+    "benchmarks",
+    "boilerplate-plugin"
+  ],
+  "all": true
 }
