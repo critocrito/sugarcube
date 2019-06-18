@@ -14,19 +14,19 @@ email. This code is licensed under the [GPL 3](LICENSE).
 
 This is a [Lerna](https://lernajs.io/) mono-repo.
 
-To setup the project, run `npm run setup`. This will execute `npm install` and
+To setup the project, run `yarn setup`. This will execute `yarn install` and
 `lerna bootstrap`.
 
-To link all packages into the local run `lerna exec npm install`.
+To link all packages into the local run `lerna exec yarn install`.
 
-To build all packages run `npm run build`. It's possible to build only
-specific packages using `npm run build -- cli core`.
+To build all packages run `yarn build`. It's possible to build only
+specific packages using `yarn build -- cli core`.
 
-All packages are linted using `npm run lint`. The coding standard is enforced
-by [Prettier](https://github.com/prettier/prettier). Run `npm run fix` to
+All packages are linted using `yarn lint`. The coding standard is enforced
+by [Prettier](https://github.com/prettier/prettier). Run `yarn fix` to
 rewrite your code to follow the coding standard.
 
-Run the tests with `npm run test`.
+Run the tests with `yarn test`.
 
 Note: Sometimes a test is failing. This often happens in the tests regarding
 the state. This is related to `jsverify`. The error thrown is `TypeError:
@@ -43,9 +43,9 @@ the project root. In the end my `.npmrc` looks somthing like that:
     @sugarcube:registry=https://registry.npmjs.org/
     //registry.npmjs.org/:_authToken=<YOUR AUTH TOKEN>
 
-To actually release a new version, simply run `npm run release`.
+To actually release a new version, simply run `yarn release`.
 
-To develop the following host dependencies are required when running `npm run setup`.
+To develop the following host dependencies are required when running `yarn setup`.
 
 - Java JDK (7 or 8) for `plugin-tika`.
 
@@ -61,15 +61,15 @@ There is a `compile` run target that compiles all packages. Provide the name
 of one or more package names to only compile those.
 
 ```sh
-npm run compile
-npm run compile plugin-tika cli core
+yarn compile
+yarn compile plugin-tika cli core
 ```
 
 Using the `watch` target a single package can be watched for file changes that
 trigger a compilation.
 
 ```sh
-npm run watch plugin-tika
+yarn watch plugin-tika
 ```
 
 ## Testing
@@ -81,7 +81,7 @@ JSON file to extract all dependencies and outputs them as a text stream. To
 set it up with the current development version:
 
 ```
-npm run setup
+yarn setup
 cd project
 mkdir -p node_modules/.bin
 cd node_modules
@@ -111,11 +111,6 @@ curl -X GET http://localhost:9200/_cluster/health?pretty
 The `./scripts` folder contains some programs I used in the past. Install all
 dependencies.
 
-```
-cd scripts
-npm i
-```
-
 To use a program run it from the project root.
 
 ```
@@ -124,4 +119,5 @@ To use a program run it from the project root.
 
 - `count-imports.js` :: Count the usage of a dependency in the SuagrCube code
   base. The program takes the name of the dependency as it's arguments and
-  prints a count of the imports, e.g. `./scripts/count-imports lodash/fp`.
+  prints a count of the imports, e.g. `./scripts/count-imports lodash/fp`. This script is currently not working.
+- `make-docs.js` :: Generate the documentation from the different packages and place them in the `docs` directory.

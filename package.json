@@ -3,23 +3,26 @@
   "license": "GPL-3.0",
   "author": "Christo <christo@cryptodrunks.net>",
   "version": "0.0.0",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "build": "npm run clean && npm run compile && npm run lint && npm run test",
+    "build": "yarn clean && yarn compile && yarn lint && yarn test",
     "check": "eslint --print-config .eslintrc.json | eslint-config-prettier-check",
     "clean": "rimraf packages/**/_dist",
     "clean-mods": "lerna clean --yes",
-    "compile": "cross-env NODE_ENV=production make compile",
-    "coverage": "cross-env NODE_ENV=test nyc npm test",
+    "compile": "lerna exec --parallel -- babel --root-mode upward lib -d _dist",
+    "coverage": "cross-env NODE_ENV=test nyc yarn test",
     "docs": "node ./scripts/make-docs.js",
-    "fix": "npm run lint -- --fix",
+    "fix": "yarn lint --fix",
     "lint": "eslint packages/**/lib/**/*.js test/**/*.js boilerplate-plugin/lib/**/*.js scripts/**/*.js",
-    "prerelease": "npm run test && npm run test:e2e",
-    "release": "npm run build && lerna publish --conventional-commits -m \"chore(release): Bumped to version %s.\"",
-    "setup": "npm run clean-mods && make setup && npm run compile",
-    "test": "npm run test:mocha",
-    "test:e2e": "cd project && npm run test-parallel",
+    "prerelease": "yarn test && yarn test:e2e",
+    "release": "yarn build && lerna publish --conventional-commits -m \"chore(release): Bumped to version %s.\"",
+    "setup": "yarn clean-mods && yarn install && lerna bootstrap && yarn compile",
+    "test": "yarn test:mocha",
+    "test:e2e": "cd project && yarn test-parallel",
     "test:mocha": "cross-env NODE_ENV=test mocha -c -R progress -t 6000 -r @babel/register -r test/helpers.js test/**/*.spec.js",
-    "watch": "make watch"
+    "watch": "yarn compile -w --verbose"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.4",

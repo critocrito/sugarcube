@@ -5,7 +5,7 @@ lerna-*.log
 _dist
 .npmrc
 .eslintcache
-yarn.lock
+package-json.lock
 project/.vagrant
 .dir-locals.el
 *.swp
