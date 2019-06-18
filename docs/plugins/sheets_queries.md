@@ -2,14 +2,15 @@
 path: "/plugins/sheets_queries"
 title: "sheets_queries plugin"
 author: "niko <niko@niko.io>"
-version: "0.24.0"
+version: "0.25.0"
 bugs: "https://github.com/critocrito/sugarcube/issues"
 license: "GPL-3.0"
 homepage: "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-googlesheets#readme"
-tags: ["sugarcube","sugarcube plugin","sugarcube-plugin","google sheets"]
+tags: ["google sheets","sugarcube","sugarcube plugin","sugarcube-plugin"]
 ---
 
 ### Installation
+
     npm install --save @sugarcube/plugin-googlesheets
 
 ### Authentication
@@ -54,6 +55,7 @@ case of the CLI interface the tokens are stored in `.sugarcube_cache.json`.
 
 
 ### Usage
+
 Fetch queries from a Google spreadsheet. The first column is the query type,
 and the second column is the query term. The plugin looks up the
 `sheets_query` query type to determine the sheet in which to look.

@@ -2,18 +2,20 @@
 path: "/plugins/media_youtubedl_check"
 title: "media_youtubedl_check plugin"
 author: "Christo <christo@cryptodrunks.net>"
-version: "0.24.0"
+version: "0.25.0"
 bugs: "https://github.com/critocrito/sugarcube/issues"
 license: "GPL-3.0"
 homepage: "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-media#readme"
-tags: ["sugarcube","sugarcube plugin","sugarcube-plugin","@sugarcube/plugin","data","transformation","exif","images","media"]
+tags: ["@sugarcube/plugin","data","exif","images","media","sugarcube","sugarcube plugin","sugarcube-plugin","transformation"]
 ---
 
 ### Installation
+
     npm install --save @sugarcube/plugin-media
 
 
 ### Usage
+
 Check any video in \`\_sc_media\*\* if it is still available.
 
 **Configuration Options:**

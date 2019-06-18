@@ -2,14 +2,15 @@
 path: "/plugins/sheets_append"
 title: "sheets_append plugin"
 author: "niko <niko@niko.io>"
-version: "0.24.0"
+version: "0.25.0"
 bugs: "https://github.com/critocrito/sugarcube/issues"
 license: "GPL-3.0"
 homepage: "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-googlesheets#readme"
-tags: ["sugarcube","sugarcube plugin","sugarcube-plugin","google sheets"]
+tags: ["google sheets","sugarcube","sugarcube plugin","sugarcube-plugin"]
 ---
 
 ### Installation
+
     npm install --save @sugarcube/plugin-googlesheets
 
 ### Authentication
@@ -54,6 +55,7 @@ case of the CLI interface the tokens are stored in `.sugarcube_cache.json`.
 
 
 ### Usage
+
 Append data to a Google spreadsheet. This plugin is similar to
 `sheets_export`, only that data isn't merged, but just appended to the end of
 the spreadsheet. This allows for rows with duplicated `_sc_id_hash`. A new

@@ -2,18 +2,20 @@
 path: "/plugins/workflow_multiplex_end"
 title: "workflow_multiplex_end plugin"
 author: "Christo <christo@cryptodrunks.net>"
-version: "0.24.0"
+version: "0.25.0"
 bugs: "https://github.com/critocrito/sugarcube"
 license: "GPL-3.0"
 homepage: "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-workflow#readme"
-tags: ["sugarcube","sugarcube-plugin","data","transformation"]
+tags: ["data","sugarcube","sugarcube-plugin","transformation"]
 ---
 
 ### Installation
+
     npm install --save @sugarcube/plugin-workflow
 
 
 ### Usage
+
 This plugin acts as a stopper for \`workflow_multiplex\*\* to signal where the multiplexing should end. It will then resume the remainder of the pipeline as a single run. Not that the data envelope is not carried over into the remainder pipeline. Only the queries, cache and stats are preserved.
 
 **Example:**

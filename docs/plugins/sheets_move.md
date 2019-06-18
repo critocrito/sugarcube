@@ -2,14 +2,15 @@
 path: "/plugins/sheets_move"
 title: "sheets_move plugin"
 author: "niko <niko@niko.io>"
-version: "0.24.0"
+version: "0.25.0"
 bugs: "https://github.com/critocrito/sugarcube/issues"
 license: "GPL-3.0"
 homepage: "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-googlesheets#readme"
-tags: ["sugarcube","sugarcube plugin","sugarcube-plugin","google sheets"]
+tags: ["google sheets","sugarcube","sugarcube plugin","sugarcube-plugin"]
 ---
 
 ### Installation
+
     npm install --save @sugarcube/plugin-googlesheets
 
 ### Authentication
@@ -54,6 +55,7 @@ case of the CLI interface the tokens are stored in `.sugarcube_cache.json`.
 
 
 ### Usage
+
 Move data from one spreadsheet to another. If a sheet doesn't exist yet, a new
 one will be created. Before any values are exported a backup of the target
 sheet is created with the name of `<sheet-name>-bkp`. If the export succeeds,

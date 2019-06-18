@@ -2,18 +2,20 @@
 path: "/plugins/tor_check"
 title: "tor_check plugin"
 author: "Christo <christo@cryptodrunks.net>"
-version: "0.24.0"
+version: "0.25.0"
 bugs: "https://github.com/critocrito/sugarcube/issues"
 license: "GPL-3.0"
 homepage: "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-tor#readme"
-tags: ["sugarcube","sugarcube plugin","sugarcube-plugin","data","transformation","tor"]
+tags: ["data","sugarcube","sugarcube plugin","sugarcube-plugin","tor","transformation"]
 ---
 
 ### Installation
+
     npm install --save @sugarcube/plugin-tor
 
 
 ### Usage
+
     $(npm bin)/sugarcube -p tor_check
     2017-03-22T20:24:28.417Z - info: Starting the tor_check plugin.
     2017-03-22T20:24:28.672Z - info:

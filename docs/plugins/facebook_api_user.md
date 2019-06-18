@@ -2,14 +2,15 @@
 path: "/plugins/facebook_api_user"
 title: "facebook_api_user plugin"
 author: "Christo <christo@cryptodrunks.net>"
-version: "0.24.0"
+version: "0.25.0"
 bugs: "https://github.com/critocrito/sugarcube/issues"
 license: "GPL-3.0"
 homepage: "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-facebook#readme"
-tags: ["sugarcube","sugarcube plugin","sugarcube-plugin","data","transformation","facebook"]
+tags: ["data","facebook","sugarcube","sugarcube plugin","sugarcube-plugin","transformation"]
 ---
 
 ### Installation
+
     npm install --save @sugarcube/plugin-facebook
 
 It requires you to register your app.
@@ -25,6 +26,7 @@ You'll need the `app_id` and the `app_secret`.
 
 
 ### Usage
+
 Fetch data about a user. It uses `facebook_user` as query type.
 
     sugarcube -Q facebook_user:<user_id> \

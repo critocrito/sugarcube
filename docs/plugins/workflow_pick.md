@@ -2,18 +2,20 @@
 path: "/plugins/workflow_pick"
 title: "workflow_pick plugin"
 author: "Christo <christo@cryptodrunks.net>"
-version: "0.24.0"
+version: "0.25.0"
 bugs: "https://github.com/critocrito/sugarcube"
 license: "GPL-3.0"
 homepage: "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-workflow#readme"
-tags: ["sugarcube","sugarcube-plugin","data","transformation"]
+tags: ["data","sugarcube","sugarcube-plugin","transformation"]
 ---
 
 ### Installation
+
     npm install --save @sugarcube/plugin-workflow
 
 
 ### Usage
+
 Pick the list of attributes from every unit and drop the rest.
 
 **Configuration:**

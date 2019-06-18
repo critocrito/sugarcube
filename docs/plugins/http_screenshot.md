@@ -2,18 +2,20 @@
 path: "/plugins/http_screenshot"
 title: "http_screenshot plugin"
 author: "Christo <Christo@cryptodrunks.net>"
-version: "0.24.0"
+version: "0.25.0"
 bugs: "https://github.com/critocrito/sugarcube/issues"
 license: "GPL-3.0"
 homepage: "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-http#readme"
-tags: ["sugarcube","sugarcube plugin","sugarcube-plugin","data","transformation","http"]
+tags: ["data","http","sugarcube","sugarcube plugin","sugarcube-plugin","transformation"]
 ---
 
 ### Installation
+
     npm install --save @sugarcube/plugin-http
 
 
 ### Usage
+
 Fetch every URL in `_sc_media` in a headless browser and make a
 screenshot. The format of the screenshot is JPEG. Downloaded targets are added
 to the `_sc_downloads` collection. Screenshots are stored in `<data_dir>/<unit

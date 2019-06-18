@@ -2,18 +2,20 @@
 path: "/plugins/twitter_tweets"
 title: "twitter_tweets plugin"
 author: "Christo <christo@cryptodrunks.net>"
-version: "0.24.0"
+version: "0.25.0"
 bugs: "https://github.com/critocrito/sugarcube/issues"
 license: "GPL-3.0"
 homepage: "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-twitter#readme"
-tags: ["sugarcube","sugarcube plugin","sugarcube-plugin","data","transformation","twitter"]
+tags: ["data","sugarcube","sugarcube plugin","sugarcube-plugin","transformation","twitter"]
 ---
 
 ### Installation
+
     npm install --save @sugarcube/plugin-twitter
 
 
 ### Usage
+
 Fetch individual tweets by the Tweet ID.
 
 **Configuration:**

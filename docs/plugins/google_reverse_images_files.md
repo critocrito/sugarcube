@@ -2,20 +2,22 @@
 path: "/plugins/google_reverse_images_files"
 title: "google_reverse_images_files plugin"
 author: "Christo <christo@cryptodrunks.net>"
-version: "0.24.0"
+version: "0.25.0"
 bugs: "https://github.com/critocrito/sugarcube/issues"
 license: "GPL-3.0"
 homepage: "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-google#readme"
-tags: ["sugarcube","sugarcube plugin","sugarcube-plugin","data","transformation","google","search"]
+tags: ["data","google","search","sugarcube","sugarcube plugin","sugarcube-plugin","transformation"]
 ---
 
 ### Installation
+
     npm install --save @sugarcube/plugin-google
 
 You need at least Node 7.5.0 for this module.
 
 
 ### Usage
+
 Make a Google reverse image search. Specify a glob pattern by the query type
 `glob_pattern` that resolves to a list of image files.
 

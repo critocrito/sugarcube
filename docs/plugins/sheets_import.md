@@ -2,14 +2,15 @@
 path: "/plugins/sheets_import"
 title: "sheets_import plugin"
 author: "niko <niko@niko.io>"
-version: "0.24.0"
+version: "0.25.0"
 bugs: "https://github.com/critocrito/sugarcube/issues"
 license: "GPL-3.0"
 homepage: "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-googlesheets#readme"
-tags: ["sugarcube","sugarcube plugin","sugarcube-plugin","google sheets"]
+tags: ["google sheets","sugarcube","sugarcube plugin","sugarcube-plugin"]
 ---
 
 ### Installation
+
     npm install --save @sugarcube/plugin-googlesheets
 
 ### Authentication
@@ -54,6 +55,7 @@ case of the CLI interface the tokens are stored in `.sugarcube_cache.json`.
 
 
 ### Usage
+
 Import data from a Google Spreadsheet.
 
 -   `google.client_id`: The identifier for this client.

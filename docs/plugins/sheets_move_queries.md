@@ -2,14 +2,15 @@
 path: "/plugins/sheets_move_queries"
 title: "sheets_move_queries plugin"
 author: "niko <niko@niko.io>"
-version: "0.24.0"
+version: "0.25.0"
 bugs: "https://github.com/critocrito/sugarcube/issues"
 license: "GPL-3.0"
 homepage: "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-googlesheets#readme"
-tags: ["sugarcube","sugarcube plugin","sugarcube-plugin","google sheets"]
+tags: ["google sheets","sugarcube","sugarcube plugin","sugarcube-plugin"]
 ---
 
 ### Installation
+
     npm install --save @sugarcube/plugin-googlesheets
 
 ### Authentication
@@ -54,6 +55,7 @@ case of the CLI interface the tokens are stored in `.sugarcube_cache.json`.
 
 
 ### Usage
+
 Move queries in the pipeline from one sheet to another. The plugin will look up queries defined through the `sheets_queries` query type, and move the queries to a spreadsheet defined with `google.to_spreadsheet_id` and `google.to_sheet`.
 
 By specifying `google.copy_from_spreadsheet` and `google.copy_from_sheet` the new sheet will be copied from a template if it doesn't yet exist. Both of those options have to be provided if a new sheet should be create from a template.

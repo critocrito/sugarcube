@@ -2,18 +2,20 @@
 path: "/plugins/elastic_import"
 title: "elastic_import plugin"
 author: "Christo <christo@cryptodrunks.net>"
-version: "0.24.0"
+version: "0.25.0"
 bugs: "https://github.com/critocrito/sugarcube/issues"
 license: "GPL-3.0"
 homepage: "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-elasticsearch#readme"
-tags: ["sugarcube","sugarcube-plugin","data","transformation","elasticsearch","data storage"]
+tags: ["data","data storage","elasticsearch","sugarcube","sugarcube-plugin","transformation"]
 ---
 
 ### Installation
+
     npm install --save @sugarcube/plugin-elasticsearch
 
 
 ### Usage
+
 Search for units in Elasticsearch and import them into the pipeline. Search
 bodies can be defined in JSON files and imported using the `glob_pattern`
 query type or supplied directly using the `elastic_query` source type. All

@@ -2,18 +2,20 @@
 path: "/plugins/workflow_merge_query"
 title: "workflow_merge_query plugin"
 author: "Christo <christo@cryptodrunks.net>"
-version: "0.24.0"
+version: "0.25.0"
 bugs: "https://github.com/critocrito/sugarcube"
 license: "GPL-3.0"
 homepage: "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-workflow#readme"
-tags: ["sugarcube","sugarcube-plugin","data","transformation"]
+tags: ["data","sugarcube","sugarcube-plugin","transformation"]
 ---
 
 ### Installation
+
     npm install --save @sugarcube/plugin-workflow
 
 
 ### Usage
+
 Merge any fields from the query object into units acquired for this query. This allows to annotate data with data stored alongside the query sources. This plugin will skip the merge if the unit already has a value set for this field. This behavior can be changed by setting the `--overflow.overwrite_query_merge` flag.
 
 **Example:**

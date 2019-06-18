@@ -2,18 +2,20 @@
 path: "/plugins/tap_writef"
 title: "tap_writef plugin"
 author: "Christo <christo@cryptodrunks.net>"
-version: "0.24.0"
+version: "0.25.0"
 bugs: "https://github.com/critocrito/sugarcube/issues"
 license: "GPL-3.0"
 homepage: "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-tap#readme"
-tags: ["sugarcube","sugarcube plugin","sugarcube-plugin","data","transformation"]
+tags: ["data","sugarcube","sugarcube plugin","sugarcube-plugin","transformation"]
 ---
 
 ### Installation
+
     npm install --save @sugarcube/plugin-tap
 
 
 ### Usage
+
     $(npm bin)/sugarcube -c cfg.json -p twitter_feed,tap_writef
 
 Write the data part of the envelope to a file.

@@ -2,18 +2,20 @@
 path: "/plugins/youtube_channel"
 title: "youtube_channel plugin"
 author: "Christo <christo@cryptodrunks.net>"
-version: "0.24.0"
+version: "0.25.0"
 bugs: "https://github.com/critocrito/sugarcube/issues"
 license: "GPL-3.0"
 homepage: "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-youtube#readme"
-tags: ["sugarcube","sugarcube plugin","sugarcube-plugin","data","transformation","youtube"]
+tags: ["data","sugarcube","sugarcube plugin","sugarcube-plugin","transformation","youtube"]
 ---
 
 ### Installation
+
     npm install --save @sugarcube/plugin-youtube
 
 
 ### Usage
+
 Fetch a list of videos from a channel. A query must be configured to supply one or more channel ids.
 
     [{

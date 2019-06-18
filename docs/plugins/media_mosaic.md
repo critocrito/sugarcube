@@ -2,18 +2,20 @@
 path: "/plugins/media_mosaic"
 title: "media_mosaic plugin"
 author: "Christo <christo@cryptodrunks.net>"
-version: "0.24.0"
+version: "0.25.0"
 bugs: "https://github.com/critocrito/sugarcube/issues"
 license: "GPL-3.0"
 homepage: "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-media#readme"
-tags: ["sugarcube","sugarcube plugin","sugarcube-plugin","@sugarcube/plugin","data","transformation","exif","images","media"]
+tags: ["@sugarcube/plugin","data","exif","images","media","sugarcube","sugarcube plugin","sugarcube-plugin","transformation"]
 ---
 
 ### Installation
+
     npm install --save @sugarcube/plugin-media
 
 
 ### Usage
+
 Generate a mosaic of screenshots for every video in `_sc_downloads`. This plugin will create a `mosaic.jpg` in the same download directory as the video. The mosaic can be generated either based on scene changes or every 400th frame. The mosaic is generated using [`ffmpeg`]\(<https://www.ffmpeg.org/**>.
 
 **Configuration Options:**

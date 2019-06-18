@@ -2,18 +2,20 @@
 path: "/plugins/csv_export_failed"
 title: "csv_export_failed plugin"
 author: "Christo <christo@cryptodrunks.net>"
-version: "0.24.0"
+version: "0.25.0"
 bugs: "https://github.com/critocrito/sugarcube/issues"
 license: "GPL-3.0"
 homepage: "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-csv#readme"
-tags: ["sugarcube","sugarcube plugin","sugarcube-plugin","data","transformation","csv"]
+tags: ["csv","data","sugarcube","sugarcube plugin","sugarcube-plugin","transformation"]
 ---
 
 ### Installation
+
     npm install --save @sugarcube/plugin-csv
 
 
 ### Usage
+
 Export any failure stats of a pipeline run to a CSV file. The file is named `failed-stats-<marker>.csv`.
 
 **Configuration:**

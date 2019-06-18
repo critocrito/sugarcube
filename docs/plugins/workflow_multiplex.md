@@ -2,18 +2,20 @@
 path: "/plugins/workflow_multiplex"
 title: "workflow_multiplex plugin"
 author: "Christo <christo@cryptodrunks.net>"
-version: "0.24.0"
+version: "0.25.0"
 bugs: "https://github.com/critocrito/sugarcube"
 license: "GPL-3.0"
 homepage: "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-workflow#readme"
-tags: ["sugarcube","sugarcube-plugin","data","transformation"]
+tags: ["data","sugarcube","sugarcube-plugin","transformation"]
 ---
 
 ### Installation
+
     npm install --save @sugarcube/plugin-workflow
 
 
 ### Usage
+
 Break all queries into batches with a size configured by `workflow.multiplex_size` and run the remainder of the pipeline once for each batch. This allows to break the whole pipeline into smaller executions. This helps to deal with data processes that would yield a huge number of observations.
 
 **Example:**

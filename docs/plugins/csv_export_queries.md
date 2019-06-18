@@ -2,18 +2,20 @@
 path: "/plugins/csv_export_queries"
 title: "csv_export_queries plugin"
 author: "Christo <christo@cryptodrunks.net>"
-version: "0.24.0"
+version: "0.25.0"
 bugs: "https://github.com/critocrito/sugarcube/issues"
 license: "GPL-3.0"
 homepage: "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-csv#readme"
-tags: ["sugarcube","sugarcube plugin","sugarcube-plugin","data","transformation","csv"]
+tags: ["csv","data","sugarcube","sugarcube plugin","sugarcube-plugin","transformation"]
 ---
 
 ### Installation
+
     npm install --save @sugarcube/plugin-csv
 
 
 ### Usage
+
 Export the queries of an envelope to a file.
 
 **Configuration**:

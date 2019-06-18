@@ -2,14 +2,15 @@
 path: "/plugins/guardian_search"
 title: "guardian_search plugin"
 author: "Christo <christo@cryptodrunks.net>"
-version: "0.24.0"
+version: "0.25.0"
 bugs: "https://github.com/critocrito/sugarcube/issues"
 license: "GPL-3.0"
 homepage: "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-guardian#readme"
-tags: ["sugarcube","sugarcube plugin","sugarcube-plugin","data","transformation","guardian","news"]
+tags: ["data","guardian","news","sugarcube","sugarcube plugin","sugarcube-plugin","transformation"]
 ---
 
 ### Installation
+
     npm install --save @sugarcube/plugin-guardian
 
 ### Register for an API key
@@ -20,6 +21,7 @@ to specify a valid Email. The API key will be send to you.
 
 
 ### Usage
+
 This plugin searches the Guardian archive. The query type is
 `guardian_search`.
 
