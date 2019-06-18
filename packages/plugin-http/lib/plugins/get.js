@@ -3,7 +3,7 @@ import {collectP} from "dashp";
 import pify from "pify";
 import fs from "fs";
 import url from "url";
-import {join, extname} from "path";
+import {join, basename, extname} from "path";
 import {envelope as env, plugin as p, utils} from "@sugarcube/core";
 import {mkdirP, sha256sum, md5sum} from "@sugarcube/plugin-fs";
 
@@ -21,6 +21,17 @@ const cleanUp = async location => {
   } catch (e) {}
 };
 
+const downloadExists = async location => {
+  try {
+    await accessAsync(location);
+  } catch (e) {
+    // telegram_channels use filenames that throw a ENAMETOOLONG.
+    if (e.code === "ENOENT" || e.code === "ENAMETOOLONG") return false;
+    throw e;
+  }
+  return true;
+};
+
 const curlGet = async (envelope, {log, cfg, stats}) => {
   const dataDir = get("http.data_dir", cfg);
   const getTypes = sToA(",", get("http.get_types", cfg));
@@ -33,52 +44,53 @@ const curlGet = async (envelope, {log, cfg, stats}) => {
       const source = href || term;
       const idHash = media._sc_id_hash;
 
-      // In the past we stored files in oldDir. To simplify we introduce the
-      // new style location based on dir.
+      // We maintain backwards compatibility with the old location where to
+      // store files. If the new style location fails, try the old style
+      // location as well. And only if that one fails as well download the
+      // file to the new style location.
+      //
+      // Old style locations could look like this:
+      //   - data/{unit_hash}/image/{media_hash}/{filename}
+      //   - data/{unit_hash}/image/{media_hash}/{media_hash}.ext
+      //
+      // New style location is aligned with the handling of other types of
+      // media.
+      //   - data/{unit_hash}/image/{media_hash}.ext
       const dir = join(dataDir, unit._sc_id_hash, type);
+      const oldDir = join(dataDir, unit._sc_id_hash, type, idHash);
       const location = join(
         dir,
         `${idHash}${extname(url.parse(source).pathname)}`,
       );
-      const oldDir = join(dataDir, unit._sc_id_hash, type, idHash);
       const oldLocation = join(
         oldDir,
         `${idHash}${extname(url.parse(source).pathname)}`,
       );
+      const oldLocation2 = join(oldDir, basename(url.parse(source).pathname));
 
-      // We maintain backwards compatibility with the old location where to
-      // store files. If the new style location fails, try the old style
-      // location as well. And only if that one fails as well download the
-      // file to the new style location. By making sure to test the old style
-      // location first we ensure to use the new style location in the failure
-      // stat.
       try {
-        try {
-          await accessAsync(oldLocation);
-          log.info(`Media ${source} exists at ${oldLocation}.`);
-          return null;
-        } catch (ee) {
-          if (ee.code === "ENOENT") {
-            await accessAsync(location);
-            log.info(`Media ${source} exists at ${location}.`);
+        const locations = [location, oldLocation, oldLocation2];
+        const locationsExists = await Promise.all(
+          locations.map(l => downloadExists(l)),
+        );
+        for (let i = 0; i < locationsExists.length; i += 1) {
+          if (locationsExists[i]) {
+            log.info(`Media ${source} exists at ${locations[i]}.`);
             return null;
           }
-          throw ee;
         }
       } catch (e) {
-        if (e.code !== "ENOENT") {
-          const failed = {
-            type: unit._sc_source,
-            term: source,
-            plugin: "http_get",
-            reason: e.message,
-          };
-          stats.update("failed", fails =>
-            Array.isArray(fails) ? fails.concat(failed) : [failed],
-          );
-          log.warn(`Failed to access ${location}.`);
-          return null;
-        }
+        const failed = {
+          type: unit._sc_source,
+          term: source,
+          plugin: "http_get",
+          reason: e.message,
+        };
+        stats.update("failed", fails =>
+          Array.isArray(fails) ? fails.concat(failed) : [failed],
+        );
+        log.warn(`Failed to access ${e.path}.`);
+        return null;
       }
 
       await mkdirP(dir);
