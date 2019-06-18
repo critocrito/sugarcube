@@ -1,6 +1,8 @@
 # SugarCube
 
-[![pipeline status](https://gitlab.com/sugarcube/sugarcube/badges/master/pipeline.svg)](https://gitlab.com/sugarcube/sugarcube/commits/master)
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![Build Status](https://travis-ci.org/critocrito/sugarcube.svg?branch=master)](https://travis-ci.org/critocrito/sugarcube) [![Coverage Status](https://coveralls.io/repos/github/critocrito/sugarcube/badge.svg?branch=master)](https://coveralls.io/github/critocrito/sugarcube?branch=master)
+
+## Synopsis
 
 SugarCube is a framework to fetch, transform and publish data. Data processes
 are described using plugins, which are chained in sequence to transform any
