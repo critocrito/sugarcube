@@ -1,10 +1,11 @@
 import {get} from "lodash/fp";
-import dashp, {collectP} from "dashp";
-import {youtubeDlCheck} from "../utils";
+import dashp, {collectP, delayP} from "dashp";
+import {youtubeDlCheck, random} from "../utils";
 
 const plugin = async (envelope, {log, cfg, stats}) => {
   const cmd = get("media.youtubedl_cmd", cfg);
   const parallel = get("media.youtubedl_parallel", cfg);
+  const delaySeconds = get("media.youtubedl_delay", cfg);
   const sourceAddress = get("media.youtubedl_source_address", cfg);
 
   let mod;
@@ -39,6 +40,12 @@ const plugin = async (envelope, {log, cfg, stats}) => {
       .map(({term}) => term);
 
     await collectP(async url => {
+      if (delaySeconds > 0) {
+        const randomDelay = random(delaySeconds, 2 * delaySeconds);
+        log.debug(`Waiting ${randomDelay} seconds before fetching ${url}.`);
+        await delayP(randomDelay * 1000);
+      }
+
       try {
         await youtubeDlCheck(cmd, url, sourceAddress);
       } catch (e) {
@@ -77,6 +84,12 @@ plugin.argv = {
     desc:
       "Specify the number of parallel youtubedl downloads. Can be between 1 and 8.",
     default: 1,
+  },
+  "media.youtubedl_delay": {
+    type: "number",
+    nargs: 1,
+    desc: "Wait between N and 2xN seconds between invocations of youtube-dl.",
+    default: 0,
   },
   "media.youtubedl_source_address": {
     type: "string",

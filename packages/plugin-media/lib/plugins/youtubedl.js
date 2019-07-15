@@ -1,12 +1,12 @@
 import {includes, get} from "lodash/fp";
-import dashp, {collectP} from "dashp";
+import dashp, {collectP, delayP} from "dashp";
 import pify from "pify";
 import {join} from "path";
 import fs from "fs";
 import {envelope as env} from "@sugarcube/core";
 import {mkdirP, sha256sum, md5sum} from "@sugarcube/plugin-fs";
 
-import {youtubeDl} from "../utils";
+import {youtubeDl, random} from "../utils";
 
 const accessAsync = pify(fs.access);
 const unlinkAsync = pify(fs.unlink);
@@ -27,6 +27,7 @@ const plugin = async (envelope, {cfg, log, stats}) => {
   const videoFormat = get("media.download_format", cfg);
   const parallel = get("media.youtubedl_parallel", cfg);
   const forceDownload = get("media.youtubedl_force_download", cfg);
+  const delaySeconds = get("media.youtubedl_delay", cfg);
   const sourceAddress = get("media.youtubedl_source_address", cfg);
 
   let mod;
@@ -97,6 +98,12 @@ const plugin = async (envelope, {cfg, log, stats}) => {
 
       if (downloadExists && forceDownload)
         log.info(`Forcing a re-download of ${source}.`);
+
+      if (delaySeconds > 0) {
+        const randomDelay = random(delaySeconds, 2 * delaySeconds);
+        log.debug(`Waiting ${randomDelay} seconds before fetching ${source}.`);
+        await delayP(randomDelay * 1000);
+      }
 
       try {
         await youtubeDl(cmd, videoFormat, source, location, sourceAddress);
@@ -186,8 +193,14 @@ plugin.argv = {
   },
   "media.youtubedl_force_download": {
     type: "boolean",
-    desc: "Force a redownload of he video.",
+    desc: "Force a redownload of the video.",
     default: false,
+  },
+  "media.youtubedl_delay": {
+    type: "number",
+    nargs: 1,
+    desc: "Wait between N and 2xN seconds between invocations of youtube-dl.",
+    default: 0,
   },
   "media.youtubedl_source_address": {
     type: "string",

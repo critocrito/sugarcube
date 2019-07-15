@@ -65,10 +65,14 @@ export const ffmpeg = (cmd, source, dest, force = false) => {
   return runCmd(cmd, force ? ["-y"].concat(args) : args);
 };
 
+export const random = (min, max) =>
+  Math.floor(Math.random() * (max - min) + min);
+
 export default {
   youtubeDl,
   youtubeDlCheck,
   mosaicSceneChange,
   mosaicNthFrame,
   ffmpeg,
+  random,
 };

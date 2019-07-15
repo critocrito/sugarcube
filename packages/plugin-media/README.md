@@ -27,6 +27,7 @@ Download all videos of type `video` that are stored in `_sc_media`. SHA256 and M
 - `media.youtubedl_cmd`: The path to the `youtube-dl` command. Defaults to `youtube-dl`, with no specific path supplied.
 - `media.youtubedl_parallel`: Specify how many videos to fetch at the same time. It defaults to 1 and can be set between 1 and 8.
 - `media.youtubedl_force_download`: Set this flag to `true` for force a download of the video, even if it already exists.
+- `media.youtubedl_delay`: Wait between invocations of youtube-dl for `DELAY <= N < 2xDELAY` seconds. Defaults to 0 seconds.
 - `media.youtubedl_source_address`: Bind `youtube-dl` to the specified source IP address.
 
 **Example:**
@@ -43,6 +44,7 @@ Check any video in `_sc_media** if it is still available.
 
 - `media.youtubedl_cmd`: The path to the `youtube-dl` command. Defaults to `youtube-dl`, with no specific path supplied.
 - `media.youtubedl_parallel`: Specify how many videos to fetch at the same time. It defaults to 1 and can be set between 1 and 8.
+- `media.youtubedl_delay`: Wait between invocations of youtube-dl for `DELAY <= N < 2xDELAY` seconds. Defaults to 0 seconds.
 - `media.youtubedl_source_address`: Bind `youtube-dl` to the specified source IP address.
 
 ### `media_mosaic` plugin
