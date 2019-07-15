@@ -6,10 +6,10 @@
   "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-youtube#readme",
   "repository": "https://github.com/critocrito/sugarcube",
   "bugs": "https://github.com/critocrito/sugarcube/issues",
-  "version": "0.25.1",
+  "version": "0.26.0",
   "main": "_dist/index.js",
   "dependencies": {
-    "@sugarcube/core": "^0.25.1",
+    "@sugarcube/core": "^0.26.0",
     "dashp": "^0.10.1",
     "date-fns": "^1.29.0",
     "lodash": "^4.17.4",

@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.26.0](https://github.com/critocrito/sugarcube/compare/v0.25.1...v0.26.0) (2019-07-15)
+
+
+### Features
+
+* balance youtube-dl over one or more source ip addresses ([1cf42ce](https://github.com/critocrito/sugarcube/commit/1cf42ce))
+* configure a random delay between youtubedl invocations ([a0c42cc](https://github.com/critocrito/sugarcube/commit/a0c42cc))
+
+
+
+
+
 ## [0.25.1](https://github.com/critocrito/sugarcube/compare/v0.25.0...v0.25.1) (2019-06-18)
 
 
