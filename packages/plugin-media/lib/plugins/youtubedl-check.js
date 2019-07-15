@@ -1,12 +1,33 @@
-import {get} from "lodash/fp";
+import {get, constant} from "lodash/fp";
 import dashp, {collectP, delayP} from "dashp";
+import isIp from "is-ip";
 import {youtubeDlCheck, random} from "../utils";
 
 const plugin = async (envelope, {log, cfg, stats}) => {
   const cmd = get("media.youtubedl_cmd", cfg);
   const parallel = get("media.youtubedl_parallel", cfg);
   const delaySeconds = get("media.youtubedl_delay", cfg);
-  const sourceAddress = get("media.youtubedl_source_address", cfg);
+
+  // Youtube-dl can either use the default route, or balance every invocation
+  // of youtube-dl in a round-robin fashion over a list of ip-addresses.
+  const sourceAddresses =
+    get("media.youtubedl_source_addresses", cfg) == null
+      ? []
+      : get("media.youtubedl_source_addresses", cfg).filter(isIp);
+  if (sourceAddresses.length > 0)
+    log.debug(
+      `Balancing youtube-dl over ${
+        sourceAddresses.length
+      } IP's: ${sourceAddresses.join(", ")}`,
+    );
+  const ipBalancer =
+    sourceAddresses.length === 0
+      ? constant(null)
+      : () => {
+          const elem = sourceAddresses.shift();
+          sourceAddresses.push(elem);
+          return elem;
+        };
 
   let mod;
   switch (parallel) {
@@ -45,6 +66,12 @@ const plugin = async (envelope, {log, cfg, stats}) => {
         log.debug(`Waiting ${randomDelay} seconds before fetching ${url}.`);
         await delayP(randomDelay * 1000);
       }
+
+      // sourceAddress can either be a string containing an ip address or
+      // null, which means to simply use the default host route.
+      const sourceAddress = ipBalancer();
+      if (sourceAddress !== null)
+        log.debug(`Using ${sourceAddress} as source address.`);
 
       try {
         await youtubeDlCheck(cmd, url, sourceAddress);
@@ -91,9 +118,9 @@ plugin.argv = {
     desc: "Wait between N and 2xN seconds between invocations of youtube-dl.",
     default: 0,
   },
-  "media.youtubedl_source_address": {
-    type: "string",
-    desc: "Bind YoutubeDL to this source IP address.",
+  "media.youtubedl_source_addresses": {
+    type: "array",
+    desc: "Round-Robin load balance youtube-dl's source ip addresses.",
   },
 };
 
