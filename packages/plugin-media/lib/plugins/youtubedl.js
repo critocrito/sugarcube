@@ -1,5 +1,5 @@
 import {includes, get, constant} from "lodash/fp";
-import dashp, {collectP, delayP} from "dashp";
+import dashp, {ofP, collectP, delayP} from "dashp";
 import pify from "pify";
 import {join} from "path";
 import fs from "fs";
@@ -123,7 +123,7 @@ const plugin = async (envelope, {cfg, log, stats}) => {
       if (delaySeconds > 0) {
         const randomDelay = random(delaySeconds, 2 * delaySeconds);
         log.debug(`Waiting ${randomDelay} seconds before fetching ${source}.`);
-        await delayP(randomDelay * 1000);
+        await delayP(randomDelay * 1000, ofP());
       }
 
       // sourceAddress can either be a string containing an ip address or

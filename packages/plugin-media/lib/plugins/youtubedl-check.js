@@ -1,5 +1,5 @@
 import {get, constant} from "lodash/fp";
-import dashp, {collectP, delayP} from "dashp";
+import dashp, {ofP, collectP, delayP} from "dashp";
 import isIp from "is-ip";
 import {youtubeDlCheck, random} from "../utils";
 
@@ -64,7 +64,7 @@ const plugin = async (envelope, {log, cfg, stats}) => {
       if (delaySeconds > 0) {
         const randomDelay = random(delaySeconds, 2 * delaySeconds);
         log.debug(`Waiting ${randomDelay} seconds before fetching ${url}.`);
-        await delayP(randomDelay * 1000);
+        await delayP(randomDelay * 1000, ofP());
       }
 
       // sourceAddress can either be a string containing an ip address or
