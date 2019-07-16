@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.26.1](https://github.com/critocrito/sugarcube/compare/v0.26.0...v0.26.1) (2019-07-16)
+
+
+### Bug Fixes
+
+* delay between youtubedl invocations ([e623469](https://github.com/critocrito/sugarcube/commit/e623469))
+
+
+
+
+
 # [0.26.0](https://github.com/critocrito/sugarcube/compare/v0.25.1...v0.26.0) (2019-07-15)
 
 
