@@ -114,6 +114,8 @@ const plugin = async (envelope, {cfg, log, stats}) => {
         log.info(
           `Video ${source} exists at ${location}. Not forcing a download.`,
         );
+        counter += 1;
+
         return media;
       }
 

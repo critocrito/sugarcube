@@ -69,6 +69,8 @@ const plugin = async (envelope, {log, cfg, stats}) => {
           throw e;
         }
         log.warn(`Video at ${location} doesn't exist. Skipping mosaic.`);
+        counter += 1;
+
         return download;
       }
 
@@ -87,6 +89,8 @@ const plugin = async (envelope, {log, cfg, stats}) => {
         log.info(
           `Mosaic of ${location} exists at ${dest}. Not forcing a re-generation.`,
         );
+        counter += 1;
+
         return Object.assign({}, download, {mosaic: dest});
       }
 
