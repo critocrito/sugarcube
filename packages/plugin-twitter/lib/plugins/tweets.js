@@ -1,4 +1,4 @@
-import {chunk} from "lodash/fp";
+import {chunk, tap} from "lodash/fp";
 import {flowP, caughtP, flatmapP} from "dashp";
 import {envelope as env, plugin as p} from "@sugarcube/core";
 
@@ -14,6 +14,8 @@ const tweetsPlugin = async (envelope, {log, cfg, stats}) => {
     .queriesByType(querySource, envelope)
     .map(term => parseTweetId(term));
 
+  let counter = 0;
+
   log.info(`Querying Twitter for ${tweetIds.length} tweets.`);
 
   const fetchTweets = ids => {
@@ -22,6 +24,12 @@ const tweetsPlugin = async (envelope, {log, cfg, stats}) => {
       [
         // Fetch tweets for this chunk.
         tweets(cfg),
+        // Log the download counter.
+        tap(xs => {
+          counter += Object.keys(xs).length;
+          if (counter % 1000 === 0)
+            log.debug(`Fetched ${counter} out of ${tweetIds.length} tweets.`);
+        }),
         // Verify each tweet was retrieved and exists.
         ({id: response}) => {
           const results = [];
