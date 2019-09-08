@@ -75,7 +75,7 @@ export const rowsToQueries = curry3(
       map(row =>
         Object.assign({}, row, {
           term: row.term.trim(),
-          type: row.type == null ? defaultType : row.type,
+          type: row.type == null ? defaultType : row.type.trim(),
         }),
       ),
       qs.hash,

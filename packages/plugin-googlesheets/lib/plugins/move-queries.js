@@ -67,8 +67,8 @@ const moveQueries = async (envelope, {log, cfg, cache}) => {
               if (
                 envelope.queries.find(
                   q =>
-                    q.type === r[allQueryTypeIndex] &&
-                    q.term === r[allQueryTermIndex],
+                    q.type === r[allQueryTypeIndex].trim() &&
+                    q.term === r[allQueryTermIndex].trim(),
                 ) == null
               )
                 return false;
