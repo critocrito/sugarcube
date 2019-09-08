@@ -108,15 +108,12 @@ const fileImportPlugin = async (envelope, {log, cfg, stats}) => {
           sha256sum(location),
         ]);
       } catch (e) {
-        const failed = {
+        stats.fail({
           type: unit._sc_source,
           term: source,
           plugin: "media_file_import",
           reason: e.message,
-        };
-        stats.update("failed", fails =>
-          Array.isArray(fails) ? fails.concat(failed) : [failed],
-        );
+        });
         log.warn(
           `Failed to download ${media.type} ${source} to ${location}. Cleaning up stale artifact.`,
         );

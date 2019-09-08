@@ -137,15 +137,12 @@ const plugin = async (envelope, {cfg, log, stats}) => {
       try {
         await youtubeDl(cmd, videoFormat, source, location, sourceAddress);
       } catch (ee) {
-        const failed = {
+        stats.fail({
           type: unit._sc_source,
           term: source,
           plugin: "media_youtubedl",
           reason: ee.message,
-        };
-        stats.update("failed", fails =>
-          Array.isArray(fails) ? fails.concat(failed) : [failed],
-        );
+        });
 
         log.warn(`Failed to download video ${source}: ${ee.message}`);
 

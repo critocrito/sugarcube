@@ -76,15 +76,13 @@ const plugin = async (envelope, {log, cfg, stats}) => {
       try {
         await youtubeDlCheck(cmd, url, sourceAddress);
       } catch (e) {
-        const failed = {
+        stats.fail({
           type: unit._sc_source,
           term: url,
           plugin: "media_youtubedl_check",
           reason: e.message,
-        };
-        stats.update("failed", fails =>
-          Array.isArray(fails) ? fails.concat(failed) : [failed],
-        );
+        });
+
         log.warn(`Check for ${url} failed: ${e.message}`);
       }
       counter += 1;

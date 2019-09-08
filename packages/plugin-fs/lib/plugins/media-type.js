@@ -33,15 +33,12 @@ const plugin = (envelope, {cfg, log, stats}) => {
     if (["video", "image", "pdf"].includes(category)) {
       media.push({type: category, term: location});
     } else {
-      const failed = {
+      stats.fail({
         type: unit._sc_source,
         term: location,
         plugin: "fs_media_type",
         reason: `Unsupported category for mime type: ${mime}`,
-      };
-      stats.update("failed", fails =>
-        Array.isArray(fails) ? fails.concat(failed) : [failed],
-      );
+      });
     }
 
     return Object.assign(unit, {_sc_media: unit._sc_media.concat(media)});

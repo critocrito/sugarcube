@@ -20,15 +20,13 @@ const apiPages = (envelope, {log, cfg, stats}) => {
     try {
       data = await page(fetcher, q);
     } catch (e) {
-      const fail = {
+      stats.fail({
         type: querySource,
         term: q,
         plugin: "facebook_api_pages",
         reason: e.message,
-      };
-      stats.update("failed", fails =>
-        Array.isArray(fails) ? fails.concat(fail) : [fail],
-      );
+      });
+
       log.warn(`Facebook page ${q} returned an error: ${e.message}`);
     }
     return data;

@@ -6,6 +6,7 @@ import {liftManyA2} from "./data/plugin";
 import {envelopeQueries, fmapData, filterData} from "./data/envelope";
 import ds from "./data/data";
 import {state} from "./state";
+import {instrument} from "./instrument";
 import {uid, generateSeed} from "./crypto";
 import {now, curry3} from "./utils";
 
@@ -107,14 +108,8 @@ const mangleData = (source, marker, date, envelope) =>
 const runner = curry3("runner", (plugins, cfg, queries) => {
   // FIXME: The signature of `runner` has to change to allow seed objects for
   //        cache. Using the `cfg` option is just a crutch.
-  const stats =
-    cfg.stats && cfg.stats.get && cfg.stats.update
-      ? cfg.stats
-      : state(cfg.stats);
-  const cache =
-    cfg.cache && cfg.cache.get && cfg.cache.update
-      ? cfg.cache
-      : state(cfg.cache);
+  const stats = instrument(cfg.stats);
+  const cache = state(cfg.cache);
   const seed = generateSeed(8);
   const timestamp = now();
   const stream = Bacon.Bus();

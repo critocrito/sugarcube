@@ -54,15 +54,13 @@ const listChannel = (envelope, {cfg, log, stats}) => {
         async q => {
           const exists = await channelExists(key, q);
           if (!exists) {
-            const fail = {
+            stats.fail({
               type: querySource,
               term: q,
               plugin: "youtube_channel",
               reason: "Youtube channel does not exist.",
-            };
-            stats.update("failed", fails =>
-              Array.isArray(fails) ? fails.concat(fail) : [fail],
-            );
+            });
+
             log.warn(`Channel ${q} does not exist.`);
           }
           return exists

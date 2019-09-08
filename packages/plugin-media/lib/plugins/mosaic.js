@@ -53,7 +53,7 @@ const plugin = async (envelope, {log, cfg, stats}) => {
       try {
         await accessAsync(location);
       } catch (e) {
-        const failed = {
+        stats.fail({
           type: unit._sc_source,
           term: source,
           plugin: "media_mosaic",
@@ -61,10 +61,8 @@ const plugin = async (envelope, {log, cfg, stats}) => {
             e.code === "ENOENT"
               ? `Video at ${location} doesn't exits`
               : e.message,
-        };
-        stats.update("failed", fails =>
-          Array.isArray(fails) ? fails.concat(failed) : [failed],
-        );
+        });
+
         if (e.code !== "ENOENT") {
           throw e;
         }
@@ -103,15 +101,12 @@ const plugin = async (envelope, {log, cfg, stats}) => {
       try {
         await mosaicGeneration(cmd, location, resolve(dest), forceGeneration);
       } catch (ee) {
-        const failed = {
+        stats.fail({
           type: unit._sc_source,
           term: source,
           plugin: "media_mosaic",
           reason: ee.message,
-        };
-        stats.update("failed", fails =>
-          Array.isArray(fails) ? fails.concat(failed) : [failed],
-        );
+        });
 
         log.warn(
           `Failed to create mosaic for video at ${location}: ${ee.message}`,

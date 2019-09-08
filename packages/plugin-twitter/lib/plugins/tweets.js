@@ -84,15 +84,13 @@ const tweetsPlugin = async (envelope, {log, cfg, stats}) => {
         caughtP(e => {
           const reason = parseApiErrors(e);
           ids.forEach(id => {
-            const fail = {
+            stats.fail({
               type: querySource,
               term: id,
               plugin: "twitter_tweet",
               reason,
-            };
-            stats.update("failed", queries =>
-              Array.isArray(queries) ? queries.concat(fail) : [fail],
-            );
+            });
+
             log.warn(`Failed to fetch tweet ${id}: ${reason}`);
           });
           return [];

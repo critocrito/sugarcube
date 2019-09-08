@@ -1,7 +1,7 @@
 import {set, merge, getOr} from "lodash/fp";
 
 export const state = (obj = {}) => {
-  let s = Object.assign({}, obj);
+  let s = obj.get != null && obj.update != null ? obj : Object.assign({}, obj);
 
   const get = path => (path ? getOr({}, path, s) : s);
 
