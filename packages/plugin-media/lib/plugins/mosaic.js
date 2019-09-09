@@ -46,6 +46,10 @@ const plugin = async (envelope, {log, cfg, stats}) => {
       const {type, term, href, location} = download;
 
       if (type !== "video") return download;
+      if (location == null || location === "") {
+        log.warn(`No location for vide ${term}. Skipping mosaic creation.`);
+        return download;
+      }
 
       const source = href || term;
       const dest = join(dirname(location), "mosaic.jpg");
