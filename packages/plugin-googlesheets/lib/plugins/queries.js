@@ -30,7 +30,12 @@ const importQueries = (envelope, {log, cfg, cache}) => {
         setSelections,
       }) {
         const now = new Date();
-        const {sheetUrl} = yield getSheet(id, query);
+        const sheet = yield getSheet(id, query);
+        if (sheet == null) {
+          log.warn(`Failed to fetch sheet ${query} of spreadsheet ${id}`);
+          return [];
+        }
+        const {sheetUrl} = sheet;
         const rows = yield getRows(id, query);
 
         if (rows.length < 2) {
