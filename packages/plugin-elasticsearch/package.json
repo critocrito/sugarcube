@@ -11,9 +11,11 @@
   "dependencies": {
     "@sugarcube/core": "^0.26.0",
     "dashp": "^0.10.1",
-    "elasticsearch": "^14.1.0",
+    "es6": "npm:@elastic/elasticsearch@6",
+    "es7": "npm:@elastic/elasticsearch@7",
     "glob": "^7.1.2",
     "lodash": "^4.17.4",
+    "node-fetch": "^2.6.0",
     "pify": "^3.0.0"
   },
   "keywords": [

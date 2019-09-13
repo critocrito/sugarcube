@@ -1,7 +1,9 @@
 /* eslint-disable no-plusplus */
-import {chunk, merge} from "lodash/fp";
+import {isPlainObject, chunk, merge} from "lodash/fp";
 import {collectP, ofP} from "dashp";
-import elastic from "elasticsearch";
+import {Client as Client6} from "es6";
+import {Client as Client7} from "es7";
+import fetch from "node-fetch";
 import {utils} from "@sugarcube/core";
 
 import {unstripify, stripUnderscores} from "./utils";
@@ -10,7 +12,53 @@ import queries from "./queries";
 
 const {curry2, curry3, curry4, curry6} = utils;
 
-export const connect = host => new elastic.Client({host, log: "warning"});
+const esVersion = async node => {
+  const {version} = await fetch(node).then(resp => resp.json());
+  return parseInt(version.number[0], 10);
+};
+
+const mergeMappings = async (client, customMappings = {}) => {
+  const {body} = await client.info();
+  const version = parseInt(body.version.number[0], 10);
+  switch (version) {
+    case 6: {
+      return merge(defaultMappings, customMappings);
+    }
+    case 7: {
+      const {mappings, ...rest} = defaultMappings;
+      return Object.assign(rest, {mappings: mappings._doc}, customMappings);
+    }
+    default: {
+      throw new Error(`Elasticsearch version ${version} not supported.`);
+    }
+  }
+};
+
+// ES6 returns total as number, ES7 as an object with a value sttribute.
+const normalizeTotal = body => {
+  return isPlainObject(body.hits.total)
+    ? body.hits.total.value
+    : body.hits.total;
+};
+
+export const connect = async node => {
+  let Client;
+  const version = await esVersion(node);
+  switch (version) {
+    case 6: {
+      Client = Client6;
+      break;
+    }
+    case 7: {
+      Client = Client7;
+      break;
+    }
+    default: {
+      throw new Error(`Elasticsearch version ${version} not supported.`);
+    }
+  }
+  return new Client({node, requestTimeout: 60 * 1000});
+};
 
 export const toHeader = (index, unit) => ({
   _index: index,
@@ -20,26 +68,26 @@ export const toHeader = (index, unit) => ({
 export const toMsg = (index, unit) =>
   stripUnderscores((toHeader(index, unit), {body: unit}));
 
-export const createIndex = curry3(
-  "createIndex",
-  async (index, mapping, client) => {
-    const body = mapping;
+const createIndex = curry3("createIndex", async (index, mapping, client) => {
+  const body = await mergeMappings(client, mapping);
 
-    const aliasExists = await client.indices.existsAlias({name: index});
-    const indexExists = await client.indices.exists({index});
+  const {body: aliasExists} = await client.indices.existsAlias({name: index});
+  const {body: indexExists} = await client.indices.exists({index});
 
-    if (aliasExists || indexExists) return ofP(null);
+  if (aliasExists || indexExists) return ofP(null);
 
-    await client.indices.create({index: `${index}-1`, body});
-    return client.indices.putAlias({index: `${index}-1`, name: index});
-  },
-);
+  await client.indices.create({index: `${index}-1`, body});
+  return client.indices.putAlias({index: `${index}-1`, name: index});
+});
 
+/*
+ * Public API
+ */
 export const reindex = curry6(
   "reindex",
   async (index, host, port, toIndex, client, customMappings) => {
-    const mappings = merge(defaultMappings, customMappings);
-    await createIndex(toIndex, mappings, client);
+    await createIndex(toIndex, customMappings, client);
+
     await client.reindex({
       body: queries.reindex(index, host, port, toIndex),
       refresh: true,
@@ -51,9 +99,8 @@ export const reindex = curry6(
 
 export const query = curry4(
   "query",
-  async (index, body, amount, client, customMappings) => {
-    const mappings = merge(defaultMappings, customMappings);
-    await createIndex(index, mappings, client);
+  async (index, reqBody, amount, client, customMappings) => {
+    await createIndex(index, customMappings, client);
 
     const allData = [];
     let meta = {took: 0, total: 0};
@@ -62,17 +109,19 @@ export const query = curry4(
     responseQueue.push(
       await client.search({
         index,
-        body,
+        body: reqBody,
         size: 2000,
         scroll: "60s",
-        requestTimeout: "90000",
       }),
     );
 
     while (responseQueue.length) {
-      const response = responseQueue.shift();
-      while (response.hits.hits.length) {
-        const unit = response.hits.hits.shift();
+      const {body} = responseQueue.shift();
+      // ES7 changed the return value of body.hits.total
+      const total = normalizeTotal(body);
+
+      while (body.hits.hits.length > 0) {
+        const unit = body.hits.hits.shift();
         allData.push(
           Object.assign(
             unstripify(unit._source),
@@ -86,26 +135,21 @@ export const query = curry4(
         );
       }
 
-      meta = Object.assign(
-        {},
-        meta,
-        response.timed_out ? {timedOut: true} : {},
-        {
-          took: meta.took + response.took,
-          total: response.hits.total,
-        },
-      );
+      meta = Object.assign({}, meta, body.timed_out ? {timedOut: true} : {}, {
+        took: meta.took + body.took,
+        total,
+      });
 
       if (
         (amount != null && allData.length >= amount) ||
-        response.hits.total === allData.length
+        total === allData.length
       ) {
         break;
       }
       responseQueue.push(
         // eslint-disable-next-line no-await-in-loop
         await client.scroll({
-          scrollId: response._scroll_id,
+          scrollId: body._scroll_id,
           scroll: "30s",
         }),
       );
@@ -135,8 +179,7 @@ export const bulk = curry4(
     }
 
     // Ensure the index is created.
-    const mappings = merge(defaultMappings, customMappings);
-    await createIndex(index, mappings, client);
+    await createIndex(index, customMappings, client);
 
     // Run the bulk requests
     const responseQueue = [];
@@ -145,12 +188,12 @@ export const bulk = curry4(
     const [firstChunk, ...chunks] = chunk(batchSize, toIndex.concat(toUpdate));
 
     responseQueue.push(
-      await client.bulk({body: firstChunk, type: "_doc", refresh: true}),
+      await client.bulk({index, body: firstChunk, type: "_doc", refresh: true}),
     );
 
     while (responseQueue.length) {
-      const response = responseQueue.shift();
-      const {took, items} = response;
+      const {body} = responseQueue.shift();
+      const {took, items} = body;
 
       for (let i = 0; i < (items || []).length; i++) {
         const item = items[i];
@@ -191,8 +234,8 @@ export const queryByIds = curry3(
   async (index, ids, client, customMappings) => {
     const batchSize = 2500;
     const responses = await collectP(idsChunk => {
-      const body = queries.byIds(idsChunk);
-      return query(index, body, null, client, customMappings);
+      const reqBody = queries.byIds(idsChunk);
+      return query(index, reqBody, null, client, customMappings);
     }, chunk(batchSize, ids));
 
     return responses.reduce(
@@ -215,14 +258,13 @@ export const queryOne = curry3(
   "queryOne",
   async (index, id, client, customMappings) => {
     // Ensure the index is created.
-    const mappings = merge(defaultMappings, customMappings);
-    await createIndex(index, mappings, client);
+    await createIndex(index, customMappings, client);
 
     const {_version: version, _type: type, _source: data} = await client.get({
       index,
       id,
       type: "_all",
-    });
+    }).body;
     return [data, {version, type}];
   },
 );
@@ -232,9 +274,11 @@ export const queryExisting = curry3(
   async (index, ids, client, customMappings) => {
     const batchSize = 5000;
 
+    await createIndex(index, customMappings, client);
+
     const responses = await collectP(idsChunk => {
-      const body = queries.existing(idsChunk);
-      return query(index, body, null, client, customMappings);
+      const reqBody = queries.existing(idsChunk);
+      return query(index, reqBody, null, client, customMappings);
     }, chunk(batchSize, ids));
 
     return responses.reduce(
@@ -255,7 +299,8 @@ export const queryExisting = curry3(
 
 export const Elastic = {
   Do: curry2("ElasticDo", async (G, {host, port, mappings}) => {
-    const client = connect(`${host}:${port}`);
+    const node = `http://${host}:${port}`;
+    const client = await connect(node);
     const api = {bulk, query, queryByIds, queryOne, queryExisting, reindex};
     const customMappings = stripUnderscores(mappings || {});
     const generator = G(api);
