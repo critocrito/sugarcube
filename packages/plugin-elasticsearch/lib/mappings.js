@@ -1,4 +1,27 @@
 export default {
+  settings: {
+    analysis: {
+      filter: {
+        trigrams_filter: {
+          type: "ngram",
+          min_gram: 3,
+          max_gram: 3,
+        },
+      },
+      analyzer: {
+        trigrams: {
+          type: "custom",
+          tokenizer: "standard",
+          filter: ["lowercase", "trigrams_filter"],
+        },
+        exact: {
+          tokenizer: "standard",
+          filter: ["lowercase"],
+        },
+      },
+    },
+  },
+
   mappings: {
     _doc: {
       properties: {
@@ -6,18 +29,32 @@ export default {
           type: "keyword",
           ignore_above: 64,
         },
+
         $sc_content_hash: {
           type: "keyword",
           ignore_above: 64,
         },
+
         $sc_id_fields: {
-          type: "keyword",
-          ignore_above: 256,
+          type: "text",
+          fields: {
+            keyword: {
+              type: "keyword",
+              ignore_above: 256,
+            },
+          },
         },
+
         $sc_content_fields: {
-          type: "keyword",
-          ignore_above: 256,
+          type: "text",
+          fields: {
+            keyword: {
+              type: "keyword",
+              ignore_above: 256,
+            },
+          },
         },
+
         $sc_downloads: {
           type: "nested",
           properties: {
@@ -34,6 +71,7 @@ export default {
               fields: {
                 keyword: {
                   type: "keyword",
+                  ignore_above: 256,
                 },
               },
             },
@@ -42,6 +80,16 @@ export default {
               fields: {
                 keyword: {
                   type: "keyword",
+                  ignore_above: 256,
+                },
+              },
+            },
+            mosaic: {
+              type: "text",
+              fields: {
+                keyword: {
+                  type: "keyword",
+                  ignore_above: 256,
                 },
               },
             },
@@ -55,6 +103,7 @@ export default {
             },
           },
         },
+
         $sc_media: {
           type: "nested",
           properties: {
@@ -67,10 +116,17 @@ export default {
               ignore_above: 256,
             },
             term: {
-              type: "keyword",
+              type: "text",
+              fields: {
+                keyword: {
+                  type: "keyword",
+                  ignore_above: 256,
+                },
+              },
             },
           },
         },
+
         $sc_relations: {
           type: "nested",
           properties: {
@@ -87,11 +143,13 @@ export default {
               fields: {
                 keyword: {
                   type: "keyword",
+                  ignore_above: 256,
                 },
               },
             },
           },
         },
+
         $sc_queries: {
           type: "nested",
           properties: {
@@ -108,11 +166,13 @@ export default {
               fields: {
                 keyword: {
                   type: "keyword",
+                  ignore_above: 256,
                 },
               },
             },
           },
         },
+
         $sc_locations: {
           type: "nested",
           properties: {
@@ -129,6 +189,7 @@ export default {
               fields: {
                 keyword: {
                   type: "keyword",
+                  ignore_above: 256,
                 },
               },
             },
@@ -137,6 +198,7 @@ export default {
             },
           },
         },
+
         $sc_pubdates: {
           properties: {
             fetch: {
@@ -147,24 +209,10 @@ export default {
             },
           },
         },
+
         $sc_markers: {
           type: "keyword",
           ignore_above: 64,
-        },
-
-        // web searches
-        href_text: {
-          type: "text",
-          index_options: "offsets",
-        },
-        // social media
-        message: {
-          type: "text",
-          index_options: "offsets",
-        },
-        "snippet.description": {
-          type: "text",
-          index_options: "offsets",
         },
       },
     },

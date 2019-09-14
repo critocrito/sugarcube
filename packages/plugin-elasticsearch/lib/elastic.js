@@ -1,5 +1,5 @@
 /* eslint-disable no-plusplus */
-import {isPlainObject, chunk, merge} from "lodash/fp";
+import {isPlainObject, chunk} from "lodash/fp";
 import {collectP, ofP} from "dashp";
 import {Client as Client6} from "es6";
 import {Client as Client7} from "es7";
@@ -22,7 +22,7 @@ const mergeMappings = async (client, customMappings = {}) => {
   const version = parseInt(body.version.number[0], 10);
   switch (version) {
     case 6: {
-      return merge(defaultMappings, customMappings);
+      return Object.assign(defaultMappings, customMappings);
     }
     case 7: {
       const {mappings, ...rest} = defaultMappings;
