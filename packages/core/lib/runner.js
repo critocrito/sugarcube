@@ -134,7 +134,7 @@ const runner = curry3("runner", (plugins, cfg, queries) => {
 
   const log = {
     info: msg => events.emit("log", {type: "info", msg}),
-    warn: msg => events.emi("log", {type: "warn", msg}),
+    warn: msg => events.emit("log", {type: "warn", msg}),
     error: msg => events.emit("log", {type: "error", msg}),
     debug: msg => events.emit("log", {type: "debug", msg}),
   };

@@ -17,7 +17,7 @@
     "lodash": "^4.17.4",
     "source-map-support": "^0.5.3",
     "strip-json-comments": "^2.0.1",
-    "winston": "^2.3.1",
+    "winston": "^3.2.1",
     "yargs": "^11.0.0"
   },
   "keywords": [

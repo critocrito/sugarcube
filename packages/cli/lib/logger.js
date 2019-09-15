@@ -1,14 +1,22 @@
-import winston from "winston";
+import winston, {format, transports} from "winston";
 
-// Setup logging
-winston.remove(winston.transports.Console);
-winston.add(winston.transports.Console, {
-  timestamp: true,
-  colorize: true,
-  level: "debug",
+const sugarcubeFormat = format.printf(({level, message, timestamp}) => {
+  return `${timestamp} - ${level}: ${message}`;
 });
 
-const {info, warn, error, debug} = winston;
+const createLogger = level => {
+  const logger = winston.createLogger({
+    level,
+    format: format.combine(
+      format.timestamp(),
+      format.errors({stack: true}),
+      format.colorize(),
+      format.splat(),
+      sugarcubeFormat,
+    ),
+    transports: [new transports.Console()],
+  });
+  return logger;
+};
 
-export {info, warn, error, debug};
-export default {info, warn, error, debug};
+export {createLogger};

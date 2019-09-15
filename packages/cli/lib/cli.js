@@ -21,19 +21,11 @@ import {runner, createFeatureDecisions} from "@sugarcube/core";
 import v8 from "v8";
 
 import {mapFiles, parseConfigFile, parseConfigFileWithExtends} from ".";
-import {info, warn, error, debug} from "./logger";
+import {createLogger} from "./logger";
 import {modules} from "./packages";
 
 // eslint-disable-next-line import/no-dynamic-require
 const {name: project} = require(path.resolve(process.cwd(), "package.json"));
-
-const haltAndCough = curry((d, e) => {
-  error(e.message);
-  if (d) {
-    error(e);
-  }
-  process.exit(1);
-});
 
 // Make sure we have all requested plugins.
 // <type>:<term> -> {type: "<type>", term: "<term>"}
@@ -131,6 +123,17 @@ const {argv} = Object.keys(plugins)
       .options(options);
   }, yargs);
 
+const logger = createLogger(argv.debug ? "debug" : "info");
+const {debug, info, error} = logger;
+
+const haltAndCough = curry((d, e) => {
+  error(e.message);
+  if (d) {
+    error(e);
+  }
+  process.exit(1);
+});
+
 process.on("unhandledRejection", haltAndCough(argv.debug));
 
 if (argv.listFeatures) {
@@ -209,31 +212,12 @@ try {
   haltAndCough(argv.debug, e);
 }
 
-run.events.on("log", ({type, msg}) => {
-  switch (type) {
-    case "info":
-      info(msg);
-      break;
-    case "warn":
-      warn(msg);
-      break;
-    case "error":
-      error(msg);
-      break;
-    case "debug":
-      if (argv.debug) {
-        debug(msg);
-      }
-      break;
-    default:
-      break;
-  }
-});
+run.events.on("log", ({type, msg}) => logger.log(type, msg));
 run.events.on("stats", ({stats}) => {
   const statsNames = Object.keys(stats);
   const text = isEmpty(statsNames) ? "none" : statsNames.join(", ");
-  debug(`receiving stats for: ${text}`);
-  debug(inspect(stats, {color: true, depth: null}));
+  debug(`Receiving stats for: ${text}`);
+  debug(inspect(stats, {color: true, depth: null}), stats);
 });
 run.events.on("plugin_start", ({plugin}) => {
   info(`Starting the ${plugin} plugin.`);
