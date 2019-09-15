@@ -37,46 +37,44 @@ const plugin = async (envelope, {cfg, log, cache, stats, plugins}) => {
       Object.assign({}, cfg, {cache, stats, plugins: pipeline}),
       queries.concat(staticQueries),
     );
-    run.stream.onValue(msg => {
-      switch (msg.type) {
-        case "log_info":
-          log.info(`Batch ${batch}: ${msg.msg}`);
+    run.events.on("log", ({type, msg}) => {
+      switch (type) {
+        case "info":
+          log.info(`Batch ${batch}: ${msg}`);
           break;
-        case "log_warn":
-          log.warn(`Batch ${batch}: ${msg.msg}`);
+        case "warn":
+          log.warn(`Batch ${batch}: ${msg}`);
           break;
-        case "log_error":
-          log.error(`Batch ${batch}: ${msg.msg}`);
+        case "error":
+          log.error(`Batch ${batch}: ${msg}`);
           break;
-        case "log_debug":
-          if (cfg.debug) log.debug(`Batch ${batch}: ${msg.msg}`);
-          break;
-        case "plugin_start":
-          log.info(`Batch ${batch}: Starting the ${msg.plugin} plugin.`);
-          break;
-        case "plugin_end":
-          log.info(`Batch ${batch}: Finished the ${msg.plugin} plugin.`);
+        case "debug":
+          if (cfg.debug) log.debug(`Batch ${batch}: ${msg}`);
           break;
         default:
           break;
       }
     });
-    run.stream.onError(e => {
+    run.events.on("plugin_start", ({plugin: p}) =>
+      log.info(`Batch ${batch}: Starting the ${p} plugin.`),
+    );
+    run.events.on("plugin_end", ({plugin: p}) =>
+      log.info(`Batch ${batch}: Finished the ${p} plugin.`),
+    );
+    run.events.on("error", e => {
       log.error(`Batch ${batch}: ${e.message}`);
       if (cfg.debug) log.error(e);
       if (!continueOnError) abort = true;
     });
+    run.events.on("run", () => log.info(`Starting batch ${batch}.`));
+    run.events.on("end", () => log.info(`Finished batch ${batch}.`));
 
     return memo.then(async () => {
       // eslint-disable-next-line promise/always-return
       if (abort) return;
-      log.info(`Starting batch ${batch}.`);
       await run();
-      log.info(`Finished batch ${batch}.`);
     });
   }, Promise.resolve());
-
-  log.info("Finished the workflow_multiplex plugin");
 
   if (tailPipeline.length === 0)
     return Object.assign({endEarly: true}, env.empty());
@@ -86,31 +84,31 @@ const plugin = async (envelope, {cfg, log, cache, stats, plugins}) => {
     Object.assign({}, cfg, {cache, stats, plugins: tailPipeline}),
     envelope.queries,
   );
-  run.stream.onValue(msg => {
-    switch (msg.type) {
-      case "log_info":
-        log.info(msg.msg);
+  run.events.on("log", ({type, msg}) => {
+    switch (type) {
+      case "info":
+        log.info(msg);
         break;
-      case "log_warn":
-        log.warn(msg.msg);
+      case "warn":
+        log.warn(msg);
         break;
-      case "log_error":
-        log.error(msg.msg);
+      case "error":
+        log.error(msg);
         break;
-      case "log_debug":
-        if (cfg.debug) log.debug(msg.msg);
-        break;
-      case "plugin_start":
-        log.info(`Starting the ${msg.plugin} plugin.`);
-        break;
-      case "plugin_end":
-        log.info(`Finished the ${msg.plugin} plugin.`);
+      case "debug":
+        if (cfg.debug) log.debug(msg);
         break;
       default:
         break;
     }
   });
-  run.stream.onError(e => {
+  run.events.on("plugin_start", ({plugin: p}) =>
+    log.info(`Starting the ${p} plugin.`),
+  );
+  run.events.on("plugin_end", ({plugin: p}) =>
+    log.info(`Finished the ${p} plugin.`),
+  );
+  run.events.on("error", e => {
     log.error(e.message);
     if (cfg.debug) log.error(e);
   });

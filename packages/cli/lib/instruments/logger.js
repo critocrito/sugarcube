@@ -40,13 +40,11 @@ const instrument = cfg => {
   // eslint-disable-next-line camelcase
   const plugin_start = ({plugin}) => {
     logger.info(`Starting the ${plugin} plugin.`);
-    logger.profile(plugin);
   };
 
   // eslint-disable-next-line camelcase
   const plugin_end = ({plugin}) => {
     logger.info(`Finished the ${plugin} plugin.`);
-    logger.profile(plugin);
   };
 
   const logStats = ({stats}) => {
