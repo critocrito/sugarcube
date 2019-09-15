@@ -15,6 +15,7 @@ import {
 } from "lodash/fp";
 import fs from "fs";
 import path from "path";
+import {inspect} from "util";
 import dotenv from "dotenv";
 import {runner, createFeatureDecisions} from "@sugarcube/core";
 import v8 from "v8";
@@ -199,7 +200,7 @@ const config = flow([
 ])(argv);
 
 // Now we have our queries and config, we can create a sugarcube run, and
-// execute it. We also wire the logging to the stream messages.
+// execute it. We also listen to events emitted by the runner.
 let run;
 
 try {
@@ -208,46 +209,44 @@ try {
   haltAndCough(argv.debug, e);
 }
 
-run.stream.onValue(msg => {
-  let statsNames;
-  let text;
-
-  switch (msg.type) {
-    case "log_info":
-      info(msg.msg);
+run.events.on("log", ({type, msg}) => {
+  switch (type) {
+    case "info":
+      info(msg);
       break;
-    case "log_warn":
-      warn(msg.msg);
+    case "warn":
+      warn(msg);
       break;
-    case "log_error":
-      error(msg.msg);
+    case "error":
+      error(msg);
       break;
-    case "log_debug":
+    case "debug":
       if (argv.debug) {
-        debug(msg.msg);
+        debug(msg);
       }
-      break;
-    case "plugin_start":
-      info(`Starting the ${msg.plugin} plugin.`);
-      break;
-    case "plugin_end":
-      info(`Finished the ${msg.plugin} plugin.`);
-      break;
-    case "stats":
-      statsNames = Object.keys(msg.stats);
-      text = isEmpty(statsNames) ? "none" : statsNames.join(", ");
-      info(`receiving stats for: ${text}`);
       break;
     default:
       break;
   }
 });
-run.stream.onEnd(() => info("Finished the LSD."));
-run.stream.onError(haltAndCough(argv.debug));
+run.events.on("stats", ({stats}) => {
+  const statsNames = Object.keys(stats);
+  const text = isEmpty(statsNames) ? "none" : statsNames.join(", ");
+  debug(`receiving stats for: ${text}`);
+  debug(inspect(stats, {color: true, depth: null}));
+});
+run.events.on("plugin_start", ({plugin}) => {
+  info(`Starting the ${plugin} plugin.`);
+});
+run.events.on("plugin_end", ({plugin}) => {
+  info(`Finished the ${plugin} plugin.`);
+});
+run.events.on("error", haltAndCough(argv.debug));
 
 info(`Starting run ${run.marker}.`);
 
 // Run the pipeline.
 run()
   .then(() => fs.writeFileSync(argv.cache, JSON.stringify(run.cache.get())))
+  .then(() => info("Finished the LSD."))
   .catch(haltAndCough(argv.debug));

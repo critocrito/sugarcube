@@ -9,7 +9,6 @@
   "version": "0.26.0",
   "main": "_dist/index.js",
   "dependencies": {
-    "baconjs": "^0.7.89",
     "dashp": "^0.10.1",
     "lodash": "^4.17.4"
   },

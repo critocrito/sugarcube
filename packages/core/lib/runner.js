@@ -1,5 +1,5 @@
+import {EventEmitter} from "events";
 import {flow, map, zip, merge} from "lodash/fp";
-import Bacon from "baconjs";
 import {flowP, caughtP, tapP, foldP} from "dashp";
 
 import {liftManyA2} from "./data/plugin";
@@ -12,14 +12,14 @@ import {now, curry3} from "./utils";
 
 // The following functions provide funtionalities that should be run every
 // time a plugin is run. The plugin runner composes them with the plugin.
-const pluginStats = (stream, name, stats, envelope) => {
-  stream.push({type: "plugin_stats", plugin: name});
+const pluginStats = (events, name, stats, envelope) => {
+  events.emit("plugin_stats", {type: "plugin_stats", plugin: name});
   return envelope;
 };
 
-const start = (stream, name, stats, envelope) => {
+const start = (events, name, stats, envelope) => {
   const epoch = Date.now();
-  stream.push({type: "plugin_start", ts: now(), plugin: name});
+  events.emit("plugin_start", {type: "plugin_start", ts: now(), plugin: name});
   stats.update(`pipeline.plugins.${name}`, st =>
     Object.assign({}, st, {
       start: Array.isArray(st.start) ? st.start.concat(epoch) : [epoch],
@@ -28,14 +28,14 @@ const start = (stream, name, stats, envelope) => {
   return envelope;
 };
 
-const end = (stream, name, stats, envelope) => {
+const end = (events, name, stats, envelope) => {
   const epoch = Date.now();
   const duration =
     epoch - stats.get(`pipeline.plugins.${name}.start`).slice(-1)[0];
   // eslint-disable-next-line camelcase
   const total = filterData(({_sc_source}) => _sc_source === name, envelope).data
     .length;
-  stream.push({type: "plugin_end", ts: now(), plugin: name});
+  events.emit("plugin_end", {type: "plugin_end", ts: now(), plugin: name});
   stats.update(`pipeline.plugins.${name}`, st =>
     Object.assign({}, st, {
       total: Array.isArray(st.total) ? st.total.concat(total) : [total],
@@ -65,9 +65,9 @@ const mangleData = (source, marker, date, envelope) =>
  * A runable sugarcube pipeline.
  * @typedef {Function} Runable
  * @property {string} marker The id of this run.
- * @property {stream} stream A BaconJS stream, which is used to communicate
+ * @property {events} EventEmitter A NodeJS EventEmitter, which is used to communicate
  * between the progress of the sugarcube pipeline and caller of the
- * pipeline. It has the full BaconJS API available.
+ * pipeline.
  */
 
 /**
@@ -75,17 +75,16 @@ const mangleData = (source, marker, date, envelope) =>
  *
  * Construct a SugarCube pipeline. The pipeline is a function that can be
  * called without any arguments. It will return a promise that resolves to the
- * result of the pipeline run. The pipeline has a stream object is used to
+ * result of the pipeline run. The pipeline has a events object is used to
  * receive messages during the pipeline run. It's currently mainly used for
  * logging purposes, but can be used for more as well.
  *
- * The stream sends messages with the following types:
+ * The following events are emitted:
  *
- * - `log_info`
- * - `log_debug`
- * - `log_error`
+ * - `log`
  * - `plugin_start`
  * - `plugin_end`
+ * - `stats`
  *
  * The pipeline also exports an id, called a `marker`.
  *
@@ -95,7 +94,7 @@ const mangleData = (source, marker, date, envelope) =>
  * @example
  * const run = runner(config, queryIds);
  *
- * run.stream.onValue(msg => {
+ * run.events.onValue(msg => {
  *   switch (msg.type) {
  *     case 'log_info': console.log(msg.msg); break;
  *     // ... other cases ...
@@ -112,7 +111,7 @@ const runner = curry3("runner", (plugins, cfg, queries) => {
   const cache = state(cfg.cache);
   const seed = generateSeed(8);
   const timestamp = now();
-  const stream = Bacon.Bus();
+  const events = new EventEmitter();
   const marker = uid(seed, timestamp);
   let endEarly = false;
 
@@ -134,10 +133,10 @@ const runner = curry3("runner", (plugins, cfg, queries) => {
   );
 
   const log = {
-    info: msg => stream.push({type: "log_info", msg}),
-    warn: msg => stream.push({type: "log_warn", msg}),
-    error: msg => stream.push({type: "log_error", msg}),
-    debug: msg => stream.push({type: "log_debug", msg}),
+    info: msg => events.emit("log", {type: "info", msg}),
+    warn: msg => events.emi("log", {type: "warn", msg}),
+    error: msg => events.emit("log", {type: "error", msg}),
+    debug: msg => events.emit("log", {type: "debug", msg}),
   };
 
   const run = () =>
@@ -148,29 +147,28 @@ const runner = curry3("runner", (plugins, cfg, queries) => {
           // eslint-disable-next-line consistent-return
           return liftManyA2(
             [
-              e => start(stream, name, stats, e),
+              e => start(events, name, stats, e),
               plugin,
               e => {
                 endEarly = !!e.endEarly;
                 return e;
               },
               e => mangleData(name, marker, timestamp, e),
-              e => pluginStats(stream, name, stats, e),
-              e => end(stream, name, stats, e),
+              e => pluginStats(events, name, stats, e),
+              e => end(events, name, stats, e),
             ],
             envelope,
             {plugins, cache, stats, log, cfg: merge({marker}, cfg)},
           );
         }, envelopeQueries(queries)),
-        caughtP(e => stream.error(e)),
-        tapP(() => stream.push({type: "stats", stats: stats.get()})),
-        tapP(() => stream.end()),
+        caughtP(e => events.emit("error", e)),
+        tapP(() => events.emit("stats", {type: "stats", stats: stats.get()})),
       ],
       pipeline,
     );
 
   run.marker = marker;
-  run.stream = stream;
+  run.events = events;
   run.cache = cache;
   run.plugins = plugins;
 
