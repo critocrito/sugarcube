@@ -2,12 +2,14 @@ import {
   flow,
   curry,
   map,
+  filter,
   merge,
   concat,
   join,
   omit,
   keys,
   difference,
+  uniq,
   zipObject,
   isArray,
   isString,
@@ -15,13 +17,12 @@ import {
 } from "lodash/fp";
 import fs from "fs";
 import path from "path";
-import {inspect} from "util";
 import dotenv from "dotenv";
 import {runner, createFeatureDecisions} from "@sugarcube/core";
 import v8 from "v8";
+import loggerInstrument from "./instruments/logger";
 
 import {mapFiles, parseConfigFile, parseConfigFileWithExtends} from ".";
-import {createLogger} from "./logger";
 import {modules} from "./packages";
 
 // eslint-disable-next-line import/no-dynamic-require
@@ -45,6 +46,7 @@ dotenv.config();
 // Load all available plugins.
 const plugins = modules().plugins();
 const features = modules().features();
+const instruments = modules().instruments();
 
 // Basic arguments for the command line tool.
 const yargs = require("yargs")
@@ -59,6 +61,17 @@ const yargs = require("yargs")
     if (isArray(arg)) return arg;
     return [];
   })
+  .nargs("I", 1)
+  .alias("I", "instruments")
+  .string("I")
+  .describe("I", "A list of instruments")
+  .coerce("I", arg => {
+    // arg can be "instrument1,instrument2" or ["instrument1", "instrument2"].
+    if (isString(arg)) return arg.split(",");
+    if (isArray(arg)) return arg;
+    return [];
+  })
+  .default("I", [])
   .nargs("q", 1)
   .describe(
     "q",
@@ -99,6 +112,9 @@ const yargs = require("yargs")
   .option("list-plugins")
   .boolean("list-plugins")
   .describe("list-plugins", "List all available plugins.")
+  .option("list-instruments")
+  .boolean("list-instruments")
+  .describe("list-instruments", "List all available instruments.")
   .config("c", parseConfigFileWithExtends)
   .nargs("C", 1)
   .string("C")
@@ -111,7 +127,19 @@ const yargs = require("yargs")
   .alias("h", "help")
   .version();
 
-// Finalize the argument parsing for every plugin.
+// Extend the argument parser for plugin and instrument configuration options
+// and finalize the parsing.
+Object.keys(instruments)
+  .sort()
+  .reduce((memo, name) => {
+    const instrument = instruments[name];
+    const description = instrument.desc;
+    const options = instrument.argv || {};
+    return memo
+      .group(keys(options), `${name}: ${description}`)
+      .options(options);
+  }, yargs);
+
 const {argv} = Object.keys(plugins)
   .sort()
   .reduce((memo, name) => {
@@ -123,29 +151,45 @@ const {argv} = Object.keys(plugins)
       .options(options);
   }, yargs);
 
-const logger = createLogger(argv.debug ? "debug" : "info");
-const {debug, info, error} = logger;
+// Create a local version of the logger instrument, so that we can send log
+// messages before the pipeline run.
+const logger = loggerInstrument({debug: argv.debug, logger: argv.logger});
+const error = msg => logger.log({type: "error", msg});
+const debug = msg => logger.log({type: "debug", msg});
 
+// A common exception handler. In case of error, log and simply exit.
 const haltAndCough = curry((d, e) => {
-  error(e.message);
   if (d) {
     error(e);
+  } else {
+    error(e.message);
   }
   process.exit(1);
 });
 
 process.on("unhandledRejection", haltAndCough(argv.debug));
 
+// The next command line options just print a list of features, plugins and
+// instruments and exit.
 if (argv.listFeatures) {
   Object.keys(features).forEach(feature =>
-    info(`${feature}: ${features[feature].desc}`),
+    // eslint-disable-next-line no-console
+    console.log(`${feature}: ${features[feature].desc}`),
+  );
+  process.exit(0);
+}
+if (argv.listInstruments) {
+  Object.keys(instruments).forEach(instrument =>
+    // eslint-disable-next-line no-console
+    console.log(`${instrument}: ${instruments[instrument].desc}`),
   );
   process.exit(0);
 }
 if (argv.listPlugins) {
   Object.keys(plugins)
     .sort()
-    .forEach(plugin => info(`${plugin}: ${plugins[plugin].desc}`));
+    // eslint-disable-next-line no-console
+    .forEach(plugin => console.log(`${plugin}: ${plugins[plugin].desc}`));
   process.exit(0);
 }
 
@@ -158,6 +202,20 @@ if (!isEmpty(missingPlugins)) {
   haltAndCough(argv.debug, new Error(msg));
 }
 
+// Halt if an instrument is not available.
+const missingInstruments = flow([
+  keys,
+  filter(key => key !== "cli_logger"),
+  difference(argv.instruments.filter(key => key !== "cli_logger")),
+])(instruments);
+if (!isEmpty(missingInstruments)) {
+  const msg = `Missing the following instruments: ${join(
+    ", ",
+    missingInstruments,
+  )}`;
+  haltAndCough(argv.debug, new Error(msg));
+}
+
 // We can collect queries from a file as well as the command line.
 const queries = flow([
   concat(argv.q ? argv.q : []),
@@ -165,6 +223,7 @@ const queries = flow([
   concat(argv.queries ? argv.queries : []),
 ])([]);
 
+// Populate the persistency cache across runs.
 let cache;
 if (fs.existsSync(argv.cache)) {
   cache = JSON.parse(fs.readFileSync(argv.cache).toString());
@@ -177,6 +236,8 @@ if (argv.debug) {
   debug(`Memory limit set to ${Math.round(limitMb)} MB.`);
 }
 
+// Produce the final configuration object and omit redundant or unneeded
+// fields from the command line parsing.
 const argvOmit = [
   "_",
   "h",
@@ -185,11 +246,15 @@ const argvOmit = [
   "Q",
   "d",
   "D",
+  "I",
+  "instruments",
   "features",
   "list-features",
   "listFeatures",
   "list-plugins",
   "listPlugins",
+  "list-instruments",
+  "listInstruments",
   "c",
   "p",
   "$0",
@@ -212,25 +277,26 @@ try {
   haltAndCough(argv.debug, e);
 }
 
-run.events.on("log", ({type, msg}) => logger.log(type, msg));
-run.events.on("stats", ({stats}) => {
-  const statsNames = Object.keys(stats);
-  const text = isEmpty(statsNames) ? "none" : statsNames.join(", ");
-  debug(`Receiving stats for: ${text}`);
-  debug(inspect(stats, {color: true, depth: null}), stats);
+// Setup all instrumentation. cli_logger is treated special, since this cli
+// always includes it.
+flow([
+  keys,
+  filter(name => argv.instruments.includes(name)),
+  concat("cli_logger"),
+  uniq,
+])(instruments).forEach(name => {
+  const instrument = instruments[name](config);
+  ["log", "stats", "plugin_start", "plugin_end", "run", "end"].forEach(
+    event => {
+      if (instrument[event] != null) run.events.on(event, instrument[event]);
+    },
+  );
 });
-run.events.on("plugin_start", ({plugin}) => {
-  info(`Starting the ${plugin} plugin.`);
-});
-run.events.on("plugin_end", ({plugin}) => {
-  info(`Finished the ${plugin} plugin.`);
-});
-run.events.on("error", haltAndCough(argv.debug));
 
-info(`Starting run ${run.marker}.`);
+// Listen for errors from the pipeline run.
+run.events.on("error", haltAndCough(argv.debug));
 
 // Run the pipeline.
 run()
   .then(() => fs.writeFileSync(argv.cache, JSON.stringify(run.cache.get())))
-  .then(() => info("Finished the LSD."))
   .catch(haltAndCough(argv.debug));

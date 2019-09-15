@@ -11,6 +11,8 @@ import {
 import path from "path";
 import {readdirSync} from "fs";
 
+import {instruments as localInstruments} from "./instruments";
+
 export const load = f =>
   reduce((memo, mod) => {
     // Rename paths to a prettier naming scheme
@@ -56,6 +58,11 @@ export let modules = () => {
       Object.keys(packages).reduce(
         (memo, key) => merge(memo, packages[key].features || {}),
         {},
+      ),
+    instruments: () =>
+      Object.keys(packages).reduce(
+        (memo, key) => merge(memo, packages[key].instruments || {}),
+        localInstruments,
       ),
   });
   return modules();

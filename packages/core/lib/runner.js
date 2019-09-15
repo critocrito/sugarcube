@@ -142,6 +142,7 @@ const runner = curry3("runner", (plugins, cfg, queries) => {
   const run = () =>
     flowP(
       [
+        tapP(() => events.emit("run", {marker})),
         foldP((envelope, [name, plugin]) => {
           if (endEarly) return;
           // eslint-disable-next-line consistent-return
@@ -162,7 +163,10 @@ const runner = curry3("runner", (plugins, cfg, queries) => {
           );
         }, envelopeQueries(queries)),
         caughtP(e => events.emit("error", e)),
-        tapP(() => events.emit("stats", {type: "stats", stats: stats.get()})),
+        tapP(() => {
+          events.emit("stats", {type: "stats", stats: stats.get()});
+          events.emit("end");
+        }),
       ],
       pipeline,
     );
