@@ -264,7 +264,7 @@ const argvOmit = [
 ];
 const config = flow([
   omit(argvOmit),
-  cfg => merge(cfg, {project, queries, cache, plugins}),
+  cfg => merge(cfg, {project, queries, plugins}),
 ])(argv);
 
 // Now we have our queries and config, we can create a sugarcube run, and
@@ -272,7 +272,7 @@ const config = flow([
 let run;
 
 try {
-  run = runner(plugins, config, queries);
+  run = runner({cache, plugins, config, queries});
 } catch (e) {
   haltAndCough(argv.debug, e);
 }

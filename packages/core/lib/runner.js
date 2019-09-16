@@ -8,7 +8,7 @@ import ds from "./data/data";
 import {state} from "./state";
 import {instrument} from "./instrument";
 import {uid, generateSeed} from "./crypto";
-import {now, curry3} from "./utils";
+import {now} from "./utils";
 
 // The following functions provide funtionalities that should be run every
 // time a plugin is run. The plugin runner composes them with the plugin.
@@ -88,8 +88,12 @@ const mangleData = (source, marker, date, envelope) =>
  *
  * The pipeline also exports an id, called a `marker`.
  *
- * @param {Object} config Configuration for a sugarcube run.
- * @param {Array.<String>} queryIds A list of ids to query.
+ * @param {Object} opts Runner options.
+ * @param {Object} opts.config Configuration for a sugarcube run.
+ * @param {Array.<Plugin>} opts.plugins Plugins avaiable to the pipeline.
+ * @param {Array.<Query>} opts.queries Queries for this pipeline run.
+ * @param {Object} opts.stats A seed for collecting stats. Can be undefined.
+ * @param {Object} opts.cache A cache from previous pipeline runs. Can be undefined.
  * @returns {Runable} A configured SugarCube run function.
  * @example
  * const run = runner(config, queryIds);
@@ -104,11 +108,11 @@ const mangleData = (source, marker, date, envelope) =>
  *
  * run();
  */
-const runner = curry3("runner", (plugins, cfg, queries) => {
-  // FIXME: The signature of `runner` has to change to allow seed objects for
-  //        cache. Using the `cfg` option is just a crutch.
-  const stats = instrument(cfg.stats);
-  const cache = state(cfg.cache);
+const runner = opts => {
+  const {plugins, config, queries, stats: runStats, cache: runCache} = opts;
+
+  const stats = instrument(runStats);
+  const cache = state(runCache);
   const seed = generateSeed(8);
   const timestamp = now();
   const events = new EventEmitter();
@@ -119,7 +123,9 @@ const runner = curry3("runner", (plugins, cfg, queries) => {
   // is a string indicating the name of the plugin, and the second element
   // is a function, that is the actual plugin.
   //     [['twitter_search', f1], ['mongodb_store', f2]]
-  const pipeline = flow([map(p => plugins[p]), zip(cfg.plugins)])(cfg.plugins);
+  const pipeline = flow([map(p => plugins[p]), zip(config.plugins)])(
+    config.plugins,
+  );
 
   stats.update(
     "pipeline",
@@ -128,7 +134,7 @@ const runner = curry3("runner", (plugins, cfg, queries) => {
         (memo, [p], order) => Object.assign(memo, {[p]: {order}}),
         {},
       ),
-      name: cfg.name,
+      name: config.name,
     }),
   );
 
@@ -159,7 +165,7 @@ const runner = curry3("runner", (plugins, cfg, queries) => {
               e => end(events, name, stats, e),
             ],
             envelope,
-            {plugins, cache, stats, log, cfg: merge({marker}, cfg)},
+            {plugins, cache, stats, log, cfg: merge({marker}, config)},
           );
         }, envelopeQueries(queries)),
         caughtP(e => events.emit("error", e)),
@@ -177,6 +183,6 @@ const runner = curry3("runner", (plugins, cfg, queries) => {
   run.plugins = plugins;
 
   return run;
-});
+};
 
 export default runner;

@@ -32,11 +32,13 @@ const plugin = async (envelope, {cfg, log, cache, stats, plugins}) => {
 
   await queryChunks.reduce((memo, queries, index) => {
     const batch = index + 1;
-    const run = runner(
+    const run = runner({
       plugins,
-      Object.assign({}, cfg, {cache, stats, plugins: pipeline}),
-      queries.concat(staticQueries),
-    );
+      cache,
+      stats,
+      config: Object.assign({}, cfg, {plugins: pipeline}),
+      queries: queries.concat(staticQueries),
+    });
     run.events.on("log", ({type, msg}) => {
       switch (type) {
         case "info":
@@ -79,11 +81,13 @@ const plugin = async (envelope, {cfg, log, cache, stats, plugins}) => {
   if (tailPipeline.length === 0)
     return Object.assign({endEarly: true}, env.empty());
 
-  const run = runner(
+  const run = runner({
     plugins,
-    Object.assign({}, cfg, {cache, stats, plugins: tailPipeline}),
-    envelope.queries,
-  );
+    cache,
+    stats,
+    config: Object.assign({}, cfg, {plugins: tailPipeline}),
+    queries: envelope.queries,
+  });
   run.events.on("log", ({type, msg}) => {
     switch (type) {
       case "info":

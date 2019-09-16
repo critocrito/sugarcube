@@ -9,7 +9,7 @@
   "version": "0.26.0",
   "main": "_dist/index.js",
   "bin": {
-    "sugarcube": "bin/sugarcube.js"
+    "sugarcube": "_dist/sugarcube.js"
   },
   "dependencies": {
     "@sugarcube/core": "^0.26.0",
