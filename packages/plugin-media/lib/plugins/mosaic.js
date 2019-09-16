@@ -70,7 +70,7 @@ const plugin = async (envelope, {log, cfg, stats}) => {
         if (e.code !== "ENOENT") {
           throw e;
         }
-        log.warn(`Video at ${location} doesn't exist. Skipping mosaic.`);
+
         counter += 1;
 
         return download;
@@ -109,12 +109,8 @@ const plugin = async (envelope, {log, cfg, stats}) => {
           type: unit._sc_source,
           term: source,
           plugin: "media_mosaic",
-          reason: ee.message,
+          reason: `Failed to create mosaic for video at ${location}: ${ee.message}`,
         });
-
-        log.warn(
-          `Failed to create mosaic for video at ${location}: ${ee.message}`,
-        );
 
         return download;
       }

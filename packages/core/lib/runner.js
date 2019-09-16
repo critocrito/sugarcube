@@ -111,11 +111,11 @@ const mangleData = (source, marker, date, envelope) =>
 const runner = opts => {
   const {plugins, config, queries, stats: runStats, cache: runCache} = opts;
 
-  const stats = instrument(runStats);
+  const events = new EventEmitter();
+  const stats = instrument(runStats, {events, config});
   const cache = state(runCache);
   const seed = generateSeed(8);
   const timestamp = now();
-  const events = new EventEmitter();
   const marker = uid(seed, timestamp);
   let endEarly = false;
 

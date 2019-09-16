@@ -96,10 +96,8 @@ const tweetsPlugin = async (envelope, {log, cfg, stats}) => {
               type: querySource,
               term: id,
               plugin: "twitter_tweet",
-              reason,
+              reason: `Failed to fetch tweet: ${reason}`,
             });
-
-            log.warn(`Failed to fetch tweet ${id}: ${reason}`);
           });
           return [];
         }),

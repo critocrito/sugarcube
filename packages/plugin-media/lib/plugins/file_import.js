@@ -112,11 +112,8 @@ const fileImportPlugin = async (envelope, {log, cfg, stats}) => {
           type: unit._sc_source,
           term: source,
           plugin: "media_file_import",
-          reason: e.message,
+          reason: `Failed to download ${media.type} to ${location}: ${e.message}. Cleaning up stale artifact.`,
         });
-        log.warn(
-          `Failed to download ${media.type} ${source} to ${location}. Cleaning up stale artifact.`,
-        );
 
         // If we force an import and it fails, but the import exists already,
         // better to keep the old one around.

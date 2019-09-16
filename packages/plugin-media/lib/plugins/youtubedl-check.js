@@ -80,10 +80,8 @@ const plugin = async (envelope, {log, cfg, stats}) => {
           type: unit._sc_source,
           term: url,
           plugin: "media_youtubedl_check",
-          reason: e.message,
+          reason: `Check failed: ${e.message}`,
         });
-
-        log.warn(`Check for ${url} failed: ${e.message}`);
       }
       counter += 1;
       if (counter % 100 === 0)

@@ -141,10 +141,8 @@ const plugin = async (envelope, {cfg, log, stats}) => {
           type: unit._sc_source,
           term: source,
           plugin: "media_youtubedl",
-          reason: ee.message,
+          reason: `Failed to download video: ${ee.message}`,
         });
-
-        log.warn(`Failed to download video ${source}: ${ee.message}`);
 
         // If we force a download and it fails, but the download exists
         // already, better to keep the old one around.

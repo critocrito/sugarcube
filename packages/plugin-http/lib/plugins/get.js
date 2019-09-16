@@ -84,9 +84,8 @@ const curlGet = async (envelope, {log, cfg, stats}) => {
           type: unit._sc_source,
           term: source,
           plugin: "http_get",
-          reason: e.message,
+          reason: `Failed to access ${e.path}: ${e.message}.`,
         });
-        log.warn(`Failed to access ${e.path}.`);
         return null;
       }
 
@@ -107,11 +106,8 @@ const curlGet = async (envelope, {log, cfg, stats}) => {
             type: unit._sc_source,
             term: source,
             plugin: "http_get",
-            reason: e.message,
+            reason: `Failed to download ${media.type} to ${location}: ${e.message}. Cleaning up stale artifact.`,
           });
-          log.warn(
-            `Failed to download ${media.type} ${source} to ${location}. Cleaning up stale artifact.`,
-          );
           await cleanUp(location);
           return null;
         }

@@ -26,8 +26,6 @@ const apiPages = (envelope, {log, cfg, stats}) => {
         plugin: "facebook_api_pages",
         reason: e.message,
       });
-
-      log.warn(`Facebook page ${q} returned an error: ${e.message}`);
     }
     return data;
   };

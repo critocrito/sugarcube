@@ -45,7 +45,7 @@ const feedPlugin = async (envelope, {log, cfg, stats}) => {
             plugin: "twitter_feed",
             reason,
           });
-          log.warn(`Failed to fetch ${user}: ${reason}`);
+
           return [];
         }),
       ],
