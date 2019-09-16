@@ -1,6 +1,6 @@
 # `@sugarcube/plugin-`
 
-Plugins for SugarCube ...
+Plugins and instruments for Sugarcube.
 
 ## Installation
 
@@ -10,4 +10,8 @@ npm install --save @sugarcube/plugin-
 
 ## Plugins
 
-### `module_name` plugin
+### `boilerplate_plugin` plugin
+
+## Instruments
+
+### `boilerplate_instrument` instrument
