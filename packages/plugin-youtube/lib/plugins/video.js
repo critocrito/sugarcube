@@ -17,7 +17,10 @@ const fetchVideos = async (envelope, {cfg, log, stats}) => {
 
   const videos = await flatmapP(
     flowP([
-      tapP(chunks => log.info(`Fetch details for ${chunks.length} videos.`)),
+      tapP(chunks => {
+        stats.count("total", chunks.length);
+        log.info(`Fetch details for ${chunks.length} videos.`);
+      }),
       async qs => {
         const results = await videosList(key, qs);
         if (results.length !== qs.length) {
@@ -28,18 +31,14 @@ const fetchVideos = async (envelope, {cfg, log, stats}) => {
                     type: querySource,
                     term: q,
                     plugin: "youtube_video",
-                    reason: "Youtube video does not exist.",
+                    reason: "Doesn't exist.",
                   })
                 : memo,
             [],
           );
-          stats.update("failed", fails =>
-            Array.isArray(fails) ? fails.concat(missing) : missing,
-          );
-          missing.forEach(({term}) =>
-            log.warn(`Video ${term} does not exist.`),
-          );
+          missing.forEach(stats.fail);
         }
+        stats.count("success", results.length);
         // Merge the query into the data unit.
         return results.map(r => {
           const query = envelope.queries.find(

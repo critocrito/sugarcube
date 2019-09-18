@@ -1,4 +1,4 @@
-import {size, get} from "lodash/fp";
+import {get} from "lodash/fp";
 import {envelope as env} from "@sugarcube/core";
 
 import {Elastic} from "../elastic";
@@ -10,34 +10,27 @@ const plugin = async (envelope, {cfg, log, stats}) => {
 
   log.info(`Using ${host}:${port}/${index}.`);
 
-  return Elastic.Do(
+  const ids = envelope.data.map(u => u._sc_id_hash);
+
+  stats.count("total", ids.length);
+
+  const [results, history] = await Elastic.Do(
     function* complementLeft({queryByIds}) {
-      const ids = envelope.data.map(u => u._sc_id_hash);
       const existing = yield queryByIds(index, ids);
 
-      stats.update("pipeline", st => {
-        const {total, created, complemented} = st;
-        const newTotal = ids.length;
-        const newlyCreated = ids.length - existing.length;
-        return Object.assign({}, st, {
-          total: Array.isArray(total) ? total.concat(newTotal) : [newTotal],
-          created: Array.isArray(created)
-            ? created.concat(newlyCreated)
-            : [newlyCreated],
-          complemented: Array.isArray(complemented)
-            ? complemented.concat(existing.length)
-            : [existing.length],
-        });
-      });
+      log.info(`Supplementing ${existing.length} existing units.`);
 
-      log.info(`Supplementing ${size(existing)} existing units.`);
       return existing;
     },
     {host, port},
-  ).then(([rs, history]) => {
-    history.forEach(([k, meta]) => log.debug(`${k}: ${JSON.stringify(meta)}.`));
-    return env.concatDataLeft(rs, envelope);
-  });
+  );
+
+  history.forEach(([k, meta]) => log.debug(`${k}: ${JSON.stringify(meta)}.`));
+
+  stats.count("new", ids.length - results.length);
+  stats.count("existing", results.length);
+
+  return env.concatDataLeft(results, envelope);
 };
 
 plugin.argv = {};

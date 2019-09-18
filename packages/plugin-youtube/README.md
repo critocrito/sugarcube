@@ -41,6 +41,12 @@ or setting it in the JSON configuration file:
 }
 ```
 
+**Metrics:**
+
+- `total`: The total number of Youtube videos fetched.
+- `fail`: The number of videos that failed.
+- `success`: The number of videos that were successfully fetched.
+
 ### `youtube_channel` plugin
 
 Fetch a list of videos from a channel. A query must be configured to supply one or more channel ids.
@@ -94,7 +100,14 @@ videos. It uses the `media_youtubedl` plugin.
 $(npm bin)/sugarcube -c config.json \
                      -q channels.json \
                      -p youtube_channel,media_youtubedl
-```
+``**
+
+**Metrics:**
+
+- `total`: The total number of Youtube channels queried.
+- `fail`: The number of channels that failed.
+- `success`: The number of channels that succeeded to download.
+- `fetched`: The number of videos that are fetched from the channels.
 
 ## License
 

@@ -25,6 +25,13 @@ added to the `_sc_downloads` collection.
 
   Fetch files of this media type. Separate different types using a comma.
 
+**Metrics:**
+
+- `total`: The total number of files fetched.
+- `existing`: The number of files that were already previously fetched.
+- `success`: The number of files that were successfully fetched.
+- `fail`: The number of files that were failed to download.
+
 ### `http_wget` plugin
 
 Fetch whole web pages from `_sc_media`. Downloaded targets are added to the
@@ -62,6 +69,13 @@ $(npm bin)/sugarcube -d \
                      -q feeds.json \
                      -p twitter_feed,http_wget,http_screenshot
 ```
+
+**Metrics:**
+
+- `total`: The total number of screenshots taken.
+- `existing`: The number of screenshots that already exist.
+- `success`: The number of screenshots that were successfully taken.
+- `fail`: The number of screenshots that were failed.
 
 ## License
 

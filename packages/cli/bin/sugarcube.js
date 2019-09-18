@@ -2,4 +2,4 @@
 
 require("source-map-support").install();
 // eslint-disable-next-line import/no-dynamic-require
-require("../lib/cli");
+require("../_dist/cli");

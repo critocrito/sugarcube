@@ -1,16 +1,119 @@
+import {merge, getOr} from "lodash/fp";
 import {state} from "./state";
 
 export const instrument = (maybeState, {events}) => {
-  const s = state(maybeState);
+  const s = maybeState == null ? state(maybeState) : maybeState;
+  let curPlugin;
 
   const fail = failure => {
     const {term, plugin, reason} = failure;
+    const msg = `${plugin} ${term}: ${reason}`;
+    const marker = s.get("pipeline.marker");
+
     s.update("failed", failures =>
       Array.isArray(failures) ? failures.concat(failure) : [failure],
     );
-    const msg = `${plugin} ${term}: ${reason}`;
-    events.emit("log", {type: "warn", msg});
+    s.update("plugins", plugins => {
+      const currentFail = getOr(0, `${plugin}.counts.fail`, plugins);
+
+      return merge(plugins, {
+        [plugin]: {counts: {fail: currentFail + 1}},
+      });
+    });
+
+    if (events != null) {
+      events.emit("log", {type: "warn", msg});
+      events.emit("fail", Object.assign({}, failure, {marker}));
+    }
   };
 
-  return {fail, get: s.get, update: s.update};
+  const count = (type, term) => {
+    const marker = s.get("pipeline.marker");
+
+    if (curPlugin != null)
+      s.update("plugins", plugins => {
+        const curCount = getOr(0, `${curPlugin}.counts.${type}`, plugins);
+        const increment = term == null ? 1 : term;
+
+        return merge(plugins, {
+          [curPlugin]: {counts: {[type]: curCount + increment}},
+        });
+      });
+
+    if (events != null)
+      events.emit("count", {type: `${curPlugin}.${type}`, term, marker});
+  };
+
+  const timing = t => {
+    const {term, type} = t;
+    const marker = s.get("pipeline.marker");
+
+    s.update("plugins", plugins => {
+      const curDuration = getOr(0, `${curPlugin}.durations.${type}`, plugins);
+      const increment = term == null ? 0 : term;
+
+      return merge(plugins, {
+        [curPlugin]: {durations: {[type]: curDuration + increment}},
+      });
+    });
+
+    if (events != null)
+      events.emit("duration", {type: `${curPlugin}.${type}`, term, marker});
+  };
+
+  const pipelineStart = ({pipeline, project, name, ts, marker}) => {
+    s.update("pipeline", p => {
+      const plugins = pipeline.map(([plugin]) => plugin);
+      return merge(p, {
+        project: getOr(project || "Unnamed Project", "project", p),
+        name: getOr(name || "Unnamed Pipeline", "name", p),
+        start: getOr(ts, "start", p),
+        marker: getOr(marker, "marker", p),
+        plugins: getOr(plugins, "plugins", p),
+      });
+    });
+  };
+
+  const pipelineEnd = ({ts}) => {
+    const startDate = s.get(`pipeline.start`);
+    const marker = s.get("pipeline.marker");
+    const took = ts - startDate;
+
+    s.update("pipeline", p => {
+      return merge(p, {
+        end: ts,
+        took,
+      });
+    });
+    events.emit("duration", {type: `pipeline.took`, term: took, marker});
+  };
+
+  const pluginStart = ({plugin, ts}) => {
+    curPlugin = plugin;
+    s.update("plugins", plugins => {
+      return merge(plugins, {[plugin]: {start: ts}});
+    });
+  };
+
+  const pluginEnd = ({plugin, ts}) => {
+    const start = s.get(`plugins.${plugin}.start`);
+    s.update("plugins", plugins => {
+      return merge(plugins, {[plugin]: {end: ts}});
+    });
+    timing({type: "took", term: ts - start});
+    // Make sure to unset curPlugin last.
+    curPlugin = null;
+  };
+
+  return {
+    fail,
+    count,
+    timing,
+    pipelineStart,
+    pipelineEnd,
+    pluginStart,
+    pluginEnd,
+    get: s.get,
+    update: s.update,
+  };
 };

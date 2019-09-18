@@ -7,7 +7,7 @@ import {omitFromData} from "../utils";
 
 const {sToA} = utils;
 
-const plugin = (envelope, {cfg, log}) => {
+const plugin = (envelope, {cfg, log, stats}) => {
   const host = get("elastic.host", cfg);
   const port = get("elastic.port", cfg);
   const index = get("elastic.index", cfg);
@@ -37,6 +37,10 @@ const plugin = (envelope, {cfg, log}) => {
       const toIndex = omitFromData(omitFields, dataToIndex.data);
       const toUpdate = omitFromData(omitFields, dataToUpdate.data);
 
+      stats.count("total", ids.length);
+      stats.count("new", toIndex.length);
+      stats.count("existing", toUpdate.length);
+
       log.info(`Indexing ${size(toIndex)} units.`);
       log.info(`Updating ${size(toUpdate)} units.`);
 
@@ -44,9 +48,13 @@ const plugin = (envelope, {cfg, log}) => {
 
       if (size(errors) > 0) {
         errors.forEach(e =>
-          log.error(`Unit ${e.id} threw an error: ${e.error}`),
+          stats.fail({
+            type: "any_unit",
+            term: e.id,
+            plugin: "elastic_export",
+            reason: e.error,
+          }),
         );
-        throw new Error(`Indexing units threw an error.`);
       }
     },
     {host, port, mappings},

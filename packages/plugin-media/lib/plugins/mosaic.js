@@ -70,7 +70,7 @@ const plugin = async (envelope, {log, cfg, stats}) => {
         if (e.code !== "ENOENT") {
           throw e;
         }
-
+        stats.count("total");
         counter += 1;
 
         return download;
@@ -91,6 +91,7 @@ const plugin = async (envelope, {log, cfg, stats}) => {
         log.info(
           `Mosaic of ${location} exists at ${dest}. Not forcing a re-generation.`,
         );
+        stats.count("existing");
         counter += 1;
 
         return Object.assign({}, download, {mosaic: dest});
@@ -116,6 +117,7 @@ const plugin = async (envelope, {log, cfg, stats}) => {
       }
 
       log.info(`Created mosaic at ${dest} with strategy ${strategy}.`);
+      stats.count("success");
 
       counter += 1;
       if (counter % 100 === 0)

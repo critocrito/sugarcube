@@ -50,6 +50,7 @@ const listChannel = (envelope, {cfg, log, stats}) => {
   const retrieveChannel = query =>
     flowP(
       [
+        tapP(() => stats.count("total")),
         parseChannelQuery,
         async q => {
           const exists = await channelExists(key, q);
@@ -65,7 +66,10 @@ const listChannel = (envelope, {cfg, log, stats}) => {
             ? flowP([
                 op,
                 tapP(ds => {
-                  log.info(`Received ${size(ds)} videos for ${query}.`);
+                  const total = size(ds);
+                  log.info(`Received ${total} videos for ${query}.`);
+                  stats.count("success");
+                  stats.count("fetched", total);
                 }),
               ])(query)
             : [];

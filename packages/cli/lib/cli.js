@@ -3,7 +3,7 @@ import {
   curry,
   map,
   filter,
-  merge,
+  mergeAll,
   concat,
   join,
   omit,
@@ -264,7 +264,16 @@ const argvOmit = [
 ];
 const config = flow([
   omit(argvOmit),
-  cfg => merge(cfg, {project, queries, plugins}),
+  cfg =>
+    mergeAll([
+      {project: "Unnamed Project", name: "Unnamed Pipeline"},
+      cfg,
+      {
+        project,
+        queries,
+        plugins,
+      },
+    ]),
 ])(argv);
 
 // Now we have our queries and config, we can create a sugarcube run, and
@@ -286,11 +295,19 @@ flow([
   uniq,
 ])(instruments).forEach(name => {
   const instrument = instruments[name](config);
-  ["log", "stats", "plugin_start", "plugin_end", "run", "end"].forEach(
-    event => {
-      if (instrument[event] != null) run.events.on(event, instrument[event]);
-    },
-  );
+  [
+    "log",
+    "stats",
+    "plugin_start",
+    "plugin_end",
+    "run",
+    "end",
+    "fail",
+    "count",
+    "duration",
+  ].forEach(event => {
+    if (instrument[event] != null) run.events.on(event, instrument[event]);
+  });
 });
 
 // Listen for errors from the pipeline run.
@@ -299,4 +316,6 @@ run.events.on("error", haltAndCough(argv.debug));
 // Run the pipeline.
 run()
   .then(() => fs.writeFileSync(argv.cache, JSON.stringify(run.cache.get())))
-  .catch(haltAndCough(argv.debug));
+  .catch(e => {
+    haltAndCough(argv.debug, e);
+  });

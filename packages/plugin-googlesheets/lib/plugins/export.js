@@ -8,7 +8,7 @@ import {
 } from "../utils";
 import {assertCredentials, assertSpreadsheet} from "../assertions";
 
-const exportData = async (envelope, {log, cfg, cache}) => {
+const exportData = async (envelope, {log, cfg, cache, stats}) => {
   const client = get("google.client_id", cfg);
   const secret = get("google.client_secret", cfg);
   const id = get("google.spreadsheet_id", cfg);
@@ -68,6 +68,8 @@ const exportData = async (envelope, {log, cfg, cache}) => {
       log.info(
         `Merging ${size(envelope.data)} into ${size(rows.slice(1))} units.`,
       );
+      stats.count("total", size(envelope.data));
+      stats.count("existing", size(rows.slice(1)));
 
       const mergedRows = flow([
         concatEnvelopeAndRows(envelope),

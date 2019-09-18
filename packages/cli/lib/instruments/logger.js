@@ -1,5 +1,5 @@
 import {getOr} from "lodash/fp";
-import {inspect} from "util";
+import formatDistance from "date-fns/formatDistance";
 import winston, {format, transports} from "winston";
 
 const sugarcubeFormat = format.printf(({level, message, timestamp, stack}) => {
@@ -28,6 +28,8 @@ const createLogger = (level, colorize) => {
   return logger;
 };
 
+const humanDuration = s => formatDistance(new Date(0), new Date(s));
+
 const instrument = cfg => {
   const debug = getOr(false, "debug", cfg);
   const colors = getOr(true, "logger.colors", cfg);
@@ -37,21 +39,41 @@ const instrument = cfg => {
     logger.log(type, msg);
   };
 
-  // eslint-disable-next-line camelcase
-  const plugin_start = ({plugin}) => {
-    logger.info(`Starting the ${plugin} plugin.`);
-  };
-
-  // eslint-disable-next-line camelcase
-  const plugin_end = ({plugin}) => {
-    logger.info(`Finished the ${plugin} plugin.`);
-  };
-
   const logStats = ({stats}) => {
-    const statsNames = Object.keys(stats);
-    const text = statsNames.length === 0 ? "none" : statsNames.join(", ");
-    logger.debug(`Receiving stats for: ${text}`);
-    logger.debug(`\n${inspect(stats, {colors, depth: null})}`);
+    const {plugins, project, name} = stats.pipeline;
+    const failures = getOr([], "failed", stats);
+    const pluginStats = getOr({}, "plugins", stats);
+
+    const logFailures =
+      failures.length > 0
+        ? `and collected ${failures.length} failures`
+        : "and had no failures";
+
+    logger.debug(
+      `Pipeline ${project}/${name} took ${humanDuration(
+        getOr(0, "pipeline.took", stats),
+      )} ${logFailures}.`,
+    );
+
+    if (plugins != null)
+      plugins.forEach(p => {
+        const plugin = pluginStats[p];
+        const took = getOr(0, "durations.took", plugin);
+        const counts = getOr({}, "counts", plugin);
+        const durations = getOr({}, "durations", plugin);
+        const logCounts = Object.keys(counts)
+          .map(c => `${c}=${counts[c]}`)
+          .join(", ");
+        const logDurations = Object.keys(durations)
+          .filter(d => d !== "took")
+          .map(d => `${d}=${humanDuration(durations[d])}`)
+          .join(", ");
+        logger.debug(`Plugin ${p} took ${humanDuration(took)}`);
+
+        if (logCounts.length > 0) logger.debug(`  counts: ${logCounts}`);
+        if (logDurations.length > 0)
+          logger.debug(`  durations: ${logDurations}`);
+      });
   };
 
   const run = ({marker}) => {
@@ -62,7 +84,7 @@ const instrument = cfg => {
     logger.info("Finished the LSD.");
   };
 
-  return {log, plugin_start, plugin_end, stats: logStats, run, end};
+  return {log, run, end, stats: logStats};
 };
 
 instrument.desc =

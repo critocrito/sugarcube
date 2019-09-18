@@ -50,7 +50,14 @@ sugarcube -Q ddg_search:Keith\ Johnstone \
           --elastic.mappings mappings.json
 ```
 
-Indexes are created the first time an export happens. In order to change the mappings of an existing index see [this](https://www.elastic.co/blog/changing-mapping-with-zero-downtime), [this](https://www.elastic.co/blog/reindex-is-coming) and [this](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-reindex.html).
+Indexes are created the first time an export happens. In order to change the mappings of an existing index see [this](https://www.elastic.co/blog/changing-mapping-with-zero-downtime), [this](https://www.elastic.co/blog/reindex-is-coming) and [this](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-reindex.html**.
+
+**Metrics:**
+
+- `total`: The total number of units exported.
+- `new`: The number of new units indexed.
+- `existing`: The number of existing units updated.
+- `fail`: The number of units that failed to export.
 
 ### `elastic_import` plugin
 
@@ -128,6 +135,10 @@ I can then call this script like that:
 ./pipelines.sh
 ```
 
+**Metrics:**
+
+- `total`: The total number of units imported.
+
 ### `elastic_complement` plugin
 
 Complement data in the pipeline with existing data stored in
@@ -152,6 +163,11 @@ sugarcube -Q ddg_search:Keith\ Johnstone \
           -p ddg_search,elastic_complement,elastic_export
 ```
 
+**Metrics:**
+
+- `new`: The number of new units that weren't complemented.
+- `existing`: The number of units that were complemented.
+
 ### `elastic_complement_left` plugin
 
 Complement data in the pipeline with existing data stored in
@@ -175,6 +191,11 @@ data before exporting it again to Elasticsearch.
 sugarcube -Q ddg_search:Keith\ Johnstone \
           -p ddg_search,elastic_complement_left,elastic_export
 ```
+
+**Metrics:**
+
+- `new`: The number of new units that weren't complemented.
+- `existing`: The number of units that were complemented.
 
 ### `elastic_supplement` plugin
 

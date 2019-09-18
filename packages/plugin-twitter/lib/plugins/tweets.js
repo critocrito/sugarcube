@@ -20,6 +20,8 @@ const tweetsPlugin = async (envelope, {log, cfg, stats}) => {
 
   const fetchTweets = ids => {
     log.info(`Fetching a chunk of ${ids.length} tweets.`);
+    stats.count("total", ids.length);
+
     return flowP(
       [
         // Fetch tweets for this chunk.
@@ -56,6 +58,7 @@ const tweetsPlugin = async (envelope, {log, cfg, stats}) => {
                 reason: "Tweet does not exist.",
               });
             } else {
+              stats.count("success");
               results.push(response[id]);
             }
           });
@@ -65,11 +68,13 @@ const tweetsPlugin = async (envelope, {log, cfg, stats}) => {
         // Handle any failed tweets.
         ([results, fails]) => {
           if (fails.length > 0) {
-            stats.update("failed", failed =>
-              Array.isArray(failed) ? failed.concat(fails) : [fails],
-            );
             fails.forEach(({term, reason}) =>
-              log.warn(`Failed to fetch tweet ${term}: ${reason}`),
+              stats.fail({
+                type: querySource,
+                plugin: "twitter_tweet",
+                term,
+                reason,
+              }),
             );
           }
           return results;
@@ -96,7 +101,7 @@ const tweetsPlugin = async (envelope, {log, cfg, stats}) => {
               type: querySource,
               term: id,
               plugin: "twitter_tweet",
-              reason: `Failed to fetch tweet: ${reason}`,
+              reason,
             });
           });
           return [];

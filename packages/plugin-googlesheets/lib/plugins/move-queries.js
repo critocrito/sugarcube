@@ -12,7 +12,7 @@ import {assertCredentials, assertSpreadsheet} from "../assertions";
 
 const querySource = "sheets_query";
 
-const moveQueries = async (envelope, {log, cfg, cache}) => {
+const moveQueries = async (envelope, {log, cfg, cache, stats}) => {
   const client = get("google.client_id", cfg);
   const secret = get("google.client_secret", cfg);
   const id = get("google.spreadsheet_id", cfg);
@@ -105,6 +105,8 @@ const moveQueries = async (envelope, {log, cfg, cache}) => {
           `Merging ${rowsToMove.length - 1} queries into ${existingRows.length -
             1} queries.`,
         );
+        stats.count("total", rowsToMove.length);
+        stats.count("existing", existingRows.length);
 
         const mergedRows = flow([
           concatQueriesRows(defaultType, existingRows),

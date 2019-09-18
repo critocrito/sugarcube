@@ -21,7 +21,14 @@ Fetch the tweets of a twitter user account.
 - `twitter.access_token_key`
 - `twitter.access_token_secret`
 - `twitter.tweet_count`
-- `twitter.retweets`
+- `twitter.retweets**
+
+**Metrics:**
+
+- `total`: The total number of feeds queried.
+- `fail`: The number of feeds that failed to query.
+- `success`: The number of feeds that succeeded.
+- `fetched`: The number of tweets that were fetched from all feeds.
 
 ### `twitter_tweets` plugin
 
@@ -32,7 +39,13 @@ Fetch individual tweets by the Tweet ID.
 - `twitter.consumer_key`
 - `twitter.consumer_secret`
 - `twitter.access_token_key`
-- `twitter.access_token_secret`
+- `twitter.access_token_secret**
+
+**Metrics:**
+
+- `total`: The total number of tweets queried.
+- `fail`: The number of tweets that failed to download.
+- `success`: The number tweets that succeeded to download.
 
 ### `twitter_friends` plugin
 

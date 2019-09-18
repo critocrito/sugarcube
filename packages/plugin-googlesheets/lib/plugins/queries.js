@@ -7,7 +7,7 @@ import {assertCredentials, assertSpreadsheet} from "../assertions";
 
 const querySource = "sheets_query";
 
-const importQueries = (envelope, {log, cfg, cache}) => {
+const importQueries = (envelope, {log, cfg, cache, stats}) => {
   const client = get("google.client_id", cfg);
   const secret = get("google.client_secret", cfg);
   const id = get("google.spreadsheet_id", cfg);
@@ -51,6 +51,8 @@ const importQueries = (envelope, {log, cfg, cache}) => {
             count > 1 ? "queries" : "query"
           }.`,
         );
+
+        stats.count("total", count);
 
         // Update the last access field
         const header = rows[0].includes("last access")

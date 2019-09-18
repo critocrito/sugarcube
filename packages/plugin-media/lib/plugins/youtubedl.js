@@ -92,6 +92,8 @@ const plugin = async (envelope, {cfg, log, stats}) => {
 
       if (!includes(type, downloadTypes)) return media;
 
+      stats.count("total");
+
       const location = join(
         dataDir,
         unit._sc_id_hash,
@@ -114,6 +116,7 @@ const plugin = async (envelope, {cfg, log, stats}) => {
         log.info(
           `Video ${source} exists at ${location}. Not forcing a download.`,
         );
+        stats.count("existing");
         counter += 1;
 
         return media;
@@ -152,6 +155,7 @@ const plugin = async (envelope, {cfg, log, stats}) => {
       }
 
       log.info(`Downloaded ${source} to ${location}.`);
+      stats.count("success");
 
       const [md5, sha256] = await Promise.all([
         md5sum(location),

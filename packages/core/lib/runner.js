@@ -3,48 +3,32 @@ import {flow, map, zip, merge} from "lodash/fp";
 import {flowP, caughtP, tapP, foldP} from "dashp";
 
 import {liftManyA2} from "./data/plugin";
-import {envelopeQueries, fmapData, filterData} from "./data/envelope";
+import {envelopeQueries, fmapData} from "./data/envelope";
 import ds from "./data/data";
 import {state} from "./state";
 import {instrument} from "./instrument";
 import {uid, generateSeed} from "./crypto";
 import {now} from "./utils";
 
-// The following functions provide funtionalities that should be run every
-// time a plugin is run. The plugin runner composes them with the plugin.
-const pluginStats = (events, name, stats, envelope) => {
-  events.emit("plugin_stats", {type: "plugin_stats", plugin: name});
+// The following functions provide pre and post-hooks for each plugin. The
+// plugin runner composes them with the plugin.
+const start = (events, plugin, stats, envelope) => {
+  const ts = now();
+  stats.pluginStart({plugin, ts});
+  events.emit("log", {type: "info", msg: `Starting the ${plugin} plugin.`});
+  events.emit("plugin_start", {plugin, ts});
   return envelope;
 };
 
-const start = (events, name, stats, envelope) => {
-  const epoch = Date.now();
-  events.emit("plugin_start", {type: "plugin_start", ts: now(), plugin: name});
-  stats.update(`pipeline.plugins.${name}`, st =>
-    Object.assign({}, st, {
-      start: Array.isArray(st.start) ? st.start.concat(epoch) : [epoch],
-    }),
-  );
-  return envelope;
-};
-
-const end = (events, name, stats, envelope) => {
-  const epoch = Date.now();
-  const duration =
-    epoch - stats.get(`pipeline.plugins.${name}.start`).slice(-1)[0];
-  // eslint-disable-next-line camelcase
-  const total = filterData(({_sc_source}) => _sc_source === name, envelope).data
-    .length;
-  events.emit("plugin_end", {type: "plugin_end", ts: now(), plugin: name});
-  stats.update(`pipeline.plugins.${name}`, st =>
-    Object.assign({}, st, {
-      total: Array.isArray(st.total) ? st.total.concat(total) : [total],
-      end: Array.isArray(st.end) ? st.end.concat(epoch) : [epoch],
-      duration: Array.isArray(st.duration)
-        ? st.duration.concat(duration)
-        : [duration],
-    }),
-  );
+const end = (events, plugin, stats, marker, envelope) => {
+  const ts = now();
+  stats.pluginEnd({plugin, ts});
+  events.emit("log", {type: "info", msg: `Finished the ${plugin} plugin.`});
+  events.emit("plugin_end", {
+    stats: stats.get(`plugins.${plugin}`),
+    plugin,
+    ts,
+  });
   return envelope;
 };
 
@@ -98,9 +82,9 @@ const mangleData = (source, marker, date, envelope) =>
  * @example
  * const run = runner(config, queryIds);
  *
- * run.events.onValue(msg => {
- *   switch (msg.type) {
- *     case 'log_info': console.log(msg.msg); break;
+ * run.events.on(({type, msg}) => {
+ *   switch (type) {
+ *     case 'info': console.log(msg); break;
  *     // ... other cases ...
  *     default: break;
  *   }
@@ -112,11 +96,11 @@ const runner = opts => {
   const {plugins, config, queries, stats: runStats, cache: runCache} = opts;
 
   const events = new EventEmitter();
-  const stats = instrument(runStats, {events, config});
-  const cache = state(runCache);
+  const ts = now();
   const seed = generateSeed(8);
-  const timestamp = now();
-  const marker = uid(seed, timestamp);
+  const marker = uid(seed, ts);
+  const stats = instrument(runStats, {events});
+  const cache = state(runCache);
   let endEarly = false;
 
   // The pipeline is a list of tuples, where the first element of the tuple
@@ -125,17 +109,6 @@ const runner = opts => {
   //     [['twitter_search', f1], ['mongodb_store', f2]]
   const pipeline = flow([map(p => plugins[p]), zip(config.plugins)])(
     config.plugins,
-  );
-
-  stats.update(
-    "pipeline",
-    merge({
-      plugins: pipeline.reduce(
-        (memo, [p], order) => Object.assign(memo, {[p]: {order}}),
-        {},
-      ),
-      name: config.name,
-    }),
   );
 
   const log = {
@@ -148,7 +121,16 @@ const runner = opts => {
   const run = () =>
     flowP(
       [
-        tapP(() => events.emit("run", {marker})),
+        tapP(() => {
+          stats.pipelineStart({
+            project: config.project,
+            name: config.name,
+            ts,
+            pipeline,
+            marker,
+          });
+          events.emit("run", {marker});
+        }),
         foldP((envelope, [name, plugin]) => {
           if (endEarly) return;
           // eslint-disable-next-line consistent-return
@@ -160,17 +142,17 @@ const runner = opts => {
                 endEarly = !!e.endEarly;
                 return e;
               },
-              e => mangleData(name, marker, timestamp, e),
-              e => pluginStats(events, name, stats, e),
-              e => end(events, name, stats, e),
+              e => mangleData(name, marker, ts, e),
+              e => end(events, name, stats, marker, e),
             ],
             envelope,
-            {plugins, cache, stats, log, cfg: merge({marker}, config)},
+            {plugins, cache, stats, log, cfg: merge({marker}, config), events},
           );
         }, envelopeQueries(queries)),
         caughtP(e => events.emit("error", e)),
         tapP(() => {
-          events.emit("stats", {type: "stats", stats: stats.get()});
+          stats.pipelineEnd({ts: now()});
+          events.emit("stats", {stats: stats.get()});
           events.emit("end");
         }),
       ],

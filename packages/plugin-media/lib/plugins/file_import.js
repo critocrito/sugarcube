@@ -62,6 +62,8 @@ const fileImportPlugin = async (envelope, {log, cfg, stats}) => {
       // Skip URL's from importing.
       if (/^https?:\/\//.test(source)) return null;
 
+      stats.count("total");
+
       const dir = join(dataDir, unit._sc_id_hash, type);
       const filename =
         type === "video"
@@ -84,6 +86,8 @@ const fileImportPlugin = async (envelope, {log, cfg, stats}) => {
         log.info(
           `Media ${type} ${source} exists at ${location}. Not forcing an import.`,
         );
+        stats.count("existing");
+
         return null;
       }
 
@@ -123,6 +127,7 @@ const fileImportPlugin = async (envelope, {log, cfg, stats}) => {
       }
 
       log.info(`Imported ${source} to ${location}.`);
+      stats.count("success");
 
       counter += 1;
       if (counter % 100 === 0)

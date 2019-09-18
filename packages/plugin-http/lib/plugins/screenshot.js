@@ -28,7 +28,7 @@ const screenshotUrl = curry((headless, url, path) => {
   );
 });
 
-const screenshot = (envelope, {cfg, log}) => {
+const screenshot = (envelope, {cfg, log, stats}) => {
   const dataDir = get("http.data_dir", cfg);
   const headless = get("http.headless", cfg);
 
@@ -36,6 +36,7 @@ const screenshot = (envelope, {cfg, log}) => {
     unit =>
       collectP(media => {
         if (media.type !== "url") return media;
+        stats.count("total");
         const {type, term, href} = media;
         const source = href || term;
         const idHash = media._sc_id_hash;
@@ -46,24 +47,33 @@ const screenshot = (envelope, {cfg, log}) => {
           [
             () =>
               accessAsync(location)
-                .then(() =>
-                  log.info(`Screenshot ${source} exists at ${location}`),
-                )
+                // eslint-disable-next-line promise/always-return
+                .then(() => {
+                  stats.count("existing");
+                  log.info(`Screenshot ${source} exists at ${location}`);
+                })
                 .catch(e => {
                   if (e.code === "ENOENT") {
                     return flowP(
                       [
                         () => mkdirP(dir),
                         () => screenshotUrl(headless, source, location),
-                        tapP(() =>
+                        tapP(() => {
+                          stats.count("success");
                           log.info(
                             `Screenshot of ${source} stored in ${location}.`,
-                          ),
-                        ),
+                          );
+                        }),
                       ],
                       null,
                     );
                   }
+                  stats.fail({
+                    type: unit._sc_source,
+                    term: source,
+                    plugin: "http_screenshot",
+                    reason: `Failed to access ${e.path}: ${e.message}.`,
+                  });
                   throw e;
                 }),
             () => Promise.all([md5sum(location), sha256sum(location)]),

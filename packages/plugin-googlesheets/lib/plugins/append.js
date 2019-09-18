@@ -4,7 +4,7 @@ import SheetsDo from "../sheets";
 import {unitsToRows, coerceSelectionLists} from "../utils";
 import {assertCredentials, assertSpreadsheet} from "../assertions";
 
-const exportData = async (envelope, {log, cfg, cache}) => {
+const exportData = async (envelope, {log, cfg, cache, stats}) => {
   const client = get("google.client_id", cfg);
   const secret = get("google.client_secret", cfg);
   const id = get("google.spreadsheet_id", cfg);
@@ -56,6 +56,7 @@ const exportData = async (envelope, {log, cfg, cache}) => {
 
       log.info(`Appended ${size(dataNoHeader)} units to ${sheetUrl}.`);
       log.info(`Updated range ${range.replace(/^.*!/, "")} of ${sheet}.`);
+      stats.count("total");
     },
     {client, secret, tokens: cache.get("sheets.tokens")},
   );

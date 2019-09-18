@@ -6,7 +6,7 @@ import {assertCredentials, assertSpreadsheet, assertSheet} from "../assertions";
 
 const querySource = "sheets_condition";
 
-const importData = async (envelope, {log, cfg, cache}) => {
+const importData = async (envelope, {log, cfg, cache, stats}) => {
   const client = get("google.client_id", cfg);
   const secret = get("google.client_secret", cfg);
   const id = get("google.spreadsheet_id", cfg);
@@ -33,6 +33,7 @@ const importData = async (envelope, {log, cfg, cache}) => {
 
   log.info("Spreadsheet retrieved");
   log.info(`Updating ${size(units)} units from sheet`);
+  stats.count("total", size(units));
 
   return env.concatData(units, envelope);
 };

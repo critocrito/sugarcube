@@ -44,6 +44,13 @@ Download all videos of type `video` that are stored in `_sc_media`. SHA256 and M
 $(npm bin)/sugarcube -q queries.json -c config.json -p twitter_feed,media_youtubedl
 ```
 
+**Metrics:**
+
+- `total`: The total number of videos downloaded.
+- `existing`: The number of videos that already existed.
+- `fail`: The number of videos that failed to download.
+- `success`: The number of videos that were successfully downloaded.
+
 ### `media_youtubedl_check`
 
 Check any video in `_sc_media** if it is still available.
@@ -61,7 +68,12 @@ Check any video in `_sc_media** if it is still available.
         "youtubedl_source_addresses": ["192.168.2.100", "192.168.2.101"]
       }
     }
-    ```
+    ``**
+**Metrics:**
+
+- `total`: The total number of videos checked.
+- `fail`: The number of videos that failed to check.
+- `success`: The number of videos that were successfully checked.
 
 ### `media_mosaic` plugin
 
@@ -82,6 +94,13 @@ $(npm bin)/sugarcube -p youtube_video,media_youtubedl,media_mosaic \
                      --media.mosaic_force
 ```
 
+**Metrics:**
+
+- `total`: The total number of video mosaics generated.
+- `existing`: The number of mosaics that already existed.
+- `fail`: The number of mosaics that failed to generate.
+- `success`: The number of mosaics that were successfully generated.
+
 ### `media_file_import` plugin
 
 Import media files into the data collection. This is a natural fit with the `fs_unfold` plugin.
@@ -99,6 +118,13 @@ Import media files into the data collection. This is a natural fit with the `fs_
 ```
 $(npm bin)/sugarcube -Q glob_pattern:~/files/* -p fs_unfold,media_file_import
 ```
+
+**Metrics:**
+
+- `total`: The total number of files imported.
+- `existing`: The number of files that already existed.
+- `fail`: The number of files that failed to import.
+- `success`: The number of files that were successfully imported.
 
 ## License
 

@@ -1,4 +1,3 @@
-import {size} from "lodash/fp";
 import {flowP, flatmapP, tapP, caughtP} from "dashp";
 import {envelope as env, plugin as p} from "@sugarcube/core";
 
@@ -18,8 +17,14 @@ const feedPlugin = async (envelope, {log, cfg, stats}) => {
   const fetchTimeline = user =>
     flowP(
       [
+        tapP(() => stats.count("total")),
         feed(cfg),
-        tapP(rs => log.info(`Fetched ${size(rs)} tweets for ${user}.`)),
+        tapP(rs => {
+          const fetched = rs.length;
+          stats.count("success");
+          stats.count("fetched", fetched);
+          log.info(`Fetched ${fetched} tweets for ${user}.`);
+        }),
         // Merge the query into the data unit.
         results =>
           results.map(r => {

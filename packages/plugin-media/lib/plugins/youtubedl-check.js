@@ -61,6 +61,8 @@ const plugin = async (envelope, {log, cfg, stats}) => {
       .map(({term}) => term);
 
     await collectP(async url => {
+      stats.count("total");
+
       if (delaySeconds > 0) {
         const randomDelay = random(delaySeconds, 2 * delaySeconds);
         log.debug(`Waiting ${randomDelay} seconds before fetching ${url}.`);
@@ -83,6 +85,9 @@ const plugin = async (envelope, {log, cfg, stats}) => {
           reason: `Check failed: ${e.message}`,
         });
       }
+
+      stats.count("success");
+
       counter += 1;
       if (counter % 100 === 0)
         log.debug(`Checked ${counter} out of ${envelope.data.length} units.`);

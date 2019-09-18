@@ -11,7 +11,7 @@ const globP = pify(glob);
 const querySourceGlob = "glob_pattern";
 const querySourceQuery = "elastic_query";
 
-const plugin = async (envelope, {cfg, log}) => {
+const plugin = async (envelope, {cfg, log, stats}) => {
   const host = get("elastic.host", cfg);
   const port = get("elastic.port", cfg);
   const index = get("elastic.index", cfg);
@@ -52,7 +52,10 @@ const plugin = async (envelope, {cfg, log}) => {
         log.debug(`Query: ${JSON.stringify(body)}`);
         results = results.concat(units);
       }
+
       log.info(`Fetched ${size(results)} units for ${size(bodies)} queries.`);
+      stats.count("total", size(results));
+
       return results;
     },
     {host, port},

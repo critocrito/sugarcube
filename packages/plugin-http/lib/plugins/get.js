@@ -40,6 +40,8 @@ const curlGet = async (envelope, {log, cfg, stats}) => {
     const downloads = await collectP(async media => {
       if (!includes(media.type, getTypes)) return null;
 
+      stats.count("total");
+
       const {type, term, href} = media;
       const source = href || term;
       const idHash = media._sc_id_hash;
@@ -75,6 +77,7 @@ const curlGet = async (envelope, {log, cfg, stats}) => {
         );
         for (let i = 0; i < locationsExists.length; i += 1) {
           if (locationsExists[i]) {
+            stats.count("existing");
             log.info(`Media ${source} exists at ${locations[i]}.`);
             return null;
           }
@@ -96,6 +99,7 @@ const curlGet = async (envelope, {log, cfg, stats}) => {
 
       try {
         await download(source, location);
+        stats.count("success");
         [md5, sha256] = await Promise.all([
           md5sum(location),
           sha256sum(location),
