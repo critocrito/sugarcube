@@ -30,6 +30,8 @@ const instrument = cfg => {
 
   return {
     fail: ({type, term, marker, reason, plugin}) => {
+      // The filename construction is shared with the mail_failed_stats and
+      // the csv_export_failed plugin. If updated here, update there as well.
       const filename = path.join(
         dataDir,
         `failed-stats-${label == null ? "" : `${label}-`}${marker}.csv`,

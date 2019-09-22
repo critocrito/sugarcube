@@ -32,6 +32,18 @@ const mailFailedStats = async (envelope, {cfg, log, stats}) => {
   const noEncrypt = get("mail.no-encrypt", cfg);
   const from = get("mail.from", cfg);
   const isDebug = get("mail.debug", cfg);
+
+  // I'm cheating here a little, in case a CSV file exists conatining the
+  // failures I attach it to the email. I have to match the csvFilename
+  // construction with the csv_failures_file instrument and the
+  // csv_export_failed plugin for this to work.
+  const dataDir = get("csv.data_dir", cfg);
+  const label = get("csv.label", cfg);
+  const csvFilename = path.join(
+    dataDir == null ? "" : dataDir,
+    `failed-stats-${label == null ? "" : `${label}-`}${marker}.csv`,
+  );
+
   const recipients = env.queriesByType(querySource, envelope);
   const subject = `[${project}]: Failed queries for ${name} (${marker}).`;
   const body = dots.failed_stats(Object.assign({}, {recipients, failures}));
@@ -57,7 +69,7 @@ const mailFailedStats = async (envelope, {cfg, log, stats}) => {
     }
 
     try {
-      statsFile = fs.createReadStream(stats.get("failed_stats_csv"));
+      statsFile = fs.createReadStream(csvFilename);
     } catch (e) {} // eslint-disable-line no-empty
 
     if (statsFile != null) {
@@ -69,7 +81,7 @@ const mailFailedStats = async (envelope, {cfg, log, stats}) => {
         return;
       }
       const filename = path.basename(
-        `${stats.get("failed_stats_csv")}${!noEncrypt ? ".gpg" : ""}`,
+        `${csvFilename}${!noEncrypt ? ".gpg" : ""}`,
       );
       attachments = [{filename, content}];
     }

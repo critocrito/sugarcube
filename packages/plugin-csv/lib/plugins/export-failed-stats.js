@@ -7,6 +7,8 @@ const exportFailedStatsPlugin = (envelope, {log, cfg, stats}) => {
   const dataDir = get("csv.data_dir", cfg);
   const delimiter = get("csv.delimiter", cfg);
   const label = get("csv.label", cfg);
+  // The filename construction is shared with the mail_failed_stats plugin and
+  // the csv_failures_file instrument. If updated here, update there as well.
   const filename = path.join(
     dataDir,
     `failed-stats-${label == null ? "" : `${label}-`}${cfg.marker}.csv`,
@@ -28,7 +30,6 @@ const exportFailedStatsPlugin = (envelope, {log, cfg, stats}) => {
   return new Promise((resolve, reject) => {
     csv.on("error", reject);
     csv.on("finish", () => {
-      stats.update("failed_stats_csv", () => filename);
       resolve(envelope);
     });
 
