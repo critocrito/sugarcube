@@ -154,6 +154,7 @@ const {argv} = Object.keys(plugins)
 // Create a local version of the logger instrument, so that we can send log
 // messages before the pipeline run.
 const logger = loggerInstrument({debug: argv.debug, logger: argv.logger});
+const info = msg => logger.log({type: "info", msg});
 const error = msg => logger.log({type: "error", msg});
 const debug = msg => logger.log({type: "debug", msg});
 
@@ -311,11 +312,16 @@ flow([
 });
 
 // Listen for errors from the pipeline run.
-run.events.on("error", haltAndCough(argv.debug));
+run.events.on("error", e => {
+  // close any instruments that might have open ressources.
+  run.events.emit("end");
+  haltAndCough(argv.debug, e);
+});
 
 // Run the pipeline.
+info(`Starting run ${run.marker}.`);
+
 run()
   .then(() => fs.writeFileSync(argv.cache, JSON.stringify(run.cache.get())))
-  .catch(e => {
-    haltAndCough(argv.debug, e);
-  });
+  .then(() => info("Finished the LSD."))
+  .catch(haltAndCough(argv.debug));

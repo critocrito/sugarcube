@@ -76,15 +76,7 @@ const instrument = cfg => {
       });
   };
 
-  const run = ({marker}) => {
-    logger.info(`Starting run ${marker}.`);
-  };
-
-  const end = () => {
-    logger.info("Finished the LSD.");
-  };
-
-  return {log, run, end, stats: logStats};
+  return {log, stats: logStats};
 };
 
 instrument.desc =
