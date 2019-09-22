@@ -1,6 +1,6 @@
 {
   "name": "@sugarcube/plugin-statsd",
-  "description": "",
+  "description": "StatsD backend for SugarCube.",
   "license": "GPL-3.0",
   "author": "Christo <christo@cryptodrunks.net>",
   "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-statsd#readme",
@@ -21,5 +21,8 @@
     "sugarcube",
     "sugarcube-plugin",
     "transformation"
-  ]
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }
