@@ -319,9 +319,17 @@ run.events.on("error", e => {
 });
 
 // Run the pipeline.
-info(`Starting run ${run.marker}.`);
+(async () => {
+  info(`Starting run ${run.marker}.`);
 
-run()
-  .then(() => fs.writeFileSync(argv.cache, JSON.stringify(run.cache.get())))
-  .then(() => info("Finished the LSD."))
-  .catch(haltAndCough(argv.debug));
+  await run();
+
+  try {
+    // Persist cache.
+    fs.writeFileSync(argv.cache, JSON.stringify(run.cache.get()));
+  } catch (e) {
+    haltAndCough(argv.debug, e);
+  }
+
+  info("Finished the LSD.");
+})();
