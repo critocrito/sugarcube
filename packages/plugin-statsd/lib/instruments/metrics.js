@@ -11,23 +11,23 @@ const instrument = cfg => {
     telegraf: statsd.telegraf,
   });
 
-  const fmtMetric = ({marker, type}) => {
-    return `sugarcube.${project}.${name}.${marker}.${type}`;
+  const fmtMetric = ({type}) => {
+    return `sugarcube.${project}.${name}.${type}`;
   };
 
   return {
-    fail: ({plugin, marker}) => {
-      const metric = fmtMetric({marker, type: `${plugin}.fail`});
+    fail: ({plugin}) => {
+      const metric = fmtMetric({type: `${plugin}.fail`});
       client.increment(metric);
     },
 
-    count: ({type, term, marker}) => {
-      const metric = fmtMetric({marker, type});
+    count: ({type, term}) => {
+      const metric = fmtMetric({type});
       client.increment(metric, term == null ? 1 : term);
     },
 
-    duration: ({type, term, marker}) => {
-      const metric = fmtMetric({type, marker});
+    duration: ({type, term}) => {
+      const metric = fmtMetric({type});
       client.timing(metric, term);
     },
 
