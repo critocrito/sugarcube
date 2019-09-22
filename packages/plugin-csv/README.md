@@ -97,6 +97,41 @@ Export any failure stats of a pipeline run to a CSV file. The file is named `fai
 - `csv.data_dir`: Specify the directory location to write the file to. Defaults to `./data`.
 - `csv.label`: Specify an additional label to add to the file name of the exported CSV file.
 
+## Instruments
+
+### `csv_failure_file` instrument
+
+Export failures to a CSV file. The name of the file is `<data-dir>/failed-stats-<marker>.csv`. If the `label` is configured, the filename is `<data-dir>/failed-stats-<label>-<marker>.csv`.
+
+**Configuration:**
+
+- `csv.delimiter`: Specify the csv delimiter. Defaults to `,`.
+- `csv.data_dir`: Specify the directory location to write the file to. Defaults to `./data`.
+- `csv.label`: Specify an additional label to add to the file name of the exported CSV file.
+
+**Example:**
+
+```
+sugarcube -I csv_failures_file --csv.data_dir ./csv -p youtube_channel -c config.json
+```
+
+```json
+{
+  "instruments": [
+    "csv_failures_file"
+  ],
+  "plugins": [
+    "youtube_channel"
+  ],
+  "csv": {
+    "data_dir": "./csv"
+  },
+  "queries": [
+    {"type": "youtube_channel", "term": "non-existing"}
+  ]
+}
+```
+
 ## License
 
 [GPL3](./LICENSE) @ [Christo](christo@cryptodrunks.net)
