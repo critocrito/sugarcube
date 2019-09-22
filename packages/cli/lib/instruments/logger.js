@@ -80,7 +80,7 @@ const instrument = cfg => {
 };
 
 instrument.desc =
-  "Log messages to STDOUT [log, plugin_start, plugin_end, stats, run, end].";
+  "Log messages to STDOUT [log, plugin_start, plugin_end, stats].";
 
 instrument.argv = {
   debug: {
