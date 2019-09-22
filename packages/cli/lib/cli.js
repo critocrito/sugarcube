@@ -322,6 +322,7 @@ run.events.on("error", e => {
 (async () => {
   info(`Starting run ${run.marker}.`);
 
+  // Errors are handled by listening to the `error` event.
   await run();
 
   try {
