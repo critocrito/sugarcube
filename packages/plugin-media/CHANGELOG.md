@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.27.0](https://github.com/critocrito/sugarcube/compare/v0.26.1...v0.27.0) (2019-09-22)
+
+
+### Bug Fixes
+
+* **plugin-media:** count existing videos ([fcde080](https://github.com/critocrito/sugarcube/commit/fcde080))
+* **plugin-media:** handle missing locations when generating mosaics ([0da1a81](https://github.com/critocrito/sugarcube/commit/0da1a81))
+
+
+### Features
+
+* **core:** extract the failure logging into the stats instrument ([d91a0e2](https://github.com/critocrito/sugarcube/commit/d91a0e2))
+* reworked stats instrumentation and store metrics in StatsD ([ca1997b](https://github.com/critocrito/sugarcube/commit/ca1997b))
+
+
+
+
+
 ## [0.26.1](https://github.com/critocrito/sugarcube/compare/v0.26.0...v0.26.1) (2019-07-16)
 
 

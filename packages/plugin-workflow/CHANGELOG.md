@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.27.0](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-workflow/compare/v0.26.1...v0.27.0) (2019-09-22)
+
+
+### Features
+
+* reworked stats instrumentation and store metrics in StatsD ([ca1997b](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-workflow/commit/ca1997b))
+
+
+
+
+
 # [0.26.0](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-workflow/compare/v0.25.1...v0.26.0) (2019-07-15)
 
 **Note:** Version bump only for package @sugarcube/plugin-workflow

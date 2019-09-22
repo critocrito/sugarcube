@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.27.0](https://github.com/critocrito/sugarcube/compare/v0.26.1...v0.27.0) (2019-09-22)
+
+
+### Bug Fixes
+
+* **plugin-googlesheets:** trim whitespace from queries to move ([f5640f6](https://github.com/critocrito/sugarcube/commit/f5640f6))
+* **plugin-media:** count existing videos ([fcde080](https://github.com/critocrito/sugarcube/commit/fcde080))
+* **plugin-media:** handle missing locations when generating mosaics ([0da1a81](https://github.com/critocrito/sugarcube/commit/0da1a81))
+* fail gracefully if google sheet doesn't exist ([abeb49f](https://github.com/critocrito/sugarcube/commit/abeb49f))
+
+
+### Features
+
+* introduce an instrumentation API and extract the cli logger to an instrument ([c68fc9e](https://github.com/critocrito/sugarcube/commit/c68fc9e))
+* **core:** extract the failure logging into the stats instrument ([d91a0e2](https://github.com/critocrito/sugarcube/commit/d91a0e2))
+* reworked stats instrumentation and store metrics in StatsD ([ca1997b](https://github.com/critocrito/sugarcube/commit/ca1997b))
+* **plugin-csv:** export failures using the csv_failures_file instrument ([d60ecb4](https://github.com/critocrito/sugarcube/commit/d60ecb4))
+* **plugin-elasticsearch:** support ES6 and ES7 ([20bf2b1](https://github.com/critocrito/sugarcube/commit/20bf2b1)), closes [#3](https://github.com/critocrito/sugarcube/issues/3) [#4](https://github.com/critocrito/sugarcube/issues/4)
+* **plugin-twitter:** log tweets counter ([e2cd4e9](https://github.com/critocrito/sugarcube/commit/e2cd4e9))
+
+
+
+
+
 ## [0.26.1](https://github.com/critocrito/sugarcube/compare/v0.26.0...v0.26.1) (2019-07-16)
 
 

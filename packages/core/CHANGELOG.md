@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.27.0](https://github.com/critocrito/sugarcube/compare/v0.26.1...v0.27.0) (2019-09-22)
+
+
+### Features
+
+* introduce an instrumentation API and extract the cli logger to an instrument ([c68fc9e](https://github.com/critocrito/sugarcube/commit/c68fc9e))
+* **core:** extract the failure logging into the stats instrument ([d91a0e2](https://github.com/critocrito/sugarcube/commit/d91a0e2))
+* reworked stats instrumentation and store metrics in StatsD ([ca1997b](https://github.com/critocrito/sugarcube/commit/ca1997b))
+
+
+
+
+
 # [0.26.0](https://github.com/critocrito/sugarcube/compare/v0.25.1...v0.26.0) (2019-07-15)
 
 **Note:** Version bump only for package @sugarcube/core
