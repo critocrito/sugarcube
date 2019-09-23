@@ -78,12 +78,8 @@ const plugin = async (envelope, {log, cfg, stats}) => {
       try {
         await youtubeDlCheck(cmd, url, sourceAddress);
       } catch (e) {
-        stats.fail({
-          type: unit._sc_source,
-          term: url,
-          plugin: "media_youtubedl_check",
-          reason: `Check failed: ${e.message}`,
-        });
+        const reason = `Check failed: ${e.message}`;
+        stats.fail({type: unit._sc_source, term: url, reason});
       }
 
       stats.count("success");

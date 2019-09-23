@@ -44,12 +44,7 @@ const feedPlugin = async (envelope, {log, cfg, stats}) => {
 
         caughtP(e => {
           const reason = parseApiErrors(e);
-          stats.fail({
-            type: querySource,
-            term: user,
-            plugin: "twitter_feed",
-            reason,
-          });
+          stats.fail({type: querySource, term: user, reason});
 
           return [];
         }),

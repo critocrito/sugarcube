@@ -20,12 +20,7 @@ const apiPages = (envelope, {log, cfg, stats}) => {
     try {
       data = await page(fetcher, q);
     } catch (e) {
-      stats.fail({
-        type: querySource,
-        term: q,
-        plugin: "facebook_api_pages",
-        reason: e.message,
-      });
+      stats.fail({type: querySource, term: q, reason: e.message});
     }
     return data;
   };

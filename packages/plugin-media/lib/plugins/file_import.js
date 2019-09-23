@@ -112,12 +112,8 @@ const fileImportPlugin = async (envelope, {log, cfg, stats}) => {
           sha256sum(location),
         ]);
       } catch (e) {
-        stats.fail({
-          type: unit._sc_source,
-          term: source,
-          plugin: "media_file_import",
-          reason: `Failed to download ${media.type} to ${location}: ${e.message}. Cleaning up stale artifact.`,
-        });
+        const reason = `Failed to download ${media.type} to ${location}: ${e.message}. Cleaning up stale artifact.`;
+        stats.fail({type: unit._sc_source, term: source, reason});
 
         // If we force an import and it fails, but the import exists already,
         // better to keep the old one around.

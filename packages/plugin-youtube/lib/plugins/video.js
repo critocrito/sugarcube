@@ -30,7 +30,6 @@ const fetchVideos = async (envelope, {cfg, log, stats}) => {
                 ? memo.concat({
                     type: querySource,
                     term: q,
-                    plugin: "youtube_video",
                     reason: "Doesn't exist.",
                   })
                 : memo,

@@ -68,12 +68,8 @@ const screenshot = (envelope, {cfg, log, stats}) => {
                       null,
                     );
                   }
-                  stats.fail({
-                    type: unit._sc_source,
-                    term: source,
-                    plugin: "http_screenshot",
-                    reason: `Failed to access ${e.path}: ${e.message}.`,
-                  });
+                  const reason = `Failed to access ${e.path}: ${e.message}.`;
+                  stats.fail({type: unit._sc_source, term: source, reason});
                   throw e;
                 }),
             () => Promise.all([md5sum(location), sha256sum(location)]),

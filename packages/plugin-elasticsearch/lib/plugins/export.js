@@ -48,12 +48,7 @@ const plugin = (envelope, {cfg, log, stats}) => {
 
       if (size(errors) > 0) {
         errors.forEach(e =>
-          stats.fail({
-            type: "any_unit",
-            term: e.id,
-            plugin: "elastic_export",
-            reason: e.error,
-          }),
+          stats.fail({type: "any_unit", term: e.id, reason: e.error}),
         );
       }
     },

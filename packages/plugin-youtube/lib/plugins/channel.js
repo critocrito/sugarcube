@@ -55,12 +55,7 @@ const listChannel = (envelope, {cfg, log, stats}) => {
         async q => {
           const exists = await channelExists(key, q);
           if (!exists)
-            stats.fail({
-              type: querySource,
-              term: q,
-              plugin: "youtube_channel",
-              reason: "Doesn't exist.",
-            });
+            stats.fail({type: querySource, term: q, reason: "Doesn't exist."});
 
           return exists
             ? flowP([

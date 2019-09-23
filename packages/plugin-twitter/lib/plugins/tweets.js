@@ -69,12 +69,7 @@ const tweetsPlugin = async (envelope, {log, cfg, stats}) => {
         ([results, fails]) => {
           if (fails.length > 0) {
             fails.forEach(({term, reason}) =>
-              stats.fail({
-                type: querySource,
-                plugin: "twitter_tweet",
-                term,
-                reason,
-              }),
+              stats.fail({type: querySource, term, reason}),
             );
           }
           return results;
@@ -96,14 +91,7 @@ const tweetsPlugin = async (envelope, {log, cfg, stats}) => {
         // Handle any API errors.
         caughtP(e => {
           const reason = parseApiErrors(e);
-          ids.forEach(id => {
-            stats.fail({
-              type: querySource,
-              term: id,
-              plugin: "twitter_tweet",
-              reason,
-            });
-          });
+          ids.forEach(id => stats.fail({type: querySource, term: id, reason}));
           return [];
         }),
       ],

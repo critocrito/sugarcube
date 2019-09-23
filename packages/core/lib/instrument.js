@@ -6,20 +6,22 @@ export const instrument = (maybeState, {events}) => {
   let curPlugin;
 
   const fail = failure => {
-    const {term, plugin, reason} = failure;
-    const msg = `${plugin} ${term}: ${reason}`;
+    const {term, reason} = failure;
+    const msg = `${curPlugin || "unknown plugin"} ${term}: ${reason}`;
     const marker = s.get("pipeline.marker");
 
     s.update("failed", failures =>
       Array.isArray(failures) ? failures.concat(failure) : [failure],
     );
-    s.update("plugins", plugins => {
-      const currentFail = getOr(0, `${plugin}.counts.fail`, plugins);
 
-      return merge(plugins, {
-        [plugin]: {counts: {fail: currentFail + 1}},
+    if (curPlugin != null)
+      s.update("plugins", plugins => {
+        const currentFail = getOr(0, `${curPlugin}.counts.fail`, plugins);
+
+        return merge(plugins, {
+          [curPlugin]: {counts: {fail: currentFail + 1}},
+        });
       });
-    });
 
     if (events != null) {
       events.emit("log", {type: "warn", msg});

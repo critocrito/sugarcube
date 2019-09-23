@@ -83,12 +83,8 @@ const curlGet = async (envelope, {log, cfg, stats}) => {
           }
         }
       } catch (e) {
-        stats.fail({
-          type: unit._sc_source,
-          term: source,
-          plugin: "http_get",
-          reason: `Failed to access ${e.path}: ${e.message}.`,
-        });
+        const reason = `Failed to access ${e.path}: ${e.message}.`;
+        stats.fail({type: unit._sc_source, term: source, reason});
         return null;
       }
 
@@ -106,12 +102,8 @@ const curlGet = async (envelope, {log, cfg, stats}) => {
         ]);
       } catch (e) {
         if (e.code !== "ENOENT") {
-          stats.fail({
-            type: unit._sc_source,
-            term: source,
-            plugin: "http_get",
-            reason: `Failed to download ${media.type} to ${location}: ${e.message}. Cleaning up stale artifact.`,
-          });
+          const reason = `Failed to download ${media.type} to ${location}: ${e.message}. Cleaning up stale artifact.`;
+          stats.fail({type: unit._sc_source, term: source, reason});
           await cleanUp(location);
           return null;
         }
