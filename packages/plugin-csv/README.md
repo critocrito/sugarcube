@@ -99,7 +99,7 @@ Export any failure stats of a pipeline run to a CSV file. The file is named `fai
 
 ## Instruments
 
-### `csv_failure_file` instrument
+### `csv_failures_file` instrument
 
 Export failures to a CSV file. The name of the file is `<data-dir>/failed-stats-<marker>.csv`. If the `label` is configured, the filename is `<data-dir>/failed-stats-<label>-<marker>.csv`.
 
