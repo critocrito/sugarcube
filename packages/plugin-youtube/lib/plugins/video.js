@@ -13,6 +13,8 @@ const fetchVideos = async (envelope, {cfg, log, stats}) => {
     .queriesByType(querySource, envelope)
     .map(term => parseVideoQuery(term));
 
+  let counter = 0;
+
   log.info(`Querying for ${queries.length} videos.`);
 
   const videos = await flatmapP(
@@ -20,6 +22,9 @@ const fetchVideos = async (envelope, {cfg, log, stats}) => {
       tapP(chunks => {
         stats.count("total", chunks.length);
         log.info(`Fetch details for ${chunks.length} videos.`);
+        counter += Object.keys(chunks).length;
+        if (counter % 1000 === 0)
+          log.debug(`Fetched ${counter} out of ${queries.length} videos.`);
       }),
       async qs => {
         const results = await videosList(key, qs);
