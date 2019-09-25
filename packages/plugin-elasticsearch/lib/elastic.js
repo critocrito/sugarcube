@@ -221,7 +221,12 @@ export const bulk = curry4(
 
       responseQueue.push(
         // eslint-disable-next-line no-await-in-loop
-        await client.bulk({body: nextChunk, type: "_doc", refresh: true}),
+        await client.bulk({
+          index,
+          body: nextChunk,
+          type: "_doc",
+          refresh: true,
+        }),
       );
     }
 
