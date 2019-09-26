@@ -25,7 +25,10 @@ export const instrument = (maybeState, {events}) => {
 
     if (events != null) {
       events.emit("log", {type: "warn", msg});
-      events.emit("fail", Object.assign({}, failure, {marker}));
+      events.emit(
+        "fail",
+        Object.assign({}, failure, {marker, plugin: curPlugin}),
+      );
     }
   };
 
