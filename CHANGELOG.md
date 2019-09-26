@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.28.1](https://github.com/critocrito/sugarcube/compare/v0.28.0...v0.28.1) (2019-09-26)
+
+
+### Bug Fixes
+
+* **plugin-youtube:** remove size limit of youtube failing filter plugin ([9bd390d](https://github.com/critocrito/sugarcube/commit/9bd390d))
+
+
+
+
+
 # [0.28.0](https://github.com/critocrito/sugarcube/compare/v0.27.2...v0.28.0) (2019-09-26)
 
 
