@@ -9,6 +9,7 @@ const instrument = cfg => {
   const label = get("csv.label", cfg);
 
   let file = filename => {
+    if (filename == null) return null;
     if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir);
     const writeStream = fs.createWriteStream(filename);
 
@@ -19,6 +20,7 @@ const instrument = cfg => {
   };
 
   let csvWriter = filename => {
+    if (filename == null) return null;
     const writeStream = file(filename);
     const csv = stringify({header: true, delimiter});
     csv.pipe(writeStream);
@@ -38,12 +40,14 @@ const instrument = cfg => {
       );
       const writer = csvWriter(filename);
 
-      writer.write({type, term, reason, plugin});
+      if (writer != null) writer.write({type, term, reason, plugin});
     },
 
     end: () => {
-      file().end();
-      csvWriter().end();
+      const fileHandler = file();
+      const writer = csvWriter();
+      if (fileHandler != null) fileHandler.end();
+      if (writer != null) writer.end();
     },
   };
 };

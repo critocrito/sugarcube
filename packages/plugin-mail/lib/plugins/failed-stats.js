@@ -44,6 +44,8 @@ const mailFailedStats = async (envelope, {cfg, log, stats}) => {
     `failed-stats-${label == null ? "" : `${label}-`}${marker}.csv`,
   );
 
+  log.debug(`Attaching failed stats CSV from ${csvFilename}`);
+
   const recipients = env.queriesByType(querySource, envelope);
   const subject = `[${project}]: Failed queries for ${name} (${marker}).`;
   const body = dots.failed_stats(Object.assign({}, {recipients, failures}));
