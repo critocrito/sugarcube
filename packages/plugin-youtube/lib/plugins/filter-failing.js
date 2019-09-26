@@ -56,7 +56,7 @@ const checkAndFilterVideos = async (envelope, {cfg, log, stats}) => {
       },
       delayP(500),
     ]),
-    chunk(50, envelope.data.slice(0, 1000)),
+    chunk(50, envelope.data),
   );
 
   return env.envelopeData(videos);
