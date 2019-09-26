@@ -110,6 +110,18 @@ export const videosList = curry((key, ids) => {
   return page(videos, params).then(map(video));
 });
 
+export const videosListCheck = curry((key, ids) => {
+  const parts = ["id"];
+  const params = {
+    part: join(",", parts),
+    id: join(",", Array.isArray(ids) ? ids : [ids]),
+    maxResults: 50,
+    key,
+  };
+
+  return page(videos, params);
+});
+
 export const videoChannel = curry((key, range, id) =>
   channelSearch(key, range, id).then(rs => {
     const ids = map(property("id.videoId"), rs);
@@ -130,6 +142,7 @@ export const videoChannelPlaylist = curry((key, id) =>
 export default {
   channelSearch,
   videosList,
+  videosListCheck,
   videoChannel,
   videoChannelPlaylist,
 };

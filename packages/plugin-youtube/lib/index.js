@@ -1,10 +1,12 @@
 import {forEach, merge} from "lodash/fp";
 import channelPlugin from "./plugins/channel";
 import videoPlugin from "./plugins/video";
+import filterFailingPlugin from "./plugins/filter-failing";
 
 const plugins = {
   youtube_channel: channelPlugin,
   youtube_video: videoPlugin,
+  youtube_filter_failing: filterFailingPlugin,
 };
 
 forEach(p => {

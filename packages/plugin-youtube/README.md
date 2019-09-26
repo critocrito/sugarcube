@@ -100,7 +100,7 @@ videos. It uses the `media_youtubedl` plugin.
 $(npm bin)/sugarcube -c config.json \
                      -q channels.json \
                      -p youtube_channel,media_youtubedl
-``**
+```
 
 **Metrics:**
 
@@ -108,6 +108,40 @@ $(npm bin)/sugarcube -c config.json \
 - `fail`: The number of channels that failed.
 - `success`: The number of channels that succeeded to download.
 - `fetched`: The number of videos that are fetched from the channels.
+
+### `youtube_filter_failing` plugin
+
+This plugin verifies against the Youtube API that each unit that is a Youtube video exists, and returns all failing videos as units in the envelope. It is meant as the first step in a two step process to verify the number of videos that were taken down by Youtube. The output of this plugin can be send straight to the `media_youtubedl_check** plugin for a more detailed check.
+
+This plugin doesn't collect missing videos as failures, but it counts the metric.
+
+**Configuration:**
+
+- `youtube.api_key` :: The API key for Youtube.com. This option is required.
+
+**Example:**
+
+```json
+{
+  "plugins": [
+    "elastic_import",
+    "youtube_filter_failing",
+    "media_youtubedl_check"
+  ],
+  "youtube": {
+    "api_key": "<key>"
+  },
+  "queries": [
+    { "type": "glob_pattern", "term": "./es-queries/all-youtube-videos.json" }
+  ]
+}
+```
+
+**Metrics:**
+
+- `total`: The total number of Youtube videos queried.
+- `fail`: The number of videos that failed.
+- `success`: The number of videos that exist.
 
 ## License
 
