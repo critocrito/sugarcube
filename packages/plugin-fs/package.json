@@ -6,10 +6,10 @@
   "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-fs#readme",
   "repository": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-fs",
   "bugs": "https://github.com/critocrito/sugarcube/issues",
-  "version": "0.27.2",
+  "version": "0.28.0",
   "main": "_dist/index.js",
   "dependencies": {
-    "@sugarcube/core": "^0.27.2",
+    "@sugarcube/core": "^0.28.0",
     "dashp": "^0.10.1",
     "file-type": "^10.11.0",
     "glob": "^7.1.2",

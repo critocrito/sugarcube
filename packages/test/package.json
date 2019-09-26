@@ -4,10 +4,10 @@
   "license": "GPL-3.0",
   "author": "Christo <christo@cryptodrunks.net>",
   "repository": "https://github.com/critocrito/sugarcube/tree/master/packages/test",
-  "version": "0.27.2",
+  "version": "0.28.0",
   "main": "_dist/index.js",
   "dependencies": {
-    "@sugarcube/core": "^0.27.2",
+    "@sugarcube/core": "^0.28.0",
     "jsverify": "^0.8.3",
     "lodash": "^4.17.4"
   },

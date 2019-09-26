@@ -6,10 +6,10 @@
   "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-elasticsearch#readme",
   "repository": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-elasticsearch",
   "bugs": "https://github.com/critocrito/sugarcube/issues",
-  "version": "0.27.2",
+  "version": "0.28.0",
   "main": "_dist/index.js",
   "dependencies": {
-    "@sugarcube/core": "^0.27.2",
+    "@sugarcube/core": "^0.28.0",
     "dashp": "^0.10.1",
     "es6": "npm:@elastic/elasticsearch@6",
     "es7": "npm:@elastic/elasticsearch@7",
