@@ -15,7 +15,6 @@ const checkAndFilterVideos = async (envelope, {cfg, log, stats}) => {
     flowP([
       tapP(units => {
         stats.count("total", units.length);
-        log.info(`Fetch details for ${units.length} videos.`);
         counter += units.length;
         if (counter % 1000 === 0)
           log.debug(
@@ -56,6 +55,9 @@ const checkAndFilterVideos = async (envelope, {cfg, log, stats}) => {
         }
 
         stats.count("existing", units.length - missing.length);
+        log.info(
+          `Fetch details for ${units.length} videos: ${missing.length} failed.`,
+        );
 
         return missing;
       },
