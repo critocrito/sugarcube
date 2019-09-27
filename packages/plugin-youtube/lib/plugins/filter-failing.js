@@ -43,13 +43,18 @@ const checkAndFilterVideos = async (envelope, {cfg, log, stats}) => {
               .filter(({type}) => type === "video")
               .forEach(({term}) => {
                 const i = parseVideoQuery(term);
-                if (results.find(({id}) => id === i) == null)
+                if (results.find(({id}) => id === i) == null) {
                   missing.push(unit);
+                  stats.fail({
+                    type: "youtube_video",
+                    reason: "Doesn't exist",
+                    term,
+                  });
+                }
               });
           });
         }
 
-        stats.count("fail", missing.length);
         stats.count("existing", units.length - missing.length);
 
         return missing;
