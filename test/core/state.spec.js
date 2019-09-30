@@ -53,6 +53,7 @@ describe("state", () => {
       return isEqual(get(p, s.get()), s.get(p));
     },
   );
+
   it("chains updates in sequence", () => {
     const s = state({a: 0, b: []});
     s.get().should.eql({a: 0, b: []});
@@ -61,6 +62,7 @@ describe("state", () => {
     s.update(({a, b}) => ({a: a + 1, b: b.concat(a)}));
     s.get().should.eql({a: 2, b: [0, 1]});
   });
+
   it("can sequence a lot of updates", () => {
     const iterations = 100000;
     const f = ({count}) => ({count: count + 1});
@@ -69,5 +71,29 @@ describe("state", () => {
     [...Array(iterations).keys()].forEach(() => s.update(f));
 
     s.get().should.eql({count: iterations});
+  });
+
+  it("accepts null and undefined as constructor", () => {
+    let s = state(undefined);
+    s.get().should.eql({});
+    s = state(null);
+    s.get().should.eql({});
+  });
+
+  it("accepts a state object as constructor", () => {
+    const s1 = state();
+    s1.update(() => ({a: 23}));
+
+    const s = state(s1);
+
+    s.get().should.eql(s1.get());
+  });
+
+  it("accepts a plain object as constructor", () => {
+    const obj = {a: 23};
+
+    const s = state(obj);
+
+    s.get().should.eql(obj);
   });
 });
