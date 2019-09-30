@@ -79,6 +79,22 @@ describe("instrumentation", () => {
     ins.get("plugins.myplugin.counts.field2").should.eql(5);
   });
 
+  it("can emit non plugin measurements for counters", () => {
+    const ev = new EventEmitter();
+    ev.on("count", spy);
+    const ins = instrument(null, {events: ev});
+    const plugin = {plugin: "myplugin", ts: 100};
+    ins.pluginStart(plugin);
+
+    ins.count("other.field");
+
+    spy.calledOnce.should.equal(true);
+
+    const args = spy.firstCall.args[0];
+
+    args.should.eql({type: "other.field", term: undefined, marker: {}});
+  });
+
   it("emits a `count` event on when incrementing a counter by a fixed number", () => {
     const ev = new EventEmitter();
     ev.on("count", spy);
@@ -139,6 +155,22 @@ describe("instrumentation", () => {
     const args = spy.firstCall.args[0];
 
     args.should.eql({type: "myplugin.t", term: 10, marker: {}});
+  });
+
+  it("can emit non plugin measurements durations", () => {
+    const ev = new EventEmitter();
+    ev.on("duration", spy);
+    const ins = instrument(null, {events: ev});
+    const plugin = {plugin: "myplugin", ts: 100};
+    ins.pluginStart(plugin);
+
+    ins.timing({type: "other.t", term: 10});
+
+    spy.calledOnce.should.equal(true);
+
+    const args = spy.firstCall.args[0];
+
+    args.should.eql({type: "other.t", term: 10, marker: {}});
   });
 
   it("instruments plugin start and end", () => {

@@ -31,6 +31,9 @@ export const instrument = (maybeState, {events}) => {
 
   const count = (type, term) => {
     const marker = s.get("pipeline.marker");
+    const [measurement, field] = /\./.test(type)
+      ? type.split(".")
+      : [curPlugin, type];
 
     if (curPlugin != null)
       s.update("plugins", plugins => {
@@ -43,24 +46,27 @@ export const instrument = (maybeState, {events}) => {
       });
 
     if (events != null)
-      events.emit("count", {type: `${curPlugin}.${type}`, term, marker});
+      events.emit("count", {type: `${measurement}.${field}`, term, marker});
   };
 
-  const timing = t => {
-    const {term, type} = t;
+  const timing = ({term, type}) => {
     const marker = s.get("pipeline.marker");
+    const [measurement, field] = /\./.test(type)
+      ? type.split(".")
+      : [curPlugin, type];
 
-    s.update("plugins", plugins => {
-      const curDuration = getOr(0, `${curPlugin}.durations.${type}`, plugins);
-      const increment = term == null ? 0 : term;
+    if (curPlugin != null)
+      s.update("plugins", plugins => {
+        const curDuration = getOr(0, `${curPlugin}.durations.${type}`, plugins);
+        const increment = term == null ? 0 : term;
 
-      return merge(plugins, {
-        [curPlugin]: {durations: {[type]: curDuration + increment}},
+        return merge(plugins, {
+          [curPlugin]: {durations: {[type]: curDuration + increment}},
+        });
       });
-    });
 
     if (events != null)
-      events.emit("duration", {type: `${curPlugin}.${type}`, term, marker});
+      events.emit("duration", {type: `${measurement}.${field}`, term, marker});
   };
 
   const pipelineStart = ({pipeline, project, name, ts, marker}) => {
