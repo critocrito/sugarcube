@@ -5,7 +5,7 @@ const {assertCfg} = utils.assertions;
 
 export const assertCredentials = assertCfg(["youtube.api_key"]);
 
-export const parseVideoQuery = query => {
+export const parseYoutubeVideo = query => {
   if (query.startsWith("http")) {
     const u = new URL(query);
     // Accept youtube urls in the form of https://youtu.be and https://www.youtube.com
@@ -16,7 +16,7 @@ export const parseVideoQuery = query => {
   return query;
 };
 
-export const parseChannelQuery = query => {
+export const parseYoutubeChannel = query => {
   if (query.startsWith("http")) {
     const u = new URL(query);
     return u.pathname
@@ -25,6 +25,35 @@ export const parseChannelQuery = query => {
       .split("/")[1];
   }
   return query;
+};
+
+export const isYoutubeVideo = url => {
+  const u = new URL(url);
+  if (/youtube\.com/.test(u.hostname) && u.searchParams.get("v") != null)
+    return true;
+  if (
+    /youtu\.be/.test(u.hostname) &&
+    u.pathname.split("/").filter(x => x !== "").length === 1
+  )
+    return true;
+  return false;
+};
+
+export const isYoutubeChannel = url => {
+  const u = new URL(url);
+  if (/youtube\.com/.test(u.hostname) && /channel/.test(u.pathname))
+    return true;
+  return false;
+};
+
+export const normalizeYoutubeVideoUrl = url => {
+  const videoId = parseYoutubeVideo(url);
+  return `https://www.youtube.com/watch?v=${videoId}`;
+};
+
+export const normalizeYoutubeChannelUrl = url => {
+  const channelId = parseYoutubeChannel(url);
+  return `https://www.youtube.com/channel/${channelId}`;
 };
 
 export default {assertCredentials};

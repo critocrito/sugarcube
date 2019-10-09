@@ -2,7 +2,7 @@ import {get, chunk} from "lodash/fp";
 import {flatmapP, flowP, tapP, delayP} from "dashp";
 import {envelope as env, plugin as p} from "@sugarcube/core";
 import {videosList} from "../api";
-import {assertCredentials, parseVideoQuery} from "../utils";
+import {assertCredentials, parseYoutubeVideo} from "../utils";
 
 const querySource = "youtube_video";
 
@@ -11,7 +11,7 @@ const fetchVideos = async (envelope, {cfg, log, stats}) => {
 
   const queries = env
     .queriesByType(querySource, envelope)
-    .map(term => parseVideoQuery(term));
+    .map(term => parseYoutubeVideo(term));
 
   let counter = 0;
 
@@ -47,7 +47,7 @@ const fetchVideos = async (envelope, {cfg, log, stats}) => {
         return results.map(r => {
           const query = envelope.queries.find(
             ({type, term}) =>
-              type === querySource && parseVideoQuery(term) === r.id,
+              type === querySource && parseYoutubeVideo(term) === r.id,
           );
           if (query == null) return r;
           return Object.assign(r, {

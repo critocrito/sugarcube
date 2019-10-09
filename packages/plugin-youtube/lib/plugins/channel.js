@@ -5,7 +5,7 @@ import parse from "date-fns/parse";
 import format from "date-fns/format";
 import subDays from "date-fns/sub_days";
 
-import {assertCredentials, parseChannelQuery} from "../utils";
+import {assertCredentials, parseYoutubeChannel} from "../utils";
 import {videoChannelPlaylist, videoChannel, channelExists} from "../api";
 
 const querySource = "youtube_channel";
@@ -51,7 +51,7 @@ const listChannel = (envelope, {cfg, log, stats}) => {
     flowP(
       [
         tapP(() => stats.count("total")),
-        parseChannelQuery,
+        parseYoutubeChannel,
         async q => {
           const exists = await channelExists(key, q);
           if (!exists)

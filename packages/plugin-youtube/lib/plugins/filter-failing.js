@@ -2,7 +2,7 @@ import {get, chunk} from "lodash/fp";
 import {flatmapP, flowP, tapP, delayP} from "dashp";
 import {envelope as env, plugin as p} from "@sugarcube/core";
 import {videosListCheck} from "../api";
-import {assertCredentials, parseVideoQuery} from "../utils";
+import {assertCredentials, parseYoutubeVideo} from "../utils";
 
 const checkAndFilterVideos = async (envelope, {cfg, log, stats}) => {
   const key = get("youtube.api_key", cfg);
@@ -27,7 +27,7 @@ const checkAndFilterVideos = async (envelope, {cfg, log, stats}) => {
             memo.concat(
               unit._sc_media
                 .filter(({type}) => type === "video")
-                .map(({term}) => parseVideoQuery(term)),
+                .map(({term}) => parseYoutubeVideo(term)),
             ),
           [],
         );
@@ -41,7 +41,7 @@ const checkAndFilterVideos = async (envelope, {cfg, log, stats}) => {
             unit._sc_media
               .filter(({type}) => type === "video")
               .forEach(({term}) => {
-                const i = parseVideoQuery(term);
+                const i = parseYoutubeVideo(term);
                 if (results.find(({id}) => id === i) == null) {
                   missing.push(unit);
                   stats.fail({

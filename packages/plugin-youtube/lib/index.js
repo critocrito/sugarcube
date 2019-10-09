@@ -2,7 +2,14 @@ import {forEach, merge} from "lodash/fp";
 import channelPlugin from "./plugins/channel";
 import videoPlugin from "./plugins/video";
 import filterFailingPlugin from "./plugins/filter-failing";
-import {parseVideoQuery, parseChannelQuery} from "./utils";
+import {
+  parseYoutubeVideo,
+  parseYoutubeChannel,
+  normalizeYoutubeVideoUrl,
+  normalizeYoutubeChannelUrl,
+  isYoutubeVideo,
+  isYoutubeChannel,
+} from "./utils";
 
 const plugins = {
   youtube_channel: channelPlugin,
@@ -24,6 +31,22 @@ forEach(p => {
   );
 }, plugins);
 
-export {plugins};
+export {
+  plugins,
+  parseYoutubeVideo,
+  parseYoutubeChannel,
+  normalizeYoutubeVideoUrl,
+  normalizeYoutubeChannelUrl,
+  isYoutubeVideo,
+  isYoutubeChannel,
+};
 
-export default {plugins, parseVideoQuery, parseChannelQuery};
+export default {
+  plugins,
+  parseYoutubeVideo,
+  parseYoutubeChannel,
+  normalizeYoutubeVideoUrl,
+  normalizeYoutubeChannelUrl,
+  isYoutubeVideo,
+  isYoutubeChannel,
+};
