@@ -16,7 +16,6 @@ import {
   keys,
 } from "lodash/fp";
 import {URL} from "url";
-import {basename} from "path";
 import {foldP, delay} from "dashp";
 import pify from "pify";
 import Twitter from "twitter";
@@ -122,10 +121,26 @@ export const recurse = curry((maxDepth, key, fn) => {
   return params => iter(params, 0, params[key]);
 });
 
+export const isTwitterTweet = url => {
+  const u = new URL(url);
+  if (/twitter\.com/.test(u.hostname) && /status/.test(u.pathname)) return true;
+  return false;
+};
+
+export const isTwitterFeed = url => {
+  const u = new URL(url);
+  if (
+    /twitter\.com/.test(u.hostname) &&
+    u.pathname.split("/").filter(x => x !== "").length === 1
+  )
+    return true;
+  return false;
+};
+
 export const parseTweetId = id => {
   if (id.startsWith("http")) {
     const u = new URL(id);
-    return basename(u.pathname);
+    return u.pathname.split("/").filter(x => x !== "")[2];
   }
   return id;
 };
@@ -134,9 +149,24 @@ export const parseTwitterUser = user => {
   if (Number.isInteger(user)) return user.toString();
   if (user.startsWith("http")) {
     const u = new URL(user);
-    return basename(u.pathname);
+    return u.pathname
+      .replace(/^\//, "")
+      .replace(/\/$/, "")
+      .split("/")[0];
   }
   return user.replace(/^@/, "");
+};
+
+export const normalizeTwitterTweetUrl = url => {
+  const userId = parseTwitterUser(url);
+  const tweetId = parseTweetId(url);
+  if (userId === tweetId) return `https://twitter.com/i/status/${tweetId}`;
+  return `https://twitter.com/${userId}/status/${tweetId}`;
+};
+
+export const normalizeTwitterUserUrl = url => {
+  const userId = parseTwitterUser(url);
+  return `https://twitter.com/${userId}`;
 };
 
 export default {
@@ -148,4 +178,8 @@ export default {
   recurse,
   parseTweetId,
   parseTwitterUser,
+  normalizeTwitterTweetUrl,
+  normalizeTwitterUserUrl,
+  isTwitterFeed,
+  isTwitterTweet,
 };

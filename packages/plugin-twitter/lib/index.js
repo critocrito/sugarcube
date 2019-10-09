@@ -4,6 +4,14 @@ import followersPlugin from "./followers";
 import friendsPlugin from "./friends";
 import searchPlugin from "./search";
 import tweetsPlugin from "./plugins/tweets";
+import {
+  parseTweetId,
+  parseTwitterUser,
+  normalizeTwitterTweetUrl,
+  normalizeTwitterUserUrl,
+  isTwitterFeed,
+  isTwitterTweet,
+} from "./utils";
 
 const plugins = {
   twitter_feed: feedPlugin,
@@ -61,5 +69,21 @@ forEach(p => {
   );
 }, recursivePlugins);
 
-export {plugins};
-export default {plugins};
+export {
+  plugins,
+  parseTweetId,
+  parseTwitterUser,
+  normalizeTwitterTweetUrl,
+  normalizeTwitterUserUrl,
+  isTwitterFeed,
+  isTwitterTweet,
+};
+export default {
+  plugins,
+  parseTweetId,
+  parseTwitterUser,
+  normalizeTwitterTweetUrl,
+  normalizeTwitterUserUrl,
+  isTwitterFeed,
+  isTwitterTweet,
+};
