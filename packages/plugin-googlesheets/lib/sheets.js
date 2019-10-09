@@ -71,6 +71,15 @@ const getSheet = curry3("getSheet", async (id, sheet, auth) => {
   ])(spreadsheet.sheets);
 });
 
+const getAllSheets = curry2("getAllSheets", async (id, auth) => {
+  const spreadsheet = await getSpreadsheet(id, auth);
+  return map(({properties: s}) =>
+    merge(s, {
+      sheetUrl: `${spreadsheet.spreadsheetUrl}#gid=${s.sheetId}`,
+    }),
+  )(spreadsheet.sheets);
+});
+
 const createSheet = curry3("createSheet", async (id, sheet, auth) => {
   await flowP3([createSheetRequest, spreadsheetBatchUpdate], auth, id, sheet);
   return getSheet(id, sheet, auth);
@@ -294,6 +303,7 @@ const api = {
   createSheet,
   deleteSheet,
   getSheet,
+  getAllSheets,
   getOrCreateSheet,
   updateSheetProps,
   duplicateSheet,
