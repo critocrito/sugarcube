@@ -49,7 +49,7 @@ const instrument = cfg => {
         ? `and collected ${failures.length} failures`
         : "and had no failures";
 
-    logger.debug(
+    logger.info(
       `Pipeline ${project}/${name} took ${humanDuration(
         getOr(0, "pipeline.took", stats),
       )} ${logFailures}.`,
@@ -68,11 +68,11 @@ const instrument = cfg => {
           .filter(d => d !== "took")
           .map(d => `${d}=${humanDuration(durations[d])}`)
           .join(", ");
-        logger.debug(`Plugin ${p} took ${humanDuration(took)}`);
+        logger.info(`Plugin ${p} took ${humanDuration(took)}`);
 
-        if (logCounts.length > 0) logger.debug(`  counts: ${logCounts}`);
+        if (logCounts.length > 0) logger.info(`  counts: ${logCounts}`);
         if (logDurations.length > 0)
-          logger.debug(`  durations: ${logDurations}`);
+          logger.info(`  durations: ${logDurations}`);
       });
   };
 
