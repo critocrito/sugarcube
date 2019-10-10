@@ -18,9 +18,12 @@ import moveQueriesPlugin from "./plugins/move-queries";
 import SheetsDo from "./sheets";
 import {
   unitsToRows,
+  queriesToRows,
   rowsToUnits,
   rowsToQueries,
   concatEnvelopeAndRows,
+  concatQueriesRows,
+  coerceSelectionLists,
 } from "./utils";
 
 const plugins = {
@@ -190,15 +193,21 @@ export {
   plugins,
   SheetsDo,
   unitsToRows,
+  queriesToRows,
   rowsToUnits,
   rowsToQueries,
   concatEnvelopeAndRows,
+  concatQueriesRows,
+  coerceSelectionLists,
 };
 export default {
   plugins,
   SheetsDo,
   unitsToRows,
+  queriesToRows,
   rowsToUnits,
   rowsToQueries,
   concatEnvelopeAndRows,
+  concatQueriesRows,
+  coerceSelectionLists,
 };
