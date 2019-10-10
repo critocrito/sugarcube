@@ -1,5 +1,5 @@
 /* eslint-disable no-plusplus */
-import {isPlainObject, chunk} from "lodash/fp";
+import {isPlainObject, chunk, get} from "lodash/fp";
 import {collectP, ofP} from "dashp";
 import {Client as Client6} from "es6";
 import {Client as Client7} from "es7";
@@ -315,11 +315,33 @@ export const Elastic = {
     const chain = async nextG => {
       const {done, value} = await nextG.next(data);
       if (done) return ofP([value || data, history]);
-      const [result, meta] = await value(client, customMappings);
       // All curried function names have the format of <name>-<int> where
       // <int> is the number of missing arguments. For a prettier output in
       // the history strip -<int> from the name.
-      history = history.concat([[value.name.replace(/-.*$/, ""), meta]]);
+      const prettyName = value.name.replace(/-.*$/, "");
+      let result;
+      let meta;
+
+      try {
+        [result, meta] = await value(client, customMappings);
+      } catch (e) {
+        const error = JSON.stringify({
+          status: get("meta.statusCode", e),
+          body: get("meta.meta.request.params.body", e),
+          href: get("meta.meta.request.params.url.href", e),
+          type: get("meta.body.error.type", e),
+          reason: get("meta.body.error.reason", e),
+          line: get("meta.body.error.line", e),
+          col: get("meta.body.error.col", e),
+          method: get("meta.meta.request.params.method", e),
+          path: get("meta.meta.request.params.path", e),
+          qs: get("meta.meta.request.params.querystring", e),
+        });
+        e.message = `\`${prettyName}\` in \`${G.name}\`: ${error}`;
+        throw e;
+      }
+
+      history = history.concat([[prettyName, meta]]);
       data = result;
       return chain(nextG);
     };
