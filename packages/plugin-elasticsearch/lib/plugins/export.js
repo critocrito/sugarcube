@@ -1,4 +1,4 @@
-import {size, get} from "lodash/fp";
+import {size, get, getOr} from "lodash/fp";
 import fs from "fs";
 import {envelope as env, utils} from "@sugarcube/core";
 
@@ -37,12 +37,42 @@ const plugin = (envelope, {cfg, log, stats}) => {
       const toIndex = omitFromData(omitFields, dataToIndex.data);
       const toUpdate = omitFromData(omitFields, dataToUpdate.data);
 
+      const sourceStatsNew = dataToIndex.data.reduce(
+        (memo, {_sc_source: source}) =>
+          Object.assign(memo, {[source]: getOr(0, source, memo) + 1}),
+        {},
+      );
+      const sourceStatsExisting = dataToUpdate.data.reduce(
+        (memo, {_sc_source: source}) =>
+          Object.assign(memo, {[source]: getOr(0, source, memo) + 1}),
+        {},
+      );
+
       stats.count("total", ids.length);
       stats.count("new", toIndex.length);
+      Object.entries(sourceStatsNew).forEach(([source, count]) =>
+        stats.count(`${source}_new`, count),
+      );
+
       stats.count("existing", toUpdate.length);
+      Object.entries(sourceStatsExisting).forEach(([source, count]) =>
+        stats.count(`${source}_existing`, count),
+      );
 
       log.info(`Indexing ${size(toIndex)} units.`);
+      if (size(toIndex) > 0)
+        log.debug(
+          `  counts new: ${Object.entries(sourceStatsNew)
+            .map(([source, count]) => `${source}=${count}`)
+            .join(", ")}`,
+        );
       log.info(`Updating ${size(toUpdate)} units.`);
+      if (size(toUpdate) > 0)
+        log.debug(
+          `  counts existing: ${Object.entries(sourceStatsExisting)
+            .map(([source, count]) => `${source}=${count}`)
+            .join(", ")}`,
+        );
 
       const errors = yield bulk(index, {index: toIndex, update: toUpdate});
 
