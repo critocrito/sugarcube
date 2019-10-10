@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.29.0](https://github.com/critocrito/sugarcube/compare/v0.28.1...v0.29.0) (2019-10-10)
+
+
+### Bug Fixes
+
+* **core:** emit the plugin name on fail ([59f1044](https://github.com/critocrito/sugarcube/commit/59f1044))
+* **core:** improve on state construction ([f58d212](https://github.com/critocrito/sugarcube/commit/f58d212))
+* **plugin-twitter:** filter search urls from user timelines ([b6d182b](https://github.com/critocrito/sugarcube/commit/b6d182b))
+
+
+### Features
+
+* **core:** collect measurements for non plugin metrics ([51a7b60](https://github.com/critocrito/sugarcube/commit/51a7b60))
+* **plugin-elasticsearch:** track new/existing units by source ([a712b4d](https://github.com/critocrito/sugarcube/commit/a712b4d))
+* **plugin-googlesheets:** add api to fetch all sheets on a spreadsheet ([bb9a4d1](https://github.com/critocrito/sugarcube/commit/bb9a4d1))
+* **plugin-twitter:** parse and normalize tweet and feed urls ([a4dd412](https://github.com/critocrito/sugarcube/commit/a4dd412))
+* **plugin-youtube:** export parser for video and channel urls ([9cfd0ef](https://github.com/critocrito/sugarcube/commit/9cfd0ef))
+* **plugin-youtube:** parse and normalize video and channel urls ([9ab8455](https://github.com/critocrito/sugarcube/commit/9ab8455))
+
+
+
+
+
 ## [0.28.1](https://github.com/critocrito/sugarcube/compare/v0.28.0...v0.28.1) (2019-09-26)
 
 

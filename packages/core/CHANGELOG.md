@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.29.0](https://github.com/critocrito/sugarcube/compare/v0.28.1...v0.29.0) (2019-10-10)
+
+
+### Bug Fixes
+
+* **core:** emit the plugin name on fail ([59f1044](https://github.com/critocrito/sugarcube/commit/59f1044))
+* **core:** improve on state construction ([f58d212](https://github.com/critocrito/sugarcube/commit/f58d212))
+
+
+### Features
+
+* **core:** collect measurements for non plugin metrics ([51a7b60](https://github.com/critocrito/sugarcube/commit/51a7b60))
+
+
+
+
+
 # [0.28.0](https://github.com/critocrito/sugarcube/compare/v0.27.2...v0.28.0) (2019-09-26)
 
 **Note:** Version bump only for package @sugarcube/core

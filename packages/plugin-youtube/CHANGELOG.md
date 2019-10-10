@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.29.0](https://github.com/critocrito/sugarcube/compare/v0.28.1...v0.29.0) (2019-10-10)
+
+
+### Features
+
+* **plugin-youtube:** export parser for video and channel urls ([9cfd0ef](https://github.com/critocrito/sugarcube/commit/9cfd0ef))
+* **plugin-youtube:** parse and normalize video and channel urls ([9ab8455](https://github.com/critocrito/sugarcube/commit/9ab8455))
+
+
+
+
+
 ## [0.28.1](https://github.com/critocrito/sugarcube/compare/v0.28.0...v0.28.1) (2019-09-26)
 
 

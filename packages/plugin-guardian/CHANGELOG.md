@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.29.0](https://github.com/critocrito/sugarcube/compare/v0.28.1...v0.29.0) (2019-10-10)
+
+**Note:** Version bump only for package @sugarcube/plugin-guardian
+
+
+
+
+
 # [0.28.0](https://github.com/critocrito/sugarcube/compare/v0.27.2...v0.28.0) (2019-09-26)
 
 **Note:** Version bump only for package @sugarcube/plugin-guardian

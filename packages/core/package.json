@@ -6,7 +6,7 @@
   "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/core#readme",
   "repository": "https://github.com/critocrito/sugarcube",
   "bugs": "https://github.com/critocrito/sugarcube/issues",
-  "version": "0.28.0",
+  "version": "0.29.0",
   "main": "_dist/index.js",
   "dependencies": {
     "dashp": "^0.10.1",

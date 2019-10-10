@@ -6,10 +6,10 @@
   "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mail#readme",
   "repository": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mail",
   "bugs": "https://github.com/critocrito/sugarcube/issues",
-  "version": "0.28.0",
+  "version": "0.29.0",
   "main": "_dist/index.js",
   "dependencies": {
-    "@sugarcube/core": "^0.28.0",
+    "@sugarcube/core": "^0.29.0",
     "dashp": "^0.10.1",
     "date-fns": "^1.29.0",
     "dot": "^1.1.2",
