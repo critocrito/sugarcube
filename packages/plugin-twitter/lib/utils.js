@@ -131,7 +131,8 @@ export const isTwitterFeed = url => {
   const u = new URL(url);
   if (
     /twitter\.com/.test(u.hostname) &&
-    u.pathname.split("/").filter(x => x !== "").length === 1
+    u.pathname.split("/").filter(x => x !== "").length === 1 &&
+    u.pathname.split("/").filter(x => x !== "")[0] !== "search"
   )
     return true;
   return false;
