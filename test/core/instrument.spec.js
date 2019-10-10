@@ -92,10 +92,10 @@ describe("instrumentation", () => {
 
     const args = spy.firstCall.args[0];
 
-    args.should.eql({type: "other.field", term: undefined, marker: {}});
+    args.should.eql({type: "other.field", term: 1, marker: {}});
   });
 
-  it("emits a `count` event on when incrementing a counter by a fixed number", () => {
+  it("emits a `count` event on when incrementing a counter", () => {
     const ev = new EventEmitter();
     ev.on("count", spy);
     const ins = instrument(null, {events: ev});
@@ -108,7 +108,7 @@ describe("instrumentation", () => {
 
     const args = spy.firstCall.args[0];
 
-    args.should.eql({type: "myplugin.field", term: undefined, marker: {}});
+    args.should.eql({type: "myplugin.field", term: 1, marker: {}});
   });
 
   it("emits a `count` event on when incrementing a counter by a fixed number", () => {

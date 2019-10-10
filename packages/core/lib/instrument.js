@@ -37,11 +37,11 @@ export const instrument = (maybeState, {events}) => {
     const [measurement, field] = /\./.test(type)
       ? type.split(".")
       : [curPlugin, type];
+    const increment = term == null ? 1 : term;
 
     if (curPlugin != null)
       s.update("plugins", plugins => {
         const curCount = getOr(0, `${curPlugin}.counts.${type}`, plugins);
-        const increment = term == null ? 1 : term;
 
         return merge(plugins, {
           [curPlugin]: {counts: {[type]: curCount + increment}},
@@ -49,7 +49,11 @@ export const instrument = (maybeState, {events}) => {
       });
 
     if (events != null)
-      events.emit("count", {type: `${measurement}.${field}`, term, marker});
+      events.emit("count", {
+        type: `${measurement}.${field}`,
+        term: increment,
+        marker,
+      });
   };
 
   const timing = ({term, type}) => {
