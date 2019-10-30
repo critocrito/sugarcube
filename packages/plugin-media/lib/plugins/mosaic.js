@@ -1,13 +1,10 @@
 import {get} from "lodash/fp";
 import dashp, {collectP} from "dashp";
-import pify from "pify";
 import {join, resolve, dirname} from "path";
-import fs from "fs";
 import {envelope as env} from "@sugarcube/core";
+import {existsP} from "@sugarcube/plugin-fs";
 
 import {mosaicSceneChange, mosaicNthFrame} from "../utils";
-
-const accessAsync = pify(fs.access);
 
 const plugin = async (envelope, {log, cfg, stats}) => {
   const cmd = get("media.ffmpeg_cmd", cfg);
@@ -54,34 +51,15 @@ const plugin = async (envelope, {log, cfg, stats}) => {
       const source = href || term;
       const dest = join(dirname(location), "mosaic.jpg");
 
-      try {
-        await accessAsync(location);
-      } catch (e) {
-        const reason =
-          e.code === "ENOENT"
-            ? `Video at ${location} doesn't exits`
-            : e.message;
+      if (!(await existsP(location))) {
+        const reason = `Video at ${location} doesn't exits`;
         stats.fail({type: unit._sc_source, term: source, reason});
-
-        if (e.code !== "ENOENT") {
-          throw e;
-        }
-        stats.count("total");
         counter += 1;
 
         return download;
       }
 
-      let mosaicExists = false;
-
-      try {
-        await accessAsync(resolve(dest));
-        mosaicExists = true;
-      } catch (e) {
-        if (e.code !== "ENOENT") {
-          throw e;
-        }
-      }
+      const mosaicExists = await existsP(resolve(dest));
 
       if (mosaicExists && !forceGeneration) {
         log.info(
@@ -101,8 +79,8 @@ const plugin = async (envelope, {log, cfg, stats}) => {
 
       try {
         await mosaicGeneration(cmd, location, resolve(dest), forceGeneration);
-      } catch (ee) {
-        const reason = `Failed to create mosaic for video at ${location}: ${ee.message}`;
+      } catch (e) {
+        const reason = `Failed to create mosaic for video at ${location}: ${e.message}`;
         stats.fail({type: unit._sc_source, term: source, reason});
 
         return download;

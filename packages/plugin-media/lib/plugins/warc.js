@@ -1,6 +1,4 @@
-import fs from "fs";
 import {join} from "path";
-import {promisify} from "util";
 import {includes, get} from "lodash/fp";
 import {flatmapP, collectP} from "dashp";
 import puppeteer from "puppeteer-extra";
@@ -8,18 +6,9 @@ import {TimeoutError} from "puppeteer/lib/api";
 import pluginStealth from "puppeteer-extra-plugin-stealth";
 import {PuppeteerWARCGenerator, PuppeteerCapturer} from "node-warc";
 import {envelope as env} from "@sugarcube/core";
-import {mkdirP, sha256sum, md5sum} from "@sugarcube/plugin-fs";
+import {mkdirP, sha256sum, md5sum, existsP} from "@sugarcube/plugin-fs";
 
-const accessAsync = promisify(fs.access);
-const unlinkAsync = promisify(fs.unlink);
-
-const cleanUp = async location => {
-  try {
-    await accessAsync(location);
-    await unlinkAsync(location);
-    // eslint-disable-next-line no-empty
-  } catch (e) {}
-};
+import {cleanUp} from "../utils";
 
 const archiveTypes = ["url"];
 
@@ -45,17 +34,7 @@ const plugin = async (envelope, {log, cfg, stats}) => {
 
       const warcDir = join(dataDir, unit._sc_id_hash, "warc");
       const location = join(warcDir, `${idHash}.warc.gz`);
-
-      let archiveExists = false;
-
-      try {
-        await accessAsync(location);
-        archiveExists = true;
-      } catch (e) {
-        if (e.code !== "ENOENT") {
-          throw e;
-        }
-      }
+      const archiveExists = await existsP(location);
 
       if (archiveExists && !forceArchive) {
         log.info(`Archive ${source} exists at ${location}. Not re-archiving.`);

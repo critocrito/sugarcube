@@ -1,24 +1,10 @@
-import fs from "fs";
 import {join, extname} from "path";
 import {get} from "lodash/fp";
 import dashp, {collectP} from "dashp";
-import {promisify} from "util";
 import {envelope as env} from "@sugarcube/core";
-import {mkdirP, sha256sum, md5sum} from "@sugarcube/plugin-fs";
+import {mkdirP, sha256sum, md5sum, existsP, cpP} from "@sugarcube/plugin-fs";
 
-import {ffmpeg} from "../utils";
-
-const cpP = promisify(fs.copyFile);
-const accessP = promisify(fs.access);
-const unlinkP = promisify(fs.unlink);
-
-const cleanUp = async location => {
-  try {
-    await accessP(location);
-    await unlinkP(location);
-    // eslint-disable-next-line no-empty
-  } catch (e) {}
-};
+import {ffmpeg, cleanUp} from "../utils";
 
 const fileImportPlugin = async (envelope, {log, cfg, stats}) => {
   const dataDir = get("media.data_dir", cfg);
@@ -71,16 +57,7 @@ const fileImportPlugin = async (envelope, {log, cfg, stats}) => {
           : `${idHash}${extname(source)}`;
       const location = join(dir, filename);
 
-      let importExists = false;
-
-      try {
-        await accessP(location);
-        importExists = true;
-      } catch (e) {
-        if (e.code !== "ENOENT") {
-          throw e;
-        }
-      }
+      const importExists = await existsP(location);
 
       if (importExists && !forceImport) {
         log.info(

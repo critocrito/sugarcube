@@ -4,7 +4,24 @@ import pify from "pify";
 import crypto from "crypto";
 import {dirname} from "path";
 import fs from "fs";
+import {promisify} from "util";
 import glob from "glob";
+
+export const accessP = promisify(fs.access);
+export const unlinkP = promisify(fs.unlink);
+export const cpP = promisify(fs.copyFile);
+
+export const existsP = async location => {
+  try {
+    await accessP(location);
+  } catch (e) {
+    if (e.code !== "ENOENT") {
+      throw e;
+    }
+    return false;
+  }
+  return true;
+};
 
 export const mkdirP = dir =>
   pify(fs.mkdir)(dir).catch(err => {

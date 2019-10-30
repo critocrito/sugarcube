@@ -1,5 +1,6 @@
 import {retry} from "dashp";
 import {runCmd} from "@sugarcube/utils";
+import {accessP, unlinkP} from "@sugarcube/plugin-fs";
 
 export const youtubeDl = (cmd, videoFormat, href, target, sourceIp) => {
   const args = [
@@ -68,11 +69,10 @@ export const ffmpeg = (cmd, source, dest, force = false) => {
 export const random = (min, max) =>
   Math.floor(Math.random() * (max - min) + min);
 
-export default {
-  youtubeDl,
-  youtubeDlCheck,
-  mosaicSceneChange,
-  mosaicNthFrame,
-  ffmpeg,
-  random,
+export const cleanUp = async location => {
+  try {
+    await accessP(location);
+    await unlinkP(location);
+    // eslint-disable-next-line no-empty
+  } catch (e) {}
 };

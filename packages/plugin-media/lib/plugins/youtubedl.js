@@ -1,24 +1,11 @@
 import {includes, get, constant} from "lodash/fp";
 import dashp, {ofP, collectP, delayP} from "dashp";
-import pify from "pify";
 import {join} from "path";
-import fs from "fs";
 import {envelope as env} from "@sugarcube/core";
-import {mkdirP, sha256sum, md5sum} from "@sugarcube/plugin-fs";
+import {mkdirP, sha256sum, md5sum, existsP} from "@sugarcube/plugin-fs";
 import isIp from "is-ip";
 
-import {youtubeDl, random} from "../utils";
-
-const accessAsync = pify(fs.access);
-const unlinkAsync = pify(fs.unlink);
-
-const cleanUp = async location => {
-  try {
-    await accessAsync(location);
-    await unlinkAsync(location);
-    // eslint-disable-next-line no-empty
-  } catch (e) {}
-};
+import {youtubeDl, random, cleanUp} from "../utils";
 
 const downloadTypes = ["video"];
 
@@ -94,23 +81,9 @@ const plugin = async (envelope, {cfg, log, stats}) => {
 
       stats.count("total");
 
-      const location = join(
-        dataDir,
-        unit._sc_id_hash,
-        "youtubedl",
-        `${idHash}.${videoFormat}`,
-      );
-
-      let downloadExists = false;
-
-      try {
-        await accessAsync(location);
-        downloadExists = true;
-      } catch (e) {
-        if (e.code !== "ENOENT") {
-          throw e;
-        }
-      }
+      const dir = join(dataDir, unit._sc_id_hash, "youtubedl");
+      const location = join(dir, `${idHash}.${videoFormat}`);
+      const downloadExists = existsP(location);
 
       if (downloadExists && !forceDownload) {
         log.info(
@@ -139,8 +112,8 @@ const plugin = async (envelope, {cfg, log, stats}) => {
 
       try {
         await youtubeDl(cmd, videoFormat, source, location, sourceAddress);
-      } catch (ee) {
-        const reason = `Failed to download video: ${ee.message}`;
+      } catch (e) {
+        const reason = `Failed to download video: ${e.message}`;
         stats.fail({type: unit._sc_source, term: source, reason});
 
         // If we force a download and it fails, but the download exists
