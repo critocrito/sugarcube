@@ -10,6 +10,16 @@ npm install --save @sugarcube/plugin-http
 
 ## Plugins
 
+### `http_import` plugin
+
+Import queries of query type `http_url` as Sugarcube units. The unit only contains the URL as `location` field. The MIME type of the url is determined and set in `_sc_media` so that other plugins can do further transformations on the unit.
+
+**Metrics:**
+
+- `total`: The total number of queries imported.
+- `success`: The number of URLs that were successfully imported.
+- `fail`: The number of URLs that failed to import.
+
 ### `http_get` plugin
 
 Fetch images, files, pdf's and videos from `_sc_data`. Downloaded targets are

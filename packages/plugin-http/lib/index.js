@@ -1,14 +1,30 @@
-import {forEach, merge, values} from "lodash/fp";
+import {
+  flow,
+  intersection,
+  keys,
+  pick,
+  forEach,
+  merge,
+  values,
+} from "lodash/fp";
 
 import getPlugin from "./plugins/get";
 import wgetPlugin from "./plugins/wget";
 import screenshotPlugin from "./plugins/screenshot";
+import importPlugin from "./plugins/import";
 
 const plugins = {
   http_get: getPlugin,
   http_wget: wgetPlugin,
   http_screenshot: screenshotPlugin,
+  http_import: importPlugin,
 };
+
+const dataPlugins = flow([
+  keys,
+  intersection(["http_get", "http_wget", "http_screenshot"]),
+  ps => pick(ps, plugins),
+])(plugins);
 
 forEach(p => {
   // eslint-disable-next-line no-param-reassign
@@ -23,7 +39,7 @@ forEach(p => {
     },
     p.argv,
   );
-}, values(plugins));
+}, values(dataPlugins));
 
 export {plugins};
 export default {plugins};
