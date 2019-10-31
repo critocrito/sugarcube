@@ -1,6 +1,6 @@
 import {join} from "path";
 import {includes, get} from "lodash/fp";
-import dashp, {flowP, tapP, collectP} from "dashp";
+import dashp, {collectP} from "dashp";
 import {PuppeteerWARCGenerator, PuppeteerCapturer} from "node-warc";
 import {envelope as env} from "@sugarcube/core";
 import {
@@ -47,94 +47,90 @@ const plugin = async (envelope, {log, cfg, stats}) => {
     log.debug(`Progress: ${cnt}/${total} units (${percent}%).`),
   );
 
-  const data = await flowP(
-    [
-      mapper(async unit => {
-        const medias = await collectP(async media => {
-          const {type, term, href} = media;
-          const source = href || term;
-          const idHash = media._sc_id_hash;
+  const data = await mapper(async unit => {
+    const medias = await collectP(async media => {
+      const {type, term, href} = media;
+      const source = href || term;
+      const idHash = media._sc_id_hash;
 
-          if (!includes(type, archiveTypes)) return media;
+      if (!includes(type, archiveTypes)) return media;
 
-          stats.count("total");
+      stats.count("total");
 
-          const warcDir = join(dataDir, unit._sc_id_hash, "warc");
-          const location = join(warcDir, `${idHash}.warc.gz`);
-          const archiveExists = await existsP(location);
+      const warcDir = join(dataDir, unit._sc_id_hash, "warc");
+      const location = join(warcDir, `${idHash}.warc.gz`);
+      const archiveExists = await existsP(location);
 
-          if (archiveExists && !forceArchive) {
-            log.info(`Archive ${source} exists at ${location}. Skipping.`);
-            stats.count("existing");
-            return media;
-          }
+      if (archiveExists && !forceArchive) {
+        log.info(`Archive ${source} exists at ${location}. Skipping.`);
+        stats.count("existing");
+        return media;
+      }
 
-          if (archiveExists && forceArchive) {
-            log.info(`Re-archiving ${source}.`);
-            stats.count("re-archive");
-          }
+      if (archiveExists && forceArchive) {
+        log.info(`Re-archiving ${source}.`);
+        stats.count("re-archive");
+      }
 
-          try {
-            await browse(async ({goto, page}) => {
-              const cap = new PuppeteerCapturer(page);
-              cap.startCapturing();
+      try {
+        await browse(async ({goto, page}) => {
+          const cap = new PuppeteerCapturer(page);
+          cap.startCapturing();
 
-              await goto(source);
+          await goto(source);
 
-              // ensure the download directory.
-              await mkdirP(warcDir);
+          // ensure the download directory.
+          await mkdirP(warcDir);
 
-              const warcGen = new PuppeteerWARCGenerator({gzip: true});
-              await warcGen.generateWARC(cap, {
-                warcOpts: {warcPath: `${location}.tmp.warc.gz`},
-                winfo: {
-                  description: `${source} captured as part of: ${cfg.name}`,
-                  isPartOf: cfg.project,
-                },
-              });
-            });
-            await mvP(`${location}.tmp.warc.gz`, location);
-          } catch (e) {
-            const reason = `Failed to archive url: ${e.message}`;
-            stats.fail({type: unit._sc_source, term: source, reason});
-            await cleanUp(`${location}.tmp.warc.gz`);
+          const warcGen = new PuppeteerWARCGenerator({gzip: true});
+          await warcGen.generateWARC(cap, {
+            warcOpts: {warcPath: `${location}.tmp.warc.gz`},
+            winfo: {
+              description: `${source} captured as part of: ${cfg.name}`,
+              isPartOf: cfg.project,
+            },
+          });
+        });
+        await mvP(`${location}.tmp.warc.gz`, location);
+      } catch (e) {
+        const reason = `Failed to archive url: ${e.message}`;
+        stats.fail({type: unit._sc_source, term: source, reason});
+        await cleanUp(`${location}.tmp.warc.gz`);
 
-            return media;
-          }
+        return media;
+      }
 
-          log.info(`Archived ${source} to ${location}.`);
-          stats.count("success");
-          if (!archiveExists) stats.count("new");
+      log.info(`Archived ${source} to ${location}.`);
+      stats.count("success");
+      if (!archiveExists) stats.count("new");
 
-          const [md5, sha256] = await Promise.all([
-            md5sum(location),
-            sha256sum(location),
-          ]);
-          unit._sc_downloads.push(
-            Object.assign(
-              {},
-              {
-                location,
-                md5,
-                sha256,
-                type,
-                term,
-              },
-              href ? {href} : {},
-            ),
-          );
+      const [md5, sha256] = await Promise.all([
+        md5sum(location),
+        sha256sum(location),
+      ]);
+      unit._sc_downloads.push(
+        Object.assign(
+          {},
+          {
+            location,
+            md5,
+            sha256,
+            type,
+            term,
+          },
+          href ? {href} : {},
+        ),
+      );
 
-          return media;
-        }, unit._sc_media);
+      return media;
+    }, unit._sc_media);
 
-        logCounter();
+    logCounter();
 
-        return Object.assign({}, unit, {_sc_media: medias});
-      }),
-      tapP(() => dispose()),
-    ],
-    envelope.data,
-  );
+    return Object.assign({}, unit, {_sc_media: medias});
+  }, envelope.data);
+
+  await dispose();
 
   return env.envelope(data, envelope.queries);
 };
