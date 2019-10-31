@@ -25,7 +25,7 @@ Populate the `_sc_media` field from a location field of the unit. Successive plu
 
 ## API
 
-### unfold
+### `unfold`
 
 Unfold a glob pattern into a list of file objects.
 
