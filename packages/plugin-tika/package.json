@@ -9,12 +9,12 @@
   "version": "0.29.0",
   "main": "_dist/index.js",
   "dependencies": {
+    "@conscia/tika": "1.14.1",
     "@sugarcube/core": "^0.29.0",
     "@sugarcube/plugin-fs": "^0.29.0",
     "dashp": "^0.10.1",
     "lodash": "^4.17.4",
-    "moment": "^2.19.1",
-    "tika": "critocrito/node-tika#forked-master"
+    "moment": "^2.19.1"
   },
   "keywords": [
     "data",

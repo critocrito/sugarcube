@@ -1,5 +1,5 @@
 import {curry, reduce, mergeAll, concat, has, identity} from "lodash/fp";
-import tika from "tika";
+import tika from "@conscia/tika";
 import moment from "moment";
 
 import ct from "./content-types";
