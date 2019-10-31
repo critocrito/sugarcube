@@ -1,3 +1,4 @@
+import {get} from "lodash/fp";
 import {flatmapP, collectP} from "dashp";
 import {envelope as env} from "@sugarcube/core";
 import {extract, tikaMetaFields} from "@sugarcube/utils";
@@ -6,7 +7,9 @@ import {unfold, mimeCategory} from "../api";
 
 const querySource = "glob_pattern";
 
-const plugin = async (envelope, {log, stats}) => {
+const plugin = async (envelope, {cfg, log, stats}) => {
+  const language = get("fs.extract_language", cfg);
+
   const queries = env.queriesByType(querySource, envelope);
 
   const data = await flatmapP(async query => {
@@ -25,7 +28,7 @@ const plugin = async (envelope, {log, stats}) => {
 
       let contents = {text: null, meta: {}};
       try {
-        contents = await extract(location);
+        contents = await extract(location, {language});
       } catch (e) {
         if (!/unsupported media type/i.test(e.message)) {
           stats.fail({
@@ -65,7 +68,13 @@ const plugin = async (envelope, {log, stats}) => {
   return env.concatData(data.filter(unit => unit != null), envelope);
 };
 
-plugin.argv = {};
+plugin.argv = {
+  "fs.extract_language": {
+    type: "string",
+    nargs: 1,
+    desc: "A ISO 839-2 3 letter language code to set the extraction language.",
+  },
+};
 plugin.desc = "Import files from a glob pattern.";
 
 export default plugin;

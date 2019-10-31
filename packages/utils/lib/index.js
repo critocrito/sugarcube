@@ -42,8 +42,13 @@ export const counter = (total, log, {threshold = 100, steps = 50} = {}) => {
 };
 
 export const extract = (location, opts = {}) => {
+  const tikaOpts = Object.assign(
+    {},
+    opts.language != null ? {ocrLanguage: opts.language} : {},
+  );
+
   return new Promise((resolve, reject) => {
-    tika.extract(location, opts, (err, text, meta) => {
+    tika.extract(location, tikaOpts, (err, text, meta) => {
       if (err) reject(err);
       resolve({text, meta});
     });
