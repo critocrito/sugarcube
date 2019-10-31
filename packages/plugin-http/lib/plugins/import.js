@@ -2,15 +2,7 @@ import fetch from "node-fetch";
 import contentType from "content-type";
 import {flowP, collectP} from "dashp";
 import {envelope as env} from "@sugarcube/core";
-import {extract} from "@sugarcube/utils";
-
-import {
-  getAuthor,
-  getTitle,
-  getDescription,
-  getLanguage,
-  getCreated,
-} from "../utils";
+import {extract, tikaMetaFields} from "@sugarcube/utils";
 
 const querySource = "http_url";
 
@@ -55,12 +47,8 @@ const plugin = async (envelope, {log, stats}) => {
         const {text, meta} = contents;
 
         const unitData = {
-          body: text.trim(),
-          author: getAuthor(meta),
-          title: getTitle(meta),
-          description: getDescription(meta),
-          language: getLanguage(meta),
-          created: getCreated(meta),
+          body: text == null || text === "" ? text : text.trim(),
+          ...tikaMetaFields(meta),
         };
 
         const pubdates =
@@ -79,7 +67,7 @@ const plugin = async (envelope, {log, stats}) => {
           }, {}),
         };
 
-        log.info(`Imported ${url} as media type "${mediaType}".`);
+        log.info(`Imported url ${url} as media type "${mediaType}".`);
         stats.count("success");
 
         return unit;
