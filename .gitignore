@@ -19,3 +19,4 @@ project/.vagrant
 .nyc_output
 coverage
 data
+.sugarcube_cache.json
