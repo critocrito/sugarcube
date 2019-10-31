@@ -1,6 +1,6 @@
 import {get} from "lodash/fp";
 import dashp, {collectP} from "dashp";
-import {join, resolve, dirname} from "path";
+import {join, dirname} from "path";
 import {envelope as env} from "@sugarcube/core";
 import {existsP, mvP, cleanUp} from "@sugarcube/plugin-fs";
 import {counter} from "@sugarcube/utils";
@@ -52,21 +52,42 @@ const plugin = async (envelope, {log, cfg, stats}) => {
       }
 
       const source = href || term;
-      const dest = join(dirname(location), "mosaic.jpg");
+      const idHash = download._sc_id_hash;
 
+      // Make sure the video really exists before attempting to generate a
+      // mosaic.
       if (!(await existsP(location))) {
-        const reason = `Video at ${location} doesn't exits`;
+        const reason = `Source video at ${location} doesn't exist. Skipping`;
         stats.fail({type: unit._sc_source, term: source, reason});
 
         return download;
       }
 
-      const mosaicExists = await existsP(resolve(dest));
+      // Maintain compatibility with the old mosaic path.
+      const newDest = join(dirname(location), `${idHash}.mosaic.jpg`);
+      const oldDest = join(dirname(location), "mosaic.jpg");
+
+      let dest = newDest;
+      let mosaicExists = false;
+
+      try {
+        const destinations = [newDest, oldDest];
+        const destExists = await Promise.all(destinations.map(d => existsP(d)));
+
+        for (let i = 0; i < destExists.length; i += 1) {
+          if (destExists[i]) {
+            mosaicExists = true;
+            dest = destinations[i];
+          }
+        }
+      } catch (e) {
+        const reason = `Failed to access ${e.path}: ${e.message}.`;
+        stats.fail({type: unit._sc_source, term: source, reason});
+        return null;
+      }
 
       if (mosaicExists && !forceGeneration) {
-        log.info(
-          `Mosaic of ${location} exists at ${dest}. Not forcing a re-generation.`,
-        );
+        log.info(`Mosaic of ${location} exists at ${dest}. Skipping`);
         stats.count("existing");
 
         return Object.assign({}, download, {mosaic: dest});
@@ -96,6 +117,7 @@ const plugin = async (envelope, {log, cfg, stats}) => {
 
       log.info(`Created mosaic at ${dest} with strategy ${strategy}.`);
       stats.count("success");
+      if (!mosaicExists) stats.count("new");
 
       return Object.assign({}, download, {mosaic: dest});
     }, unit._sc_downloads);

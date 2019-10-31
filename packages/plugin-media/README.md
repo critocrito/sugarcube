@@ -100,6 +100,7 @@ $(npm bin)/sugarcube -p youtube_video,media_youtubedl,media_mosaic \
 - `existing`: The number of mosaics that already existed.
 - `fail`: The number of mosaics that failed to generate.
 - `success`: The number of mosaics that were successfully generated.
+- `new`: The number of new mosaics out of the number of successfully generated mosaics.
 
 ### `media_file_import` plugin
 
