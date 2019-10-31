@@ -161,6 +161,8 @@ Take a screenshot of every URL in `_sc_media` and populate the `_sc_downloads` f
 
 - `media.data_dir`: Store all screenshots into this directory. Defaults to `data`.
 - `media.force`: Force a new screenshot, even if one already exists at the target location.
+- `media.parallel`: Specify how many screenshots to take at the same time. It defaults to 1 and can be set between 1 and 8.
+
 
 **Example:**
 
