@@ -10,18 +10,21 @@ npm install --save @sugarcube/plugin-fs
 
 ## Plugins
 
-### `fs_unfold` plugin
+### `fs_import` plugin
 
-The query type is `glob_pattern`. It expands the glob pattern and turns every
-file into an unit.
+The query type is `glob_pattern`. It expands the glob pattern and turns every file into an unit. If possible, it extracts the body and meta data from the file using [Apache Tika](https://tika.apache.org/).
 
-### `fs_media_type` plugin
+**Example:**
 
-Populate the `_sc_media` field from a location field of the unit. Successive plugins can therefore operate on files that were imported using `fs_unfold`.
+```
+sugarcube -Q glob_pattern:path/to/files/** -p fs_import
+```
 
-**Configuration:**
+**Metrics:**
 
-- `fs.location_field`: Specify the name of the field that contains the file path. Defaults to `location`.
+- `total`: The total number of files imported.
+- `fail`: The number of files that failed to import.
+- `success`: The number files that succeeded to import.
 
 ## API
 

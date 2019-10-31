@@ -1,5 +1,4 @@
-import unfoldPlugin from "./plugins/unfold";
-import mediaTypePlugin from "./plugins/media-type";
+import importPlugin from "./plugins/import";
 import {
   unfold,
   mkdirP,
@@ -12,8 +11,7 @@ import {
 } from "./api";
 
 export const plugins = {
-  fs_unfold: unfoldPlugin,
-  fs_media_type: mediaTypePlugin,
+  fs_import: importPlugin,
 };
 
 export * from "./api";

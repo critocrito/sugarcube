@@ -9,6 +9,7 @@
   "dependencies": {
     "@conscia/tika": "^1.14.1",
     "dashp": "^0.10.1",
+    "date-fns": "^2.6.0",
     "lodash": "^4.17.11"
   },
   "keywords": [

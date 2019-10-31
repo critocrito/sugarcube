@@ -4,6 +4,8 @@ import {flowP, collectP} from "dashp";
 import crypto from "crypto";
 import {dirname} from "path";
 import glob from "glob";
+import readChunk from "read-chunk";
+import fileType from "file-type";
 
 export const accessP = promisify(fs.access);
 export const unlinkP = promisify(fs.unlink);
@@ -40,6 +42,17 @@ export const cleanUp = async location => {
     await unlinkP(location);
     // eslint-disable-next-line no-empty
   } catch (e) {}
+};
+
+export const mimeCategory = location => {
+  // Determine the mime-type of the file.
+  const buffer = readChunk.sync(location, 0, fileType.minimumBytes);
+  const {mime} = fileType(buffer);
+
+  if (["video", "image"].includes(mime.replace(/^(\w*)\/.*/g, "$1"))) {
+    return mime.replace(/^(\w*)\/.*/g, "$1");
+  }
+  return "document";
 };
 
 const hashFile = algorithm => target => {
