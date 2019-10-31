@@ -27,6 +27,18 @@ export const runCmd = (cmd, args) =>
     });
   });
 
+export const counter = (total, log, {threshold = 100, steps = 50} = {}) => {
+  let cnt = 0;
+
+  return () => {
+    cnt += 1;
+    const percent = Math.floor((cnt / total) * 100);
+    const shouldLog = cnt % steps === 0;
+    if (total >= threshold && shouldLog) log({total, cnt, percent});
+  };
+};
+
 export default {
   runCmd,
+  counter,
 };
