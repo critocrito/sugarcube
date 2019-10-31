@@ -14,6 +14,7 @@
     "@sugarcube/utils": "^0.29.0",
     "content-type": "^1.0.4",
     "dashp": "^0.10.1",
+    "date-fns": "^2.6.0",
     "lodash": "^4.17.4",
     "node-fetch": "^2.6.0",
     "pify": "^3.0.0",

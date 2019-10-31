@@ -1,3 +1,4 @@
+import tika from "@conscia/tika";
 import {spawn} from "child_process";
 
 export const runCmd = (cmd, args) =>
@@ -38,7 +39,17 @@ export const counter = (total, log, {threshold = 100, steps = 50} = {}) => {
   };
 };
 
+export const extract = (location, opts = {}) => {
+  return new Promise((resolve, reject) => {
+    tika.extract(location, opts, (err, text, meta) => {
+      if (err) reject(err);
+      resolve({text, meta});
+    });
+  });
+};
+
 export default {
   runCmd,
   counter,
+  extract,
 };

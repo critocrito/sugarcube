@@ -654,6 +654,13 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
+"@conscia/tika@1.14.1", "@conscia/tika@^1.14.1":
+  version "1.14.1"
+  resolved "https://registry.yarnpkg.com/@conscia/tika/-/tika-1.14.1.tgz#118ab22c1e668a1ad43a77c6edcdec9762e9d548"
+  integrity sha512-RUGwh/9Vl14egD4Terh3hoo6Nw1SKQksIXC97ER3qU9tqDvKslJ9V1TRHpW1ihQr7opiWM9m7QMRAvPHUysovA==
+  dependencies:
+    java "^0.11.1"
+
 "@evocateur/libnpmaccess@^3.1.0":
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/@evocateur/libnpmaccess/-/libnpmaccess-3.1.0.tgz#e546ee4e4bedca54ed9303948ec54c985cec33e4"
@@ -2821,6 +2828,11 @@ date-fns@^2.2.1:
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.2.1.tgz#b3f79cf56760af106050c686f4c72586a3383ee9"
   integrity sha512-4V1i5CnTinjBvJpXTq7sDHD4NY6JPcl15112IeSNNLUWQOQ+kIuCvRGOFZMQZNvkadw8F9QTyZxz59rIRU6K+w==
 
+date-fns@^2.6.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.6.0.tgz#a5bc82e6a4c3995ae124b0ba1a71aec7b8cbd666"
+  integrity sha512-F55YxqRdEfP/eYQmQjLN798v0AwLjmZ8nMBjdQvNwEE3N/zWVrlkkqT+9seBlPlsbkybG4JmWg3Ee3dIV9BcGQ==
+
 dateformat@^3.0.0:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/dateformat/-/dateformat-3.0.3.tgz#a6e37499a4d9a9cf85ef5872044d62901c9889ae"
@@ -4983,15 +4995,15 @@ istanbul-reports@^2.2.4:
   dependencies:
     handlebars "^4.1.2"
 
-java@~0.11.0:
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/java/-/java-0.11.0.tgz#2fa72529daad80365b0d21f621f794cf9847ed0e"
-  integrity sha512-RIx44OqCMRMcAcPIF4htuw1QESuZyopDWYZ40pUIfbpfwUUROLT1JyK5/4XYWA2HuW0NuUtRmhuzZ1znDqsuaQ==
+java@^0.11.1:
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/java/-/java-0.11.1.tgz#8dc99d15094a94184cb852738ccfe9c32b358c12"
+  integrity sha512-ptMbeFUArQ1vXQSHbfifODHpxZAB9EELJFFLAsb3dMnGfXYprcZToJysCRncbqch3Fxqi3xPCJSjJupHPbmD2w==
   dependencies:
     async "2.6.1"
     find-java-home "0.2.0"
     glob "7.1.3"
-    lodash "4.17.11"
+    lodash "4.17.14"
     nan "2.11.1"
 
 js-levenshtein@^1.1.3:
@@ -5433,7 +5445,12 @@ lodash.zip@^4.2.0:
   resolved "https://registry.yarnpkg.com/lodash.zip/-/lodash.zip-4.2.0.tgz#ec6662e4896408ed4ab6c542a3990b72cc080020"
   integrity sha1-7GZi5IlkCO1KtsVCo5kLcswIACA=
 
-lodash@4.17.11, lodash@^4.11.1, lodash@^4.13.1, lodash@^4.15.0, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.2.1:
+lodash@4.17.14:
+  version "4.17.14"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.14.tgz#9ce487ae66c96254fe20b599f21b6816028078ba"
+  integrity sha512-mmKYbW3GLuJeX+iGP+Y7Gp1AiGHGbXHCOh/jZmrawMmsE7MS4znI3RL2FsjbqOyMayHInjOeykW7PEajUk1/xw==
+
+lodash@^4.11.1, lodash@^4.13.1, lodash@^4.15.0, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.2.1:
   version "4.17.11"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
   integrity sha512-cQKh8igo5QUhZ7lg38DYWAxMvjSAKG0A8wGSVimP07SIUEK2UO+arSRKbRZWtelMtN5V0Hkwh5ryOto/SshYIg==
@@ -8351,12 +8368,6 @@ through@2, "through@>=2.2.7 <3", through@^2.3.4, through@^2.3.6:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
   integrity sha1-DdTJ/6q8NXlgsbckEV1+Doai4fU=
-
-tika@critocrito/node-tika#forked-master:
-  version "1.6.1"
-  resolved "https://codeload.github.com/critocrito/node-tika/tar.gz/21ef748e15359d9db547774920b81c96626bf389"
-  dependencies:
-    java "~0.11.0"
 
 tmp@^0.0.33:
   version "0.0.33"
