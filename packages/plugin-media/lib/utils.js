@@ -1,4 +1,6 @@
+import fs from "fs";
 import {retry} from "dashp";
+import fetch from "node-fetch";
 import {runCmd} from "@sugarcube/utils";
 import {accessP, unlinkP} from "@sugarcube/plugin-fs";
 
@@ -75,4 +77,10 @@ export const cleanUp = async location => {
     await unlinkP(location);
     // eslint-disable-next-line no-empty
   } catch (e) {}
+};
+
+export const download = async (from, to) => {
+  const resp = await fetch(from);
+  const dest = fs.createWriteStream(to);
+  resp.body.pipe(dest);
 };

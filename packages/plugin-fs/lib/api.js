@@ -8,12 +8,14 @@ import glob from "glob";
 export const accessP = promisify(fs.access);
 export const unlinkP = promisify(fs.unlink);
 export const cpP = promisify(fs.copyFile);
+export const mvP = promisify(fs.rename);
 
 export const existsP = async location => {
   try {
     await accessP(location);
   } catch (e) {
-    if (e.code === "ENOENT") return false;
+    // telegram uses filenames that throw a ENAMETOOLONG.
+    if (e.code === "ENOENT" || e.code === "ENAMETOOLONG") return false;
     throw e;
   }
   return true;
@@ -31,6 +33,14 @@ export const mkdirP = dir =>
         throw err;
     }
   });
+
+export const cleanUp = async location => {
+  try {
+    await accessP(location);
+    await unlinkP(location);
+    // eslint-disable-next-line no-empty
+  } catch (e) {}
+};
 
 const hashFile = algorithm => target => {
   const fd = fs.createReadStream(target);

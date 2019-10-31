@@ -20,7 +20,9 @@ Import queries of query type `http_url` as Sugarcube units. The unit only contai
 - `success`: The number of URLs that were successfully imported.
 - `fail`: The number of URLs that failed to import.
 
-### `http_get` plugin
+### `http_get` plugin (DEPRECATED)
+
+This plugin is deprecated in favor of the `media_fetch` plugin.
 
 Fetch images, files, pdf's and videos from `_sc_data`. Downloaded targets are
 added to the `_sc_downloads` collection.
