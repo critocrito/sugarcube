@@ -1,6 +1,7 @@
 import {size, get, pickBy, identity} from "lodash/fp";
 import {flowP, tapP} from "dashp";
 import {plugin as p, envelope as env} from "@sugarcube/core";
+import {counter} from "@sugarcube/utils";
 import parse from "date-fns/parse";
 import format from "date-fns/format";
 import subDays from "date-fns/sub_days";
@@ -43,6 +44,13 @@ const listChannel = (envelope, {cfg, log, stats}) => {
       `Limiting queries from ${range.publishedAfter} till ${range.publishedBefore}`,
     );
 
+  const logCounter = counter(
+    envelope.data.length,
+    ({cnt, total, percent}) =>
+      log.debug(`Progress: ${cnt}/${total} units (${percent}%).`),
+    {threshold: 50, steps: 25},
+  );
+
   const op = range
     ? videoChannel(key, pickBy(identity, range))
     : videoChannelPlaylist(key);
@@ -69,6 +77,7 @@ const listChannel = (envelope, {cfg, log, stats}) => {
               ])(query)
             : [];
         },
+        tapP(() => logCounter()),
       ],
       query,
     );

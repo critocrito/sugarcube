@@ -1,27 +1,28 @@
 import {get, chunk} from "lodash/fp";
-import {flatmapP, flowP, tapP, delayP} from "dashp";
+import {flatmapP, flowP, delayP} from "dashp";
 import {envelope as env, plugin as p} from "@sugarcube/core";
+import {counter} from "@sugarcube/utils";
+
 import {videosListCheck} from "../api";
 import {assertCredentials, parseYoutubeVideo} from "../utils";
 
 const checkAndFilterVideos = async (envelope, {cfg, log, stats}) => {
   const key = get("youtube.api_key", cfg);
 
-  let counter = 0;
+  const logCounter = counter(
+    envelope.data.length,
+    ({cnt, total, percent}) =>
+      log.debug(`Progress: ${cnt}/${total} units (${percent}%).`),
+    {threshold: 50, steps: 25},
+  );
 
   log.info(`Checking ${envelope.data.length} videos.`);
 
   const videos = await flatmapP(
     flowP([
-      tapP(units => {
-        stats.count("total", units.length);
-        counter += units.length;
-        if (counter % 1000 === 0)
-          log.debug(
-            `Fetched ${counter} out of ${envelope.data.length} videos.`,
-          );
-      }),
       async units => {
+        stats.count("total", units.length);
+
         const ids = units.reduce(
           (memo, unit) =>
             memo.concat(
@@ -52,6 +53,8 @@ const checkAndFilterVideos = async (envelope, {cfg, log, stats}) => {
                 }
               });
           });
+
+          units.forEach(logCounter);
         }
 
         stats.count("existing", units.length - missing.length);

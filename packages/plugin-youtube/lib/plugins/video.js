@@ -1,6 +1,8 @@
 import {get, chunk} from "lodash/fp";
-import {flatmapP, flowP, tapP, delayP} from "dashp";
+import {flatmapP, flowP, delayP} from "dashp";
 import {envelope as env, plugin as p} from "@sugarcube/core";
+import {counter} from "@sugarcube/utils";
+
 import {videosList} from "../api";
 import {assertCredentials, parseYoutubeVideo} from "../utils";
 
@@ -13,20 +15,21 @@ const fetchVideos = async (envelope, {cfg, log, stats}) => {
     .queriesByType(querySource, envelope)
     .map(term => parseYoutubeVideo(term));
 
-  let counter = 0;
+  const logCounter = counter(
+    envelope.data.length,
+    ({cnt, total, percent}) =>
+      log.debug(`Progress: ${cnt}/${total} units (${percent}%).`),
+    {threshold: 50, steps: 25},
+  );
 
   log.info(`Querying for ${queries.length} videos.`);
 
   const videos = await flatmapP(
     flowP([
-      tapP(chunks => {
-        stats.count("total", chunks.length);
-        log.info(`Fetch details for ${chunks.length} videos.`);
-        counter += Object.keys(chunks).length;
-        if (counter % 1000 === 0)
-          log.debug(`Fetched ${counter} out of ${queries.length} videos.`);
-      }),
       async qs => {
+        stats.count("total", qs.length);
+        log.info(`Fetch details for ${qs.length} videos.`);
+
         const results = await videosList(key, qs);
         if (results.length !== qs.length) {
           const missing = qs.reduce(
@@ -42,7 +45,10 @@ const fetchVideos = async (envelope, {cfg, log, stats}) => {
           );
           missing.forEach(stats.fail);
         }
+
+        qs.forEach(logCounter);
         stats.count("success", results.length);
+
         // Merge the query into the data unit.
         return results.map(r => {
           const query = envelope.queries.find(
