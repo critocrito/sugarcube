@@ -163,6 +163,7 @@ const runner = opts => {
   run.events = events;
   run.cache = cache;
   run.plugins = plugins;
+  run.stats = stats;
 
   return run;
 };

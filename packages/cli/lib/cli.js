@@ -155,6 +155,7 @@ const {argv} = Object.keys(plugins)
 // messages before the pipeline run.
 const logger = loggerInstrument({debug: argv.debug, logger: argv.logger});
 const info = msg => logger.log({type: "info", msg});
+const warn = msg => logger.log({type: "warn", msg});
 const error = msg => logger.log({type: "error", msg});
 const debug = msg => logger.log({type: "debug", msg});
 
@@ -286,6 +287,25 @@ try {
 } catch (e) {
   haltAndCough(argv.debug, e);
 }
+
+// Handle the SIGINT event to gracefully shutdown. Print
+if (process.platform === "win32") {
+  // eslint-disable-next-line global-require
+  const rl = require("readline").createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+
+  rl.on("SIGINT", () => process.emit("SIGINT"));
+}
+
+process.on("SIGINT", () => {
+  warn("Sugarcube pipeline was interrupted by the user. Shutting down.");
+  run.stats.pipelineEnd({ts: new Date()});
+  run.events.emit("stats", {stats: run.stats.get()});
+  run.events.emit("end");
+  process.exit();
+});
 
 // Setup all instrumentation. cli_logger is treated special, since this cli
 // always includes it.
