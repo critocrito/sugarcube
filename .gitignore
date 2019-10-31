@@ -18,3 +18,4 @@ project/.vagrant
 .vscode
 .nyc_output
 coverage
+data
