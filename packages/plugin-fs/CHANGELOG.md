@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.30.0](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-fs/compare/v0.29.0...v0.30.0) (2019-10-31)
+
+
+### Features
+
+* **plugin-fs:** replace fs_unfold with fs_import plugin and extract data with Tika ([7f01656](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-fs/commit/7f01656))
+* **plugin-fs:** set OCR language for text extraction on file import ([94c9726](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-fs/commit/94c9726))
+* **plugin-media:** add media_fetch plugin as replacement for http_get ([fbeb98a](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-fs/commit/fbeb98a))
+
+
+
+
+
 # [0.29.0](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-fs/compare/v0.28.1...v0.29.0) (2019-10-10)
 
 **Note:** Version bump only for package @sugarcube/plugin-fs

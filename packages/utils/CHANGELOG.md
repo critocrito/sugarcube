@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.30.0](https://github.com/critocrito/sugarcube/tree/master/packages/utils/compare/v0.29.0...v0.30.0) (2019-10-31)
+
+
+### Features
+
+* **plugin-fs:** replace fs_unfold with fs_import plugin and extract data with Tika ([7f01656](https://github.com/critocrito/sugarcube/tree/master/packages/utils/commit/7f01656))
+* **plugin-fs:** set OCR language for text extraction on file import ([94c9726](https://github.com/critocrito/sugarcube/tree/master/packages/utils/commit/94c9726))
+* **plugin-http:** extract body and meta data when importing URLs ([e4bfee4](https://github.com/critocrito/sugarcube/tree/master/packages/utils/commit/e4bfee4))
+* **utils:** add a progress logging counter ([89d97a7](https://github.com/critocrito/sugarcube/tree/master/packages/utils/commit/89d97a7))
+
+
+
+
+
 # [0.29.0](https://github.com/critocrito/sugarcube/tree/master/packages/utils/compare/v0.28.1...v0.29.0) (2019-10-10)
 
 **Note:** Version bump only for package @sugarcube/utils

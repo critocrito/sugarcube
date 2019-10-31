@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.30.0](https://github.com/critocrito/sugarcube/compare/v0.29.0...v0.30.0) (2019-10-31)
+
+
+### Bug Fixes
+
+* **plugin-media:** set type to image for screenshots ([7481d16](https://github.com/critocrito/sugarcube/commit/7481d16))
+
+
+### Features
+
+* **plugin-media:** add media_fetch plugin as replacement for http_get ([fbeb98a](https://github.com/critocrito/sugarcube/commit/fbeb98a))
+* **plugin-media:** add plugin to archive URLs in WARC files ([57723a6](https://github.com/critocrito/sugarcube/commit/57723a6))
+* **plugin-media:** archive websites in parallel ([d5a8ac5](https://github.com/critocrito/sugarcube/commit/d5a8ac5))
+* **plugin-media:** deprecate http_screenshot in favor of media_screenshot ([2ebc971](https://github.com/critocrito/sugarcube/commit/2ebc971))
+* **plugin-media:** safely add files and extract cleanUp function into fs plugin ([c28e51f](https://github.com/critocrito/sugarcube/commit/c28e51f))
+* **plugin-media:** safely import media files and allow to keep the original ([a6b984c](https://github.com/critocrito/sugarcube/commit/a6b984c))
+* **plugin-media:** take screenshots of websites in parallel ([0b17fbe](https://github.com/critocrito/sugarcube/commit/0b17fbe))
+
+
+
+
+
 # [0.29.0](https://github.com/critocrito/sugarcube/compare/v0.28.1...v0.29.0) (2019-10-10)
 
 **Note:** Version bump only for package @sugarcube/plugin-media

@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.30.0](https://github.com/critocrito/sugarcube/compare/v0.29.0...v0.30.0) (2019-10-31)
+
+
+### Features
+
+* **plugin-http:** add the http_import plugin ([ae475fa](https://github.com/critocrito/sugarcube/commit/ae475fa))
+* **plugin-http:** extract body and meta data when importing URLs ([e4bfee4](https://github.com/critocrito/sugarcube/commit/e4bfee4))
+* **plugin-media:** add media_fetch plugin as replacement for http_get ([fbeb98a](https://github.com/critocrito/sugarcube/commit/fbeb98a))
+* **plugin-media:** deprecate http_screenshot in favor of media_screenshot ([2ebc971](https://github.com/critocrito/sugarcube/commit/2ebc971))
+
+
+
+
+
 # [0.29.0](https://github.com/critocrito/sugarcube/compare/v0.28.1...v0.29.0) (2019-10-10)
 
 **Note:** Version bump only for package @sugarcube/plugin-http
