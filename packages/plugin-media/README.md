@@ -147,6 +147,32 @@ $(npm bin)/sugarcube -q queries.json -c config.json -p http_import,media_warc
 - `existing`: The number of URLs that already existed as an archive.
 - `fail`: The number of URLs that failed to archive.
 - `success`: The number of URL's that were successfully archived.
+- `new`: The number of new archives out of the number of successfully archived URL's.
+
+### `media_screenshot` plugin
+
+Take a screenshot of every URL in `_sc_media` and populate the `_sc_downloads` field with the location of the images. The format of the screenshot is JPEG. Screenshots are stored in `<data_dir>/<unit id>/screenshot/screenshot-<media id>.jpg`.
+
+**Configuration Options:**
+
+- `media.data_dir`: Store all screenshots into this directory. Defaults to `data`.
+- `media.force`: Force a new screenshot, even if one already exists at the target location.
+
+**Example:**
+
+Import some websites and take screenshots of them.
+
+```
+$(npm bin)/sugarcube -q queries.json -p http_import,media_screenshot
+```
+
+**Metrics:**
+
+- `total`: The total number of screenshots taken.
+- `existing`: The number of screenshots that already exist.
+- `fail`: The number of screenshots that failed.
+- `success`: The number of screenshots that were successfully taken.
+- `new`: The number of new screenshots out of the number of successfully taken screenshots.
 
 ## License
 

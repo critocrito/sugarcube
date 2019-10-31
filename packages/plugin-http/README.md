@@ -57,7 +57,9 @@ Fetch whole web pages from `_sc_media`. Downloaded targets are added to the
 
   Specify the path to the `wget` command.
 
-### `http_screenshot` plugin
+### `http_screenshot` plugin (DEPRECATED)
+
+This plugin is deprecated in favor of the `media_screenshot` plugin.
 
 Fetch every URL in `_sc_media` in a headless browser and make a
 screenshot. The format of the screenshot is JPEG. Downloaded targets are added
