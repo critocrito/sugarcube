@@ -1,4 +1,4 @@
-import {join, extname} from "path";
+import {join, basename, extname} from "path";
 import {get} from "lodash/fp";
 import dashp, {collectP} from "dashp";
 import {envelope as env} from "@sugarcube/core";
@@ -21,6 +21,7 @@ const fileImportPlugin = async (envelope, {log, cfg, stats}) => {
   const videoFormat = get("media.import_video_format", cfg);
   const parallel = get("media.import_parallel", cfg);
   const forceImport = get("media.force_import", cfg);
+  const keepOriginal = get("media.keep_original", cfg);
 
   let mod;
   switch (parallel) {
@@ -68,7 +69,9 @@ const fileImportPlugin = async (envelope, {log, cfg, stats}) => {
         type === "video"
           ? `${idHash}.${videoFormat}`
           : `${idHash}${extname(source)}`;
+      const origFilename = basename(source);
       const location = join(dir, filename);
+      const origLocation = join(dir, origFilename);
 
       const importExists = await existsP(location);
 
@@ -82,21 +85,30 @@ const fileImportPlugin = async (envelope, {log, cfg, stats}) => {
       if (importExists && forceImport)
         log.info(`Forcing a re-import of ${source}.`);
 
-      // Only if we have a video and hasn't the right video format already, we use ffmpeg.
-      const op =
-        type === "video" && !new RegExp(`${videoFormat}$`).test(extname(source))
-          ? (s, d, f = false) => ffmpeg(cmd, s, d, f)
-          : (s, d) => cpP(s, d);
-
       await mkdirP(dir);
 
       try {
-        await op(source, `${location}.tmp`, forceImport);
-        await mvP(`${location}.tmp`, location);
+        // Videos are imported using ffmpeg, every other file is simply copied.
+        if (type === "video") {
+          await ffmpeg(cmd, source, `${location}.tmp.mp4`, forceImport);
+          await mvP(`${location}.tmp.mp4`, location);
+        } else {
+          await cpP(source, `${location}.tmp`);
+          await mvP(`${location}.tmp`, location);
+        }
+        // Import the original file as well.
+        if (keepOriginal) {
+          await cpP(source, `${origLocation}.tmp`);
+          await mvP(`${origLocation}.tmp`, origLocation);
+        }
       } catch (e) {
-        const reason = `Failed to download ${media.type} to ${location}: ${e.message}. Cleaning up stale artifact.`;
+        const reason = `Failed to import ${media.type} to ${location}: ${e.message}.`;
         stats.fail({type: unit._sc_source, term: source, reason});
-        await cleanUp(`${location}.tmp`);
+        await Promise.all([
+          cleanUp(`${location}.tmp.mp4`),
+          cleanUp(`${location}.tmp`),
+          cleanUp(`${origLocation}.tmp`),
+        ]);
 
         return null;
       }
@@ -107,7 +119,9 @@ const fileImportPlugin = async (envelope, {log, cfg, stats}) => {
       ]);
 
       log.info(`Imported ${source} to ${location}.`);
+      if (keepOriginal) log.info(`Kept the original at ${origLocation}.`);
       stats.count("success");
+      if (importExists) stats.count("new");
 
       return Object.assign(
         {},
@@ -119,6 +133,7 @@ const fileImportPlugin = async (envelope, {log, cfg, stats}) => {
           term,
         },
         href ? {href} : {},
+        keepOriginal ? {original: origLocation} : {},
       );
     }, unit._sc_media);
 
@@ -161,6 +176,11 @@ fileImportPlugin.argv = {
   "media.force_import": {
     type: "boolean",
     desc: "Force a re-import of the file.",
+    default: false,
+  },
+  "media.keep_original": {
+    type: "boolean",
+    desc: "Keep a copy of the original file.",
     default: false,
   },
 };

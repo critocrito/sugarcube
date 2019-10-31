@@ -104,7 +104,7 @@ $(npm bin)/sugarcube -p youtube_video,media_youtubedl,media_mosaic \
 
 ### `media_file_import` plugin
 
-Import media files into the data collection. This is a natural fit with the `fs_unfold` plugin.
+Import media files into the data collection. This plugin works with the `fs_import` plugin.
 
 **Configuration Options:**
 
@@ -113,11 +113,12 @@ Import media files into the data collection. This is a natural fit with the `fs_
 - `media.ffmpeg_cmd`: The path to the `ffmpeg` command which is used to import videos. Defaults to `ffmpeg`, with no specific path supplied.
 - `media.import_parallel`: Specify how many files to import at the same time. It defaults to 1 and can be set between 1 and 8.
 - `media.force_import`: Set this flag to `true` for force an import of the file, even if it already exists.
+- `media.keep_original`: If set to true, make a copy of the original file as well. The original is copied as is, without any transformation. Defaults to `false`.
 
 **Example:**
 
 ```
-$(npm bin)/sugarcube -Q glob_pattern:~/files/* -p fs_unfold,media_file_import
+$(npm bin)/sugarcube -Q glob_pattern:~/files/* -p fs_import,media_file_import
 ```
 
 **Metrics:**
@@ -126,6 +127,7 @@ $(npm bin)/sugarcube -Q glob_pattern:~/files/* -p fs_unfold,media_file_import
 - `existing`: The number of files that already existed.
 - `fail`: The number of files that failed to import.
 - `success`: The number of files that were successfully imported.
+- `new`: The number of new files out of the number of successfully imported files.
 
 ### `media_warc` plugin
 
