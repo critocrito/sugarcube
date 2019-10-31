@@ -1,5 +1,6 @@
 import {flowP, flatmapP, tapP, caughtP} from "dashp";
 import {envelope as env, plugin as p} from "@sugarcube/core";
+import {counter} from "@sugarcube/utils";
 
 import {feed, parseApiErrors} from "./twitter";
 import {parseTwitterUser} from "./utils";
@@ -11,6 +12,13 @@ const feedPlugin = async (envelope, {log, cfg, stats}) => {
   const users = env
     .queriesByType(querySource, envelope)
     .map(term => parseTwitterUser(term));
+
+  const logCounter = counter(
+    envelope.data.length,
+    ({cnt, total, percent}) =>
+      log.debug(`Progress: ${cnt}/${total} units (${percent}%).`),
+    {threshold: 50, steps: 25},
+  );
 
   log.debug(`Fetching the tweets for ${users.join(", ")}`);
 
@@ -24,6 +32,7 @@ const feedPlugin = async (envelope, {log, cfg, stats}) => {
           stats.count("success");
           stats.count("fetched", fetched);
           log.info(`Fetched ${fetched} tweets for ${user}.`);
+          logCounter();
         }),
         // Merge the query into the data unit.
         results =>

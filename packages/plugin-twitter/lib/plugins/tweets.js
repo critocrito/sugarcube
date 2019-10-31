@@ -1,6 +1,7 @@
 import {chunk, tap} from "lodash/fp";
 import {flowP, caughtP, flatmapP} from "dashp";
 import {envelope as env, plugin as p} from "@sugarcube/core";
+import {counter} from "@sugarcube/utils";
 
 import {tweets, parseApiErrors} from "../twitter";
 import {tweetTransform} from "../entities";
@@ -14,7 +15,12 @@ const tweetsPlugin = async (envelope, {log, cfg, stats}) => {
     .queriesByType(querySource, envelope)
     .map(term => parseTweetId(term));
 
-  let counter = 0;
+  const logCounter = counter(
+    envelope.data.length,
+    ({cnt, total, percent}) =>
+      log.debug(`Progress: ${cnt}/${total} units (${percent}%).`),
+    {threshold: 50, steps: 25},
+  );
 
   log.info(`Querying Twitter for ${tweetIds.length} tweets.`);
 
@@ -27,11 +33,7 @@ const tweetsPlugin = async (envelope, {log, cfg, stats}) => {
         // Fetch tweets for this chunk.
         tweets(cfg),
         // Log the download counter.
-        tap(xs => {
-          counter += Object.keys(xs).length;
-          if (counter % 1000 === 0)
-            log.debug(`Fetched ${counter} out of ${tweetIds.length} tweets.`);
-        }),
+        tap(xs => xs.forEach(logCounter)),
         // Verify each tweet was retrieved and exists.
         ({id: response}) => {
           const results = [];
