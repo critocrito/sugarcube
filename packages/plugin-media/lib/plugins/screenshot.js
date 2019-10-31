@@ -2,10 +2,16 @@ import {join} from "path";
 import {merge, includes, get} from "lodash/fp";
 import {flowP, tapP, collectP} from "dashp";
 import {envelope as env} from "@sugarcube/core";
-import {mkdirP, sha256sum, md5sum, existsP} from "@sugarcube/plugin-fs";
+import {
+  mkdirP,
+  sha256sum,
+  md5sum,
+  existsP,
+  mvP,
+  cleanUp,
+} from "@sugarcube/plugin-fs";
 import {counter} from "@sugarcube/utils";
 
-import {cleanUp} from "../utils";
 import browser from "../browser";
 
 const archiveTypes = ["url"];
@@ -52,18 +58,16 @@ const plugin = async (envelope, {log, cfg, stats}) => {
               await goto(source);
               await mkdirP(dir);
               await page.screenshot({
-                path: location,
+                path: `${location}.tmp.jpg`,
                 quality: 100,
                 fullPage: true,
               });
             });
+            await mvP(`${location}.tmp.jpg`, location);
           } catch (e) {
             const reason = `Failed to take screenshot: ${e.message}`;
             stats.fail({type: unit._sc_source, term: source, reason});
-
-            // If we force an archive and it fails, but exists already, better to
-            // keep the old one around.
-            if (screenshotExists && !force) await cleanUp(location);
+            await cleanUp(`${location}.tmp.jpg`);
 
             return media;
           }

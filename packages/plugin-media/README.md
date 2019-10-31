@@ -188,7 +188,8 @@ Fetch images and documents from `_sc_media`. Downloaded targets are added to the
 - `total`: The total number of files fetched.
 - `existing`: The number of files that were already previously fetched.
 - `success`: The number of files that were successfully fetched.
-- `fail`: The number of files that were failed to download.
+- `fail`: The number of files that failed to fetch.
+- `new`: The number of new files out of the number of successfully fetched files.
 
 ## License
 

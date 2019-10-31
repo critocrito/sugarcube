@@ -3,10 +3,16 @@ import {includes, get} from "lodash/fp";
 import {flowP, tapP, flatmapP, collectP} from "dashp";
 import {PuppeteerWARCGenerator, PuppeteerCapturer} from "node-warc";
 import {envelope as env} from "@sugarcube/core";
-import {mkdirP, sha256sum, md5sum, existsP} from "@sugarcube/plugin-fs";
+import {
+  mkdirP,
+  sha256sum,
+  md5sum,
+  existsP,
+  mvP,
+  cleanUp,
+} from "@sugarcube/plugin-fs";
 import {counter} from "@sugarcube/utils";
 
-import {cleanUp} from "../utils";
 import browser from "../browser";
 
 const archiveTypes = ["url"];
@@ -38,9 +44,7 @@ const plugin = async (envelope, {log, cfg, stats}) => {
           const archiveExists = await existsP(location);
 
           if (archiveExists && !forceArchive) {
-            log.info(
-              `Archive ${source} exists at ${location}. Not re-archiving.`,
-            );
+            log.info(`Archive ${source} exists at ${location}. Skipping.`);
             stats.count("existing");
             return media;
           }
@@ -62,20 +66,18 @@ const plugin = async (envelope, {log, cfg, stats}) => {
 
               const warcGen = new PuppeteerWARCGenerator({gzip: true});
               await warcGen.generateWARC(cap, {
-                warcOpts: {warcPath: location},
+                warcOpts: {warcPath: `${location}.tmp.warc.gz`},
                 winfo: {
                   description: `${source} captured as part of: ${cfg.name}`,
                   isPartOf: cfg.project,
                 },
               });
             });
+            await mvP(`${location}.tmp.warc.gz`, location);
           } catch (e) {
             const reason = `Failed to archive url: ${e.message}`;
             stats.fail({type: unit._sc_source, term: source, reason});
-
-            // If we force an archive and it fails, but exists already, better to
-            // keep the old one around.
-            if (archiveExists && !forceArchive) await cleanUp(location);
+            await cleanUp(`${location}.tmp.warc.gz`);
 
             return media;
           }

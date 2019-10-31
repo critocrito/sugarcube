@@ -150,8 +150,6 @@ const plugin = async (envelope, {log, cfg, stats}) => {
   }, envelope);
 };
 
-// const plugin = p.liftManyA2([assertDir, curlGet]);
-
 plugin.desc = "Fetch media files.";
 
 plugin.argv = {

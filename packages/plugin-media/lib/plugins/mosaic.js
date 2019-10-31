@@ -2,7 +2,7 @@ import {get} from "lodash/fp";
 import dashp, {collectP} from "dashp";
 import {join, resolve, dirname} from "path";
 import {envelope as env} from "@sugarcube/core";
-import {existsP} from "@sugarcube/plugin-fs";
+import {existsP, mvP, cleanUp} from "@sugarcube/plugin-fs";
 import {counter} from "@sugarcube/utils";
 
 import {mosaicSceneChange, mosaicNthFrame} from "../utils";
@@ -79,10 +79,17 @@ const plugin = async (envelope, {log, cfg, stats}) => {
         strategy === "nth-frame" ? mosaicNthFrame : mosaicSceneChange;
 
       try {
-        await mosaicGeneration(cmd, location, resolve(dest), forceGeneration);
+        await mosaicGeneration(
+          cmd,
+          location,
+          `${dest}.tmp.jpg`,
+          forceGeneration,
+        );
+        await mvP(`${dest}.tmp.jpg`, dest);
       } catch (e) {
         const reason = `Failed to create mosaic for video at ${location}: ${e.message}`;
         stats.fail({type: unit._sc_source, term: source, reason});
+        await cleanUp(`${dest}.tmp.jpg`);
 
         return download;
       }

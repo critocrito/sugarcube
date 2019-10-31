@@ -2,10 +2,18 @@ import {join, extname} from "path";
 import {get} from "lodash/fp";
 import dashp, {collectP} from "dashp";
 import {envelope as env} from "@sugarcube/core";
-import {mkdirP, sha256sum, md5sum, existsP, cpP} from "@sugarcube/plugin-fs";
+import {
+  mkdirP,
+  sha256sum,
+  md5sum,
+  existsP,
+  cpP,
+  mvP,
+  cleanUp,
+} from "@sugarcube/plugin-fs";
 import {counter} from "@sugarcube/utils";
 
-import {ffmpeg, cleanUp} from "../utils";
+import {ffmpeg} from "../utils";
 
 const fileImportPlugin = async (envelope, {log, cfg, stats}) => {
   const dataDir = get("media.data_dir", cfg);
@@ -65,9 +73,7 @@ const fileImportPlugin = async (envelope, {log, cfg, stats}) => {
       const importExists = await existsP(location);
 
       if (importExists && !forceImport) {
-        log.info(
-          `Media ${type} ${source} exists at ${location}. Not forcing an import.`,
-        );
+        log.info(`Media ${type} ${source} exists at ${location}. Skipping.`);
         stats.count("existing");
 
         return null;
@@ -84,25 +90,21 @@ const fileImportPlugin = async (envelope, {log, cfg, stats}) => {
 
       await mkdirP(dir);
 
-      let sha256;
-      let md5;
-
       try {
-        await op(source, location, forceImport);
-        [md5, sha256] = await Promise.all([
-          md5sum(location),
-          sha256sum(location),
-        ]);
+        await op(source, `${location}.tmp`, forceImport);
+        await mvP(`${location}.tmp`, location);
       } catch (e) {
         const reason = `Failed to download ${media.type} to ${location}: ${e.message}. Cleaning up stale artifact.`;
         stats.fail({type: unit._sc_source, term: source, reason});
-
-        // If we force an import and it fails, but the import exists already,
-        // better to keep the old one around.
-        if (importExists && !forceImport) await cleanUp(location);
+        await cleanUp(`${location}.tmp`);
 
         return null;
       }
+
+      const [md5, sha256] = await Promise.all([
+        md5sum(location),
+        sha256sum(location),
+      ]);
 
       log.info(`Imported ${source} to ${location}.`);
       stats.count("success");

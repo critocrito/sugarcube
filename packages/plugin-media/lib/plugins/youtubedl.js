@@ -2,11 +2,18 @@ import {includes, get, constant} from "lodash/fp";
 import dashp, {ofP, collectP, delayP} from "dashp";
 import {join} from "path";
 import {envelope as env} from "@sugarcube/core";
-import {mkdirP, sha256sum, md5sum, existsP} from "@sugarcube/plugin-fs";
+import {
+  mkdirP,
+  sha256sum,
+  md5sum,
+  existsP,
+  mvP,
+  cleanUp,
+} from "@sugarcube/plugin-fs";
 import {counter} from "@sugarcube/utils";
 import isIp from "is-ip";
 
-import {youtubeDl, random, cleanUp} from "../utils";
+import {youtubeDl, random} from "../utils";
 
 const downloadTypes = ["video"];
 
@@ -86,6 +93,7 @@ const plugin = async (envelope, {cfg, log, stats}) => {
 
       const dir = join(dataDir, unit._sc_id_hash, "youtubedl");
       const location = join(dir, `${idHash}.${videoFormat}`);
+      const locationThumbnail = join(dir, `${idHash}.jpg`);
       const downloadExists = await existsP(location);
 
       if (downloadExists && !forceDownload) {
@@ -112,14 +120,22 @@ const plugin = async (envelope, {cfg, log, stats}) => {
         log.debug(`Using ${sourceAddress} as source address.`);
 
       try {
-        await youtubeDl(cmd, videoFormat, source, location, sourceAddress);
+        await youtubeDl(
+          cmd,
+          videoFormat,
+          source,
+          `${location}.tmp.mp4`,
+          sourceAddress,
+        );
+        await mvP(`${location}.tmp.mp4`, location);
+        await mvP(`${location}.tmp.jpg`, locationThumbnail);
       } catch (e) {
         const reason = `Failed to download video: ${e.message}`;
         stats.fail({type: unit._sc_source, term: source, reason});
-
-        // If we force a download and it fails, but the download exists
-        // already, better to keep the old one around.
-        if (downloadExists && !forceDownload) await cleanUp(location);
+        await Promise.all([
+          cleanUp(`${location}.tmp.mp4`),
+          cleanUp(`${location}.tmp.jpg`),
+        ]);
 
         return media;
       }

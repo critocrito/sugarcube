@@ -2,7 +2,6 @@ import fs from "fs";
 import {retry} from "dashp";
 import fetch from "node-fetch";
 import {runCmd} from "@sugarcube/utils";
-import {accessP, unlinkP} from "@sugarcube/plugin-fs";
 
 export const youtubeDl = (cmd, videoFormat, href, target, sourceIp) => {
   const args = [
@@ -70,14 +69,6 @@ export const ffmpeg = (cmd, source, dest, force = false) => {
 
 export const random = (min, max) =>
   Math.floor(Math.random() * (max - min) + min);
-
-export const cleanUp = async location => {
-  try {
-    await accessP(location);
-    await unlinkP(location);
-    // eslint-disable-next-line no-empty
-  } catch (e) {}
-};
 
 export const download = async (from, to) => {
   const resp = await fetch(from);
