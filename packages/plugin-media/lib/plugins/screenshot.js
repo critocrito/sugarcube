@@ -33,7 +33,7 @@ const plugin = async (envelope, {log, cfg, stats}) => {
           stats.count("total");
 
           const dir = join(dataDir, unit._sc_id_hash, "image");
-          const location = join(dir, `screenshot-${idHash}.jpg`);
+          const location = join(dir, `${idHash}.jpg`);
           const screenshotExists = await existsP(location);
 
           if (screenshotExists && !force) {
