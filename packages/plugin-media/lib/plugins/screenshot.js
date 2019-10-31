@@ -3,6 +3,7 @@ import {merge, includes, get} from "lodash/fp";
 import {flowP, tapP, collectP} from "dashp";
 import {envelope as env} from "@sugarcube/core";
 import {mkdirP, sha256sum, md5sum, existsP} from "@sugarcube/plugin-fs";
+import {counter} from "@sugarcube/utils";
 
 import {cleanUp} from "../utils";
 import browser from "../browser";
@@ -15,15 +16,13 @@ const plugin = async (envelope, {log, cfg, stats}) => {
 
   const {browse, dispose} = await browser();
 
-  let counter = 0;
+  const logCounter = counter(envelope.data.length, ({cnt, total, percent}) =>
+    log.debug(`Progress: ${cnt}/${total} units (${percent}%).`),
+  );
 
   return flowP(
     [
       env.fmapDataAsync(async unit => {
-        counter += 1;
-        if (counter % 100 === 0)
-          log.debug(`Reached ${counter} out of ${envelope.data.length} units.`);
-
         const medias = await collectP(async media => {
           const {type, term, href} = media;
           const source = href || term;
@@ -94,6 +93,8 @@ const plugin = async (envelope, {log, cfg, stats}) => {
 
           return media;
         }, unit._sc_media);
+
+        logCounter();
 
         return merge(unit, {_sc_media: medias});
       }),

@@ -7,6 +7,7 @@ import pluginStealth from "puppeteer-extra-plugin-stealth";
 import {PuppeteerWARCGenerator, PuppeteerCapturer} from "node-warc";
 import {envelope as env} from "@sugarcube/core";
 import {mkdirP, sha256sum, md5sum, existsP} from "@sugarcube/plugin-fs";
+import {counter} from "@sugarcube/utils";
 
 import {cleanUp} from "../utils";
 
@@ -19,8 +20,9 @@ const plugin = async (envelope, {log, cfg, stats}) => {
   const forceArchive = get("media.warc_force_archive", cfg);
 
   const browser = await puppeteer.launch();
-
-  let counter = 0;
+  const logCounter = counter(envelope.data.length, ({cnt, total, percent}) =>
+    log.debug(`Progress: ${cnt}/${total} units (${percent}%).`),
+  );
 
   const data = await flatmapP(async unit => {
     const medias = await collectP(async media => {
@@ -39,8 +41,6 @@ const plugin = async (envelope, {log, cfg, stats}) => {
       if (archiveExists && !forceArchive) {
         log.info(`Archive ${source} exists at ${location}. Not re-archiving.`);
         stats.count("existing");
-        counter += 1;
-
         return media;
       }
 
@@ -131,12 +131,10 @@ const plugin = async (envelope, {log, cfg, stats}) => {
         ),
       );
 
-      counter += 1;
-      if (counter % 100 === 0)
-        log.debug(`Archived ${counter} out of ${envelope.data.length} units.`);
-
       return media;
     }, unit._sc_media);
+
+    logCounter();
 
     return Object.assign({}, unit, {_sc_media: medias});
   }, envelope.data);

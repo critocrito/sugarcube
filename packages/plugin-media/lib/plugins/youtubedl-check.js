@@ -1,6 +1,8 @@
 import {get, constant} from "lodash/fp";
 import dashp, {ofP, collectP, delayP} from "dashp";
 import isIp from "is-ip";
+import {counter} from "@sugarcube/utils";
+
 import {youtubeDlCheck, random} from "../utils";
 
 const plugin = async (envelope, {log, cfg, stats}) => {
@@ -53,7 +55,9 @@ const plugin = async (envelope, {log, cfg, stats}) => {
   }
 
   const mapper = dashp[`flatmapP${mod}`];
-  let counter = 0;
+  const logCounter = counter(envelope.data.length, ({cnt, total, percent}) =>
+    log.debug(`Progress: ${cnt}/${total} units (${percent}%).`),
+  );
 
   await mapper(async unit => {
     const videos = unit._sc_media
@@ -83,11 +87,9 @@ const plugin = async (envelope, {log, cfg, stats}) => {
       }
 
       stats.count("success");
-
-      counter += 1;
-      if (counter % 100 === 0)
-        log.debug(`Checked ${counter} out of ${envelope.data.length} units.`);
     }, videos);
+
+    logCounter();
   }, envelope.data);
 
   return envelope;

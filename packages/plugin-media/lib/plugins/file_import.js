@@ -3,6 +3,7 @@ import {get} from "lodash/fp";
 import dashp, {collectP} from "dashp";
 import {envelope as env} from "@sugarcube/core";
 import {mkdirP, sha256sum, md5sum, existsP, cpP} from "@sugarcube/plugin-fs";
+import {counter} from "@sugarcube/utils";
 
 import {ffmpeg, cleanUp} from "../utils";
 
@@ -37,9 +38,13 @@ const fileImportPlugin = async (envelope, {log, cfg, stats}) => {
   }
 
   const mapper = dashp[`flatmapP${mod}`];
-  let counter = 0;
+  const logCounter = counter(envelope.data.length, ({cnt, total, percent}) =>
+    log.debug(`Progress: ${cnt}/${total} units (${percent}%).`),
+  );
 
   const data = await mapper(async unit => {
+    logCounter();
+
     const downloads = await collectP(async media => {
       const {type, term, href} = media;
       const source = href || term;
@@ -101,10 +106,6 @@ const fileImportPlugin = async (envelope, {log, cfg, stats}) => {
 
       log.info(`Imported ${source} to ${location}.`);
       stats.count("success");
-
-      counter += 1;
-      if (counter % 100 === 0)
-        log.debug(`Imported ${counter} out of ${envelope.data.length} units.`);
 
       return Object.assign(
         {},

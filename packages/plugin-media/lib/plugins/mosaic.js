@@ -3,6 +3,7 @@ import dashp, {collectP} from "dashp";
 import {join, resolve, dirname} from "path";
 import {envelope as env} from "@sugarcube/core";
 import {existsP} from "@sugarcube/plugin-fs";
+import {counter} from "@sugarcube/utils";
 
 import {mosaicSceneChange, mosaicNthFrame} from "../utils";
 
@@ -36,7 +37,9 @@ const plugin = async (envelope, {log, cfg, stats}) => {
   }
 
   const mapper = dashp[`flatmapP${mod}`];
-  let counter = 0;
+  const logCounter = counter(envelope.data.length, ({cnt, total, percent}) =>
+    log.debug(`Progress: ${cnt}/${total} units (${percent}%).`),
+  );
 
   const data = await mapper(async unit => {
     const downloads = await collectP(async download => {
@@ -44,7 +47,7 @@ const plugin = async (envelope, {log, cfg, stats}) => {
 
       if (type !== "video") return download;
       if (location == null || location === "") {
-        log.warn(`No location for vide ${term}. Skipping mosaic creation.`);
+        log.warn(`No location for video ${term}. Skipping mosaic creation.`);
         return download;
       }
 
@@ -54,7 +57,6 @@ const plugin = async (envelope, {log, cfg, stats}) => {
       if (!(await existsP(location))) {
         const reason = `Video at ${location} doesn't exits`;
         stats.fail({type: unit._sc_source, term: source, reason});
-        counter += 1;
 
         return download;
       }
@@ -66,7 +68,6 @@ const plugin = async (envelope, {log, cfg, stats}) => {
           `Mosaic of ${location} exists at ${dest}. Not forcing a re-generation.`,
         );
         stats.count("existing");
-        counter += 1;
 
         return Object.assign({}, download, {mosaic: dest});
       }
@@ -89,14 +90,10 @@ const plugin = async (envelope, {log, cfg, stats}) => {
       log.info(`Created mosaic at ${dest} with strategy ${strategy}.`);
       stats.count("success");
 
-      counter += 1;
-      if (counter % 100 === 0)
-        log.debug(
-          `Generated ${counter} mosaics out of ${envelope.data.length} units.`,
-        );
-
       return Object.assign({}, download, {mosaic: dest});
     }, unit._sc_downloads);
+
+    logCounter();
 
     return Object.assign({}, unit, {_sc_downloads: downloads});
   }, envelope.data);

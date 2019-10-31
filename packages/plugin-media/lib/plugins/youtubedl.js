@@ -3,6 +3,7 @@ import dashp, {ofP, collectP, delayP} from "dashp";
 import {join} from "path";
 import {envelope as env} from "@sugarcube/core";
 import {mkdirP, sha256sum, md5sum, existsP} from "@sugarcube/plugin-fs";
+import {counter} from "@sugarcube/utils";
 import isIp from "is-ip";
 
 import {youtubeDl, random, cleanUp} from "../utils";
@@ -62,7 +63,9 @@ const plugin = async (envelope, {cfg, log, stats}) => {
   }
 
   const mapper = dashp[`flatmapP${mod}`];
-  let counter = 0;
+  const logCounter = counter(envelope.data.length, ({cnt, total, percent}) =>
+    log.debug(`Progress: ${cnt}/${total} units (${percent}%).`),
+  );
 
   // ensure the download directory.
   await mkdirP(dataDir);
@@ -83,15 +86,13 @@ const plugin = async (envelope, {cfg, log, stats}) => {
 
       const dir = join(dataDir, unit._sc_id_hash, "youtubedl");
       const location = join(dir, `${idHash}.${videoFormat}`);
-      const downloadExists = existsP(location);
+      const downloadExists = await existsP(location);
 
       if (downloadExists && !forceDownload) {
         log.info(
           `Video ${source} exists at ${location}. Not forcing a download.`,
         );
         stats.count("existing");
-        counter += 1;
-
         return media;
       }
 
@@ -145,14 +146,10 @@ const plugin = async (envelope, {cfg, log, stats}) => {
         ),
       );
 
-      counter += 1;
-      if (counter % 100 === 0)
-        log.debug(
-          `Downloaded ${counter} out of ${envelope.data.length} units.`,
-        );
-
       return media;
     }, unit._sc_media);
+
+    logCounter();
 
     return Object.assign({}, unit, {_sc_media: medias});
   }, envelope.data);
