@@ -137,6 +137,7 @@ Archive media of type `url` as a gzipped [WARC](https://iipc.github.io/warc-spec
 
 - `media.data_dir`: Archive all URL's into this directory. Defaults to `data`.
 - `media.warc_force_download`: Set this flag to `true` for force a archival of the URL, even if it already exists.
+- `media.warc_parallel`: Specify how many websites to archive at the same time. It defaults to 1 and can be set between 1 and 8.
 
 **Example:**
 

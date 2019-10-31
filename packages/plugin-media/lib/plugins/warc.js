@@ -1,6 +1,6 @@
 import {join} from "path";
 import {includes, get} from "lodash/fp";
-import {flowP, tapP, flatmapP, collectP} from "dashp";
+import dashp, {flowP, tapP, collectP} from "dashp";
 import {PuppeteerWARCGenerator, PuppeteerCapturer} from "node-warc";
 import {envelope as env} from "@sugarcube/core";
 import {
@@ -20,8 +20,28 @@ const archiveTypes = ["url"];
 const plugin = async (envelope, {log, cfg, stats}) => {
   const dataDir = get("media.data_dir", cfg);
   const forceArchive = get("media.warc_force_archive", cfg);
+  const parallel = get("media.warc_parallel", cfg);
 
-  // const browser = await puppeteer.launch();
+  let mod;
+  switch (parallel) {
+    case parallel < 1 ? parallel : null:
+      log.warn(`--media.warc_parallel must be between 1 and 8. Setting to 1.`);
+      mod = "";
+      break;
+    case parallel === 1 ? parallel : null:
+      log.info(`Run a single archival at a time.`);
+      mod = "";
+      break;
+    case parallel > 8 ? parallel : null:
+      log.warn(`--media.warc_parallel must be between 1 and 8. Setting to 8.`);
+      mod = 8;
+      break;
+    default:
+      log.info(`Run ${parallel} archivals concurrently.`);
+      mod = parallel;
+  }
+
+  const mapper = dashp[`flatmapP${mod}`];
   const {browse, dispose} = await browser();
   const logCounter = counter(envelope.data.length, ({cnt, total, percent}) =>
     log.debug(`Progress: ${cnt}/${total} units (${percent}%).`),
@@ -29,7 +49,7 @@ const plugin = async (envelope, {log, cfg, stats}) => {
 
   const data = await flowP(
     [
-      flatmapP(async unit => {
+      mapper(async unit => {
         const medias = await collectP(async media => {
           const {type, term, href} = media;
           const source = href || term;
@@ -130,6 +150,12 @@ plugin.argv = {
     type: "boolean",
     desc: "Force a re-archiving of the URL.",
     default: false,
+  },
+  "media.warc_parallel": {
+    type: "number",
+    nargs: 1,
+    desc: "The number of parallel website archivals. Can be between 1 and 8.",
+    default: 1,
   },
 };
 plugin.desc = "Archive websites in using the WARC format.";
