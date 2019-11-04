@@ -10,19 +10,17 @@ import {
 
 import getPlugin from "./plugins/get";
 import wgetPlugin from "./plugins/wget";
-import screenshotPlugin from "./plugins/screenshot";
 import importPlugin from "./plugins/import";
 
 const plugins = {
   http_get: getPlugin,
   http_wget: wgetPlugin,
-  http_screenshot: screenshotPlugin,
   http_import: importPlugin,
 };
 
 const dataPlugins = flow([
   keys,
-  intersection(["http_get", "http_wget", "http_screenshot"]),
+  intersection(["http_get", "http_wget"]),
   ps => pick(ps, plugins),
 ])(plugins);
 

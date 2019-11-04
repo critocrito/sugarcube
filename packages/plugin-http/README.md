@@ -59,38 +59,6 @@ Fetch whole web pages from `_sc_media`. Downloaded targets are added to the
 
   Specify the path to the `wget` command.
 
-### `http_screenshot` plugin (DEPRECATED)
-
-This plugin is deprecated in favor of the `media_screenshot` plugin.
-
-Fetch every URL in `_sc_media` in a headless browser and make a
-screenshot. The format of the screenshot is JPEG. Downloaded targets are added
-to the `_sc_downloads` collection. Screenshots are stored in `<data_dir>/<unit
-id>/screenshot/<media id>`.
-
-**Configuration Options**:
-
-- `http.data_dir` (defaults to `./data`)
-
-  Specify the target download directory.
-
-The following example fetches a twitter user feed and screenshots as downloads
-a HTML version of every tweet.
-
-```
-$(npm bin)/sugarcube -d \
-                     -c config.json \
-                     -q feeds.json \
-                     -p twitter_feed,http_wget,http_screenshot
-```
-
-**Metrics:**
-
-- `total`: The total number of screenshots taken.
-- `existing`: The number of screenshots that already exist.
-- `success`: The number of screenshots that were successfully taken.
-- `fail`: The number of screenshots that were failed.
-
 ## License
 
 [GPL3](./LICENSE) @ [Christo](christo@cryptodrunks.net)

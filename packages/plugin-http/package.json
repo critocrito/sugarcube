@@ -17,8 +17,7 @@
     "lodash": "^4.17.4",
     "node-fetch": "^2.6.0",
     "pify": "^3.0.0",
-    "request": "^2.81.0",
-    "scraptor": "^0.1.0"
+    "request": "^2.81.0"
   },
   "keywords": [
     "data",
