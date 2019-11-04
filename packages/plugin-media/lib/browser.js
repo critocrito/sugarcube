@@ -5,7 +5,9 @@ import pluginStealth from "puppeteer-extra-plugin-stealth";
 puppeteer.use(pluginStealth());
 
 export default async () => {
-  const instance = await puppeteer.launch();
+  const instance = await puppeteer.launch({
+    args: ["--no-sandbox", "--disabled-setuid-sandbox"],
+  });
 
   const dispose = () => instance.close();
 
