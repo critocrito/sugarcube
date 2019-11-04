@@ -11,7 +11,7 @@
   "dependencies": {
     "@sugarcube/core": "^0.30.0",
     "@sugarcube/plugin-fs": "^0.30.2",
-    "csv-parse": "^1.2.4",
+    "csv-parse": "^4.4.6",
     "csv-stringify": "^1.0.4",
     "dashp": "^0.10.1",
     "lodash": "^4.17.4"
