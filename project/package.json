@@ -1,15 +1,14 @@
 {
   "name": "project",
-  "version": "0.0.0",
   "description": "An example project to help development.",
+  "license": "GPL-3.0",
+  "author": "Christo <christo@cryptodrunks.net>",
+  "version": "0.0.0",
   "main": "index.js",
   "scripts": {
     "test": "for i in issues/*; do sugarcube -c $i; done",
     "test-parallel": "find issues/*.json -type f -print0 | parallel -0 sugarcube -c"
   },
-  "keywords": [],
-  "author": "Christo <christo@cryptodrunks.net>",
-  "license": "GPL-3.0",
   "dependencies": {
     "@sugarcube/cli": "file:../packages/cli",
     "@sugarcube/core": "file:../packages/core",
@@ -37,6 +36,7 @@
     "@sugarcube/plugin-twitter": "file:../packages/plugin-twitter",
     "@sugarcube/plugin-workflow": "file:../packages/plugin-workflow",
     "@sugarcube/plugin-youtube": "file:../packages/plugin-youtube",
-    "@sugarcube/sugarcube": "file:../packages/sugarcube"
-  }
+    "@sugarcube/utils": "file:../packages/utils"
+  },
+  "keywords": []
 }

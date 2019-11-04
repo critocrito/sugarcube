@@ -22,7 +22,7 @@ sugarcube -Q glob_pattern:path/to/files/** -p fs_import
 
 **Configuration:**
 
-- `fs.extract_language`: Set the language to use for OCR extraction. The language code must be a [ISO 839-2 3 letter code](https://www.loc.gov/standards/iso639-2/php/code_list.php) and supported by [Tesseract](https://github.com/tesseract-ocr/tesseract/blob/master/doc/tesseract.1.asc#languages). Make sure to install the language pack for Tesseract as well. Example languages are: `eng` for English, `deu` for German and `ara` for Arabic.
+- `fs.extract_language`: Set the language to use for OCR extraction. The language code must be a [ISO 839-2 3 letter code](https://www.loc.gov/standards/iso639-2/php/code_list.php) and supported by [Tesseract](https://github.com/tesseract-ocr/tesseract/blob/master/doc/tesseract.1.asc#languages). Make sure to install the language pack for Tesseract as well. Example languages are: `eng` for English, `deu` for German and `ara` for Arabic. The default language is `eng`.
 
 **Metrics:**
 

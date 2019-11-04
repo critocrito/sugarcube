@@ -1,5 +1,7 @@
+import fs from "fs";
+import {promisify} from "util";
+import path from "path";
 import {get, uniq} from "lodash/fp";
-import tika from "@conscia/tika";
 import {parseISO} from "date-fns";
 import {spawn} from "child_process";
 
@@ -41,18 +43,72 @@ export const counter = (total, log, {threshold = 100, steps = 50} = {}) => {
   };
 };
 
-export const extract = (location, opts = {}) => {
-  const tikaOpts = Object.assign(
-    {},
-    opts.language != null ? {ocrLanguage: opts.language} : {},
+export const mkdirP = dir =>
+  promisify(fs.mkdir)(dir).catch(err => {
+    switch (err.code) {
+      case "EEXIST":
+        return Promise.resolve();
+      case "ENOENT":
+        // eslint-disable-next-line promise/no-nesting
+        return mkdirP(path.dirname(dir)).then(() => mkdirP(dir));
+      default:
+        throw err;
+    }
+  });
+
+const tika = async (tikaJar, opts, location) => {
+  const sourcePath = path.resolve(
+    __dirname,
+    "classpath/org/apache/tika/parser/ocr",
+  );
+  const propertiesPath = `${sourcePath}/TesseractOCRConfig.properties`;
+
+  await mkdirP(sourcePath);
+
+  fs.writeFileSync(
+    propertiesPath,
+    `# Tesseract properties
+tesseractPath=
+language=${opts.language}
+pageSegMode=1
+maxFileSizeToOcr=2147483647
+minFileSizeToOcr=0
+timeout=120
+#txt or hocr
+outputType=txt
+preserveInterwordSpacing=false
+
+# properties for image processing
+# to enable processing, set enableImageProcessing to 1
+enableImageProcessing=0
+ImageMagickPath=
+density=300
+depth=4
+colorspace=gray
+filter=triangle
+resize=900
+applyRotation=false
+`,
   );
 
-  return new Promise((resolve, reject) => {
-    tika.extract(location, tikaOpts, (err, text, meta) => {
-      if (err) reject(err);
-      resolve({text, meta});
-    });
-  });
+  const classPath = path.resolve(__dirname, "classpath");
+  const args = [
+    "-cp",
+    `${classPath}:${tikaJar}`,
+    "org.apache.tika.cli.TikaCLI",
+  ];
+
+  return Promise.all([
+    runCmd("java", args.concat(["-t", location])),
+    runCmd("java", args.concat(["-m", location])),
+  ]);
+};
+
+export const extract = async (location, opts = {}) => {
+  const cfg = Object.assign({language: "eng"}, opts);
+  const tikaJar = path.resolve(__dirname, "./tika-app.jar");
+  const [text, meta] = await tika(tikaJar, cfg, location);
+  return {text, meta};
 };
 
 const maybeGet = keys => meta => {

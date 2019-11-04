@@ -6,11 +6,14 @@
   "repository": "https://github.com/critocrito/sugarcube/tree/master/packages/utils",
   "version": "0.30.0",
   "main": "_dist/index.js",
+  "scripts": {
+    "postinstall": "node ./download-tika.js"
+  },
   "dependencies": {
-    "@conscia/tika": "^1.14.1",
     "dashp": "^0.10.1",
     "date-fns": "^2.6.0",
-    "lodash": "^4.17.11"
+    "lodash": "^4.17.11",
+    "node-fetch": "^2.6.0"
   },
   "keywords": [
     "data",

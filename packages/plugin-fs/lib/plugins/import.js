@@ -72,6 +72,7 @@ plugin.argv = {
   "fs.extract_language": {
     type: "string",
     nargs: 1,
+    default: "eng",
     desc: "A ISO 839-2 3 letter language code to set the extraction language.",
   },
 };

@@ -1,6 +1,7 @@
 import {curry, reduce, mergeAll, concat, has, identity} from "lodash/fp";
-import tika from "@conscia/tika";
 import moment from "moment";
+
+import {extract as tikaExtract} from "@sugarcube/utils";
 
 import ct from "./content-types";
 
@@ -9,14 +10,7 @@ const contentTypes = {
   "application/pdf": ct.applicationPdf,
 };
 
-export const extract = location =>
-  // eslint-disable-next-line promise/avoid-new
-  new Promise((resolve, reject) =>
-    tika.extract(location, (err, text, meta) => {
-      if (err) return reject(err);
-      return resolve([text, meta]);
-    }),
-  );
+export const extract = tikaExtract;
 
 // safeExtract is useful for fetching links, that might otherwise throw silly
 // errors. E.g. LinkedIn return error 999 and extract throws up on that.

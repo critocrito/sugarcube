@@ -74,4 +74,8 @@ export const download = async (from, to) => {
   const resp = await fetch(from);
   const dest = fs.createWriteStream(to);
   resp.body.pipe(dest);
+  return new Promise((resolve, reject) => {
+    dest.on("end", () => resolve());
+    dest.on("error", e => reject(e));
+  });
 };
