@@ -123,6 +123,9 @@ const yargs = require("yargs")
   .describe("C", "Location of the cache file.")
   .option("name")
   .describe("name", "A human friendly name for this pipeline.")
+  .options("help-details")
+  .describe("help-details", "List options for a single plugin or instrument.")
+  .alias("H", "help-details")
   .help("h")
   .alias("h", "help")
   .version();
@@ -172,7 +175,7 @@ const haltAndCough = curry((d, e) => {
 process.on("unhandledRejection", haltAndCough(argv.debug));
 
 // The next command line options just print a list of features, plugins and
-// instruments and exit.
+// instruments and specialized help output. Exit when done.
 if (argv.listFeatures) {
   Object.keys(features).forEach(feature =>
     // eslint-disable-next-line no-console
@@ -192,6 +195,28 @@ if (argv.listPlugins) {
     .sort()
     // eslint-disable-next-line no-console
     .forEach(plugin => console.log(`${plugin}: ${plugins[plugin].desc}`));
+  process.exit(0);
+}
+// Print the help of a single plugin.
+if (argv.helpDetails) {
+  const helpOutput = [];
+  yargs.showHelp(s => {
+    let printOutput = false;
+    s.split("\n").forEach(line => {
+      if (printOutput && !line.startsWith(" ")) printOutput = false;
+      if (line.startsWith(`${argv.helpDetails}:`)) printOutput = true;
+      if (printOutput) helpOutput.push(line);
+    });
+  });
+  if (helpOutput.length === 0) {
+    // eslint-disable-next-line no-console
+    console.error(
+      `No plugin or instrument found with this name: ${argv.helpDetails}`,
+    );
+    process.exit(1);
+  }
+  // eslint-disable-next-line no-console
+  console.log(helpOutput.join("\n"));
   process.exit(0);
 }
 
