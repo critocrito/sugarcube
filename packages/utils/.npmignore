@@ -4,5 +4,5 @@ npm-*.log
 .npmrc
 .babelrc
 .eslint*
-_dist/tika-app.jar
+tika-app.jar
 _dist/classpath

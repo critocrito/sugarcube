@@ -33,7 +33,7 @@ const hashFile = target => {
 };
 
 (async () => {
-  const target = "./_dist/tika-app.jar";
+  const target = "./tika-app.jar";
   // eslint-disable-next-line no-console
   console.warn("Downloading Apache Tika 1.22.");
   await download(tikaUrl, target);

@@ -92,10 +92,15 @@ applyRotation=false
   );
 
   const classPath = path.resolve(__dirname, "classpath");
+  const settings = path.resolve(__dirname, "../settings.xml");
   const args = [
+    '-Dhttp.agent="Mozilla/5.0 (X11; Linux x86_64) Gecko/20100101 Firefox/58.0"',
+    "-Djava.awt.headless=true",
+    "-Xrs",
     "-cp",
     `${classPath}:${tikaJar}`,
     "org.apache.tika.cli.TikaCLI",
+    `--config=${settings}`,
   ];
 
   return Promise.all([
@@ -106,7 +111,8 @@ applyRotation=false
 
 export const extract = async (location, opts = {}) => {
   const cfg = Object.assign({language: "eng"}, opts);
-  const tikaJar = path.resolve(__dirname, "./tika-app.jar");
+  const tikaJar = path.resolve(__dirname, "../tika-app.jar");
+
   const [text, meta] = await tika(tikaJar, cfg, location);
   return {text, meta};
 };
