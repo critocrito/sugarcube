@@ -11,7 +11,9 @@ export const instrument = (maybeState, {events}) => {
     const marker = s.get("pipeline.marker");
 
     s.update("failed", failures =>
-      Array.isArray(failures) ? failures.concat(failure) : [failure],
+      Array.isArray(failures)
+        ? failures.concat({plugin: curPlugin, marker, ...failure})
+        : [{plugin: curPlugin, marker, ...failure}],
     );
 
     if (curPlugin != null)
