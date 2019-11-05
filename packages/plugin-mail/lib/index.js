@@ -2,11 +2,16 @@ import {merge, values, forEach} from "lodash/fp";
 import mailDiffStats from "./plugins/diff-stats";
 import mailFailedStats from "./plugins/failed-stats";
 import mailPipelineStats from "./plugins/pipeline-stats";
+import reportInstrument from "./instruments/report";
 
 export const plugins = {
   mail_diff_stats: mailDiffStats,
   mail_failed_stats: mailFailedStats,
   mail_pipeline_stats: mailPipelineStats,
+};
+
+export const instruments = {
+  mail_report: reportInstrument,
 };
 
 forEach(p => {
@@ -46,6 +51,6 @@ forEach(p => {
     },
     p.argv,
   );
-}, values(plugins));
+}, values(plugins).concat(values(instruments)));
 
-export default {plugins};
+export default {plugins, instruments};

@@ -10,8 +10,9 @@
   "main": "_dist/index.js",
   "dependencies": {
     "@sugarcube/core": "^0.30.0",
+    "@sugarcube/plugin-fs": "^0.30.2",
     "dashp": "^0.10.1",
-    "date-fns": "^1.29.0",
+    "date-fns": "^2.2.1",
     "dot": "^1.1.2",
     "gpg": "^0.6.0",
     "lodash": "^4.17.4",

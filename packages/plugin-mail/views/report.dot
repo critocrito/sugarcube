@@ -1,0 +1,20 @@
+Hey,
+
+Pipeline "{{=it.project}}/{{=it.name}}" took {{=it.took}} and {{?it.failures.length}}collected {{=it.failures.length}} failures{{??}}had no failures{{?}}.
+
+
+## Pipeline stats
+{{~it.report :stat}}
+Plugin {{=stat.name}} took {{=stat.took}}.
+  {{?stat.counts.length}}counts: {{=stat.counts}}{{?}}
+  {{?stat.durations.length}}durations: {{=stat.durations}}{{?}}{{~}}
+
+## Failures by plugin
+{{~it.report :stat}}
+Plugin {{=stat.name}} had {{=stat.failures.length}} failures.
+{{~stat.failures :fail}}
+ - {{=fail.term}}: {{=fail.reason}}{{~}}
+{{~}}
+
+Sincerely,
+Sugarcube
