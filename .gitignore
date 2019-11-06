@@ -20,3 +20,4 @@ project/.vagrant
 coverage
 data
 .sugarcube_cache.json
+*.jar
