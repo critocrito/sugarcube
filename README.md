@@ -1,6 +1,9 @@
 # Sugarcube
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![Build Status](https://travis-ci.org/critocrito/sugarcube.svg?branch=master)](https://travis-ci.org/critocrito/sugarcube) [![Coverage Status](https://coveralls.io/repos/github/critocrito/sugarcube/badge.svg?branch=master)](https://coveralls.io/github/critocrito/sugarcube?branch=master)
+<p align="center">
+  <img width="460" height="300" src="/logo.png" alt="Sugarcube - Data pipelines for human rights">
+  [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![Build Status](https://travis-ci.org/critocrito/sugarcube.svg?branch=master)](https://travis-ci.org/critocrito/sugarcube) [![Coverage Status](https://coveralls.io/repos/github/critocrito/sugarcube/badge.svg?branch=master)](https://coveralls.io/github/critocrito/sugarcube?branch=master)
+</p>
 
 ## Synopsis
 
@@ -36,7 +39,7 @@ Data processes, like from the example above, can be codified in order to repeat 
 
 ## Testimony
 
-- [Syrian Archive](https://syrianarchive.org/en) uses Sugarcube to archive video evidence of human rights violations in Syria. Further, Sugarcube is used to monitor human rights documentation that is taken down by social media companies. The systems and workflows developed with Syrian Archive are now being expanded to do similar work in Yemen, Sudan and others.
+- [Syrian Archive](https://syrianarchive.org/en) uses Sugarcube to archive video evidence of human rights violations in Syria. Further, Sugarcube is used to monitor human rights documentation that is taken down by social media companies. The systems and workflows developed with Syrian Archive are now being expanded to do similar work in Yemen, Sudan and other areas.
 
 - Built using Sugarcube, the [Data Scores](https://data-scores.org/) investigation tool provided evidence and insights for research into how data analytics and data-driven "scoring" were being used in the public sector of the UK to make decisions. This research was conducted by the [Data Justice Lab](https://datajusticelab.org/).
 
