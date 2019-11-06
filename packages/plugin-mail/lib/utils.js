@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 import gpg from "gpg";
+import {formatDistance} from "date-fns";
 
 export const createTransporter = cfg =>
   cfg.debug
@@ -48,3 +49,5 @@ export const mail = async (
   const text = toEncrypt ? await encrypt(to, message) : message;
   return transporter.sendMail({from, subject, to, text});
 };
+
+export const humanDuration = s => formatDistance(new Date(0), new Date(s));

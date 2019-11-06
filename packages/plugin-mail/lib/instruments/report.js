@@ -1,11 +1,10 @@
 import fs from "fs";
 import path from "path";
 import {get, getOr} from "lodash/fp";
-import formatDistance from "date-fns/formatDistance";
 import dot from "dot";
 import {existsP} from "@sugarcube/plugin-fs";
 
-import {createTransporter, encrypt, encryptFile} from "../utils";
+import {createTransporter, encrypt, encryptFile, humanDuration} from "../utils";
 
 dot.log = false;
 
@@ -13,8 +12,6 @@ const dots = dot.process({
   path: `${__dirname}/../../views`,
   templateSettings: {strip: false},
 });
-
-const humanDuration = s => formatDistance(new Date(0), new Date(s));
 
 const instrument = cfg => {
   const noEncrypt = getOr(false, "mail.no_encrypt", cfg);

@@ -1,7 +1,7 @@
 import {get, getOr} from "lodash/fp";
 import {flowP, tapP, caughtP} from "dashp";
 import dot from "dot";
-import distanceInWords from "date-fns/distance_in_words";
+import {formatDistance} from "date-fns";
 import {envelope as env, plugin as p} from "@sugarcube/core";
 
 import {createTransporter, mail} from "../utils";
@@ -47,7 +47,7 @@ const mailFailedStats = async (envelope, {cfg, log, stats}) => {
       return Object.assign({}, stat, {
         name: key,
         total: (stat.total || []).reduce((memo, t) => memo + t, 0),
-        duration: distanceInWords(new Date(start), new Date(end)),
+        duration: formatDistance(new Date(start), new Date(end)),
       });
     })
     .sort((a, b) => {
