@@ -19,7 +19,11 @@ describe("instrumentation", () => {
     ins.fail(failure);
     ins.fail(failure);
 
-    ins.get("failed").should.eql([failure, failure]);
+    // The instrument sets the run marker and current plugin. Since we call
+    // the instrument outside of a pipeline run we have to add those keys.
+    const expected = {plugin: null, marker: null, ...failure};
+
+    ins.get("failed").should.eql([expected, expected]);
   });
 
   it("registers failure for a plugin", () => {

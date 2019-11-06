@@ -1,14 +1,16 @@
-import {merge, getOr} from "lodash/fp";
+import {isPlainObject, merge, getOr} from "lodash/fp";
 import {state} from "./state";
 
 export const instrument = (maybeState, {events}) => {
   const s = maybeState == null ? state(maybeState) : maybeState;
-  let curPlugin;
+  let curPlugin = null;
 
   const fail = failure => {
     const {term, reason} = failure;
     const msg = `${curPlugin || "unknown plugin"} ${term}: ${reason}`;
-    const marker = s.get("pipeline.marker");
+    const marker = isPlainObject(s.get("pipeline.marker"))
+      ? null
+      : s.get("pipeline.marker");
 
     s.update("failed", failures =>
       Array.isArray(failures)
@@ -27,10 +29,7 @@ export const instrument = (maybeState, {events}) => {
 
     if (events != null) {
       events.emit("log", {type: "warn", msg});
-      events.emit(
-        "fail",
-        Object.assign({}, failure, {marker, plugin: curPlugin}),
-      );
+      events.emit("fail", {marker, plugin: curPlugin, ...failure});
     }
   };
 
