@@ -106,7 +106,10 @@ const plugin = async (envelope, {log, cfg, stats}) => {
           `${dest}.tmp.jpg`,
           forceGeneration,
         );
-        await mvP(`${dest}.tmp.jpg`, dest);
+        // The mosaic generation doesn't always yield an image. If the file
+        // doesn't exist ignore the move.
+        if (await existsP(`${dest}.tmp.jpg`))
+          await mvP(`${dest}.tmp.jpg`, dest);
       } catch (e) {
         const reason = `Failed to create mosaic for video at ${location}: ${e.message}`;
         stats.fail({type: unit._sc_source, term: source, reason});
