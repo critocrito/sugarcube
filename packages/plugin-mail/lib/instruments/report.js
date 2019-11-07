@@ -21,7 +21,7 @@ const instrument = cfg => {
       setImmediate(async () => {
         const {
           name,
-          mail: {mail_recipients: recipients, from},
+          mail: {recipients, from},
         } = cfg;
         const {
           pipeline: {marker, plugins, project},
