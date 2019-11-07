@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.31.0](https://github.com/critocrito/sugarcube/compare/v0.30.2...v0.31.0) (2019-11-07)
+
+
+### Bug Fixes
+
+* **core:** add missing plugin for failure ([d2c91a5](https://github.com/critocrito/sugarcube/commit/d2c91a5))
+* **core:** failing test to instrument failures ([e8c361a](https://github.com/critocrito/sugarcube/commit/e8c361a))
+
+
+
+
+
 # [0.30.0](https://github.com/critocrito/sugarcube/compare/v0.29.0...v0.30.0) (2019-10-31)
 
 

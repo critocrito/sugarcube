@@ -6,10 +6,10 @@
   "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-regex#readme",
   "repository": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-regex",
   "bugs": "https://github.com/critocrito/sugarcube/issues",
-  "version": "0.30.0",
+  "version": "0.31.0",
   "main": "_dist/index.js",
   "dependencies": {
-    "@sugarcube/core": "^0.30.0",
+    "@sugarcube/core": "^0.31.0",
     "lodash": "^4.17.4"
   },
   "keywords": [

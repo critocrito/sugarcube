@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.31.0](https://github.com/critocrito/sugarcube/compare/v0.30.2...v0.31.0) (2019-11-07)
+
+
+### Features
+
+* **cli:** print help output for a single plugin or instrument ([6721566](https://github.com/critocrito/sugarcube/commit/6721566))
+
+
+
+
+
 # [0.30.0](https://github.com/critocrito/sugarcube/compare/v0.29.0...v0.30.0) (2019-10-31)
 
 

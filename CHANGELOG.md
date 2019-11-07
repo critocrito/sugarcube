@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.31.0](https://github.com/critocrito/sugarcube/compare/v0.30.2...v0.31.0) (2019-11-07)
+
+
+### Bug Fixes
+
+* **core:** add missing plugin for failure ([d2c91a5](https://github.com/critocrito/sugarcube/commit/d2c91a5))
+* **core:** failing test to instrument failures ([e8c361a](https://github.com/critocrito/sugarcube/commit/e8c361a))
+* **plugin-mail:** update to latest date-fns api ([97870db](https://github.com/critocrito/sugarcube/commit/97870db))
+
+
+### Features
+
+* **cli:** print help output for a single plugin or instrument ([6721566](https://github.com/critocrito/sugarcube/commit/6721566))
+* **pugin-mail:** deprecate plugins for reporting in favor of an instrument ([9287690](https://github.com/critocrito/sugarcube/commit/9287690))
+
+
+
+
+
 ## [0.30.2](https://github.com/critocrito/sugarcube/compare/v0.30.1...v0.30.2) (2019-11-04)
 
 

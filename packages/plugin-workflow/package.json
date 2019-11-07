@@ -6,10 +6,10 @@
   "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-workflow#readme",
   "repository": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-workflow",
   "bugs": "https://github.com/critocrito/sugarcube",
-  "version": "0.30.0",
+  "version": "0.31.0",
   "main": "_dist/index.js",
   "dependencies": {
-    "@sugarcube/core": "^0.30.0",
+    "@sugarcube/core": "^0.31.0",
     "lodash": "^4.17.5"
   },
   "keywords": [

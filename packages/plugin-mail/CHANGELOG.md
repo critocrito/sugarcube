@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.31.0](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mail/compare/v0.30.2...v0.31.0) (2019-11-07)
+
+
+### Bug Fixes
+
+* **plugin-mail:** update to latest date-fns api ([97870db](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mail/commit/97870db))
+
+
+### Features
+
+* **pugin-mail:** deprecate plugins for reporting in favor of an instrument ([9287690](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mail/commit/9287690))
+
+
+
+
+
 # [0.30.0](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mail/compare/v0.29.0...v0.30.0) (2019-10-31)
 
 **Note:** Version bump only for package @sugarcube/plugin-mail
