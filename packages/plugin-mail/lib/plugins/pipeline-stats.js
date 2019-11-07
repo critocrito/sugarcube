@@ -19,7 +19,7 @@ const querySource = "mail_recipient";
 const mailFailedStats = async (envelope, {cfg, log, stats}) => {
   const project = getOr("unknown-project", "project", cfg);
   const marker = get("marker", cfg);
-  const noEncrypt = get("mail.no-encrypt", cfg);
+  const noEncrypt = get("mail.no_encrypt", cfg);
   const sender = get("mail.from", cfg);
   const isDebug = get("mail.debug", cfg);
   const recipients = env.queriesByType(querySource, envelope);

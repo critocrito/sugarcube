@@ -43,7 +43,7 @@ forEach(p => {
         type: "number",
         nargs: 1,
       },
-      "mail.no-encrypt": {
+      "mail.no_encrypt": {
         type: "boolean",
         default: false,
         desc: "Encrypt all emails.",

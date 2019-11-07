@@ -29,7 +29,7 @@ const mailFailedStats = async (envelope, {cfg, log, stats}) => {
   const project = getOr("unknown-project", "project", cfg);
   const name = get("name", stats.get("pipeline"));
   const marker = get("marker", cfg);
-  const noEncrypt = get("mail.no-encrypt", cfg);
+  const noEncrypt = get("mail.no_encrypt", cfg);
   const from = get("mail.from", cfg);
   const isDebug = get("mail.debug", cfg);
 

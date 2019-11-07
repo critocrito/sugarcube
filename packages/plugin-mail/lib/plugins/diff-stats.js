@@ -19,7 +19,7 @@ const mailDiffStats = (envelope, {cfg, log, stats}) => {
   const recipients = env.queriesByType(querySource, envelope);
   // We only allow one sender.
   const sender = cfg.mail.from;
-  const noEncrypt = get("mail.no-encrypt", cfg);
+  const noEncrypt = get("mail.no_encrypt", cfg);
   const {added, removed, shared, meta} = stats.get("diff");
 
   if (added.count === 0 && removed.count === 0) {
