@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.31.2](https://github.com/critocrito/sugarcube/compare/v0.31.1...v0.31.2) (2019-11-07)
+
+
+### Bug Fixes
+
+* **plugin-media:** don't throw when mosaic generation fails ([2a80f3d](https://github.com/critocrito/sugarcube/commit/2a80f3d))
+* **plugin-media:** handle the end event when downloading files ([a14809c](https://github.com/critocrito/sugarcube/commit/a14809c))
+* **plugin-twitter:** use log counter correctly ([811df5c](https://github.com/critocrito/sugarcube/commit/811df5c))
+
+
+
+
+
 ## [0.31.1](https://github.com/critocrito/sugarcube/compare/v0.31.0...v0.31.1) (2019-11-07)
 
 

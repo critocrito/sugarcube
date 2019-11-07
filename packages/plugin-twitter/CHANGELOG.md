@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.31.2](https://github.com/critocrito/sugarcube/compare/v0.31.1...v0.31.2) (2019-11-07)
+
+
+### Bug Fixes
+
+* **plugin-twitter:** use log counter correctly ([811df5c](https://github.com/critocrito/sugarcube/commit/811df5c))
+
+
+
+
+
 # [0.31.0](https://github.com/critocrito/sugarcube/compare/v0.30.2...v0.31.0) (2019-11-07)
 
 **Note:** Version bump only for package @sugarcube/plugin-twitter
