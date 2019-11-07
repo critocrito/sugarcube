@@ -6,7 +6,7 @@
   "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mail#readme",
   "repository": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mail",
   "bugs": "https://github.com/critocrito/sugarcube/issues",
-  "version": "0.31.0",
+  "version": "0.31.1",
   "main": "_dist/index.js",
   "dependencies": {
     "@sugarcube/core": "^0.31.0",

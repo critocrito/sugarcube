@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.31.1](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mail/compare/v0.31.0...v0.31.1) (2019-11-07)
+
+
+### Bug Fixes
+
+* **plugin-mail:** consistent use of the no_encrypt option ([49fcf83](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mail/commit/49fcf83))
+* **plugin-mail:** describe event for mail_report instrument ([046535d](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mail/commit/046535d))
+* **plugin-mail:** send emails sequential ([a6a8f62](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mail/commit/a6a8f62))
+* **plugin-mail:** use correct recipient config field ([88abd09](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mail/commit/88abd09))
+
+
+
+
+
 # [0.31.0](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mail/compare/v0.30.2...v0.31.0) (2019-11-07)
 
 
