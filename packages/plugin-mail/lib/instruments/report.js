@@ -82,46 +82,49 @@ const instrument = cfg => {
         let attachments = [];
         let statsFile;
 
-        await Promise.all(
-          recipients.map(async to => {
-            try {
-              text = !noEncrypt ? await encrypt(to, body) : body;
-            } catch (e) {
-              console.log(`Failed to encrypt message to ${to}.`);
-              console.log(e);
-              return;
-            }
-
-            if (await existsP(csvFilename)) {
+        await recipients.reduce(
+          (memo, to) =>
+            memo.then(async () => {
               try {
-                statsFile = fs.createReadStream(csvFilename);
-              } catch (e) {} // eslint-disable-line no-empty
-
-              if (statsFile != null) {
-                try {
-                  content = !noEncrypt
-                    ? await encryptFile(to, statsFile)
-                    : statsFile;
-                } catch (e) {
-                  console.log(`Failed to encrypt attachment to ${to}.`);
-                  console.log(e);
-                  return;
-                }
-                const filename = path.basename(
-                  `${csvFilename}${!noEncrypt ? ".gpg" : ""}`,
-                );
-                attachments = [{filename, content}];
+                text = noEncrypt ? body : await encrypt(to, body);
+              } catch (e) {
+                console.log(`Failed to encrypt message to ${to}.`);
+                console.log(e);
+                return;
               }
-            }
 
-            await transporter.sendMail({
-              from,
-              subject,
-              to,
-              text,
-              attachments,
-            });
-          }),
+              // eslint-disable-next-line promise/always-return
+              if (await existsP(csvFilename)) {
+                try {
+                  statsFile = fs.createReadStream(csvFilename);
+                } catch (e) {} // eslint-disable-line no-empty
+
+                if (statsFile != null) {
+                  try {
+                    content = noEncrypt
+                      ? statsFile
+                      : await encryptFile(to, statsFile);
+                  } catch (e) {
+                    console.log(`Failed to encrypt attachment to ${to}.`);
+                    console.log(e);
+                    return;
+                  }
+                  const filename = path.basename(
+                    `${csvFilename}${!noEncrypt ? ".gpg" : ""}`,
+                  );
+                  attachments = [{filename, content}];
+                }
+              }
+
+              await transporter.sendMail({
+                from,
+                subject,
+                to,
+                text,
+                attachments,
+              });
+            }),
+          Promise.resolve(),
         );
       });
     },
