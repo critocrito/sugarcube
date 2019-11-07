@@ -128,7 +128,7 @@ const instrument = cfg => {
   };
 };
 
-instrument.desc = "Mail a report about the pipeline run.";
+instrument.desc = "Mail a report about the pipeline run [stats].";
 instrument.argv = {};
 
 export default instrument;
