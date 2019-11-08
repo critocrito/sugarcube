@@ -5,6 +5,7 @@ import {
   reject,
   reduce,
   merge,
+  mergeAll,
   keys,
   property,
 } from "lodash/fp";
@@ -32,6 +33,20 @@ export const loadPackageJson = flow([
   load(require),
 ]);
 
+export const loadSelf = flow([
+  // eslint-disable-next-line import/no-dynamic-require, global-require
+  () => require(`${path.join(process.cwd(), "package")}`),
+  property("name"),
+  pkgName => {
+    if (/^sugarcube-/.test(pkgName)) {
+      const name = pkgName.match(/[^/]+$/g)[0].replace(/^sugarcube-/, "");
+      // eslint-disable-next-line import/no-dynamic-require, global-require
+      return {[name]: require(process.cwd())};
+    }
+    return {};
+  },
+]);
+
 export const loadBuiltinModules = () => {
   const builtinPath = "node_modules/@sugarcube";
   return flow([
@@ -45,7 +60,12 @@ export const loadBuiltinModules = () => {
 
 // eslint-disable-next-line import/no-mutable-exports
 export let modules = () => {
-  const packages = merge(loadBuiltinModules(), loadPackageJson());
+  const packages = mergeAll([
+    loadBuiltinModules(),
+    loadPackageJson(),
+    loadSelf(),
+  ]);
+
   // Memoize the result of the package loading.
   modules = () => ({
     packages,
