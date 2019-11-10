@@ -4,7 +4,7 @@ Operations on media files and URL's.
 
 ## Installation
 
-```
+```shell
 npm install --save @sugarcube/plugin-media
 ```
 
@@ -30,7 +30,7 @@ Download all videos of type `video` that are stored in `_sc_media`. SHA256 and M
 - `media.youtubedl_delay`: Wait between invocations of youtube-dl for `DELAY <= N < 2xDELAY` seconds. Defaults to 0 seconds.
 - `media.youtubedl_source_addresses`: Bind `youtube-dl` to the one or more source IP address. If there are more than one addresses, balance in a round robin fashion. Defaults to the default route of the host.
 
-    ```
+    ```json
     {
       "media": {
         "youtubedl_source_addresses": ["192.168.2.100", "192.168.2.101"]
@@ -40,7 +40,7 @@ Download all videos of type `video` that are stored in `_sc_media`. SHA256 and M
 
 **Example:**
 
-```
+```shell
 $(npm bin)/sugarcube -q queries.json -c config.json -p twitter_feed,media_youtubedl
 ```
 
@@ -62,7 +62,7 @@ Check any video in `_sc_media** if it is still available.
 - `media.youtubedl_delay`: Wait between invocations of youtube-dl for `DELAY <= N < 2xDELAY` seconds. Defaults to 0 seconds.
 - `media.youtubedl_source_addresses`: Bind `youtube-dl` to the one or more source IP address. If there are more than one addresses, balance in a round robin fashion. Defaults to the default route of the host. Set it to an array of IP addresses in a JSON config file.
 
-    ```
+    ```json
     {
       "media": {
         "youtubedl_source_addresses": ["192.168.2.100", "192.168.2.101"]
@@ -88,7 +88,7 @@ Generate a mosaic of screenshots for every video in `_sc_downloads`. This plugin
 
 **Example:**
 
-```
+```shell
 $(npm bin)/sugarcube -p youtube_video,media_youtubedl,media_mosaic \
                      --media.mosaic_strategy nth-frame \
                      --media.mosaic_force
@@ -117,7 +117,7 @@ Import media files into the data collection. This plugin works with the `fs_impo
 
 **Example:**
 
-```
+```shell
 $(npm bin)/sugarcube -Q glob_pattern:~/files/* -p fs_import,media_file_import
 ```
 
@@ -141,7 +141,7 @@ Archive media of type `url` as a gzipped [WARC](https://iipc.github.io/warc-spec
 
 **Example:**
 
-```
+```shell
 $(npm bin)/sugarcube -q queries.json -c config.json -p http_import,media_warc
 ```
 
@@ -168,7 +168,7 @@ Take a screenshot of every URL in `_sc_media` and populate the `_sc_downloads` f
 
 Import some websites and take screenshots of them.
 
-```
+```shell
 $(npm bin)/sugarcube -q queries.json -p http_import,media_screenshot
 ```
 

@@ -4,13 +4,13 @@ Plugins based on HTTP requests.
 
 ## Installation
 
-```
+```shell
 npm install --save @sugarcube/plugin-http
 ```
 
 ## Plugins
 
-### `http_import` plugin
+### `http_import`
 
 Import queries of query type `http_url` as Sugarcube units. The unit only contains the URL as `location` field. The MIME type of the url is determined and set in `_sc_media` so that other plugins can do further transformations on the unit.
 
@@ -20,7 +20,7 @@ Import queries of query type `http_url` as Sugarcube units. The unit only contai
 - `success`: The number of URLs that were successfully imported.
 - `fail`: The number of URLs that failed to import.
 
-### `http_get` plugin (DEPRECATED)
+### `http_get` (DEPRECATED)
 
 This plugin is deprecated in favor of the `media_fetch` plugin.
 
@@ -44,7 +44,7 @@ added to the `_sc_downloads` collection.
 - `success`: The number of files that were successfully fetched.
 - `fail`: The number of files that were failed to download.
 
-### `http_wget` plugin
+### `http_wget`
 
 Fetch whole web pages from `_sc_media`. Downloaded targets are added to the
 `_sc_downloads` collection.

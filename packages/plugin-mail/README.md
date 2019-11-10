@@ -4,7 +4,7 @@ Plugins for SugarCube ...
 
 ## Installation
 
-```
+```shell
 npm install --save @sugarcube/plugin-mail
 ```
 
@@ -132,7 +132,7 @@ Uses `mail_recipient` as query type.
 The following example diffs two csv files, and mails in debug mode the diff
 statistics to two recipients.
 
-```
+```shell
 $(npm bin)/sugarcube -d \
   -Q mail_recipient:one@example.com \
   -Q mail_recipient:two@example.com \
@@ -146,7 +146,7 @@ $(npm bin)/sugarcube -d \
 
 ## Instruments
 
-### `mail_report` instrument
+### `mail_report`
 
 Mail a report at the end of a pipeline run. The report breaks down per plugin the statistics collected and includes a list of all failures that occurred. The failures are additionally attached as a CSV file. As a default all emails are gpp encrypted. For this you need to import all GPG keys of your recipients into the local keyring. You can opt-out of email encryption by setting the `mail.no_encrypt` to true.
 

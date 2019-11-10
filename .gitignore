@@ -21,3 +21,5 @@ coverage
 data
 .sugarcube_cache.json
 *.jar
+docs/plugins
+docs/instruments

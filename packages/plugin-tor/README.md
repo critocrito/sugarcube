@@ -2,7 +2,7 @@
 
 ## Installation
 
-```
+```shell
 npm install --save @sugarcube/plugin-tor
 ```
 
@@ -10,7 +10,7 @@ npm install --save @sugarcube/plugin-tor
 
 ### `tor_check` plugin
 
-```
+```shell
 $(npm bin)/sugarcube -p tor_check
 2017-03-22T20:24:28.417Z - info: Starting the tor_check plugin.
 2017-03-22T20:24:28.672Z - info:

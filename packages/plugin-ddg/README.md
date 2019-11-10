@@ -6,7 +6,7 @@ Search on DuckDuckGo.
 
 ## Installation
 
-```
+```shell
 npm install --save @sugarcube/plugin-ddg
 ```
 
@@ -16,7 +16,7 @@ This plugin exports a single transformation plugin:
 
 ### `ddg_search` plugin
 
-```
+```shell
 $(npm bin)/sugarcube -c cfg.json -p ddg_search
 ```
 
@@ -24,7 +24,7 @@ This is a data fetching plugin.
 
 It looks for the query terms of type `ddg_search`, e.g.:
 
-```
+```json
 [{
   "type": "ddg_search",
   "term": "Some Search Term"

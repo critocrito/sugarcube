@@ -4,7 +4,7 @@ Plugins for SugarCube for side effect only.
 
 ## Installation
 
-```
+```shell
 npm install --save @sugarcube/plugin-tap
 ```
 
@@ -12,7 +12,7 @@ npm install --save @sugarcube/plugin-tap
 
 ### `tap_printf` plugin
 
-```
+```shell
 $(npm bin)/sugarcube -c cfg.json -p twitter_feed,tap_printf
 ```
 
@@ -29,7 +29,7 @@ to the screen.
 
   `$(npm bin)/sugarcube -p tap_printf --tap.select data,queries`
 
-- `tap.limit` :: Limit the output to <n> data units.
+- `tap.limit` :: Limit the output to X data units.
 
    Example: Print only 5 units of data.
 
@@ -37,7 +37,7 @@ to the screen.
 
 ### `tap_writef` plugin
 
-```
+```shell
 $(npm bin)/sugarcube -c cfg.json -p twitter_feed,tap_writef
 ```
 
@@ -45,7 +45,7 @@ Write the data part of the envelope to a file.
 
 **Configuration**:
 
-- `tap.limit` :: Limit the output to <n> data units.
+- `tap.limit` :: Limit the output to N data units.
 
    Example: Print only 5 units of data.
 

@@ -5,7 +5,7 @@ metadata and text from over a thousand different file types.
 
 ## Installation
 
-```
+```shell
 npm install --save @sugarcube/plugin-tika
 ```
 
@@ -17,7 +17,7 @@ To use this plugin you need as well Java installed.
 
 Parse a list of file specified by the query type `glob_pattern`.
 
-```
+```shell
 sugarcube -Q glob_pattern:files/**/*.pdf -p tika_parse
 ```
 
@@ -32,7 +32,7 @@ throw.
 This plugin parses any location specified using the `tika_location_field`
 query type. This fetches the text and meta data of e.g. a url inside the unit.
 
-```
+```shell
 sugarcube -Q google_search:Keith\ Johnstone \
           -Q tika_location_field:href \
           -p google_search,tika_location
@@ -46,7 +46,7 @@ directly on the unit as well, e.g. if the location field is `href`, the
 
 Export the text and meta data that `tika_location` parses to a file.
 
-```
+```shell
 sugarcube -Q google_search:Keith\ Johnstone \
           -p google_search,tika_location,tika_export \
           --tika.location_field href

@@ -4,7 +4,7 @@ This is a plugin for [SugarCube](https://gitlab.com/sugarcube/sugarcube).
 
 ## Installation
 
-```
+```shell
 npm install --save @sugarcube/plugin-twitter
 ```
 

@@ -4,7 +4,7 @@ Interact with the file system.
 
 ## Installation
 
-```
+```shell
 npm install --save @sugarcube/plugin-fs
 ```
 
@@ -16,7 +16,7 @@ The query type is `glob_pattern`. It expands the glob pattern and turns every fi
 
 **Example:**
 
-```
+```shell
 sugarcube -Q glob_pattern:path/to/files/** -p fs_import
 ```
 

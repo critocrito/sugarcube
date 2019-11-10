@@ -15,7 +15,7 @@ A Youtube API key is required to use these plugins. To obtain one follow those s
 
 ## Installation
 
-```
+```shell
 npm install --save @sugarcube/plugin-youtube
 ```
 
@@ -27,13 +27,13 @@ Fetch details for an individual video by it's id. It uses the `youtube_video` qu
 
 The Youtube API key must be set as well. You can do this by setting the `youtube.api_key` config option:
 
-```
+```shell
 --youtube.api_key <key>
 ```
 
 or setting it in the JSON configuration file:
 
-```
+```json
 {
   "youtube": {
     "api_key": "<key>"
@@ -51,7 +51,7 @@ or setting it in the JSON configuration file:
 
 Fetch a list of videos from a channel. A query must be configured to supply one or more channel ids.
 
-```
+```json
 [{
   type: "youtube_channel",
   term: "UCJkMlOu7faDgqh4PfzbpLdg"
@@ -65,13 +65,13 @@ The channel query can be provided either as an id (e.g. `UC_QIfHvN9auy2CoOdSfMWD
 
 The Youtube API key must be set as well. You can do this by setting the `youtube.api_key` config option:
 
-```
+```shell
 --youtube.api_key <key>
 ```
 
 or setting it in the JSON configuration file:
 
-```
+```json
 {
   "youtube": {
     "api_key": "<key>"
@@ -81,7 +81,7 @@ or setting it in the JSON configuration file:
 
 Other Possible config values are:
 
-```
+```json
 {
   "youtube": {
     "published_before": "2017-06-22",
@@ -96,7 +96,7 @@ Setting any of these increases performance, but is capped at around 500 video re
 The following example fetches a Youtube channel and downloads all available
 videos. It uses the `media_youtubedl` plugin.
 
-```
+```shell
 $(npm bin)/sugarcube -c config.json \
                      -q channels.json \
                      -p youtube_channel,media_youtubedl
@@ -111,13 +111,13 @@ $(npm bin)/sugarcube -c config.json \
 
 ### `youtube_filter_failing` plugin
 
-This plugin verifies against the Youtube API that each unit that is a Youtube video exists, and returns all failing videos as units in the envelope. It is meant as the first step in a two step process to verify the number of videos that were taken down by Youtube. The output of this plugin can be send straight to the `media_youtubedl_check** plugin for a more detailed check.
+This plugin verifies against the Youtube API that each unit that is a Youtube video exists, and returns all failing videos as units in the envelope. It is meant as the first step in a two step process to verify the number of videos that were taken down by Youtube. The output of this plugin can be send straight to the `media_youtubedl_check` plugin for a more detailed check.
 
 This plugin doesn't collect missing videos as failures, but it counts the metric.
 
 **Configuration:**
 
-- `youtube.api_key` :: The API key for Youtube.com. This option is required.
+- `youtube.api_key`: The API key for Youtube.com. This option is required.
 
 **Example:**
 

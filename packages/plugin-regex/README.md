@@ -4,7 +4,7 @@ Match the contents of a field again regular expression queries.
 
 ## Installation
 
-```
+```shell
 npm install --save @sugarcube/plugin-regex
 ```
 
@@ -20,7 +20,7 @@ using logical OR.
 
 - `regex.field`: Specify the field to match.
 
-```
+```shell
 sugarcube -Q google_search:Keith\ Johnstone,regex_pattern:company -p google_search,regex_match,tap_printf --regex.field description
 ```
 

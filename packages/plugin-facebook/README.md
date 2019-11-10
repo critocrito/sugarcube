@@ -5,7 +5,7 @@ Query the Facebook
 
 ## Installation
 
-```
+```shell
 npm install --save @sugarcube/plugin-facebook
 ```
 
@@ -22,14 +22,16 @@ You'll need the `app_id` and the `app_secret`.
 
 ## Plugins
 
-### `facebook_api_user` plugin
+### `facebook_api_user` (DEPRECATED)
 
 Fetch data about a user. It uses `facebook_user` as query type.
 
-    sugarcube -Q facebook_user:<user_id> \
-               -p facebook_api_user \
-               --facebook.app_id <app_id> \
-               --facebook.app_secret <app_secret>
+```shell
+sugarcube -Q facebook_user:<user_id> \
+           -p facebook_api_user \
+           --facebook.app_id <app_id> \
+           --facebook.app_secret <app_secret>
+```
 
 You need the `userid`, the username won't work. To get it:
 
@@ -43,30 +45,33 @@ You need the `userid`, the username won't work. To get it:
 - **facebook.app_id**
 - **facebook.app_secret**
 
-### `facebook_api_page` plugin
+### `facebook_api_page` (DEPRECATED)
 
 Fetch data about a Facebook page. It uses `facebook_page` as query type.
 
-    sugarcube -Q facebook_page:<page_name> \
-               -p facebook_api_page \
-               --facebook.app_id <app_id> \
-               --facebook.app_secret <app_secret>
+```shell
+sugarcube -Q facebook_page:<page_name> \
+          -p facebook_api_page \
+          --facebook.app_id <app_id> \
+          --facebook.app_secret <app_secret>
+```
 
 **Configuration**
 
 - **facebook.app_id**
 - **facebook.app_secret**
 
-### `facebook_api_feed` plugin
+### `facebook_api_feed` (DEPRECATED)
 
 Fetch the feed of a Facebook page. It uses `facebook_page` as query type. This
 works currently for pages only.
 
-    sugarcube -Q facebook_id:filmsforaction \
-              -p facebook_api_feed \
-              --facebook.app_id <app_id> \
-              --facebook.app_secret <app_secret>
-
+```shell
+sugarcube -Q facebook_id:filmsforaction \
+          -p facebook_api_feed \
+          --facebook.app_id <app_id> \
+          --facebook.app_secret <app_secret>
+```
 **Configuration Options**:
 
 - **facebook.app_id**: The app id issued by Facebook.
@@ -82,7 +87,7 @@ entries and exports a CSV file. One of the pages fails because it doesn't
 exist. The `facebook_api_feed` plugin ignores missing pages, and continues
 with the rest of the pipeline.
 
-```
+```shell
 $(npm bin)/sugarcube -c configs/facebook.json \
                      -Q facebook_page:BATH5,facebook_page:MoqawamaSourria \
                      -p

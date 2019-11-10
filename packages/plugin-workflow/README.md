@@ -4,7 +4,7 @@ A collection of plugins that support investigation workflows.
 
 ## Installation
 
-```
+```shell
 npm install --save @sugarcube/plugin-workflow
 ```
 
@@ -16,7 +16,7 @@ Merge additional fields into every unit of the data pipeline. Additional fields 
 
 **Example:**
 
-```
+```shell
 sugarcube -p test_generate,workflow_merge,tap_printf \
           -Q workflow_merge:'{"hello": "world"}'
 ```
@@ -27,7 +27,7 @@ Merge any fields from the query object into units acquired for this query. This 
 
 **Example:**
 
-```
+```shell
 sugarcube -p sheets_queries,youtube_video,workflow_merge_query \
           --google.query_fields last_access,cid.incident_code,notes \
           --workflow.merge_query_fields cid.incident_code,notes
@@ -47,7 +47,7 @@ Break all queries into batches with a size configured by `workflow.multiplex_siz
 
 **Example:**
 
-```
+```shell
 sugarcube -p workflow_multiplex,youtube_channel,media_youtubedl \
           -q queries.json
 ```
@@ -61,7 +61,7 @@ The above example will run the pipeline `youtube_channel,media_youtubedl** once 
 
 **Example:**
 
-```
+```shell
 sugarcube -p workflow_multiplex,youtube_channel,media_youtubedl \
           --workflow.multiplex_size 10 \
           --workflow.multiplex_continue_on_error \
@@ -74,7 +74,7 @@ This plugin acts as a stopper for `workflow_multiplex** to signal where the mult
 
 **Example:**
 
-```
+```shell
 sugarcube -p workflow_multiplex,youtube_channel,media_youtubedl,workflow_multiplex_end,mail_report_stats \
           -q queries.json
 ```
@@ -91,7 +91,7 @@ Omit individual fields from all units. The fields can be specified on the comman
 
 **Example:**
 
-```
+```shell
 sugarcube -p workflow_omit --workflow.omit_fields a,b,c
 ```
 
@@ -105,7 +105,7 @@ Pick the list of attributes from every unit and drop the rest.
 
 **Example:**
 
-```
+```shell
 sugarcube -p workflow_pick --workflow.pick_fields a,b,c
 ```
 

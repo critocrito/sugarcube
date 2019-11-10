@@ -6,7 +6,7 @@ Persists profile, history and unit data in mongodb.
 
 ## Installation
 
-```
+```shell
 npm install --save @sugarcube/plugin-mongodb
 ```
 
@@ -14,7 +14,7 @@ npm install --save @sugarcube/plugin-mongodb
 
 ### `mongodb_store` plugin
 
-```
+```shell
 $(npm bin)/sugarcube -q queries.json -c config.json -p twitter_feed,mongodb_store
 ```
 
@@ -30,7 +30,7 @@ revisions and relations.
 Fetch all units based on a MongoDB query string. The query string is defined
 as a SugarCube query, e.g.:
 
-```
+```json
 [{
   "type": "mongodb_query_units",
   "term": {}
@@ -52,7 +52,7 @@ as a SugarCube query, e.g.:
 Fetch units by `_sc_id_hash` from the database. Supply the query type
 `mongodb_unit` that specifies the id hash of the unit.
 
-```
+```shell
 sugarcube -d -Q mongodb_unit:06b11b54d8c7c62af2c058d8c1f814cac5415bf149b790d447f0b34280f625d6 -p mongodb_fetch_units,tap_printf
 ```
 

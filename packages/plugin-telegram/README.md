@@ -2,7 +2,7 @@
 
 ## Installation
 
-```
+```shell
 npm install --save @sugarcube/plugin-telegram
 ```
 
@@ -15,7 +15,7 @@ I had to do the following steps to make this work:
 
 Edit your config file and add:
 
-```
+```shell
 {
   "telegram": {
     "bot_key": "<your bot key>",

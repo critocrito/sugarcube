@@ -4,7 +4,7 @@ Plugins to test aspects of SugarCube.
 
 ## Installation
 
-```
+```shell
 npm install --save @sugarcube/plugin-test
 ```
 

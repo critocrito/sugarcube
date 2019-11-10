@@ -2,7 +2,7 @@
 
 ## Installation
 
-```
+```shell
 npm install --save @sugarcube/plugin-google
 ```
 
@@ -14,7 +14,7 @@ You need at least Node 7.5.0 for this module.
 
 Search on Google for a term, specified by the query type `google_search`.
 
-```
+```shell
 $(npm bin)/sugarcube -Q google_search:Keith\ Johnstone -p google_search,tap_printf
 ```
 
@@ -29,7 +29,7 @@ $(npm bin)/sugarcube -Q google_search:Keith\ Johnstone -p google_search,tap_prin
 
 Make a Google image search for a term, specified by the query type `google_search`.
 
-```
+```shell
 $(npm bin)/sugarcube -Q google_search:Keith\ Johnstone -p google_images,tap_printf
 ```
 
@@ -45,7 +45,7 @@ $(npm bin)/sugarcube -Q google_search:Keith\ Johnstone -p google_images,tap_prin
 Make a Google reverse image search. Specify a glob pattern by the query type
 `glob_pattern` that resolves to a list of image files.
 
-```
+```shell
 $(npm bin)/sugarcube -Q glob_pattern:images/**/*.jpg -p google_reverse_images_files
 ```
 

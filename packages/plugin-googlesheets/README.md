@@ -5,7 +5,7 @@ google sheets.
 
 ## Installation
 
-```
+```shell
 npm install --save @sugarcube/plugin-googlesheets
 ```
 
@@ -34,7 +34,7 @@ the following:
 
 Your current config looks like this:
 
-```
+```json
 {
   "google": {
     "client_id": "<CLIENT ID>",
@@ -78,7 +78,7 @@ provided if a new sheet should be create from a template.
   from. Requires `google.copy_from_spreadsheet` as well. Multiple sheets can be specified as an array. The first is assumed to be the template for the data sheet, and any subsequent source sheet as a supporting sheet.
 
   The following configuration snippet exports data to a spreadsheet where three sheets are copied from a template sheet. The `template` sheet is renamed to `Collection`, the `meta` sheet will be renamed to `Meta` and the `locations` sheet keeps it's name.
-  ```
+  ```json
   {
     "google": {
       "sheet": "Collection,Meta",
@@ -122,7 +122,7 @@ match. The format of the query term is `<field>:<value>`. Currently only exact
 matches are supported. When specified, only rows matching the field will be
 imported from the sheets.
 
-```sh
+```shell
 sugarcube -Q sheets_condition:aa:23 -Q sheets_condition:bb:42 -p sheets_import
 ```
 
@@ -223,7 +223,7 @@ supported. When specified, only rows matching the field will be moved to
 another sheet. Rows that don't match the conditions remain on the source
 sheets.
 
-```sh
+```shell
 sugarcube -Q sheets_condition:aa:23 -Q sheets_condition:bb:42 -p sheets_move
 ```
 
@@ -250,7 +250,7 @@ By specifying `google.copy_from_spreadsheet` and `google.copy_from_sheet` the ne
 - `google.query_fields`: The `sheets_query` plugin will always look for columns named `type` and `term`. Using this option, additional fields can be added into the query extraction. This is useful to enhance queries with additional meta data. The fields `type` and `term` are always included, so there is no need to specify them separately.
 - `google.query_types_to_move`: Specify the types of queries to move from one sheet to another. This is useful if one sheet contains queries of multiple types, but an individual pipeline only operates on a sub set of those queries. Specify multiple query types by separating them with a comma.
 
-```sh
+```shell
 sugarcube -p sheets_queries,youtube_channel,sheets_move_queries \
           -Q sheets_queries:HistoricScrapes \
           --google.to_sheet DailyScrapes \
