@@ -127,6 +127,7 @@ const dataUnitSpec = {
   _sc_downloads: listsArb,
   _sc_queries: listsArb,
   _sc_locations: listsArb,
+  _sc_annotations: listsArb,
   _sc_markers: array(string),
 };
 
