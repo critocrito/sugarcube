@@ -18,7 +18,7 @@ project/.vagrant
 .vscode
 .nyc_output
 coverage
-data
+./data
 .sugarcube_cache.json
 *.jar
 docs/plugins

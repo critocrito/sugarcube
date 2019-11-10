@@ -104,6 +104,29 @@ export default {
           },
         },
 
+        $sc_annotations: {
+          type: "nested",
+          properties: {
+            $sc_id_hash: {
+              type: "keyword",
+              ignore_above: 64,
+            },
+            type: {
+              type: "keyword",
+              ignore_above: 256,
+            },
+            term: {
+              type: "text",
+              fields: {
+                keyword: {
+                  type: "keyword",
+                  ignore_above: 256,
+                },
+              },
+            },
+          },
+        },
+
         $sc_media: {
           type: "nested",
           properties: {

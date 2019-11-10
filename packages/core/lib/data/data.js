@@ -22,6 +22,7 @@ const listFields = [
   "_sc_downloads",
   "_sc_queries",
   "_sc_locations",
+  "_sc_annotations",
 ];
 
 const hashUnitId = hashWithField("_sc_id_fields");
