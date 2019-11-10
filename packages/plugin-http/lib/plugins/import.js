@@ -2,7 +2,7 @@ import fetch from "node-fetch";
 import contentType from "content-type";
 import {flowP, collectP} from "dashp";
 import {envelope as env} from "@sugarcube/core";
-import {extract, tikaMetaFields} from "@sugarcube/utils";
+import {extract, tikaMetaFields, tikaToEntity} from "@sugarcube/utils";
 
 const querySource = "http_url";
 
@@ -46,31 +46,27 @@ const plugin = async (envelope, {log, stats}) => {
           }
         const {text, meta} = contents;
 
-        const unitData = {
-          body: text == null || text === "" ? text : text.trim(),
-          ...tikaMetaFields(meta),
-        };
-
-        const pubdates =
-          unitData.created == null ? {} : {source: unitData.created};
-
         const unit = {
-          _sc_id_fields: ["location"],
-          _sc_media: [{type: mediaType, term: url}],
-          _sc_queries: [{type: querySource, term: url}],
-          _sc_pubdates: pubdates,
-          location: url,
-          // Fields that couldn't be extracted are not added to the unit.
-          ...Object.keys(unitData).reduce((memo, key) => {
-            if (unitData[key] == null) return memo;
-            return Object.assign(memo, {[key]: unitData[key]});
-          }, {}),
+          body: text == null || text === "" ? null : text.trim(),
+          ...tikaMetaFields(meta),
         };
 
         log.info(`Imported url ${url} as media type "${mediaType}".`);
         stats.count("success");
 
-        return unit;
+        return {
+          _sc_id_fields: ["location"],
+          _sc_media: [{type: mediaType, term: url}],
+          _sc_queries: [{type: querySource, term: url}],
+          _sc_href: url,
+          ...tikaToEntity(unit),
+          location: url,
+          // Fields that couldn't be extracted are not added to the unit.
+          ...Object.keys(unit).reduce((memo, key) => {
+            if (unit[key] == null) return memo;
+            return Object.assign(memo, {[key]: unit[key]});
+          }, {}),
+        };
       }),
       rs => rs.filter(r => r !== null),
     ],

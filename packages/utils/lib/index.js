@@ -172,6 +172,16 @@ export const tikaMetaFields = meta => ({
   created: tikaCreated(meta),
 });
 
+export const tikaToEntity = unit => ({
+  _sc_pubdates: unit.created ? {source: unit.created} : {},
+  ...(unit.body === "" || unit.body == null ? {} : {_sc_body: unit.body}),
+  ...(unit.language ? {_sc_language: unit.language} : {}),
+  ...(unit.author ? {_sc_author: unit.author} : {}),
+  ...(unit.title ? {_sc_title: unit.title} : {}),
+  ...(unit.description ? {_sc_description: unit.description} : {}),
+  ...(unit.language ? {_sc_language: unit.language} : {}),
+});
+
 export default {
   runCmd,
   counter,
