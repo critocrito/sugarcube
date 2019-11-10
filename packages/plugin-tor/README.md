@@ -8,7 +8,7 @@ npm install --save @sugarcube/plugin-tor
 
 ## Plugins
 
-### `tor_check` plugin
+### `tor_check`
 
 ```shell
 $(npm bin)/sugarcube -p tor_check

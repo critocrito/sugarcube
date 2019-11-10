@@ -10,7 +10,7 @@ npm install --save @sugarcube/plugin-regex
 
 ## Plugins
 
-## `regex_match` plugin
+### `regex_match`
 
 Match the contents of a field against one or more regular expression
 queries. The query type is `regex_pattern`. Multiple queries are combined

@@ -21,7 +21,7 @@ npm install --save @sugarcube/plugin-youtube
 
 ## Plugins
 
-### `youtube_video` plugin
+### `youtube_video`
 
 Fetch details for an individual video by it's id. It uses the `youtube_video` query type. The query can be specified either as the video id (e.g. `oMOSiag3dxg`) or as the full URL to the video (e.g. `https://www.youtube.com/watch?v=oMOSiag3dxg`).
 
@@ -47,7 +47,7 @@ or setting it in the JSON configuration file:
 - `fail`: The number of videos that failed.
 - `success`: The number of videos that were successfully fetched.
 
-### `youtube_channel` plugin
+### `youtube_channel`
 
 Fetch a list of videos from a channel. A query must be configured to supply one or more channel ids.
 
@@ -109,7 +109,7 @@ $(npm bin)/sugarcube -c config.json \
 - `success`: The number of channels that succeeded to download.
 - `fetched`: The number of videos that are fetched from the channels.
 
-### `youtube_filter_failing` plugin
+### `youtube_filter_failing`
 
 This plugin verifies against the Youtube API that each unit that is a Youtube video exists, and returns all failing videos as units in the envelope. It is meant as the first step in a two step process to verify the number of videos that were taken down by Youtube. The output of this plugin can be send straight to the `media_youtubedl_check` plugin for a more detailed check.
 

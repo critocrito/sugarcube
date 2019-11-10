@@ -10,7 +10,7 @@ npm install --save @sugarcube/plugin-twitter
 
 ## Plugins
 
-### `twitter_feed` plugin
+### `twitter_feed`
 
 Fetch the tweets of a twitter user account.
 
@@ -30,7 +30,7 @@ Fetch the tweets of a twitter user account.
 - `success`: The number of feeds that succeeded.
 - `fetched`: The number of tweets that were fetched from all feeds.
 
-### `twitter_tweets` plugin
+### `twitter_tweets`
 
 Fetch individual tweets by the Tweet ID.
 
@@ -47,7 +47,7 @@ Fetch individual tweets by the Tweet ID.
 - `fail`: The number of tweets that failed to download.
 - `success`: The number tweets that succeeded to download.
 
-### `twitter_friends` plugin
+### `twitter_friends`
 
 Fetch the friends of a twitter user account.
 
@@ -58,7 +58,7 @@ Fetch the friends of a twitter user account.
 - `twitter.access_token_key`
 - `twitter.access_token_secret`
 
-### `twitter_followers` plugin
+### `twitter_followers`
 
 Fetch the followers of a twitter user account.
 
@@ -69,7 +69,7 @@ Fetch the followers of a twitter user account.
 - `twitter.access_token_key`
 - `twitter.access_token_secret`
 
-### `twitter_search` plugin
+### `twitter_search`
 
 Search for tweets.
 

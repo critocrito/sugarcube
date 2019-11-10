@@ -10,7 +10,7 @@ npm install --save @sugarcube/plugin-csv
 
 ## Plugins
 
-### `csv_export` plugin
+### `csv_export`
 
 Export sugarcube data in csv format to a file.
 
@@ -25,7 +25,7 @@ Export sugarcube data in csv format to a file.
 $(npm bin)/sugarcube -c config.json -p google_search,csv_export --csv.filename data.csv
 ```
 
-### `csv_export_queries` plugin
+### `csv_export_queries`
 
 Export the queries of an envelope to a file.
 
@@ -43,7 +43,7 @@ $(npm bin)/sugarcube -c config.json \
                      --csv.queries_filename queries.csv
 ```
 
-### `csv_import` plugin
+### `csv_import`
 
 Import a csv file, and turn it into sugarcube data.
 
@@ -62,7 +62,7 @@ Uses `glob_pattern` as query type.
 $(npm bin)/sugarcube -Q glob_pattern:data/**/*.csv -p csv_import,tap_printf --csv.id_fields firstName,lastName
 ```
 
-### `csv_diff` plugin
+### `csv_diff`
 
 Create diff stats of the current envelope with data parsed from csv files.
 
@@ -84,7 +84,7 @@ $(npm bin)/sugarcube -d \
   --csv.id_fields name
 ```
 
-### `csv_export_failed` plugin
+### `csv_export_failed`
 
 Export any failure stats of a pipeline run to a CSV file. The file is named `failed-stats-<marker>.csv`.
 

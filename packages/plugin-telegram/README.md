@@ -26,7 +26,7 @@ Edit your config file and add:
 
 ## Plugins
 
-### `telegram_send_message` plugin
+### `telegram_send_message`
 
 Sends the content of `_sc_content_fields` of every unit to the Telegram chat.
 

@@ -60,7 +60,7 @@ sugarcube -d -Q mongodb_unit:06b11b54d8c7c62af2c058d8c1f814cac5415bf149b790d447f
 
 - `mongodb.uri`: The database connection string (defaults to `mongodb://localhost/sugarcube`).
 
-### `mongodb_fetch_relations` plugin
+### `mongodb_fetch_relations`
 
 Fetch relations by `_sc_id_hash` from the database. Supply the query type
 `mongodb_relation` that specifes the id hash.
@@ -69,7 +69,7 @@ Fetch relations by `_sc_id_hash` from the database. Supply the query type
 
 - `mongodb.uri`: The database connection string (defaults to `mongodb://localhost/sugarcube`).
 
-### `mongodb_fetch_revisions` plugin
+### `mongodb_fetch_revisions`
 
 Fetch revisions of units by `_sc_id_hash` from the database. Supply the query
 type `mongodb_unit` that specifies the id hash of the unit.
@@ -78,13 +78,13 @@ type `mongodb_unit` that specifies the id hash of the unit.
 
 - `mongodb.uri`: The database connection string (defaults to `mongodb://localhost/sugarcube`).
 
-### `mongodb_complement` plugin
+### `mongodb_complement`
 
 Complement data in the pipeline, with data that is already stored in the
 database. This allows to enhance data, with already stored data. Data stored
 in the database takes precedence.
 
-### `mongodb_supplement` plugin
+### `mongodb_supplement`
 
 Like `mongodb_complement`, but data in the pipeline takes precedence over data
 stored in the database.

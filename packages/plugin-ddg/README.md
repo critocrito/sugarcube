@@ -14,7 +14,7 @@ npm install --save @sugarcube/plugin-ddg
 
 This plugin exports a single transformation plugin:
 
-### `ddg_search` plugin
+### `ddg_search`
 
 ```shell
 $(npm bin)/sugarcube -c cfg.json -p ddg_search

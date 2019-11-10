@@ -10,7 +10,7 @@ npm install --save @sugarcube/plugin-fs
 
 ## Plugins
 
-### `fs_import` plugin
+### `fs_import`
 
 The query type is `glob_pattern`. It expands the glob pattern and turns every file into an unit. If possible, it extracts the body and meta data from the file using [Apache Tika](https://tika.apache.org/).
 

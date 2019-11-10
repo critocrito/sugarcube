@@ -10,7 +10,7 @@ npm install --save @sugarcube/plugin-test
 
 ## Plugins
 
-## `test_generate` plugin
+### `test_generate`
 
 Generate random data using the `data` generator from the `@sugarcube/test`
 package.

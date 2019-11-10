@@ -10,13 +10,15 @@ npm install --save @sugarcube/plugin-media
 
 ## Plugins
 
-### `media_exif` plugin
+### `media_exif`
 
 Extract exif data from image urls in `_sc_media` fields.
 
-`sugarcube -c config.json -q queries.json -p google_images,media_exif`
+```shell
+sugarcube -c config.json -q queries.json -p google_images,media_exif
+```
 
-### `media_youtubedl` plugin
+### `media_youtubedl`
 
 Download all videos of type `video` that are stored in `_sc_media`. SHA256 and MD5 sums are calculated for those downloads. It also downloads thumbnails and subtitle files if available. The plugin uses the external `youtube-dl` program to actually download. This makes it [compatible](https://rg3.github.io/youtube-dl/supportedsites.html) with a variety of websites.
 
@@ -30,13 +32,13 @@ Download all videos of type `video` that are stored in `_sc_media`. SHA256 and M
 - `media.youtubedl_delay`: Wait between invocations of youtube-dl for `DELAY <= N < 2xDELAY` seconds. Defaults to 0 seconds.
 - `media.youtubedl_source_addresses`: Bind `youtube-dl` to the one or more source IP address. If there are more than one addresses, balance in a round robin fashion. Defaults to the default route of the host.
 
-    ```json
-    {
-      "media": {
-        "youtubedl_source_addresses": ["192.168.2.100", "192.168.2.101"]
-      }
-    }
-    ```
+```json
+{
+  "media": {
+    "youtubedl_source_addresses": ["192.168.2.100", "192.168.2.101"]
+  }
+}
+```
 
 **Example:**
 
@@ -62,20 +64,21 @@ Check any video in `_sc_media** if it is still available.
 - `media.youtubedl_delay`: Wait between invocations of youtube-dl for `DELAY <= N < 2xDELAY` seconds. Defaults to 0 seconds.
 - `media.youtubedl_source_addresses`: Bind `youtube-dl` to the one or more source IP address. If there are more than one addresses, balance in a round robin fashion. Defaults to the default route of the host. Set it to an array of IP addresses in a JSON config file.
 
-    ```json
-    {
-      "media": {
-        "youtubedl_source_addresses": ["192.168.2.100", "192.168.2.101"]
-      }
-    }
-    ```
+```json
+{
+  "media": {
+    "youtubedl_source_addresses": ["192.168.2.100", "192.168.2.101"]
+  }
+}
+```
+
 **Metrics:**
 
 - `total`: The total number of videos checked.
 - `fail`: The number of videos that failed to check.
 - `success`: The number of videos that were successfully checked.
 
-### `media_mosaic` plugin
+### `media_mosaic`
 
 Generate a mosaic of screenshots for every video in `_sc_downloads`. This plugin will create a `mosaic.jpg` in the same download directory as the video. The mosaic can be generated either based on scene changes or every 400th frame. The mosaic is generated using [`ffmpeg`](https://www.ffmpeg.org/**.
 
@@ -102,7 +105,7 @@ $(npm bin)/sugarcube -p youtube_video,media_youtubedl,media_mosaic \
 - `success`: The number of mosaics that were successfully generated.
 - `new`: The number of new mosaics out of the number of successfully generated mosaics.
 
-### `media_file_import` plugin
+### `media_file_import`
 
 Import media files into the data collection. This plugin works with the `fs_import` plugin.
 
@@ -153,7 +156,7 @@ $(npm bin)/sugarcube -q queries.json -c config.json -p http_import,media_warc
 - `success`: The number of URL's that were successfully archived.
 - `new`: The number of new archives out of the number of successfully archived URL's.
 
-### `media_screenshot` plugin
+### `media_screenshot`
 
 Take a screenshot of every URL in `_sc_media` and populate the `_sc_downloads` field with the location of the images. The format of the screenshot is JPEG. Screenshots are stored in `<data_dir>/<unit id>/screenshot/screenshot-<media id>.jpg`.
 
@@ -180,7 +183,7 @@ $(npm bin)/sugarcube -q queries.json -p http_import,media_screenshot
 - `success`: The number of screenshots that were successfully taken.
 - `new`: The number of new screenshots out of the number of successfully taken screenshots.
 
-### `media_fetch` plugin
+### `media_fetch`
 
 Fetch images and documents from `_sc_media`. Downloaded targets are added to the `_sc_downloads` collection. To fetch videos use the `media_youtubedl` plugin.
 

@@ -53,7 +53,7 @@ case of the CLI interface the tokens are stored in `.sugarcube_cache.json`.
 
 ## Plugins
 
-### `sheets_export` plugin
+### `sheets_export`
 
 Export data to a Google spreadsheet. This plugin merges existing data with new
 data. Duplicates are removed. If a sheet doesn't exist yet, a new one will be
@@ -102,7 +102,7 @@ provided if a new sheet should be create from a template.
 - `total`: The total number of units exported to the Google sheet.
 - `existing`: The number of existing units exported to the Google sheet.
 
-### `sheets_import` plugin
+### `sheets_import`
 
 Import data from a Google Spreadsheet.
 
@@ -130,7 +130,7 @@ sugarcube -Q sheets_condition:aa:23 -Q sheets_condition:bb:42 -p sheets_import
 
 - `total`: The total number of units imported from the Google sheet.
 
-### `sheets_queries` plugin
+### `sheets_queries`
 
 Fetch queries from a Google spreadsheet. The first column is the query type,
 and the second column is the query term. The plugin looks up the
@@ -146,7 +146,7 @@ and the second column is the query term. The plugin looks up the
 
 - `total`: The total number of queries imported from the Google sheet.
 
-### `sheets_append` plugin
+### `sheets_append`
 
 Append data to a Google spreadsheet. This plugin is similar to
 `sheets_export`, only that data isn't merged, but just appended to the end of
@@ -184,7 +184,7 @@ fields is controlled by the order of fields declared in `google.sheet_fields`.
 
 - `total`: The total number of units appended to the Google sheet.
 
-### `sheets_move` plugin
+### `sheets_move`
 
 Move data from one spreadsheet to another. If a sheet doesn't exist yet, a new
 one will be created. Before any values are exported a backup of the target
@@ -231,7 +231,7 @@ sugarcube -Q sheets_condition:aa:23 -Q sheets_condition:bb:42 -p sheets_move
 
 - `existing`: The number of existing units.
 
-### `sheets_move_queries` plugin
+### `sheets_move_queries`
 
 Move queries in the pipeline from one sheet to another. The plugin will look up queries defined through the `sheets_queries` query type, and move the queries to a spreadsheet defined with `google.to_spreadsheet_id` and `google.to_sheet`.
 

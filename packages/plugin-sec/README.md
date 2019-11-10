@@ -10,7 +10,7 @@ npm install --save @sugarcube/plugin-sec
 
 ## Plugins
 
-## `sec_search` plugin
+### `sec_search`
 
 Search the SEC for filings. Currently only SD forms are fetched. The query
 type is `sec_search`;

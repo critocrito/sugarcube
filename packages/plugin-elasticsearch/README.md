@@ -11,7 +11,7 @@ npm install --save @sugarcube/plugin-elasticsearch
 
 ## Plugins
 
-### `elastic_export` plugin
+### `elastic_export`
 
 Store data of the current envelope in Elasticsearch.
 
@@ -53,7 +53,7 @@ Indices are created the first time an export happens. In order to change the map
 - `existing`: The number of existing units updated.
 - `fail`: The number of units that failed to export.
 
-### `elastic_import` plugin
+### `elastic_import`
 
 Search for units in Elasticsearch and import them into the pipeline. Search bodies can be defined in JSON files and imported using the `glob_pattern` query type or supplied directly using the `elastic_query` source type. All search bodies are regular Elasticsearch [request bodies](https://www.elastic.co/guide/en/elasticsearch/reference/6.2/search-request-body.html) and use the [Elasticsearch query DSL](https://www.elastic.co/guide/en/elasticsearch/reference/6.2/query-dsl.html). See [`queries.md`](./queries.md) for more examples.
 
@@ -116,7 +116,7 @@ I can then call this script like that:
 
 - `total`: The total number of units imported.
 
-### `elastic_complement` plugin
+### `elastic_complement`
 
 Complement data in the pipeline with existing data stored in Elasticsearch. This merges new data into existing data.
 
@@ -140,7 +140,7 @@ sugarcube -Q ddg_search:Keith\ Johnstone \
 - `new`: The number of new units that weren't complemented.
 - `existing`: The number of units that were complemented.
 
-### `elastic_complement_left` plugin
+### `elastic_complement_left`
 
 Complement data in the pipeline with existing data stored in Elasticsearch. This merges existing data into new data.
 
@@ -164,7 +164,7 @@ sugarcube -Q ddg_search:Keith\ Johnstone \
 - `new`: The number of new units that weren't complemented.
 - `existing`: The number of units that were complemented.
 
-### `elastic_supplement` plugin
+### `elastic_supplement`
 
 This is an alias for the `elastic_complement_left` plugin.
 

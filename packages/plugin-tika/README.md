@@ -13,7 +13,7 @@ To use this plugin you need as well Java installed.
 
 ## Plugins
 
-### `tika_parse` plugin
+### `tika_parse`
 
 Parse a list of file specified by the query type `glob_pattern`.
 
@@ -21,13 +21,13 @@ Parse a list of file specified by the query type `glob_pattern`.
 sugarcube -Q glob_pattern:files/**/*.pdf -p tika_parse
 ```
 
-### `tika_links` plugin
+### `tika_links`
 
 This plugin iterates over all links in `_sc_media` and fetches the text and
 meta data for this link. This plugin ignores any errors that the fetch might
 throw.
 
-### `tika_location` plugin
+### `tika_location`
 
 This plugin parses any location specified using the `tika_location_field`
 query type. This fetches the text and meta data of e.g. a url inside the unit.
@@ -42,7 +42,7 @@ The text and meta data are added into the `_sc_media` collection and placed
 directly on the unit as well, e.g. if the location field is `href`, the
 `href_text` and `href_meta` fields are added to the unit.
 
-### `tika_export` plugin
+### `tika_export`
 
 Export the text and meta data that `tika_location` parses to a file.
 

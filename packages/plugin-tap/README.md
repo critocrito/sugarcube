@@ -10,7 +10,7 @@ npm install --save @sugarcube/plugin-tap
 
 ## Plugins
 
-### `tap_printf` plugin
+### `tap_printf`
 
 ```shell
 $(npm bin)/sugarcube -c cfg.json -p twitter_feed,tap_printf
@@ -35,7 +35,7 @@ to the screen.
 
    `$(npm bin)/sugarcube -c cfg.json -p twitter_feed,tap_printf --tap.limit 5`
 
-### `tap_writef` plugin
+### `tap_writef`
 
 ```shell
 $(npm bin)/sugarcube -c cfg.json -p twitter_feed,tap_writef

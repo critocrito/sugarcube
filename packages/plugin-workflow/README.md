@@ -10,7 +10,7 @@ npm install --save @sugarcube/plugin-workflow
 
 ## Plugins
 
-### `workflow_merge` plugin
+### `workflow_merge`
 
 Merge additional fields into every unit of the data pipeline. Additional fields are specified using the `workflow_merge` query source. The additional fields have to be provided as a valid JSON object.
 
@@ -21,7 +21,7 @@ sugarcube -p test_generate,workflow_merge,tap_printf \
           -Q workflow_merge:'{"hello": "world"}'
 ```
 
-### `workflow_merge_query` plugin
+### `workflow_merge_query`
 
 Merge any fields from the query object into units acquired for this query. This allows to annotate data with data stored alongside the query sources. This plugin will skip the merge if the unit already has a value set for this field. This behavior can be changed by setting the `--overflow.overwrite_query_merge` flag.
 
@@ -41,7 +41,7 @@ The above example fetches queries from a Google spreadsheet and along the query 
 - `workflow.merge_query_fields`: An array of field names that should be merged into the unit.
 - `workflow.overwrite_query_merge`: Set to `true` to merge fields even if a value is already set on the unit for this field. Defaults to `false`.
 
-### `workflow_multiplex` plugin
+### `workflow_multiplex`
 
 Break all queries into batches with a size configured by `workflow.multiplex_size` and run the remainder of the pipeline once for each batch. This allows to break the whole pipeline into smaller executions. This helps to deal with data processes that would yield a huge number of observations.
 
@@ -68,7 +68,7 @@ sugarcube -p workflow_multiplex,youtube_channel,media_youtubedl \
           -q queries.json
 ```
 
-### `workflow_multiplex_end` plugin
+### `workflow_multiplex_end`
 
 This plugin acts as a stopper for `workflow_multiplex** to signal where the multiplexing should end. It will then resume the remainder of the pipeline as a single run. Not that the data envelope is not carried over into the remainder pipeline. Only the queries, cache and stats are preserved.
 

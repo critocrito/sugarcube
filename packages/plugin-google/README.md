@@ -6,8 +6,6 @@
 npm install --save @sugarcube/plugin-google
 ```
 
-You need at least Node 7.5.0 for this module.
-
 ## Plugins
 
 ### `google_search`

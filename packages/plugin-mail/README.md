@@ -10,7 +10,7 @@ npm install --save @sugarcube/plugin-mail
 
 ## Plugins
 
-## `mail_failed_stats` plugin
+### `mail_failed_stats`
 
 This plugin emails any failed queries that occur during a pipeline run. It looks up the list of queries in the `failed` attribute of the stats object. It will send an email to qvery recipient supplied using the `mail_recipient` query type. If there are no failed queries, the email sending will be skipped.
 
@@ -49,7 +49,7 @@ Uses `mail_recipient` as query type.
 
   Configure the port of the SMTP server in use.
 
-## `mail_pipeline_stats` plugin
+### `mail_pipeline_stats`
 
 A pipeline run collects a lot of instrumentation details during a run. This plugin creates a run report and emails it. It will send an email to qvery recipient supplied using the `mail_recipient` query type.
 
@@ -88,7 +88,7 @@ Uses `mail_recipient` as query type.
 
   Configure the port of the SMTP server in use.
 
-## `mail_diff_stats` plugin
+### `mail_diff_stats`
 
 This plugin sends statistics of type `diff`. It will send an email to every
 recipient supplied using the `mail_recipient` query type. Skip the emailing if
