@@ -1,7 +1,7 @@
 import {get} from "lodash/fp";
 import {flatmapP, collectP} from "dashp";
 import {envelope as env} from "@sugarcube/core";
-import {extract, tikaMetaFields} from "@sugarcube/utils";
+import {extract, tikaMetaFields, tikaToEntity} from "@sugarcube/utils";
 
 import {unfold, mimeCategory} from "../api";
 
@@ -45,9 +45,6 @@ const plugin = async (envelope, {cfg, log, stats}) => {
         ...tikaMetaFields(meta),
       };
 
-      const pubdates =
-        unitData.created == null ? {} : {source: unitData.created};
-
       log.info(`Imported file at ${location}.`);
       stats.count("total");
       stats.count("success");
@@ -55,7 +52,8 @@ const plugin = async (envelope, {cfg, log, stats}) => {
       return Object.assign({}, unit, {
         _sc_queries: [{type: querySource, term: query}],
         _sc_media: [{type: category, term: location}],
-        _sc_pubdates: pubdates,
+        _sc_href: location,
+        ...tikaToEntity(unit),
         // Fields that couldn't be extracted are not added to the unit.
         ...Object.keys(unitData).reduce((memo, key) => {
           if (unitData[key] == null) return memo;
