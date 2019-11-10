@@ -55,6 +55,115 @@ export default {
           },
         },
 
+        $sc_observation: {
+          type: "keyword",
+          ignore_above: 64,
+        },
+
+        $sc_author: {
+          type: "text",
+          fields: {
+            keyword: {
+              type: "keyword",
+              ignore_above: 256,
+            },
+          },
+        },
+
+        $sc_channel: {
+          type: "text",
+          fields: {
+            keyword: {
+              type: "keyword",
+              ignore_above: 256,
+            },
+          },
+        },
+
+        $sc_channel_href: {
+          type: "text",
+          fields: {
+            keyword: {
+              type: "keyword",
+              ignore_above: 256,
+            },
+          },
+        },
+
+        $sc_author_href: {
+          type: "text",
+          fields: {
+            keyword: {
+              type: "keyword",
+              ignore_above: 256,
+            },
+          },
+        },
+
+        $sc_title: {
+          type: "text",
+          analyzer: "english",
+          fields: {
+            exact: {
+              type: "text",
+              analyzer: "exact",
+            },
+            general: {
+              type: "text",
+              analyzer: "trigrams",
+            },
+          },
+        },
+
+        $sc_description: {
+          type: "text",
+          index_options: "offsets",
+          analyzer: "english",
+          fields: {
+            exact: {
+              type: "text",
+              analyzer: "exact",
+            },
+            general: {
+              type: "text",
+              index_options: "offsets",
+              analyzer: "trigrams",
+            },
+          },
+        },
+
+        $sc_body: {
+          type: "text",
+          index_options: "offsets",
+          analyzer: "english",
+          fields: {
+            exact: {
+              type: "text",
+              analyzer: "exact",
+            },
+            general: {
+              type: "text",
+              index_options: "offsets",
+              analyzer: "trigrams",
+            },
+          },
+        },
+
+        $sc_href: {
+          type: "text",
+          fields: {
+            keyword: {
+              type: "keyword",
+              ignore_above: 256,
+            },
+          },
+        },
+
+        $sc_language: {
+          type: "keyword",
+          ignore_above: 256,
+        },
+
         $sc_downloads: {
           type: "nested",
           properties: {
