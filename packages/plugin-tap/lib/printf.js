@@ -11,6 +11,7 @@ const printf = (envelope, {stats, cfg, cache}) => {
   const limit = getOr(null, "tap.limit", cfg);
   // FIXME: The default from printf.argv doesn't work here.
   const selection = sToA(",", getOr("data", "tap.select", cfg));
+  const exclude = sToA(",", getOr([], "tap.exclude", cfg));
   const printables = {
     data,
     queries,
@@ -25,7 +26,14 @@ const printf = (envelope, {stats, cfg, cache}) => {
     console.log(`${s}:`);
     switch (s) {
       case "data": {
-        console.log(inspect(limit ? take(limit, data) : data, opts));
+        console.log(
+          inspect(
+            limit
+              ? take(limit, data).map(omit(exclude))
+              : data.map(omit(exclude)),
+            opts,
+          ),
+        );
         break;
       }
       case "stats": {
@@ -52,6 +60,11 @@ printf.argv = {
     nargs: 1,
     default: "data",
     desc: "Specify what to log: data,queries,cfg,stats,cache,plugins",
+  },
+  "tap.exclude": {
+    type: "string",
+    nargs: 1,
+    desc: "Exclude those fields from printing to the console.",
   },
 };
 

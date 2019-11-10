@@ -35,6 +35,10 @@ to the screen.
 
    `$(npm bin)/sugarcube -c cfg.json -p twitter_feed,tap_printf --tap.limit 5`
 
+- `tap.exclude` :: Exclude those fields from printing.
+
+   `$(npm bin)/sugarcube -c cfg.json -p http_import,tap_printf --tap.exclude body,_sc_body`
+
 ### `tap_writef`
 
 ```shell
