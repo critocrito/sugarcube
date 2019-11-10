@@ -38,7 +38,7 @@ export const loadSelf = flow([
   () => require(`${path.join(process.cwd(), "package")}`),
   property("name"),
   pkgName => {
-    if (/^sugarcube-/.test(pkgName)) {
+    if (/^sugarcube-plugin/.test(pkgName)) {
       const name = pkgName.match(/[^/]+$/g)[0].replace(/^sugarcube-/, "");
       // eslint-disable-next-line import/no-dynamic-require, global-require
       return {[name]: require(process.cwd())};
