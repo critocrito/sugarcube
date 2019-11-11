@@ -1,4 +1,5 @@
-import {get, set, merge} from "lodash/fp";
+import {get, set} from "lodash/fp";
+import deepmerge from "deepmerge";
 import {envelope as env, utils} from "@sugarcube/core";
 
 const plugin = (envelope, {cfg, log}) => {
@@ -40,9 +41,10 @@ const plugin = (envelope, {cfg, log}) => {
             );
           }
 
-          return Object.assign(acc, set(field, newValue, {}));
+          return deepmerge(acc, set(field, newValue, {}));
         }, {});
-        return merge(memo, toMerge);
+
+        return deepmerge(memo, toMerge);
       }, unit),
     envelope,
   );

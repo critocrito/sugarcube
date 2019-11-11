@@ -10,6 +10,7 @@
   "main": "_dist/index.js",
   "dependencies": {
     "@sugarcube/core": "^0.32.0",
+    "deepmerge": "^4.2.2",
     "lodash": "^4.17.5"
   },
   "keywords": [
