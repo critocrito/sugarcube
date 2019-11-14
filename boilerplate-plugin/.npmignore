@@ -1,7 +1,2 @@
 test/
 lib/
-npm-*.log
-.npmrc
-.babelrc
-.eslint*
-.gitlab*
