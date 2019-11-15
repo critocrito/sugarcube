@@ -17,37 +17,44 @@ const plugin = (envelope, {cfg, log}) => {
     )}`,
   );
 
-  return env.fmapData(
-    unit =>
-      unit._sc_queries.reduce((memo, query) => {
-        const toMerge = fields.reduce((acc, field) => {
-          const oldValue = get(field, unit);
-          const newValue = get(field, query);
+  return env.fmapData(unit => {
+    const queries = envelope.queries.filter(
+      ({type, term}) =>
+        unit._sc_queries.find(
+          query => query.type === type && query.term === term,
+        ) != null,
+    );
 
-          if (!overwrite && oldValue != null) {
-            log.info(
-              `Not overwriting ${oldValue} with ${newValue} for field ${field} in ${query.type}/${unit._sc_id_hash}`,
-            );
-            return acc;
-          }
+    return queries.reduce((memo, query) => {
+      const toMerge = fields.reduce((acc, field) => {
+        const oldValue = get(field, unit);
+        const newValue = get(field, query);
 
-          if (overwrite && oldValue != null) {
-            log.info(
-              `Overwriting ${oldValue} with ${newValue} for field ${field} in ${query.type}/${unit._sc_id_hash}`,
-            );
-          } else {
-            log.info(
-              `Merging ${newValue} for field ${field} in ${query.type}/${unit._sc_id_hash}`,
-            );
-          }
+        if (!overwrite && oldValue != null) {
+          log.info(
+            `Not overwriting ${oldValue} with ${newValue} for field ${field} in ${query.type}/${unit._sc_id_hash}`,
+          );
+          return acc;
+        }
 
-          return deepmerge(acc, set(field, newValue, {}));
-        }, {});
+        if (overwrite && oldValue != null) {
+          log.info(
+            `Overwriting ${oldValue} with ${newValue} for field ${field} in ${query.type}/${unit._sc_id_hash}`,
+          );
+        } else {
+          log.info(
+            `Merging ${newValue} for field ${field} in ${query.type}/${unit._sc_id_hash}`,
+          );
+        }
 
-        return deepmerge(memo, toMerge);
-      }, unit),
-    envelope,
-  );
+        if (newValue == null) return acc;
+
+        return deepmerge(acc, set(field, newValue, {}));
+      }, {});
+
+      return deepmerge(memo, toMerge);
+    }, unit);
+  }, envelope);
 };
 
 plugin.argv = {
