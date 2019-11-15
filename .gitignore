@@ -23,3 +23,5 @@ coverage
 *.jar
 docs/plugins
 docs/instruments
+data
+sugarcube.db
