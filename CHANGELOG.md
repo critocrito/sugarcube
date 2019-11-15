@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.33.0](https://github.com/critocrito/sugarcube/compare/v0.32.1...v0.33.0) (2019-11-15)
+
+
+### Bug Fixes
+
+* **plugin-workflow:** deep merge queries into unit ([56f5cbf](https://github.com/critocrito/sugarcube/commit/56f5cbf))
+* **test:** add missing _sc_annotations field to data generator ([08b816c](https://github.com/critocrito/sugarcube/commit/08b816c))
+
+
+### Features
+
+* **core:** set _sc_annotations on every unit ([1bfeda6](https://github.com/critocrito/sugarcube/commit/1bfeda6))
+* **plugin-fs:** extend fs_import to set _sc content fields ([39f6737](https://github.com/critocrito/sugarcube/commit/39f6737))
+* **plugin-http:** extend http_import to set _sc content fields ([1b504fc](https://github.com/critocrito/sugarcube/commit/1b504fc))
+* **plugin-tap:** add option to exclude fields from printing ([9e60fdb](https://github.com/critocrito/sugarcube/commit/9e60fdb))
+
+
+
+
+
 ## [0.32.1](https://github.com/critocrito/sugarcube/compare/v0.32.0...v0.32.1) (2019-11-10)
 
 

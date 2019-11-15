@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.33.0](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-workflow/compare/v0.32.1...v0.33.0) (2019-11-15)
+
+
+### Bug Fixes
+
+* **plugin-workflow:** deep merge queries into unit ([56f5cbf](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-workflow/commit/56f5cbf))
+
+
+
+
+
 ## [0.32.1](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-workflow/compare/v0.32.0...v0.32.1) (2019-11-10)
 
 **Note:** Version bump only for package @sugarcube/plugin-workflow

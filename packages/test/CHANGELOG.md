@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.33.0](https://github.com/critocrito/sugarcube/tree/master/packages/test/compare/v0.32.1...v0.33.0) (2019-11-15)
+
+
+### Bug Fixes
+
+* **test:** add missing _sc_annotations field to data generator ([08b816c](https://github.com/critocrito/sugarcube/tree/master/packages/test/commit/08b816c))
+
+
+
+
+
 # [0.32.0](https://github.com/critocrito/sugarcube/tree/master/packages/test/compare/v0.31.2...v0.32.0) (2019-11-09)
 
 **Note:** Version bump only for package @sugarcube/test

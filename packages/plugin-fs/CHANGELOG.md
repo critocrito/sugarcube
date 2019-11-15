@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.33.0](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-fs/compare/v0.32.1...v0.33.0) (2019-11-15)
+
+
+### Features
+
+* **plugin-fs:** extend fs_import to set _sc content fields ([39f6737](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-fs/commit/39f6737))
+
+
+
+
+
 ## [0.32.1](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-fs/compare/v0.32.0...v0.32.1) (2019-11-10)
 
 **Note:** Version bump only for package @sugarcube/plugin-fs

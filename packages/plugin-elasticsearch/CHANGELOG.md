@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.33.0](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-elasticsearch/compare/v0.32.1...v0.33.0) (2019-11-15)
+
+
+### Features
+
+* **core:** set _sc_annotations on every unit ([1bfeda6](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-elasticsearch/commit/1bfeda6))
+
+
+
+
+
 ## [0.32.1](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-elasticsearch/compare/v0.32.0...v0.32.1) (2019-11-10)
 
 **Note:** Version bump only for package @sugarcube/plugin-elasticsearch
