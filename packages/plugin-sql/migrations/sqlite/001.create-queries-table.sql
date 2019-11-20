@@ -1,0 +1,12 @@
+CREATE TABLE IF NOT EXISTS queries (
+  id INTEGER PRIMARY KEY,
+  type TEXT NOT NULL,
+  term TEXT NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  data TEXT DEFAULT '{}',
+  UNIQUE(type, term)
+);
+
+CREATE INDEX IF NOT EXISTS queries_type ON queries (type);
+CREATE INDEX IF NOT EXISTS queries_term ON queries (term);

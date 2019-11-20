@@ -1,0 +1,33 @@
+{
+  "name": "@sugarcube/plugin-sql",
+  "description": "Import and export Sugarcube data and queries from and to SQL databases.",
+  "license": "GPL-3.0",
+  "author": "Christo <christo@cryptodrunks.net>",
+  "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-sql#readme",
+  "repository": "https://github.com/critocrito/sugarcube",
+  "bugs": "https://github.com/critocrito/sugarcube/issues",
+  "version": "0.32.0",
+  "main": "_dist/index.js",
+  "dependencies": {
+    "@open-fidias/marv-better-sqlite3-driver": "^1.0.1",
+    "@sugarcube/core": "0.33.0",
+    "better-sqlite3": "^5.4.3",
+    "dashp": "^0.10.1",
+    "lodash": "^4.17.11",
+    "marv": "^3.1.0",
+    "marv-pg-driver": "^3.0.0",
+    "pg-monitor": "^1.3.1",
+    "pg-promise": "^10.2.1"
+  },
+  "keywords": [
+    "data",
+    "postgresql",
+    "sql",
+    "sqlite",
+    "sugarcube",
+    "sugarcube-data",
+    "sugarcube-plugin",
+    "sugarcube-queries",
+    "transformation"
+  ]
+}
