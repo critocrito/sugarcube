@@ -12,7 +12,7 @@ const plugin = async (envelope, {cfg, log, stats}) => {
 
   const ids = envelope.data.map(u => u._sc_id_hash);
 
-  stats.count("total", ids.length);
+  if (ids.length > 0) stats.count("total", ids.length);
 
   const [results, history] = await Elastic.Do(
     function* complement({queryByIds}) {
@@ -27,8 +27,8 @@ const plugin = async (envelope, {cfg, log, stats}) => {
 
   history.forEach(([k, meta]) => log.debug(`${k}: ${JSON.stringify(meta)}.`));
 
-  stats.count("new", ids.length - results.length);
-  stats.count("existing", results.length);
+  if (ids.length > 0) stats.count("new", ids.length - results.length);
+  if (ids.length > 0) stats.count("existing", results.length);
 
   return env.concatData(results, envelope);
 };
