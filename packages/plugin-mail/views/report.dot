@@ -11,10 +11,10 @@ Plugin {{=stat.name}} took {{=stat.took}}.
 
 ## Failures by plugin
 {{~it.report :stat}}
-Plugin {{=stat.name}} had {{=stat.failures.length}} failures.
+{{?stat.failures.length}}Plugin {{=stat.name}} had {{=stat.failures.length}} failures.
 {{~stat.failures :fail}}
  - {{=fail.term}}: {{=fail.reason}}{{~}}
-{{~}}
+{{~}}{{?}}
 
 Sincerely,
 Sugarcube

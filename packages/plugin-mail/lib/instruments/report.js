@@ -40,6 +40,9 @@ const instrument = cfg => {
             const counts = getOr({}, "counts", plugin);
             const durations = getOr({}, "durations", plugin);
 
+            // Skip the plugin in the report if no counts can be reported.
+            if (Object.keys(counts).length === 0) return;
+
             report.push({
               name: p,
               took: humanDuration(took),
@@ -53,6 +56,9 @@ const instrument = cfg => {
               failures: failures.filter(({plugin: p2}) => p2 === p),
             });
           });
+
+        // Skip the report if no counts can be reported.
+        if (report.length === 0) return;
 
         // Find the CSV file of failures to attach.
         const dataDir = get("csv.data_dir", cfg);
