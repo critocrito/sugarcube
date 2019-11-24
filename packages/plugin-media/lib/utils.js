@@ -73,11 +73,18 @@ export const random = (min, max) =>
 
 export const download = async (from, to) => {
   const resp = await fetch(from);
-  const dest = fs.createWriteStream(to);
-  resp.body.pipe(dest);
+
+  if (!resp.ok)
+    return Promise.reject(new Error(`Failed to fetch ${from}: ${resp.status}`));
+
   return new Promise((resolve, reject) => {
-    resp.body.on("end", () => resolve());
+    const dest = fs.createWriteStream(to);
+
+    resp.body.on("error", e => reject(e));
     dest.on("error", e => reject(e));
+    dest.on("finish", () => resolve());
+
+    resp.body.pipe(dest);
   });
 };
 
