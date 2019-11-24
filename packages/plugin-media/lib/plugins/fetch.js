@@ -126,6 +126,7 @@ const plugin = async (envelope, {log, cfg, stats}) => {
         const reason = `Failed to download ${media.type} to ${location}: ${e.message}. Cleaning up stale artifact.`;
         stats.fail({type: unit._sc_source, term: source, reason});
         await cleanUp(`${location}.tmp`);
+        await cleanUp(`${location}`);
 
         return null;
       }
