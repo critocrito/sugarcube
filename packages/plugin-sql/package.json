@@ -29,5 +29,8 @@
     "sugarcube-plugin",
     "sugarcube-queries",
     "transformation"
-  ]
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }
