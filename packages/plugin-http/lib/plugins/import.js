@@ -1,34 +1,63 @@
-import fetch from "node-fetch";
-import contentType from "content-type";
-import {flowP, collectP} from "dashp";
+import fs from "fs";
+import os from "os";
+import path from "path";
+import {promisify} from "util";
+import {get, snakeCase} from "lodash/fp";
+import dashp, {flowP} from "dashp";
 import {envelope as env} from "@sugarcube/core";
-import {extract, tikaMetaFields, tikaToEntity} from "@sugarcube/utils";
+import {counter, tikaToEntity} from "@sugarcube/utils";
+import {mkdirP, cleanUp} from "@sugarcube/plugin-fs";
+
+import {basicImport, hypercubeImport, urlContentType} from "../utils";
+import browser from "../browser";
+
+const mkdtemp = promisify(fs.mkdtemp);
 
 const querySource = "http_url";
 
-const urlContentType = async url => {
-  const resp = await fetch(url, {method: "HEAD"});
-  if (!resp.ok) {
-    throw new Error(`${resp.status}: ${resp.statusText}`);
-  }
-  const header = resp.headers.get("Content-Type");
-  const {type} = contentType.parse(header);
+const plugin = async (envelope, {log, cfg, stats}) => {
+  const parallel = get("http.import_parallel", cfg);
 
-  if (type.startsWith("text")) return "url";
-  if (type.startsWith("image")) return "image";
-  if (type.startsWith("video")) return "video";
-  return "document";
-};
-
-const plugin = async (envelope, {log, stats}) => {
   const queries = env.queriesByType(querySource, envelope);
+
+  let mod;
+  switch (parallel) {
+    case parallel < 1 ? parallel : null:
+      log.warn(`--http.import_parallel must be between 1 and 8. Setting to 1.`);
+      mod = "";
+      break;
+    case parallel === 1 ? parallel : null:
+      log.info(`Run a single import at a time.`);
+      mod = "";
+      break;
+    case parallel > 8 ? parallel : null:
+      log.warn(`--http.import_parallel must be between 1 and 8. Setting to 8.`);
+      mod = 8;
+      break;
+    default:
+      log.info(`Run ${parallel} imports concurrently.`);
+      mod = parallel;
+  }
+
+  const mapper = dashp[`flatmapP${mod}`];
+
+  const {browse, dispose} = await browser();
+  const tmpdir = await mkdtemp(path.join(os.tmpdir(), "sugarcube-"));
+  await mkdirP(tmpdir);
+
+  const logCounter = counter(envelope.data.length, ({cnt, total, percent}) =>
+    log.debug(`Progress: ${cnt}/${total} units (${percent}%).`),
+  );
 
   const data = await flowP(
     [
-      collectP(async url => {
+      mapper(async url => {
         stats.count("total");
 
+        let unit;
+        let media = [];
         let mediaType;
+
         try {
           mediaType = await urlContentType(url);
         } catch (e) {
@@ -36,27 +65,33 @@ const plugin = async (envelope, {log, stats}) => {
           return null;
         }
 
-        let contents = {text: null, meta: {}};
-        if (!["video"].includes(mediaType))
-          try {
-            contents = await extract(url);
-          } catch (e) {
-            stats.fail({type: "http_import", term: url, reason: e.message});
-            return null;
+        try {
+          if (mediaType === "url") {
+            // Import URLS using the hypercube model. See the readme for a
+            // link to referenced paper. Provide a location for a temporary
+            // download.
+            const target = path.join(tmpdir, `${snakeCase(url)}.html`);
+            [unit, media] = await hypercubeImport(browse, target, url);
+          } else {
+            // Images, videos and documents are imported using simply Apache Tika.
+            unit = await basicImport(url);
+            media.push({type: mediaType, term: url});
           }
-        const {text, meta} = contents;
+        } catch (e) {
+          stats.fail({type: "http_import", term: url, reason: e.message});
+          return null;
+        }
 
-        const unit = {
-          body: text == null || text === "" ? null : text.trim(),
-          ...tikaMetaFields(meta),
-        };
+        if (unit == null) return null;
 
         log.info(`Imported url ${url} as media type "${mediaType}".`);
         stats.count("success");
 
+        logCounter();
+
         return {
           _sc_id_fields: ["location"],
-          _sc_media: [{type: mediaType, term: url}],
+          _sc_media: [{type: "url", term: url}].concat(media),
           _sc_queries: [{type: querySource, term: url}],
           _sc_href: url,
           ...tikaToEntity(unit),
@@ -68,7 +103,11 @@ const plugin = async (envelope, {log, stats}) => {
           }, {}),
         };
       }),
-      rs => rs.filter(r => r !== null),
+      async rs => {
+        if (tmpdir != null) await cleanUp(tmpdir);
+        if (dispose != null) await dispose();
+        return rs.filter(r => r !== null);
+      },
     ],
     queries,
   );
@@ -76,7 +115,14 @@ const plugin = async (envelope, {log, stats}) => {
   return env.concatData(data, envelope);
 };
 
-plugin.argv = {};
+plugin.argv = {
+  "http.import_parallel": {
+    type: "number",
+    nargs: 1,
+    desc: "The number of parallel HTTP imports. Can be between 1 and 8.",
+    default: 1,
+  },
+};
 plugin.desc = "Import HTTP URI's as Sugarcube units.";
 
 export default plugin;

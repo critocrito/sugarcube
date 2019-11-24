@@ -114,7 +114,7 @@ export const extract = async (location, opts = {}) => {
   const tikaJar = path.resolve(__dirname, "../tika-app.jar");
 
   const [text, meta] = await tika(tikaJar, cfg, location);
-  return {text, meta};
+  return Object.assign({text: null, meta: {}}, {text, meta});
 };
 
 const maybeGet = keys => meta => {
