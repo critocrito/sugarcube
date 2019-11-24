@@ -6,10 +6,10 @@
   "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-googlesheets#readme",
   "repository": "https://github.com/critocrito/sugarcube",
   "bugs": "https://github.com/critocrito/sugarcube/issues",
-  "version": "0.33.0",
+  "version": "0.34.0",
   "main": "_dist/index.js",
   "dependencies": {
-    "@sugarcube/core": "^0.33.0",
+    "@sugarcube/core": "^0.34.0",
     "dashp": "^0.10.1",
     "google-auth-library": "^1.3.1",
     "googleapis": "^27.0.0",

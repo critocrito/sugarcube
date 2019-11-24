@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.34.0](https://github.com/critocrito/sugarcube/compare/v0.33.1...v0.34.0) (2019-11-24)
+
+
+### Features
+
+* **plugin-http:** import URLs using the hypercube model ([89ddee9](https://github.com/critocrito/sugarcube/commit/89ddee9))
+
+
+
+
+
 # [0.33.0](https://github.com/critocrito/sugarcube/compare/v0.32.1...v0.33.0) (2019-11-15)
 
 

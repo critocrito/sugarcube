@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.34.0](https://github.com/critocrito/sugarcube/compare/v0.33.1...v0.34.0) (2019-11-24)
+
+
+### Bug Fixes
+
+* **plugin-youtube:** parse video ids from embed urls ([c5e6dd1](https://github.com/critocrito/sugarcube/commit/c5e6dd1))
+
+
+
+
+
 # [0.33.0](https://github.com/critocrito/sugarcube/compare/v0.32.1...v0.33.0) (2019-11-15)
 
 **Note:** Version bump only for package @sugarcube/plugin-youtube

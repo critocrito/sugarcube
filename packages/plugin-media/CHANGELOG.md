@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.34.0](https://github.com/critocrito/sugarcube/compare/v0.33.1...v0.34.0) (2019-11-24)
+
+
+### Bug Fixes
+
+* **plugin-media:** cleanup all stale artefacts ([a8de96d](https://github.com/critocrito/sugarcube/commit/a8de96d))
+* **plugin-media:** stream handling of file downloads ([ed46a37](https://github.com/critocrito/sugarcube/commit/ed46a37))
+
+
+### Features
+
+* **plugin-media:** guess file type of downloads when file extension is missing ([1250cf5](https://github.com/critocrito/sugarcube/commit/1250cf5))
+
+
+
+
+
 # [0.33.0](https://github.com/critocrito/sugarcube/compare/v0.32.1...v0.33.0) (2019-11-15)
 
 **Note:** Version bump only for package @sugarcube/plugin-media

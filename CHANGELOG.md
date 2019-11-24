@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.34.0](https://github.com/critocrito/sugarcube/compare/v0.33.1...v0.34.0) (2019-11-24)
+
+
+### Bug Fixes
+
+* **plugin-media:** cleanup all stale artefacts ([a8de96d](https://github.com/critocrito/sugarcube/commit/a8de96d))
+* **plugin-media:** stream handling of file downloads ([ed46a37](https://github.com/critocrito/sugarcube/commit/ed46a37))
+* **plugin-youtube:** parse video ids from embed urls ([c5e6dd1](https://github.com/critocrito/sugarcube/commit/c5e6dd1))
+* **pluigin-elasticsearch:** only instrument counts if there is data in the pipeline ([c08bf89](https://github.com/critocrito/sugarcube/commit/c08bf89))
+
+
+### Features
+
+* **plugin-http:** import URLs using the hypercube model ([89ddee9](https://github.com/critocrito/sugarcube/commit/89ddee9))
+* **plugin-media:** guess file type of downloads when file extension is missing ([1250cf5](https://github.com/critocrito/sugarcube/commit/1250cf5))
+* **plugin-sql:** add plugins to import and export queries ([8edfe47](https://github.com/critocrito/sugarcube/commit/8edfe47))
+
+
+
+
+
 ## [0.33.1](https://github.com/critocrito/sugarcube/compare/v0.33.0...v0.33.1) (2019-11-15)
 
 
