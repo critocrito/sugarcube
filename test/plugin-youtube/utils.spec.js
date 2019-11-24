@@ -11,6 +11,7 @@ import {
 const videoUrls = [
   "https://www.youtube.com/watch?v=tcCBtSjKEzI",
   "http://youtu.be/o0tjic523cg",
+  "https://www.youtube.com/embed/iq_XLq5ONtE?version",
 ];
 
 const notVideoUrls = [
@@ -33,6 +34,16 @@ describe("query format parsing", () => {
 
   it("can parse the video id from a video url", () => {
     const videoUrl = "https://www.youtube.com/watch?v=gui_SE8rJUM";
+    const videoId = "gui_SE8rJUM";
+
+    const expected = videoId;
+    const result = parseYoutubeVideo(videoUrl);
+
+    result.should.equal(expected);
+  });
+
+  it("can parse the video id from an embedded video url", () => {
+    const videoUrl = "https://www.youtube.com/embed/gui_SE8rJUM?version";
     const videoId = "gui_SE8rJUM";
 
     const expected = videoId;
