@@ -13,6 +13,7 @@
     "@sugarcube/plugin-fs": "^0.33.0",
     "@sugarcube/utils": "^0.33.0",
     "dashp": "^0.10.1",
+    "file-type": "^12.4.0",
     "gm": "^1.23.0",
     "is-ip": "^3.1.0",
     "lodash": "^4.17.4",

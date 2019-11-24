@@ -1,6 +1,7 @@
 import fs from "fs";
 import {retry} from "dashp";
 import fetch from "node-fetch";
+import fileType from "file-type";
 import {runCmd} from "@sugarcube/utils";
 
 export const youtubeDl = (cmd, videoFormat, href, target, sourceIp) => {
@@ -78,4 +79,12 @@ export const download = async (from, to) => {
     resp.body.on("end", () => resolve());
     dest.on("error", e => reject(e));
   });
+};
+
+export const guessFileType = async location => {
+  const read = fs.createReadStream(location);
+  const {fileType: ft} = await fileType.stream(read);
+  read.destroy();
+  if (ft != null && ft.ext) return `.${ft.ext}`;
+  return "";
 };

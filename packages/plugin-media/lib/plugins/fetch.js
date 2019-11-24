@@ -13,7 +13,7 @@ import {
 } from "@sugarcube/plugin-fs";
 import {counter} from "@sugarcube/utils";
 
-import {download} from "../utils";
+import {guessFileType, download} from "../utils";
 
 const {sToA} = utils;
 
@@ -110,6 +110,18 @@ const plugin = async (envelope, {log, cfg, stats}) => {
       try {
         await download(source, `${location}.tmp`);
         await mvP(`${location}.tmp`, location);
+
+        // If a download has no file extension, we try to guess it and rename
+        // the location.
+        if (extname(location) === "") {
+          // ext can either be the extension, e.g. .png, or an empty string.
+          const ext = await guessFileType(location);
+
+          log.debug(`Guessing '${ext}' file extension for ${location}.`);
+          const extLocation = `${location}${ext}`;
+          await mvP(location, extLocation);
+          location = extLocation;
+        }
       } catch (e) {
         const reason = `Failed to download ${media.type} to ${location}: ${e.message}. Cleaning up stale artifact.`;
         stats.fail({type: unit._sc_source, term: source, reason});
