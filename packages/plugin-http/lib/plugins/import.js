@@ -2,9 +2,9 @@ import fs from "fs";
 import os from "os";
 import path from "path";
 import {promisify} from "util";
-import {get, snakeCase} from "lodash/fp";
+import {get} from "lodash/fp";
 import dashp, {flowP} from "dashp";
-import {envelope as env} from "@sugarcube/core";
+import {envelope as env, crypto} from "@sugarcube/core";
 import {counter, tikaToEntity} from "@sugarcube/utils";
 import {mkdirP, cleanUp} from "@sugarcube/plugin-fs";
 
@@ -70,7 +70,7 @@ const plugin = async (envelope, {log, cfg, stats}) => {
             // Import URLS using the hypercube model. See the readme for a
             // link to referenced paper. Provide a location for a temporary
             // download.
-            const target = path.join(tmpdir, `${snakeCase(url)}.html`);
+            const target = path.join(tmpdir, `${crypto.uid(url)}.html`);
             [unit, media] = await hypercubeImport(browse, target, url);
           } else {
             // Images, videos and documents are imported using simply Apache Tika.
