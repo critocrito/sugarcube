@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.34.1](http://critocrito/sugarcube/compare/v0.34.0...v0.34.1) (2020-01-29)
+
+
+### Bug Fixes
+
+* **plugin-http:** avoid ENAMETOOLONG error for temporary website downloads ([95647de](http://critocrito/sugarcube/commits/95647de))
+
+
+
+
+
 # [0.34.0](https://github.com/critocrito/sugarcube/compare/v0.33.1...v0.34.0) (2019-11-24)
 
 
