@@ -58,6 +58,7 @@ const checkAndFilterVideos = async (envelope, {cfg, log, stats}) => {
         }
 
         stats.count("existing", units.length - missing.length);
+        stats.count("missing", missing.length);
         log.info(
           `Fetch details for ${units.length} videos: ${missing.length} failed.`,
         );

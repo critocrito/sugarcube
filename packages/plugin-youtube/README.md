@@ -52,13 +52,16 @@ or setting it in the JSON configuration file:
 Fetch a list of videos from a channel. A query must be configured to supply one or more channel ids.
 
 ```json
-[{
-  type: "youtube_channel",
-  term: "UCJkMlOu7faDgqh4PfzbpLdg"
-}, {
-  type: "youtube_channel",
-  term: "https://www.youtube.com/channel/UC_QIfHvN9auy2CoOdSfMWDw/featured"
-}]
+[
+  {
+    "type": "youtube_channel",
+    "term": "UCJkMlOu7faDgqh4PfzbpLdg"
+  },
+  {
+    "type": "youtube_channel",
+    "term": "https://www.youtube.com/channel/UC_QIfHvN9auy2CoOdSfMWDw/featured"
+  }
+]
 ```
 
 The channel query can be provided either as an id (e.g. `UC_QIfHvN9auy2CoOdSfMWDw`) or as the full URL to the channel (e.g. `https://www.youtube.com/channel/UC_QIfHvN9auy2CoOdSfMWDw/featured`). The last segment of the channel URL (in this case `featured`) is optional. The relevant part is the `/channel/<channel-id>` part of the URL.
@@ -86,7 +89,7 @@ Other Possible config values are:
   "youtube": {
     "published_before": "2017-06-22",
     "published_after": "2017-06-22",
-    "past_days": 30,
+    "past_days": 30
   }
 }
 ```
@@ -140,8 +143,11 @@ This plugin doesn't collect missing videos as failures, but it counts the metric
 **Metrics:**
 
 - `total`: The total number of Youtube videos queried.
-- `fail`: The number of videos that failed.
+- `fail`: The number of videos that failed. This metric is tracked continuously
+  as it is detected.
 - `success`: The number of videos that exist.
+- `missing`: The number of videos that failed. This metric is emitted once at
+  the end of the plugin containing the total number of failed videos.
 
 ## License
 
