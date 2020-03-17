@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.35.0](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-sec/compare/v0.34.1...v0.35.0) (2020-03-17)
+
+**Note:** Version bump only for package @sugarcube/plugin-sec
+
+
+
+
+
 # [0.34.0](https://github.com/critocrito/sugarcube/tree/master/packages/plugin-sec/compare/v0.33.1...v0.34.0) (2019-11-24)
 
 **Note:** Version bump only for package @sugarcube/plugin-sec

@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.35.0](http://critocrito/sugarcube/compare/v0.34.1...v0.35.0) (2020-03-17)
+
+
+### Bug Fixes
+
+* **utils:** bump Tika version to 1.23 ([131a468](http://critocrito/sugarcube/commits/131a468)), closes [#28](http://critocrito/sugarcube/issues/28)
+
+
+### Features
+
+* **plugin-youtube:** tracked missing youtube videos as a separate metric ([e1e8181](http://critocrito/sugarcube/commits/e1e8181))
+
+
+
+
+
 ## [0.34.1](http://critocrito/sugarcube/compare/v0.34.0...v0.34.1) (2020-01-29)
 
 

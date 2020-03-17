@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.35.0](https://github.com/critocrito/sugarcube/tree/master/packages/utils/compare/v0.34.1...v0.35.0) (2020-03-17)
+
+
+### Bug Fixes
+
+* **utils:** bump Tika version to 1.23 ([131a468](https://github.com/critocrito/sugarcube/tree/master/packages/utils/commit/131a468)), closes [#28](https://github.com/critocrito/sugarcube/tree/master/packages/utils/issues/28)
+
+
+
+
+
 # [0.34.0](https://github.com/critocrito/sugarcube/tree/master/packages/utils/compare/v0.33.1...v0.34.0) (2019-11-24)
 
 

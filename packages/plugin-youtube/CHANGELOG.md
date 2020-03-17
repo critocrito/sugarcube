@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.35.0](https://github.com/critocrito/sugarcube/compare/v0.34.1...v0.35.0) (2020-03-17)
+
+
+### Features
+
+* **plugin-youtube:** tracked missing youtube videos as a separate metric ([e1e8181](https://github.com/critocrito/sugarcube/commit/e1e8181))
+
+
+
+
+
 # [0.34.0](https://github.com/critocrito/sugarcube/compare/v0.33.1...v0.34.0) (2019-11-24)
 
 
