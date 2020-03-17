@@ -8,7 +8,7 @@ const ProgressBar = require("progress");
 const accessP = promisify(fs.access);
 const unlinkP = promisify(fs.unlink);
 
-const tikaVersion = "1.22";
+const tikaVersion = "1.23";
 const tikaUrl = `https://www-eu.apache.org/dist/tika/tika-app-${tikaVersion}.jar`;
 const sha512 =
   "64975d79211bc5c37f866abb2f4077687eff55b761567f7ad0b36a221a2ae3457b748fac9b288a31a641f37dfc8679260413f972b5b60cf6deb6721329cad001";
