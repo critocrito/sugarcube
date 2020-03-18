@@ -11,7 +11,6 @@ class Queries {
     const {createQuery} = this.queries;
     const stmt = this.db.prepare(createQuery);
     this.db.transaction(qs => {
-      // eslint-disable-next-line no-restricted-syntax
       for (const {type, term, ...data} of qs)
         stmt.run({
           type,

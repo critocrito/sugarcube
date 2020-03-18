@@ -40,7 +40,6 @@ const plugin = async (envelope, {cfg, log, stats}) => {
   return Elastic.Do(
     function* queryData({query}) {
       let results = [];
-      // eslint-disable-next-line no-restricted-syntax
       for (let body of bodies) {
         if (includeFields)
           body = merge(body, {

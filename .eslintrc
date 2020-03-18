@@ -19,6 +19,7 @@
     "arrow-parens": "off",
     "object-curly-spacing": "off",
     "no-console": "warn",
+    "no-restricted-syntax": "off",
     "prettier/prettier": [
       "error",
       {
