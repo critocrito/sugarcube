@@ -21,7 +21,7 @@ Fetch the tweets of a twitter user account.
 - `twitter.access_token_key`
 - `twitter.access_token_secret`
 - `twitter.tweet_count`
-- `twitter.retweets**
+- `twitter.retweets\*\*
 
 **Metrics:**
 
@@ -39,7 +39,7 @@ Fetch individual tweets by the Tweet ID.
 - `twitter.consumer_key`
 - `twitter.consumer_secret`
 - `twitter.access_token_key`
-- `twitter.access_token_secret**
+- `twitter.access_token_secret\*\*
 
 **Metrics:**
 
@@ -89,6 +89,29 @@ search for tweets. To search for a specific hashtag, prefix the query with
 - `twitter.geocode`: Limit tweets to the specified `langitude,latitude,radius`
   triplet, e.g. 37.781157,-122.398720,3km. The radius can be either specified
   as **km** or as **mi**.
+
+### `twitter_filter_failing`
+
+This plugin verifies against the Twitter API that each unit that is a Tweet
+exists, and returns all failing Tweets as units in the envelope.
+
+This plugin doesn't collect missing tweets as failures, but it counts the metric.
+
+**Configuration:**
+
+- `twitter.consumer_key`
+- `twitter.consumer_secret`
+- `twitter.access_token_key`
+- `twitter.access_token_secret`
+
+**Metrics:**
+
+- `total`: The total number of Twitter tweets queried.
+- `fail`: The number of tweets that failed. This metric is tracked continuously
+  as it is detected.
+- `success`: The number of tweets that exist.
+- `missing`: The number of tweets that failed. This metric is emitted once at
+  the end of the plugin containing the total number of failed tweets.
 
 ## License
 

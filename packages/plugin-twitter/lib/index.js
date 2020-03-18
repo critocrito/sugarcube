@@ -4,6 +4,7 @@ import followersPlugin from "./followers";
 import friendsPlugin from "./friends";
 import searchPlugin from "./search";
 import tweetsPlugin from "./plugins/tweets";
+import filterFailingPlugin from "./plugins/filter-failing";
 import {
   parseTweetId,
   parseTwitterUser,
@@ -19,6 +20,7 @@ const plugins = {
   twitter_friends: friendsPlugin,
   twitter_search: searchPlugin,
   twitter_tweets: tweetsPlugin,
+  twitter_filter_failing: filterFailingPlugin,
 };
 
 const recursivePlugins = [followersPlugin, friendsPlugin];
