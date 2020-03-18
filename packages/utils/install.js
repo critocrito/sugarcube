@@ -9,9 +9,9 @@ const accessP = promisify(fs.access);
 const unlinkP = promisify(fs.unlink);
 
 const tikaVersion = "1.23";
-const tikaUrl = `https://www-eu.apache.org/dist/tika/tika-app-${tikaVersion}.jar`;
+const tikaUrl = `https://archive.apache.org/dist/tika/tika-app-${tikaVersion}.jar`;
 const sha512 =
-  "64975d79211bc5c37f866abb2f4077687eff55b761567f7ad0b36a221a2ae3457b748fac9b288a31a641f37dfc8679260413f972b5b60cf6deb6721329cad001";
+  "b31b10cb3cd2b5e15a0798f2119f4ae5435e9e4af82619cf1a64121415035bc73a51923a8144c9f5245492a093a9630f18eeee4483d896672a9dfab80b203981";
 
 const logPolitely = toBeLogged => {
   const logLevel = process.env.npm_config_loglevel;
