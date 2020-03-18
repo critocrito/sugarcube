@@ -27,26 +27,40 @@ const urlify = curry((resource, params) => {
 
 const getJson = url => getAsync(url).then(r => JSON.parse(r.body));
 
-const page = (action, params, results = []) =>
-  action(params).then(r => {
-    const items = concat(results, r.items);
-    if (r.nextPageToken) {
-      return page(action, merge(params, {pageToken: r.nextPageToken}), items);
-    }
-    return items;
-  });
+const handleError = async (action, params) => {
+  const {error, ...resp} = await action(params);
+
+  if (error != null) {
+    throw new Error(error.message);
+  }
+
+  return resp;
+};
+
+const page = async (action, params, results = []) => {
+  const {items, nextPageToken} = await handleError(action, params);
+
+  if (nextPageToken) {
+    return page(
+      action,
+      merge(params, {pageToken: nextPageToken}),
+      concat(results, items),
+    );
+  }
+
+  return concat(results, items);
+};
 
 const search = flow([urlify("search"), getJson]);
 const videos = flow([urlify("videos"), getJson]);
 const channels = flow([urlify("channels"), getJson]);
 const playlistItems = flow([urlify("playlistItems"), getJson]);
 
-const getplaylistid = (action, params) =>
-  action(params).then(r => {
-    if (r.items.length > 0)
-      return r.items[0].contentDetails.relatedPlaylists.uploads;
-    return null;
-  });
+const getplaylistid = async (action, params) => {
+  const {items} = await handleError(action, params);
+  if (items.length > 0) return items[0].contentDetails.relatedPlaylists.uploads;
+  return null;
+};
 
 export const channelSearch = curry((key, range, channelId) => {
   const parts = ["id", "snippet"];
@@ -66,7 +80,7 @@ export const channelExists = curry(async (key, id) => {
     id,
     key,
   };
-  const {pageInfo} = await channels(params);
+  const {pageInfo} = await handleError(channels, params);
   return pageInfo.totalResults > 0;
 });
 
@@ -122,22 +136,18 @@ export const videosListCheck = curry((key, ids) => {
   return page(videos, params);
 });
 
-export const videoChannel = curry((key, range, id) =>
-  channelSearch(key, range, id).then(rs => {
-    const ids = map(property("id.videoId"), rs);
-    // There is a limit on how many video ids can be queried at once.
-    return flatmapP(videosList(key), chunk(50, ids));
-  }),
-);
+export const videoChannel = curry(async (key, range, id) => {
+  const resp = await channelSearch(key, range, id);
+  const ids = map(property("id.videoId"), resp);
+  // There is a limit on how many video ids can be queried at once.
+  return flatmapP(videosList(key), chunk(50, ids));
+});
 
-export const videoChannelPlaylist = curry((key, id) =>
-  channelToPlaylist(key, id)
-    .then(playlistId => {
-      if (playlistId != null) return playlistVideos(key, playlistId);
-      return [];
-    })
-    .then(flatten),
-);
+export const videoChannelPlaylist = curry(async (key, id) => {
+  const playlistId = await channelToPlaylist(key, id);
+  if (playlistId != null) return flatten(playlistVideos(key, playlistId));
+  return [];
+});
 
 export default {
   channelSearch,

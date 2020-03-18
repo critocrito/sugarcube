@@ -30,7 +30,16 @@ const fetchVideos = async (envelope, {cfg, log, stats}) => {
         stats.count("total", qs.length);
         log.info(`Fetch details for ${qs.length} videos.`);
 
-        const results = await videosList(key, qs);
+        let results = [];
+        let failMsg = "Doesn't exist";
+
+        try {
+          results = await videosList(key, qs);
+          stats.count("success", results.length);
+        } catch (e) {
+          failMsg = e.message;
+        }
+
         if (results.length !== qs.length) {
           const missing = qs.reduce(
             (memo, q) =>
@@ -38,16 +47,14 @@ const fetchVideos = async (envelope, {cfg, log, stats}) => {
                 ? memo.concat({
                     type: querySource,
                     term: q,
-                    reason: "Doesn't exist.",
+                    reason: failMsg,
                   })
                 : memo,
             [],
           );
           missing.forEach(stats.fail);
         }
-
         qs.forEach(logCounter);
-        stats.count("success", results.length);
 
         // Merge the query into the data unit.
         return results.map(r => {

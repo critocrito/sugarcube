@@ -33,9 +33,18 @@ const checkAndFilterVideos = async (envelope, {cfg, log, stats}) => {
           [],
         );
 
-        const results = await videosListCheck(key, ids);
-
         const missing = [];
+        const errors = [];
+        let results = [];
+        let isError = false;
+        let failMsg = "Doesn't exist.";
+
+        try {
+          results = await videosListCheck(key, ids);
+        } catch (e) {
+          isError = true;
+          failMsg = e.message;
+        }
 
         if (results.length !== units.length) {
           units.forEach(unit => {
@@ -43,11 +52,16 @@ const checkAndFilterVideos = async (envelope, {cfg, log, stats}) => {
               .filter(({type}) => type === "video")
               .forEach(({term}) => {
                 const i = parseYoutubeVideo(term);
+
                 if (results.find(({id}) => id === i) == null) {
-                  missing.push(unit);
+                  if (isError) {
+                    errors.push(unit);
+                  } else {
+                    missing.push(unit);
+                  }
                   stats.fail({
                     type: "youtube_video",
-                    reason: "Doesn't exist",
+                    reason: failMsg,
                     term,
                   });
                 }
@@ -57,7 +71,7 @@ const checkAndFilterVideos = async (envelope, {cfg, log, stats}) => {
           units.forEach(logCounter);
         }
 
-        stats.count("existing", units.length - missing.length);
+        stats.count("existing", units.length - missing.length - errors.length);
         stats.count("missing", missing.length);
         log.info(
           `Fetch details for ${units.length} videos: ${missing.length} failed.`,

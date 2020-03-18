@@ -1,5 +1,5 @@
 import {size, get, pickBy, identity} from "lodash/fp";
-import {flowP, tapP} from "dashp";
+import {flowP, tapP, caughtP} from "dashp";
 import {plugin as p, envelope as env} from "@sugarcube/core";
 import {counter} from "@sugarcube/utils";
 import parse from "date-fns/parse";
@@ -61,13 +61,25 @@ const listChannel = (envelope, {cfg, log, stats}) => {
         tapP(() => stats.count("total")),
         parseYoutubeChannel,
         async q => {
-          const exists = await channelExists(key, q);
+          let exists;
+
+          try {
+            exists = await channelExists(key, q);
+          } catch (e) {
+            stats.fail({type: querySource, term: q, reason: e.message});
+            return [];
+          }
+
           if (!exists)
             stats.fail({type: querySource, term: q, reason: "Doesn't exist."});
 
           return exists
             ? flowP([
                 op,
+                caughtP(e => {
+                  stats.fail({type: querySource, term: q, reason: e.message});
+                  return [];
+                }),
                 tapP(ds => {
                   const total = size(ds);
                   log.info(`Received ${total} videos for ${query}.`);
