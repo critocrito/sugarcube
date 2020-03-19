@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.36.1](https://github.com/critocrito/sugarcube/compare/v0.36.0...v0.36.1) (2020-03-19)
+
+
+### Bug Fixes
+
+* **plugin-twitter:** don't throw if tweet id is undefined ([03cd3c5](https://github.com/critocrito/sugarcube/commit/03cd3c5))
+
+
+
+
+
 # [0.36.0](https://github.com/critocrito/sugarcube/compare/v0.35.0...v0.36.0) (2020-03-19)
 
 
