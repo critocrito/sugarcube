@@ -6,13 +6,13 @@
   "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/cli#readme",
   "repository": "https://github.com/critocrito/sugarcube",
   "bugs": "https://github.com/critocrito/sugarcube/issues",
-  "version": "0.35.0",
+  "version": "0.36.0",
   "main": "_dist/index.js",
   "bin": {
     "sugarcube": "_dist/sugarcube.js"
   },
   "dependencies": {
-    "@sugarcube/core": "^0.35.0",
+    "@sugarcube/core": "^0.36.0",
     "date-fns": "^2.2.1",
     "dotenv": "^4.0.0",
     "lodash": "^4.17.4",

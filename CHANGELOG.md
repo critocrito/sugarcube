@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.36.0](http://critocrito/sugarcube/compare/v0.35.0...v0.36.0) (2020-03-19)
+
+
+### Bug Fixes
+
+* **utils:** depend on Tika 1.24 and fix download url ([4298672](http://critocrito/sugarcube/commits/4298672))
+
+
+### Features
+
+* **plugin-twitter:** check for failing twitter tweets ([599e9ee](http://critocrito/sugarcube/commits/599e9ee))
+
+
+
+
+
 # [0.35.0](http://critocrito/sugarcube/compare/v0.34.1...v0.35.0) (2020-03-17)
 
 
