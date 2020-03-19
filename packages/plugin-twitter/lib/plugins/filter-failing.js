@@ -30,8 +30,30 @@ const plugin = async (envelope, {log, cfg, stats}) => {
 
     const ids = flow([
       reduce((memo, unit) => {
-        const id = getAll(["_sc_id", "cid.online_link"], unit);
-        return memo.concat(parseTweetId(id));
+        const id = getAll(["_sc_id", "tweet_id"], unit);
+        if (id == null) {
+          stats.fail({
+            type: "twitter_tweet",
+            term: unit._sc_id_hash,
+            reason: `Twitter id is invalid (_sc_id: ${get(
+              "_sc_id",
+              unit,
+            )}, tweet_id: ${get("tweet_id", unit)})`,
+          });
+          return memo;
+        }
+        try {
+          return memo.concat(parseTweetId(id));
+        } catch (e) {
+          console.log(unit);
+          log.error(`Failed to parse twitter id of unit ${unit._sc_id_hash}.`);
+          stats.fail({
+            type: "twitter_tweet",
+            term: unit._sc_id_hash,
+            reason: e.message,
+          });
+          return memo;
+        }
       }, []),
       compact,
     ])(units);

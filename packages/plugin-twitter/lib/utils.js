@@ -14,6 +14,7 @@ import {
   compact,
   flatten,
   keys,
+  isString,
 } from "lodash/fp";
 import {URL} from "url";
 import {foldP, delay} from "dashp";
@@ -139,6 +140,7 @@ export const isTwitterFeed = url => {
 };
 
 export const parseTweetId = id => {
+  if (!isString(id)) return null;
   if (id.startsWith("http")) {
     const u = new URL(id);
     return u.pathname.split("/").filter(x => x !== "")[2];

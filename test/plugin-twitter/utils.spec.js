@@ -46,6 +46,13 @@ describe("query format parsing", () => {
     result.should.equal(expected);
   });
 
+  it("returns null when tweet id is undefined", () => {
+    const tweetId = undefined;
+    const result = parseTweetId(tweetId);
+    // eslint-disable-next-line no-unused-expressions, eqeqeq
+    (result == null).should.true;
+  });
+
   it("can parse a twitter user name", () => {
     const userName = "my_user";
     const expected = userName;
