@@ -45,7 +45,6 @@ const plugin = async (envelope, {log, cfg, stats}) => {
         try {
           return memo.concat(parseTweetId(id));
         } catch (e) {
-          console.log(unit);
           log.error(`Failed to parse twitter id of unit ${unit._sc_id_hash}.`);
           stats.fail({
             type: "twitter_tweet",
