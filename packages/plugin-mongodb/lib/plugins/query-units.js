@@ -13,12 +13,7 @@ const queryDb = async (envelope, {log}) => {
 
   for (const q of queries) {
     // eslint-disable-next-line no-await-in-loop
-    const results = await db.findMany(db.unitsC, q, {
-      _sc_id_hash: 1,
-      _sc_source: 1,
-      _sc_id: 1,
-      tweet_id: 1,
-    });
+    const results = await db.findMany(db.unitsC, q, {});
     log.info(`Queried ${size(results)} units for ${JSON.stringify(q)}.`);
     data = data.concat(results);
   }
