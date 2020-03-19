@@ -6,7 +6,7 @@
   "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-mongodb#readme",
   "repository": "https://github.com/critocrito/sugarcube",
   "bugs": "https://github.com/critocrito/sugarcube/issues",
-  "version": "0.36.1",
+  "version": "0.36.2",
   "main": "_dist/index.js",
   "dependencies": {
     "@sugarcube/core": "^0.36.0",

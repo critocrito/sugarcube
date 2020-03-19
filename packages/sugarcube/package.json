@@ -4,7 +4,7 @@
   "license": "GPL-3.0",
   "author": "Christo <christo@cryptodrunks.net>",
   "repository": "https://github.com/critocrito/sugarcube/tree/master/packages/sugarcube",
-  "version": "0.36.1",
+  "version": "0.36.2",
   "main": "_dist/index.js",
   "dependencies": {
     "@sugarcube/cli": "^0.36.0",
@@ -17,7 +17,7 @@
     "@sugarcube/plugin-googlesheets": "^0.36.0",
     "@sugarcube/plugin-http": "^0.36.0",
     "@sugarcube/plugin-media": "^0.36.0",
-    "@sugarcube/plugin-mongodb": "^0.36.1",
+    "@sugarcube/plugin-mongodb": "^0.36.2",
     "@sugarcube/plugin-tap": "^0.36.0",
     "@sugarcube/plugin-twitter": "^0.36.1",
     "@sugarcube/plugin-workflow": "^0.36.0",

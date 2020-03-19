@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.36.2](https://github.com/critocrito/sugarcube/compare/v0.36.1...v0.36.2) (2020-03-19)
+
+
+### Bug Fixes
+
+* **plugin-mongodb:** remove projections when querying units ([61a8c0c](https://github.com/critocrito/sugarcube/commit/61a8c0c))
+
+
+
+
+
 ## [0.36.1](https://github.com/critocrito/sugarcube/compare/v0.36.0...v0.36.1) (2020-03-19)
 
 **Note:** Version bump only for package @sugarcube/plugin-mongodb
