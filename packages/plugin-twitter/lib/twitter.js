@@ -38,8 +38,10 @@ const apiErrors = curry((log, user, e) => {
 });
 
 export const parseApiErrors = e => {
-  if (e[0] && e[0].code === 34) return e[0].message;
-  return e.message;
+  if (e[0] && e[0].message != null) return e[0].message;
+  if (e[0]) return JSON.stringify(e[0]);
+  if (e.message != null) return e.message;
+  return JSON.stringify(e);
 };
 
 export const tweets = curry((cfg, tweetIds) => {
