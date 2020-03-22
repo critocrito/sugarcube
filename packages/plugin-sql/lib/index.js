@@ -15,6 +15,8 @@ import queriesImport from "./plugins/queries-import";
 import instrument from "./instruments/instrument";
 import {assertCfgOptions} from "./assertions";
 
+import {connectPostgres, connectSqlite} from "./db";
+
 const {liftManyA2} = plugin;
 
 const assertEngine = assertCfgOptions("sql.engine", ["sqlite", "postgres"]);
@@ -104,4 +106,4 @@ forEach(p => {
   );
 }, queryPlugins);
 
-export default {plugins, instruments};
+export default {plugins, instruments, connectSqlite, connectPostgres};
