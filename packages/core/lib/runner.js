@@ -98,7 +98,7 @@ const runner = opts => {
   const events = new EventEmitter();
   const ts = now();
   const seed = generateSeed(8);
-  const marker = uid(seed, ts);
+  const marker = config.marker == null ? uid(seed, ts) : config.marker;
   const stats = instrument(runStats, {events});
   const cache = state(runCache);
   let endEarly = false;

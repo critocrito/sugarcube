@@ -123,6 +123,11 @@ const yargs = require("yargs")
   .describe("C", "Location of the cache file.")
   .option("name")
   .describe("name", "A human friendly name for this pipeline.")
+  .option("M")
+  .nargs("M", 1)
+  .string("M")
+  .alias("M", "marker")
+  .describe("M", "Provide a run marker instead of generating a new one.")
   .options("help-details")
   .describe("help-details", "List options for a single plugin or instrument.")
   .alias("H", "help-details")
@@ -274,6 +279,7 @@ const argvOmit = [
   "d",
   "D",
   "I",
+  "M",
   "instruments",
   "features",
   "list-features",
