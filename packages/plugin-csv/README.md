@@ -105,6 +105,8 @@ Export failures to a CSV file. The name of the file is `<data-dir>/failed-stats-
 - `csv.delimiter`: Specify the csv delimiter. Defaults to `,`.
 - `csv.data_dir`: Specify the directory location to write the file to. Defaults to `./data`.
 - `csv.label`: Specify an additional label to add to the file name of the exported CSV file.
+- `csv.append`: Append failures to a CSV file if that file already exists. The
+  default behavior is to overwrite any CSV file if it has the same name.
 
 **Example:**
 
@@ -114,18 +116,12 @@ sugarcube -I csv_failures_file --csv.data_dir ./csv -p youtube_channel -c config
 
 ```json
 {
-  "instruments": [
-    "csv_failures_file"
-  ],
-  "plugins": [
-    "youtube_channel"
-  ],
+  "instruments": ["csv_failures_file"],
+  "plugins": ["youtube_channel"],
   "csv": {
     "data_dir": "./csv"
   },
-  "queries": [
-    {"type": "youtube_channel", "term": "non-existing"}
-  ]
+  "queries": [{"type": "youtube_channel", "term": "non-existing"}]
 }
 ```
 

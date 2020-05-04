@@ -7,11 +7,29 @@ const instrument = cfg => {
   const dataDir = get("csv.data_dir", cfg);
   const delimiter = get("csv.delimiter", cfg);
   const label = get("csv.label", cfg);
+  const appendMode = get("csv.append", cfg);
+
+  const columns = ["type", "term", "reason", "plugin"];
 
   let file = filename => {
     if (filename == null) return null;
     if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir);
-    const writeStream = fs.createWriteStream(filename);
+    const flags = appendMode ? "a" : "w";
+
+    let writeStream;
+
+    if (appendMode) {
+      try {
+        fs.accessSync(filename);
+        writeStream = fs.createWriteStream(filename, {flags});
+      } catch (err) {
+        writeStream = fs.createWriteStream(filename, {flags});
+        writeStream.write(`${columns.join(delimiter)}\n`);
+      }
+    } else {
+      writeStream = fs.createWriteStream(filename, {flags});
+      writeStream.write(`${columns.join(delimiter)}\n`);
+    }
 
     // Memoize the write stream;
     file = () => writeStream;
@@ -22,7 +40,7 @@ const instrument = cfg => {
   let csvWriter = filename => {
     if (filename == null) return null;
     const writeStream = file(filename);
-    const csv = stringify({header: true, delimiter});
+    const csv = stringify({header: false, columns, delimiter});
     csv.pipe(writeStream);
 
     // Memoize the CSV writer.
@@ -64,6 +82,11 @@ instrument.argv = {
     type: "string",
     nargs: 1,
     desc: "Add a label to the export file name.",
+  },
+  "csv.append": {
+    type: "boolean",
+    default: false,
+    desc: "Append to a CSV file rather than overwrite.",
   },
 };
 
