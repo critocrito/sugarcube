@@ -31,13 +31,13 @@ to the screen.
 
 - `tap.limit` :: Limit the output to X data units.
 
-   Example: Print only 5 units of data.
+  Example: Print only 5 units of data.
 
-   `$(npm bin)/sugarcube -c cfg.json -p twitter_feed,tap_printf --tap.limit 5`
+  `$(npm bin)/sugarcube -c cfg.json -p twitter_feed,tap_printf --tap.limit 5`
 
 - `tap.exclude` :: Exclude those fields from printing.
 
-   `$(npm bin)/sugarcube -c cfg.json -p http_import,tap_printf --tap.exclude body,_sc_body`
+  `$(npm bin)/sugarcube -c cfg.json -p http_import,tap_printf --tap.exclude body,_sc_body`
 
 ### `tap_writef`
 
@@ -51,12 +51,16 @@ Write the data part of the envelope to a file.
 
 - `tap.limit` :: Limit the output to N data units.
 
-   Example: Print only 5 units of data.
+  Example: Print only 5 units of data.
 
-   `$(npm bin)/sugarcube -c cfg.json -p twitter_feed,tap_writef --tap.limit 5`
+  `$(npm bin)/sugarcube -c cfg.json -p twitter_feed,tap_writef --tap.limit 5`
 
 - `tap.filename` :: Specify the name of the output file. Defaults to
   `data-<marker>.json`.
+
+- `tap.chunk_size` :: Split the data into multiple chunks and write each chunk
+  into it's own file. The file name is based on `tap.filename` but the chunk id
+  is injected into the filename.
 
 ## License
 
