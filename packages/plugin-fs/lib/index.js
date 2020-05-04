@@ -1,4 +1,5 @@
 import importPlugin from "./plugins/import";
+import fromJsonPlugin from "./plugins/from-json";
 import {
   unfold,
   mkdirP,
@@ -12,6 +13,7 @@ import {
 
 export const plugins = {
   fs_import: importPlugin,
+  fs_from_json: fromJsonPlugin,
 };
 
 export * from "./api";

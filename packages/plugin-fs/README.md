@@ -30,6 +30,26 @@ sugarcube -Q glob_pattern:path/to/files/** -p fs_import
 - `fail`: The number of files that failed to import.
 - `success`: The number files that succeeded to import.
 
+### `fs_from_json`
+
+The query type is `glob_pattern`. It expands the glob pattern and import each file as a JSON file. The contents of the JSON files are imported as units of data.
+
+**Example:**
+
+```shell
+sugarcube -Q glob_pattern:path/to/files/*.json -p fs_from_json
+```
+
+**Configuration:**
+
+This plugin offers no configuration.
+
+**Metrics:**
+
+- `total`: The total number of units imported.
+- `fail`: The number of files that failed to import.
+- `success`: The number of units that succeeded to import.
+
 ## API
 
 ### `unfold`
@@ -40,7 +60,7 @@ Unfold a glob pattern into a list of file objects.
 
 **Parameters**
 
--   `pattern` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A glob file pattern.
+- `pattern` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** A glob file pattern.
 
 Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)>>** A list of file objects. Contains
 location, sha256 and md5 sums.
