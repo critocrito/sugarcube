@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.37.0](http://critocrito/sugarcube/compare/v0.36.2...v0.37.0) (2020-05-04)
+
+
+### Bug Fixes
+
+* **plugin-twitter:** improve api error parsing ([3b10e27](http://critocrito/sugarcube/commits/3b10e27))
+* **plugin-twitter:** remove unneded log statement ([d48637f](http://critocrito/sugarcube/commits/d48637f))
+
+
+### Features
+
+* **core:** provide a marker for a run rather than generating one ([9a2692b](http://critocrito/sugarcube/commits/9a2692b))
+* **plugin-csv:** add flag to append failure metrics to a file ([eeec2b9](http://critocrito/sugarcube/commits/eeec2b9))
+* **plugin-fs:** add the fs_from_json plugin ([f9241dd](http://critocrito/sugarcube/commits/f9241dd))
+* **plugin-sql:** expose public API ([766ba2d](http://critocrito/sugarcube/commits/766ba2d))
+* **plugin-tap:** write data to files in chunks ([eb1b098](http://critocrito/sugarcube/commits/eb1b098))
+
+
+
+
+
 ## [0.36.2](http://critocrito/sugarcube/compare/v0.36.1...v0.36.2) (2020-03-19)
 
 

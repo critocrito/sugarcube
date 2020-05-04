@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.37.0](https://github.com/critocrito/sugarcube/compare/v0.36.2...v0.37.0) (2020-05-04)
+
+
+### Features
+
+* **core:** provide a marker for a run rather than generating one ([9a2692b](https://github.com/critocrito/sugarcube/commit/9a2692b))
+
+
+
+
+
 # [0.36.0](https://github.com/critocrito/sugarcube/compare/v0.35.0...v0.36.0) (2020-03-19)
 
 **Note:** Version bump only for package @sugarcube/cli

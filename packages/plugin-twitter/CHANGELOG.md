@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.37.0](https://github.com/critocrito/sugarcube/compare/v0.36.2...v0.37.0) (2020-05-04)
+
+
+### Bug Fixes
+
+* **plugin-twitter:** improve api error parsing ([3b10e27](https://github.com/critocrito/sugarcube/commit/3b10e27))
+* **plugin-twitter:** remove unneded log statement ([d48637f](https://github.com/critocrito/sugarcube/commit/d48637f))
+
+
+
+
+
 ## [0.36.1](https://github.com/critocrito/sugarcube/compare/v0.36.0...v0.36.1) (2020-03-19)
 
 
