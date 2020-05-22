@@ -145,7 +145,7 @@ export const videoChannel = curry(async (key, range, id) => {
 
 export const videoChannelPlaylist = curry(async (key, id) => {
   const playlistId = await channelToPlaylist(key, id);
-  if (playlistId != null) return flatten(playlistVideos(key, playlistId));
+  if (playlistId != null) return flatten(await playlistVideos(key, playlistId));
   return [];
 });
 

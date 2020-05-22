@@ -86,7 +86,7 @@ const listChannel = (envelope, {cfg, log, stats}) => {
                   stats.count("success");
                   stats.count("fetched", total);
                 }),
-              ])(query)
+              ])(q)
             : [];
         },
         tapP(() => logCounter()),
