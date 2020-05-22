@@ -4,7 +4,7 @@ import path from "path";
 import {promisify} from "util";
 import {get} from "lodash/fp";
 import dashp, {flowP} from "dashp";
-import {envelope as env, crypto} from "@sugarcube/core";
+import {envelope as env, crypto, createFeatureDecisions} from "@sugarcube/core";
 import {counter, tikaToEntity} from "@sugarcube/utils";
 import {mkdirP, cleanUp} from "@sugarcube/plugin-fs";
 
@@ -49,6 +49,8 @@ const plugin = async (envelope, {log, cfg, stats}) => {
     log.debug(`Progress: ${cnt}/${total} units (${percent}%).`),
   );
 
+  const decisions = createFeatureDecisions();
+
   const data = await flowP(
     [
       mapper(async url => {
@@ -89,6 +91,27 @@ const plugin = async (envelope, {log, cfg, stats}) => {
 
         logCounter();
 
+        // Test whether the new Ncube data format is enabled.
+        if (decisions.canNcube())
+          return {
+            _sc_id: url,
+            _sc_entity: "website",
+            _sc_id_fields: ["_sc_id"],
+            _sc_media: [{type: "url", term: url}].concat(media),
+            _sc_queries: [{type: querySource, term: url}],
+            _sc_href: url,
+            ...tikaToEntity(unit),
+            _sc_data: {
+              location: url,
+              // Fields that couldn't be extracted are not added to the unit.
+              ...Object.keys(unit).reduce((memo, key) => {
+                if (unit[key] == null) return memo;
+                return Object.assign(memo, {[key]: unit[key]});
+              }, {}),
+            },
+          };
+
+        // Use the old data forma.
         return {
           _sc_id_fields: ["location"],
           _sc_media: [{type: "url", term: url}].concat(media),

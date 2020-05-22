@@ -23,6 +23,7 @@ Import of regular websites are done using a browser session (based on the [Adapt
 **Example:**
 
 The following example imports a website and extracts the contents from it. Any images found are fetched as well and finally it creates a WARC archive and takes a screenshot.
+
 ```shell
 $(npm bin)/sugarcube -p http_import,media_fetch,media_warc,media_screenshot \
                      -Q http_url:'https://mwatana.org/en/airstrike-on-detention-center/' \
@@ -73,6 +74,16 @@ Fetch whole web pages from `_sc_media`. Downloaded targets are added to the
 - `http.wget_cmd` (defaults to `wget`)
 
   Specify the path to the `wget` command.
+
+## Feature flags
+
+- `ncube` sets the new and Ncube compatible data format. This is still optional but will become the new default in the future.
+
+```shell
+$(npm bin)/sugarcube -p http_import \
+                     -Q http_url:'https://mwatana.org/en/airstrike-on-detention-center/' \
+                     -D ncube
+```
 
 ## License
 

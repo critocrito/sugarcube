@@ -39,5 +39,9 @@ forEach(p => {
   );
 }, values(dataPlugins));
 
-export {plugins};
-export default {plugins};
+const features = {
+  ncube: {desc: "Enable to Ncube compatibility."},
+};
+
+export {plugins, features};
+export default {plugins, features};
