@@ -31,8 +31,13 @@ forEach(p => {
   );
 }, plugins);
 
+const features = {
+  ncube: {desc: "Enable to Ncube compatibility."},
+};
+
 export {
   plugins,
+  features,
   parseYoutubeVideo,
   parseYoutubeChannel,
   normalizeYoutubeVideoUrl,
@@ -43,6 +48,7 @@ export {
 
 export default {
   plugins,
+  features,
   parseYoutubeVideo,
   parseYoutubeChannel,
   normalizeYoutubeVideoUrl,

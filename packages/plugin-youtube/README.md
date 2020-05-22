@@ -135,7 +135,7 @@ This plugin doesn't collect missing videos as failures, but it counts the metric
     "api_key": "<key>"
   },
   "queries": [
-    { "type": "glob_pattern", "term": "./es-queries/all-youtube-videos.json" }
+    {"type": "glob_pattern", "term": "./es-queries/all-youtube-videos.json"}
   ]
 }
 ```
@@ -148,6 +148,17 @@ This plugin doesn't collect missing videos as failures, but it counts the metric
 - `success`: The number of videos that exist.
 - `missing`: The number of videos that failed. This metric is emitted once at
   the end of the plugin containing the total number of failed videos.
+
+## Feature flags
+
+- `ncube` sets the new and Ncube compatible data format. This is still optional but will become the new default in the future.
+
+```shell
+$(npm bin)/sugarcube -c config.json \
+                     -Q youtube_channel:UCaLlzGqiPE2QRj6sSOawJRg \
+                     -p youtube_channel \
+                     -D ncube
+```
 
 ## License
 
