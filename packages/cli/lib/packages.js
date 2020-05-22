@@ -11,6 +11,7 @@ import {
 } from "lodash/fp";
 import path from "path";
 import {readdirSync} from "fs";
+import core from "@sugarcube/core";
 
 import {instruments as localInstruments} from "./instruments";
 
@@ -64,6 +65,7 @@ export let modules = () => {
     loadBuiltinModules(),
     loadPackageJson(),
     loadSelf(),
+    {core: {core}},
   ]);
 
   // Memoize the result of the package loading.
