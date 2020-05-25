@@ -13,6 +13,8 @@ import createFeatureDecisions from "./features";
 
 const utils = merge(utilsA, {assertions: assert});
 
+const features = {};
+
 export {
   runner,
   queries,
@@ -24,6 +26,7 @@ export {
   crypto,
   state,
   createFeatureDecisions,
+  features,
 };
 
 export default {
@@ -37,4 +40,5 @@ export default {
   crypto,
   state,
   createFeatureDecisions,
+  features,
 };
