@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.38.0](http://critocrito/sugarcube/compare/v0.37.0...v0.38.0) (2020-05-25)
+
+
+### Bug Fixes
+
+* **core:** export empty features as a default ([aeca70f](http://critocrito/sugarcube/commits/aeca70f))
+* **plugin-youtube:** wait for results when querying youtube channels ([eb43af7](http://critocrito/sugarcube/commits/eb43af7))
+
+
+### Features
+
+* **cli:** include feature flags from core ([eec31ba](http://critocrito/sugarcube/commits/eec31ba))
+* **plugin-http:** add optional ncube data format when importing websites ([81cfd68](http://critocrito/sugarcube/commits/81cfd68))
+* **plugin-youtube:** add optional ncube data format ([ce40cba](http://critocrito/sugarcube/commits/ce40cba))
+
+
+
+
+
 # [0.37.0](http://critocrito/sugarcube/compare/v0.36.2...v0.37.0) (2020-05-04)
 
 

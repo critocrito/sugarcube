@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.38.0](https://github.com/critocrito/sugarcube/compare/v0.37.0...v0.38.0) (2020-05-25)
+
+
+### Bug Fixes
+
+* **plugin-youtube:** wait for results when querying youtube channels ([eb43af7](https://github.com/critocrito/sugarcube/commit/eb43af7))
+
+
+### Features
+
+* **plugin-youtube:** add optional ncube data format ([ce40cba](https://github.com/critocrito/sugarcube/commit/ce40cba))
+
+
+
+
+
 # [0.37.0](https://github.com/critocrito/sugarcube/compare/v0.36.2...v0.37.0) (2020-05-04)
 
 **Note:** Version bump only for package @sugarcube/plugin-youtube

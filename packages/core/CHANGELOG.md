@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.38.0](https://github.com/critocrito/sugarcube/compare/v0.37.0...v0.38.0) (2020-05-25)
+
+
+### Bug Fixes
+
+* **core:** export empty features as a default ([aeca70f](https://github.com/critocrito/sugarcube/commit/aeca70f))
+
+
+### Features
+
+* **cli:** include feature flags from core ([eec31ba](https://github.com/critocrito/sugarcube/commit/eec31ba))
+
+
+
+
+
 # [0.37.0](https://github.com/critocrito/sugarcube/compare/v0.36.2...v0.37.0) (2020-05-04)
 
 
