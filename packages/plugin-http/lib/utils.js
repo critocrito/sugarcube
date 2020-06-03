@@ -49,7 +49,16 @@ export const urlContentType = async url => {
   const header = resp.headers.get("Content-Type");
   if (header == null) return null;
 
-  const {type} = contentType.parse(header);
+  // The content type parser throws on content types of the form 'image/gif;' if
+  // nothing follows the last semi colon.
+  let type;
+  try {
+    const parseContent = contentType.parse(header.replace(/;$/, ""));
+    // eslint-disable-next-line prefer-destructuring
+    type = parseContent.type;
+  } catch (e) {
+    return null;
+  }
 
   if (type.startsWith("text")) return "url";
   if (type.startsWith("image")) return "image";
@@ -77,7 +86,17 @@ export const hypercubeImport = async (browse, target, location) => {
     page.on("response", response => {
       const headers = response.headers();
       if (headers["content-type"] == null) return;
-      const {type} = contentType.parse(headers["content-type"]);
+      let type;
+      try {
+        const parseContent = contentType.parse(
+          headers["content-type"].replace(/;$/, ""),
+        );
+        // eslint-disable-next-line prefer-destructuring
+        type = parseContent.type;
+      } catch (e) {
+        return;
+      }
+
       if (
         ["image/png", "image/jpeg", "image/jpg"].includes(type) &&
         response.url().startsWith("http")
