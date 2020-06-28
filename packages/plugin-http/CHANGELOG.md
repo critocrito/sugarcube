@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.39.0](https://github.com/critocrito/sugarcube/compare/v0.38.0...v0.39.0) (2020-06-28)
+
+
+### Bug Fixes
+
+* **plugin-http:** catch content-type parsing errors ([23535bb](https://github.com/critocrito/sugarcube/commit/23535bb))
+
+
+
+
+
 # [0.38.0](https://github.com/critocrito/sugarcube/compare/v0.37.0...v0.38.0) (2020-05-25)
 
 
