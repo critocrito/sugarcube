@@ -1,6 +1,5 @@
-SELECT
-  type,
-  term,
-  data
-  FROM queries
+SELECT id,
+       type,
+       term
+  FROM query
  WHERE type = ${type};

@@ -1,6 +1,4 @@
-INSERT INTO queries (type, term, data)
-VALUES ($type, $term, $data)
-       ON CONFLICT (type, term) DO UPDATE
-       SET
-       updated_at = CURRENT_TIMESTAMP,
-       data = json(excluded.data);
+INSERT INTO query (type, term)
+VALUES ($type, $term)
+    ON CONFLICT (type, term) DO UPDATE
+   SET updated_at = CURRENT_TIMESTAMP;

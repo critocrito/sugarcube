@@ -8,7 +8,7 @@ import Database from "better-sqlite3";
 import QueriesPostgres from "./postgres/queries";
 import QueriesSqlite from "./sqlite/queries";
 
-const sql = engine => repo => {
+const sql = (engine, repo) => {
   const queries = {};
   const dir = path.join(__dirname, "../sql", engine, repo);
 
@@ -18,15 +18,25 @@ const sql = engine => repo => {
       const queryName = `${camelCase(path.basename(file, ".sql"))}Query`;
       if (engine === "sqlite")
         queries[queryName] = fs.readFileSync(path.join(dir, file)).toString();
-      if (engine === "postgres")
-        queries[queryName] = new QueryFile(path.join(dir, file));
+      if (engine === "postgres") {
+        const qf = new QueryFile(path.join(dir, file), {
+          minify: true,
+          compress: true,
+        });
+        if (qf.error) {
+          throw new Error(qf.error);
+        }
+        queries[queryName] = qf;
+      }
     });
 
   return queries;
 };
 
-const sqlSqlite = sql("sqlite");
-const sqlPostgres = sql("postgres");
+// I load the query files for postgres here to avoid duplicate query file creation.
+const pgQueries = {
+  queries: sql("postgres", "queries"),
+};
 
 let pgp;
 
@@ -36,7 +46,7 @@ const initOptions = {
   // eslint-disable-next-line no-unused-vars
   extend(obj, dc) {
     // eslint-disable-next-line no-param-reassign
-    obj.queries = new QueriesPostgres(obj, pgp, sqlPostgres("queries"));
+    obj.queries = new QueriesPostgres(obj, pgp, pgQueries.queries);
     // eslint-disable-next-line no-param-reassign
     obj.close = () => pgp.end();
   },
@@ -51,9 +61,10 @@ export const connectPostgres = ({debug, ...config}) => {
 
 export const connectSqlite = ({debug, database}, log) => {
   const db = new Database(database, debug ? {verbose: log.debug} : {});
+  db.pragma("foreign_keys = ON");
 
   return {
-    queries: new QueriesSqlite(db, sqlSqlite("queries")),
+    queries: new QueriesSqlite(db, sql("sqlite", "queries")),
     close: () => db.close(),
   };
 };

@@ -1,6 +1,5 @@
-INSERT INTO queries (type, term, data)
-VALUES ${values:raw}
-       ON CONFLICT (type, term) DO UPDATE
-       SET
-       updated_at = NOW(),
-       data = excluded.data;
+INSERT INTO query (type, term)
+VALUES (${type}, ${term})
+    ON CONFLICT (type, term) DO UPDATE
+   SET updated_at = NOW()
+RETURNING ID;

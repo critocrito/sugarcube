@@ -1,4 +1,4 @@
-import {get} from "lodash/fp";
+import {get, set} from "lodash/fp";
 import {flatmapP} from "dashp";
 import {envelope as env, utils as u} from "@sugarcube/core";
 
@@ -28,11 +28,23 @@ const plugin = async (envelope, {cfg, log}) => {
     );
 
   const queries = await flatmapP(async queryType => {
-    const qs = await db.queries.listByType(queryType, queryFields);
+    const qs = await db.queries.listByType(queryType);
 
     log.info(`Importing ${qs.length} queries of type '${queryType}'.`);
 
-    return qs;
+    // we merge the tags into the query object itself for backwards compatibility.
+    return qs.map(({tags: allTags, ...rest}) => {
+      const tags =
+        queryFields.length === 0
+          ? allTags
+          : allTags.filter(({name}) => queryFields.includes(name));
+
+      return {
+        tags,
+        ...rest,
+        ...tags.reduce((memo, {name, value}) => set(name, value, memo), {}),
+      };
+    });
   }, queriesByType);
 
   db.close();
