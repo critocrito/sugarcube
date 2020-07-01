@@ -4,31 +4,33 @@ class Queries {
     this.queries = queries;
   }
 
-  async create(queries) {
-    if (queries.length === 0) return [];
-
-    const {showQuery, createQuery, createQueryTagQuery} = this.queries;
+  selectOrInsertSync(type, term) {
+    const {showQuery, createQuery} = this.queries;
     const stmt = this.db.prepare(showQuery);
     const stmt2 = this.db.prepare(createQuery);
-    const stmt3 = this.db.prepare(createQueryTagQuery);
 
-    const selectOrInsertQuery = (type, term) => {
-      const {id} = stmt.get({type, term});
-      if (id) return id;
+    const query = stmt.get({type, term});
+    if (query) return query.id;
 
-      const {lastInsertRowid} = stmt2.run({type, term});
-      return lastInsertRowid;
-    };
+    const {lastInsertRowid} = stmt2.run({type, term});
+    return lastInsertRowid;
+  }
 
-    const insertQuery = this.db.transaction(({type, term, tags}) => {
-      const query = selectOrInsertQuery(type, term);
+  createSync(queries) {
+    if (queries.length === 0) return [];
+
+    const {createQueryTagQuery} = this.queries;
+    const stmt = this.db.prepare(createQueryTagQuery);
+
+    const insertQuery = this.db.transaction(({type, term, tags = []}) => {
+      const query = this.selectOrInsertSync(type, term);
 
       if (typeof query !== "number") {
         throw new Error(`${type}/${term} did not yield a row id`);
       }
 
       for (const {name, value} of tags) {
-        stmt3.run({query, name, value});
+        stmt.run({query, name, value});
       }
     });
 
@@ -43,6 +45,20 @@ class Queries {
     }
 
     return errors;
+  }
+
+  showSync(type, term) {
+    const {showQuery} = this.queries;
+    const stmt = this.db.prepare(showQuery);
+    return stmt.get({type, term});
+  }
+
+  async create(queries) {
+    return this.createSync(queries);
+  }
+
+  async show(type, term) {
+    return this.showSync(type, term);
   }
 
   async listAll() {

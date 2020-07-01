@@ -12,6 +12,8 @@ import {plugin} from "@sugarcube/core";
 import schemaMigrate from "./plugins/schema-migrate";
 import queriesExport from "./plugins/queries-export";
 import queriesImport from "./plugins/queries-import";
+import unitsImport from "./plugins/import";
+import unitsExport from "./plugins/export";
 import instrument from "./instruments/instrument";
 import {assertCfgOptions} from "./assertions";
 
@@ -25,6 +27,8 @@ export const plugins = {
   sql_schema_migrate: liftManyA2([assertEngine, schemaMigrate]),
   sql_queries_export: liftManyA2([assertEngine, queriesExport]),
   sql_queries_import: liftManyA2([assertEngine, queriesImport]),
+  sql_import: liftManyA2([assertEngine, unitsImport]),
+  sql_export: liftManyA2([assertEngine, unitsExport]),
 };
 
 export const instruments = {

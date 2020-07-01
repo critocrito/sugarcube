@@ -6,7 +6,9 @@ import monitor from "pg-monitor";
 import Database from "better-sqlite3";
 
 import QueriesPostgres from "./postgres/queries";
+import UnitsPostgres from "./postgres/units";
 import QueriesSqlite from "./sqlite/queries";
+import UnitsSqlite from "./sqlite/units";
 
 const sql = (engine, repo) => {
   const queries = {};
@@ -36,6 +38,7 @@ const sql = (engine, repo) => {
 // I load the query files for postgres here to avoid duplicate query file creation.
 const pgQueries = {
   queries: sql("postgres", "queries"),
+  units: sql("postgres", "units"),
 };
 
 let pgp;
@@ -47,6 +50,10 @@ const initOptions = {
   extend(obj, dc) {
     // eslint-disable-next-line no-param-reassign
     obj.queries = new QueriesPostgres(obj, pgp, pgQueries.queries);
+    // eslint-disable-next-line no-param-reassign
+    obj.units = new UnitsPostgres(obj, pgp, pgQueries.units, {
+      queriesStore: new QueriesPostgres(obj, pgp, pgQueries.queries),
+    });
     // eslint-disable-next-line no-param-reassign
     obj.close = () => pgp.end();
   },
@@ -63,8 +70,15 @@ export const connectSqlite = ({debug, database}, log) => {
   const db = new Database(database, debug ? {verbose: log.debug} : {});
   db.pragma("foreign_keys = ON");
 
+  const queriesStore = new QueriesSqlite(db, sql("sqlite", "queries"));
+
   return {
-    queries: new QueriesSqlite(db, sql("sqlite", "queries")),
-    close: () => db.close(),
+    queries: queriesStore,
+    units: new UnitsSqlite(db, sql("sqlite", "units"), {queriesStore}),
+    checkpoint: () => db.checkpoint(),
+    close: () => {
+      db.checkpoint();
+      db.close();
+    },
   };
 };

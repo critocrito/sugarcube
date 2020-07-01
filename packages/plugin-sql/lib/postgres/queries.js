@@ -8,15 +8,10 @@ class Queries {
   async create(queries) {
     if (queries.length === 0) return [];
 
-    const {showQuery, createQuery, createQueryTagQuery} = this.queries;
-
-    const selectOrInsertQuery = async (type, term, t) => {
-      const id = await t.oneOrNone(showQuery, {type, term}, q => q && q.id);
-      return id || t.one(createQuery, {type, term}, q => q.id);
-    };
+    const {createQueryTagQuery} = this.queries;
 
     const insertQuery = async ({type, term, tags}, t) => {
-      const id = await selectOrInsertQuery(type, term, t);
+      const id = await this.selectOrInsert(type, term, t);
 
       if (tags.length === 0) return;
 
@@ -52,6 +47,12 @@ class Queries {
     );
 
     return errors;
+  }
+
+  async selectOrInsert(type, term, t) {
+    const {showQuery, createQuery} = this.queries;
+    const id = await t.oneOrNone(showQuery, {type, term}, q => q && q.id);
+    return id || t.one(createQuery, {type, term}, q => q.id);
   }
 
   async listAll() {
