@@ -40,7 +40,7 @@ const plugin = async (envelope, {cfg, log, stats}) => {
       )
         .reduce((memo, key) => {
           if (data[key] == null || data[key] === "") return memo;
-          return memo.concat([{name: key, value: data[key]}]);
+          return memo.concat([{label: data[key], description: key}]);
         }, [])
         .concat(tags),
     };

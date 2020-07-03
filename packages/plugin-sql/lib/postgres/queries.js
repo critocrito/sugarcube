@@ -8,24 +8,23 @@ class Queries {
   async create(queries) {
     if (queries.length === 0) return [];
 
-    const {createQueryTagQuery} = this.queries;
+    const {createTaggedQueryQuery} = this.queries;
 
     const insertQuery = async ({type, term, tags}, t) => {
-      const id = await this.selectOrInsert(type, term, t);
+      const query = await this.selectOrInsert(type, term, t);
 
       if (tags.length === 0) return;
 
-      const cs = new this.pgp.helpers.ColumnSet(["query", "name", "value"]);
-      const values = this.pgp.helpers.values(
-        tags.map(({name, value}) => ({
-          name,
-          value,
-          query: id,
-        })),
-        cs,
-      );
-
-      await t.none(createQueryTagQuery, {values});
+      for (const {label, description} of tags) {
+        // eslint-disable-next-line no-await-in-loop
+        const queryTag = await this.selectOrInsertQueryTag(
+          label,
+          description,
+          t,
+        );
+        // eslint-disable-next-line no-await-in-loop
+        await t.none(createTaggedQueryQuery, {query, queryTag});
+      }
     };
 
     const errors = [];
@@ -55,14 +54,20 @@ class Queries {
     return id || t.one(createQuery, {type, term}, q => q.id);
   }
 
+  async selectOrInsertQueryTag(label, description, t) {
+    const {showQueryTagQuery, createQueryTagQuery} = this.queries;
+    const id = await t.oneOrNone(showQueryTagQuery, {label}, q => q && q.id);
+    return id || t.one(createQueryTagQuery, {label, description}, q => q.id);
+  }
+
   async listAll() {
-    const {listAllQuery, showQueryTagQuery} = this.queries;
+    const {listAllQuery, showQueryTagForQueryQuery} = this.queries;
     const queries = await this.db.manyOrNone(listAllQuery);
     if (queries == null) return [];
 
     return Promise.all(
       queries.map(async query => {
-        const tags = await this.db.manyOrNone(showQueryTagQuery, {
+        const tags = await this.db.manyOrNone(showQueryTagForQueryQuery, {
           query: query.id,
         });
 
@@ -72,7 +77,7 @@ class Queries {
   }
 
   async listByType(queryType) {
-    const {listByTypeQuery, showQueryTagQuery} = this.queries;
+    const {listByTypeQuery, showQueryTagForQueryQuery} = this.queries;
     const queries = await this.db.manyOrNone(listByTypeQuery, {
       type: queryType,
     });
@@ -80,7 +85,7 @@ class Queries {
 
     return Promise.all(
       queries.map(async query => {
-        const tags = await this.db.manyOrNone(showQueryTagQuery, {
+        const tags = await this.db.manyOrNone(showQueryTagForQueryQuery, {
           query: query.id,
         });
 

@@ -16,11 +16,23 @@ class Queries {
     return lastInsertRowid;
   }
 
+  selectOrInsertQueryTagSync(label, description) {
+    const {createQueryTagQuery, showQueryTagQuery} = this.queries;
+    const stmt = this.db.prepare(showQueryTagQuery);
+    const stmt2 = this.db.prepare(createQueryTagQuery);
+
+    const queryTag = stmt.get({label});
+    if (queryTag) return queryTag.id;
+
+    const {lastInsertRowid} = stmt2.run({label, description});
+    return lastInsertRowid;
+  }
+
   createSync(queries) {
     if (queries.length === 0) return [];
 
-    const {createQueryTagQuery} = this.queries;
-    const stmt = this.db.prepare(createQueryTagQuery);
+    const {createTaggedQueryQuery} = this.queries;
+    const stmt = this.db.prepare(createTaggedQueryQuery);
 
     const insertQuery = this.db.transaction(({type, term, tags = []}) => {
       const query = this.selectOrInsertSync(type, term);
@@ -29,8 +41,9 @@ class Queries {
         throw new Error(`${type}/${term} did not yield a row id`);
       }
 
-      for (const {name, value} of tags) {
-        stmt.run({query, name, value});
+      for (const {label, description} of tags) {
+        const queryTag = this.selectOrInsertQueryTagSync(label, description);
+        stmt.run({query, queryTag});
       }
     });
 
@@ -62,9 +75,9 @@ class Queries {
   }
 
   async listAll() {
-    const {listAllQuery, showQueryTagQuery} = this.queries;
+    const {listAllQuery, showQueryTagForQueryQuery} = this.queries;
     const stmt = this.db.prepare(listAllQuery);
-    const stmt2 = this.db.prepare(showQueryTagQuery);
+    const stmt2 = this.db.prepare(showQueryTagForQueryQuery);
 
     return stmt.all().map(query => {
       const tags = stmt2.all({query: query.id});
@@ -74,9 +87,9 @@ class Queries {
   }
 
   async listByType(queryType) {
-    const {listByTypeQuery, showQueryTagQuery} = this.queries;
+    const {listByTypeQuery, showQueryTagForQueryQuery} = this.queries;
     const stmt = this.db.prepare(listByTypeQuery);
-    const stmt2 = this.db.prepare(showQueryTagQuery);
+    const stmt2 = this.db.prepare(showQueryTagForQueryQuery);
 
     return stmt.all({type: queryType}).map(query => {
       const tags = stmt2.all({query: query.id});

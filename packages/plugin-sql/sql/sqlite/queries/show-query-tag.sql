@@ -1,4 +1,5 @@
-SELECT name,
-       value
+SELECT id,
+       label,
+       description
   FROM query_tag
- WHERE query = $query;
+ WHERE label = $label;
