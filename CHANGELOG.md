@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.40.0](https://github.com/critocrito/sugarcube/compare/v0.39.0...v0.40.0) (2020-07-20)
+
+
+### Features
+
+* **plugin-sql:** import and export data from postgresql and sqlite ([fb32563](https://github.com/critocrito/sugarcube/commit/fb32563))
+
+
+
+
+
 # [0.39.0](http://critocrito/sugarcube/compare/v0.38.0...v0.39.0) (2020-06-28)
 
 
