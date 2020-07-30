@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.41.0](https://github.com/critocrito/sugarcube/compare/v0.40.0...v0.41.0) (2020-07-30)
+
+
+### Features
+
+* **plugin-twitter:** enable ncube data format for feed and tweet plugins ([071f904](https://github.com/critocrito/sugarcube/commit/071f904))
+
+
+
+
+
 # [0.40.0](https://github.com/critocrito/sugarcube/compare/v0.39.0...v0.40.0) (2020-07-20)
 
 **Note:** Version bump only for package @sugarcube/plugin-twitter
