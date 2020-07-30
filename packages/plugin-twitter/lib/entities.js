@@ -9,6 +9,7 @@ import {
   toLower,
   getOr,
 } from "lodash/fp";
+import {createFeatureDecisions} from "@sugarcube/core";
 
 import {twitterDate} from "./utils";
 
@@ -126,7 +127,7 @@ const hashtagsToRelations = map(h => merge({}, {type: "hashtag", term: h.tag}));
 
 const linksToRelations = map(l => merge({}, {type: "url", term: l.term}));
 
-const tweet = t => {
+const tweetLegacy = t => {
   const lfUrls = flow([getOr([], "entities.urls"), urlEntities("url")])(t);
   const lfMedia = flow([getOr([], "extended_entities.media"), mediaEntities])(
     t,
@@ -162,6 +163,37 @@ const tweet = t => {
     },
     tweetEntity(t),
   );
+};
+
+const tweetNcube = t => {
+  const lfUrls = flow([getOr([], "entities.urls"), urlEntities("url")])(t);
+  const lfMedia = flow([getOr([], "extended_entities.media"), mediaEntities])(
+    t,
+  );
+  const lfLocations = coordinatesEntities(t.coordinates || {});
+  const language = t.lang != null ? t.lang : null;
+  if (!t.user.screen_name) console.log(t);
+  return {
+    _sc_id_fields: ["_sc_id"],
+    _sc_content_fields: ["tweet"],
+    _sc_id: t.id_str,
+    _sc_href: `https://twitter.com/${t.user.screen_name}/status/${t.id_str}`,
+    _sc_description: t.text,
+    _sc_author: t.user.screen_name,
+    _sc_author_id: t.user.id_str,
+    _sc_pubdates: pubDates(t),
+    _sc_locations: lfLocations,
+    _sc_media: flatten([lfMedia, lfUrls]),
+    _sc_language: language,
+    _sc_data: t,
+  };
+};
+
+const tweet = t => {
+  const decisions = createFeatureDecisions();
+
+  if (decisions.canNcube()) return tweetNcube(t);
+  return tweetLegacy(t);
 };
 
 const user = curry((source, u) => {

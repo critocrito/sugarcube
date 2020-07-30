@@ -1,5 +1,9 @@
 import {flowP, flatmapP, tapP, caughtP} from "dashp";
-import {envelope as env, plugin as p} from "@sugarcube/core";
+import {
+  envelope as env,
+  plugin as p,
+  createFeatureDecisions,
+} from "@sugarcube/core";
 import {counter} from "@sugarcube/utils";
 
 import {feed, parseApiErrors} from "./twitter";
@@ -9,6 +13,8 @@ import {assertCredentials} from "./assertions";
 const querySource = "twitter_user";
 
 const feedPlugin = async (envelope, {log, cfg, stats}) => {
+  const decisions = createFeatureDecisions();
+
   const users = env
     .queriesByType(querySource, envelope)
     .map(term => parseTwitterUser(term));
@@ -37,12 +43,15 @@ const feedPlugin = async (envelope, {log, cfg, stats}) => {
         // Merge the query into the data unit.
         results =>
           results.map(r => {
-            const query = envelope.queries.find(
-              ({type, term}) =>
+            const query = envelope.queries.find(({type, term}) => {
+              const {user: u} = decisions.canNcube() ? r._sc_data : r;
+              return (
                 type === querySource &&
-                (parseTwitterUser(term) === r.user.screen_name ||
-                  parseTwitterUser(term) === r.user.user_id),
-            );
+                (parseTwitterUser(term) === u.screen_name ||
+                  parseTwitterUser(term) === u.user_id)
+              );
+            });
+
             if (query == null) return r;
             return Object.assign(r, {
               _sc_queries: Array.isArray(r._sc_queries)

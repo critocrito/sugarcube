@@ -1,6 +1,10 @@
 import {chunk} from "lodash/fp";
 import {flowP, caughtP, flatmapP} from "dashp";
-import {envelope as env, plugin as p} from "@sugarcube/core";
+import {
+  envelope as env,
+  plugin as p,
+  createFeatureDecisions,
+} from "@sugarcube/core";
 import {counter} from "@sugarcube/utils";
 
 import {tweets, parseApiErrors} from "../twitter";
@@ -11,6 +15,8 @@ import {assertCredentials} from "../assertions";
 const querySource = "twitter_tweet";
 
 const tweetsPlugin = async (envelope, {log, cfg, stats}) => {
+  const decisions = createFeatureDecisions();
+
   const tweetIds = env
     .queriesByType(querySource, envelope)
     .map(term => parseTweetId(term));
@@ -78,10 +84,10 @@ const tweetsPlugin = async (envelope, {log, cfg, stats}) => {
         // Merge the query into the data unit.
         results =>
           results.map(r => {
-            const query = envelope.queries.find(
-              ({type, term}) =>
-                type === querySource && parseTweetId(term) === r.tweet_id,
-            );
+            const query = envelope.queries.find(({type, term}) => {
+              const tweetId = decisions.canNcube() ? r._sc_id : r.tweet_id;
+              return type === querySource && parseTweetId(term) === tweetId;
+            });
             if (query == null) return r;
             return Object.assign(r, {
               _sc_queries: Array.isArray(r._sc_queries)
