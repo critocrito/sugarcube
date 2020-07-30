@@ -3,7 +3,7 @@ import feedPlugin from "./feed";
 import followersPlugin from "./followers";
 import friendsPlugin from "./friends";
 import searchPlugin from "./search";
-import tweetsPlugin from "./plugins/tweets";
+import tweetPlugin from "./plugins/tweet";
 import filterFailingPlugin from "./plugins/filter-failing";
 import {
   parseTweetId,
@@ -19,7 +19,8 @@ const plugins = {
   twitter_followers: followersPlugin,
   twitter_friends: friendsPlugin,
   twitter_search: searchPlugin,
-  twitter_tweets: tweetsPlugin,
+  twitter_tweets: tweetPlugin,
+  twitter_tweet: tweetPlugin,
   twitter_filter_failing: filterFailingPlugin,
 };
 

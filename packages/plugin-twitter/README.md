@@ -30,7 +30,7 @@ Fetch the tweets of a twitter user account.
 - `success`: The number of feeds that succeeded.
 - `fetched`: The number of tweets that were fetched from all feeds.
 
-### `twitter_tweets`
+### `twitter_tweet`
 
 Fetch individual tweets by the Tweet ID.
 
@@ -46,6 +46,10 @@ Fetch individual tweets by the Tweet ID.
 - `total`: The total number of tweets queried.
 - `fail`: The number of tweets that failed to download.
 - `success`: The number tweets that succeeded to download.
+
+### `twitter_tweets` - DEPRECATED
+
+This is an alias for the `twitter_tweet` plugin.
 
 ### `twitter_friends`
 
