@@ -14,13 +14,20 @@ import {
   compact,
   flatten,
   keys,
-  isString,
 } from "lodash/fp";
-import {URL} from "url";
 import {foldP, delay} from "dashp";
 import pify from "pify";
 import Twitter from "twitter";
 import moment from "moment";
+
+import {
+  isTwitterTweet,
+  isTwitterFeed,
+  parseTweetId,
+  parseTwitterUser,
+  normalizeTwitterTweetUrl,
+  normalizeTwitterUserUrl,
+} from "@sugarcube/source-types";
 
 const mapObj = map.convert({cap: false});
 
@@ -122,55 +129,14 @@ export const recurse = curry((maxDepth, key, fn) => {
   return params => iter(params, 0, params[key]);
 });
 
-export const isTwitterTweet = url => {
-  const u = new URL(url);
-  if (/twitter\.com/.test(u.hostname) && /status/.test(u.pathname)) return true;
-  return false;
-};
-
-export const isTwitterFeed = url => {
-  const u = new URL(url);
-  if (
-    /twitter\.com/.test(u.hostname) &&
-    u.pathname.split("/").filter(x => x !== "").length === 1 &&
-    u.pathname.split("/").filter(x => x !== "")[0] !== "search"
-  )
-    return true;
-  return false;
-};
-
-export const parseTweetId = id => {
-  if (!isString(id)) return null;
-  if (id.startsWith("http")) {
-    const u = new URL(id);
-    return u.pathname.split("/").filter(x => x !== "")[2];
-  }
-  return id;
-};
-
-export const parseTwitterUser = user => {
-  if (Number.isInteger(user)) return user.toString();
-  if (user.startsWith("http")) {
-    const u = new URL(user);
-    return u.pathname
-      .replace(/^\//, "")
-      .replace(/\/$/, "")
-      .split("/")[0];
-  }
-  return user.replace(/^@/, "");
-};
-
-export const normalizeTwitterTweetUrl = url => {
-  const userId = parseTwitterUser(url);
-  const tweetId = parseTweetId(url);
-  if (userId === tweetId) return `https://twitter.com/i/status/${tweetId}`;
-  return `https://twitter.com/${userId}/status/${tweetId}`;
-};
-
-export const normalizeTwitterUserUrl = url => {
-  const userId = parseTwitterUser(url);
-  return `https://twitter.com/${userId}`;
-};
+export {
+  isTwitterTweet,
+  isTwitterFeed,
+  parseTweetId,
+  parseTwitterUser,
+  normalizeTwitterTweetUrl,
+  normalizeTwitterUserUrl,
+} from "@sugarcube/source-types";
 
 export default {
   paramsString,

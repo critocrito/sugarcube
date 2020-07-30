@@ -10,6 +10,7 @@
   "main": "_dist/index.js",
   "dependencies": {
     "@sugarcube/core": "^0.40.0",
+    "@sugarcube/source-types": "^0.1.4",
     "@sugarcube/utils": "^0.40.0",
     "dashp": "^0.10.1",
     "lodash": "^4.17.4",
