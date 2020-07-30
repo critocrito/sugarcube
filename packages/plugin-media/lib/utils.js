@@ -11,7 +11,7 @@ export const youtubeDl = (cmd, videoFormat, href, target, sourceIp) => {
     videoFormat,
     "--max-downloads",
     "1",
-    "--write-all-thumbnails",
+    "--write-thumbnail",
     "--all-subs",
   ]
     .concat(sourceIp == null ? [] : ["--source-address", sourceIp])
