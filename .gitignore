@@ -25,3 +25,4 @@ docs/plugins
 docs/instruments
 data
 sugarcube.db
+project/secrets.json
