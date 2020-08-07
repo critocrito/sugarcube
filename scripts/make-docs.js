@@ -145,7 +145,7 @@ const generatePluginDocs = async () => {
         await mkdirP("docs/plugins");
 
         const file = `---
-path: "/${pathName}"
+path: "/sugarcube/${pathName}"
 title: "${plugin.name}"
 author: "${plugin.author}"
 version: "${plugin.version}"
@@ -233,7 +233,7 @@ const generateInstrumentDocs = async () => {
       await mkdirP("docs/instruments");
 
       const file = `---
-path: "/${pathName}"
+path: "/sugarcube/${pathName}"
 title: "${instrument.name}"
 author: "${instrument.author}"
 version: "${instrument.version}"
