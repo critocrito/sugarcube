@@ -1,5 +1,4 @@
-SELECT id,
-       type,
+SELECT type,
        term
   FROM query
  WHERE type = $type

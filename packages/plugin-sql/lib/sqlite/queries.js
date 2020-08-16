@@ -79,10 +79,10 @@ class Queries {
     const stmt = this.db.prepare(listAllQuery);
     const stmt2 = this.db.prepare(showQueryTagForQueryQuery);
 
-    return stmt.all().map(query => {
-      const tags = stmt2.all({query: query.id});
+    return stmt.all().map(({id, ...query}) => {
+      const tags = stmt2.all({query: id});
 
-      return {...query, tags};
+      return {...query, tags: tags.map(({id: _id, ...tag}) => tag)};
     });
   }
 
@@ -91,10 +91,10 @@ class Queries {
     const stmt = this.db.prepare(listByTypeQuery);
     const stmt2 = this.db.prepare(showQueryTagForQueryQuery);
 
-    return stmt.all({type: queryType}).map(query => {
-      const tags = stmt2.all({query: query.id});
+    return stmt.all({type: queryType}).map(({id, ...query}) => {
+      const tags = stmt2.all({query: id});
 
-      return {...query, tags};
+      return {...query, tags: tags.map(({id: _id, ...tag}) => tag)};
     });
   }
 }
