@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.42.0](https://github.com/critocrito/sugarcube/compare/v0.41.0...v0.42.0) (2020-08-16)
+
+
+### Bug Fixes
+
+* **plugin-sql:** ignore the database id when listing queries ([c92ae8e](https://github.com/critocrito/sugarcube/commit/c92ae8e))
+* **plugin-twitter:** set tweet as title instead of description ([e6371b7](https://github.com/critocrito/sugarcube/commit/e6371b7))
+
+
+### Features
+
+* **plugin-sql:** support query tags for units ([99d53a9](https://github.com/critocrito/sugarcube/commit/99d53a9))
+* **plugin-twitter:** merge the query tags into the data unit and handle Ncube data format ([6189dea](https://github.com/critocrito/sugarcube/commit/6189dea))
+* **plugin-youtube:** merge the query tags into the data unit ([90371cb](https://github.com/critocrito/sugarcube/commit/90371cb))
+
+
+
+
+
 # [0.41.0](https://github.com/critocrito/sugarcube/compare/v0.40.0...v0.41.0) (2020-07-30)
 
 

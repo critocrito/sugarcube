@@ -6,11 +6,11 @@
   "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-sql#readme",
   "repository": "https://github.com/critocrito/sugarcube",
   "bugs": "https://github.com/critocrito/sugarcube/issues",
-  "version": "0.41.0",
+  "version": "0.42.0",
   "main": "_dist/index.js",
   "dependencies": {
     "@open-fidias/marv-better-sqlite3-driver": "^1.0.1",
-    "@sugarcube/core": "^0.41.0",
+    "@sugarcube/core": "^0.42.0",
     "better-sqlite3": "^5.4.3",
     "dashp": "^0.10.1",
     "lodash": "^4.17.11",

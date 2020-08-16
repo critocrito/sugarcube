@@ -6,12 +6,12 @@
   "homepage": "https://github.com/critocrito/sugarcube/tree/master/packages/plugin-tika#readme",
   "repository": "https://github.com/critocrito/sugarcube",
   "bugs": "https://github.com/critocrito/sugarcube/issues",
-  "version": "0.41.0",
+  "version": "0.42.0",
   "main": "_dist/index.js",
   "dependencies": {
-    "@sugarcube/core": "^0.41.0",
-    "@sugarcube/plugin-fs": "^0.41.0",
-    "@sugarcube/utils": "^0.41.0",
+    "@sugarcube/core": "^0.42.0",
+    "@sugarcube/plugin-fs": "^0.42.0",
+    "@sugarcube/utils": "^0.42.0",
     "dashp": "^0.10.1",
     "lodash": "^4.17.4",
     "moment": "^2.19.1"
