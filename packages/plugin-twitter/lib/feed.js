@@ -43,7 +43,7 @@ const feedPlugin = async (envelope, {log, cfg, stats}) => {
         // Merge the query into the data unit.
         results =>
           results.map(r => {
-            const query = envelope.queries.find(({type, term}) => {
+            const q = envelope.queries.find(({type, term}) => {
               const {user: u} = decisions.canNcube() ? r._sc_data : r;
               return (
                 type === querySource &&
@@ -52,12 +52,25 @@ const feedPlugin = async (envelope, {log, cfg, stats}) => {
               );
             });
 
-            if (query == null) return r;
-            return Object.assign(r, {
-              _sc_queries: Array.isArray(r._sc_queries)
-                ? r._sc_queries.concat(query)
-                : [query],
-            });
+            if (q == null) return r;
+
+            const {tags, ...query} = q;
+
+            return Object.assign(
+              r,
+              {
+                _sc_queries: Array.isArray(r._sc_queries)
+                  ? r._sc_queries.concat(query)
+                  : [query],
+              },
+              Array.isArray(tags) && tags.length > 0
+                ? {
+                    _sc_tags: Array.isArray(r._sc_tags)
+                      ? r._sc_tags.concat(tags)
+                      : tags,
+                  }
+                : undefined,
+            );
           }),
 
         caughtP(e => {

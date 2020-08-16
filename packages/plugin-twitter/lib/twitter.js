@@ -12,13 +12,15 @@ import {
   isNaN,
 } from "lodash/fp";
 import {foldP, flowP, tapP, caughtP} from "dashp";
+import {createFeatureDecisions} from "@sugarcube/core";
 
 import {request, throttle, cursorify, recurse} from "./utils";
 import {
-  tweetTransform,
   followersTransform,
   friendsTransform,
   searchTransform,
+  tweetNcube,
+  tweetLegacy,
 } from "./entities";
 
 // The requests within a 15 minutes window in milliseconds.
@@ -65,7 +67,11 @@ export const feed = curry((cfg, user) => {
     include_rts: retweets,
     [isNaN(Number(user)) ? "screen_name" : "user_id"]: user,
   };
-  return flowP([op, tweetTransform], params);
+
+  const decisions = createFeatureDecisions();
+  const transform = decisions.canNcube() ? tweetNcube : tweetLegacy;
+
+  return flowP([op, map(transform)], params);
 });
 
 export const followers = (cfg, log, users) => {

@@ -127,7 +127,7 @@ const hashtagsToRelations = map(h => merge({}, {type: "hashtag", term: h.tag}));
 
 const linksToRelations = map(l => merge({}, {type: "url", term: l.term}));
 
-const tweetLegacy = t => {
+export const tweetLegacy = t => {
   const lfUrls = flow([getOr([], "entities.urls"), urlEntities("url")])(t);
   const lfMedia = flow([getOr([], "extended_entities.media"), mediaEntities])(
     t,
@@ -165,26 +165,31 @@ const tweetLegacy = t => {
   );
 };
 
-const tweetNcube = t => {
+export const tweetNcube = t => {
   const lfUrls = flow([getOr([], "entities.urls"), urlEntities("url")])(t);
   const lfMedia = flow([getOr([], "extended_entities.media"), mediaEntities])(
     t,
   );
+  const authorUrl = `https://twitter.com/${t.user.screen_name}`;
   const lfLocations = coordinatesEntities(t.coordinates || {});
   const language = t.lang != null ? t.lang : null;
+
   return {
     _sc_id_fields: ["_sc_id"],
     _sc_content_fields: ["tweet"],
     _sc_id: t.id_str,
-    _sc_href: `https://twitter.com/${t.user.screen_name}/status/${t.id_str}`,
+    _sc_href: `${authorUrl}/status/${t.id_str}`,
     _sc_title: t.text,
     _sc_author: t.user.screen_name,
     _sc_author_id: t.user.id_str,
+    _sc_author_url: authorUrl,
     _sc_pubdates: pubDates(t),
     _sc_locations: lfLocations,
     _sc_media: flatten([lfMedia, lfUrls]),
     _sc_language: language,
     _sc_data: t,
+    _sc_queries: [],
+    _sc_tags: [],
   };
 };
 
@@ -240,7 +245,6 @@ const user = curry((source, u) => {
 
 const searchResult = t => merge(tweet(t), {_sc_source: "twitter_search"});
 
-export const tweetTransform = map(tweet);
 export const searchTransform = map(searchResult);
 export const followersTransform = map(user("followers"));
 export const friendsTransform = map(user("friends"));

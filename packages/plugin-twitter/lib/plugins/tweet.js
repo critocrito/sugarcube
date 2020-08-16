@@ -8,7 +8,7 @@ import {
 import {counter} from "@sugarcube/utils";
 
 import {tweets, parseApiErrors} from "../twitter";
-import {tweetTransform} from "../entities";
+import {tweetNcube, tweetLegacy} from "../entities";
 import {parseTweetId} from "../utils";
 import {assertCredentials} from "../assertions";
 
@@ -70,7 +70,9 @@ const tweetsPlugin = async (envelope, {log, cfg, stats}) => {
             }
           });
 
-          return [tweetTransform(results), fails];
+          const op = decisions.canNcube() ? tweetNcube : tweetLegacy;
+
+          return [results.map(op), fails];
         },
         // Handle any failed tweets.
         ([results, fails]) => {
@@ -84,16 +86,30 @@ const tweetsPlugin = async (envelope, {log, cfg, stats}) => {
         // Merge the query into the data unit.
         results =>
           results.map(r => {
-            const query = envelope.queries.find(({type, term}) => {
+            const q = envelope.queries.find(({type, term}) => {
               const tweetId = decisions.canNcube() ? r._sc_id : r.tweet_id;
               return type === querySource && parseTweetId(term) === tweetId;
             });
-            if (query == null) return r;
-            return Object.assign(r, {
-              _sc_queries: Array.isArray(r._sc_queries)
-                ? r._sc_queries.concat(query)
-                : [query],
-            });
+
+            if (q == null) return r;
+
+            const {tags, ...query} = q;
+
+            return Object.assign(
+              r,
+              {
+                _sc_queries: Array.isArray(r._sc_queries)
+                  ? r._sc_queries.concat(query)
+                  : [query],
+              },
+              Array.isArray(tags) && tags.length > 0
+                ? {
+                    _sc_tags: Array.isArray(r._sc_tags)
+                      ? r._sc_tags.concat(tags)
+                      : tags,
+                  }
+                : undefined,
+            );
           }),
         // Handle any API errors.
         caughtP(e => {
