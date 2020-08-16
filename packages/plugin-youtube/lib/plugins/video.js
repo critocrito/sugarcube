@@ -1,6 +1,10 @@
 import {get, chunk} from "lodash/fp";
 import {flatmapP, flowP, delayP} from "dashp";
-import {envelope as env, plugin as p} from "@sugarcube/core";
+import {
+  envelope as env,
+  plugin as p,
+  createFeatureDecisions,
+} from "@sugarcube/core";
 import {counter} from "@sugarcube/utils";
 
 import {videosList} from "../api";
@@ -9,6 +13,7 @@ import {assertCredentials, parseYoutubeVideo} from "../utils";
 const querySource = "youtube_video";
 
 const fetchVideos = async (envelope, {cfg, log, stats}) => {
+  const decisions = createFeatureDecisions();
   const key = get("youtube.api_key", cfg);
 
   const queries = env
@@ -58,16 +63,29 @@ const fetchVideos = async (envelope, {cfg, log, stats}) => {
 
         // Merge the query into the data unit.
         return results.map(r => {
-          const query = envelope.queries.find(
-            ({type, term}) =>
-              type === querySource && parseYoutubeVideo(term) === r.id,
-          );
-          if (query == null) return r;
-          return Object.assign(r, {
-            _sc_queries: Array.isArray(r._sc_queries)
-              ? r._sc_queries.concat(query)
-              : [query],
+          const q = envelope.queries.find(({type, term}) => {
+            const videoId = decisions.canNcube() ? r._sc_id : r.id;
+            return type === querySource && parseYoutubeVideo(term) === videoId;
           });
+          if (q == null) return r;
+
+          const {tags, ...query} = q;
+
+          return Object.assign(
+            r,
+            {
+              _sc_queries: Array.isArray(r._sc_queries)
+                ? r._sc_queries.concat(query)
+                : [query],
+            },
+            Array.isArray(tags) && tags.length > 0
+              ? {
+                  _sc_tags: Array.isArray(r._sc_tags)
+                    ? r._sc_tags.concat(tags)
+                    : tags,
+                }
+              : undefined,
+          );
         });
       },
       delayP(1000),

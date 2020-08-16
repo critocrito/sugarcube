@@ -1,5 +1,5 @@
 import {size, get, pickBy, identity} from "lodash/fp";
-import {flowP, tapP, caughtP} from "dashp";
+import {flowP, tapP, caughtP, flatmapP} from "dashp";
 import {plugin as p, envelope as env} from "@sugarcube/core";
 import {counter} from "@sugarcube/utils";
 import parse from "date-fns/parse";
@@ -11,11 +11,16 @@ import {videoChannelPlaylist, videoChannel, channelExists} from "../api";
 
 const querySource = "youtube_channel";
 
-const listChannel = (envelope, {cfg, log, stats}) => {
+const listChannel = async (envelope, {cfg, log, stats}) => {
   const key = get("youtube.api_key", cfg);
   const publishedBefore = get("youtube.published_before", cfg);
   const publishedAfter = get("youtube.published_after", cfg);
   const pastDays = get("youtube.past_days", cfg);
+
+  const queries = env
+    .queriesByType(querySource, envelope)
+    .map(term => parseYoutubeChannel(term));
+
   let range;
 
   if (publishedBefore != null || publishedAfter != null || pastDays != null) {
@@ -76,6 +81,36 @@ const listChannel = (envelope, {cfg, log, stats}) => {
           return exists
             ? flowP([
                 op,
+                results => {
+                  const sourceQuery = envelope.queries.find(
+                    ({type, term}) =>
+                      // The deprecated video data format uses r.id, the new Ncube
+                      // based data format uses r._sc_id.
+                      type === querySource && parseYoutubeChannel(term) === q,
+                  );
+
+                  if (sourceQuery == null) return results;
+
+                  const {tags, ...rest} = sourceQuery;
+
+                  return results.map(r =>
+                    Object.assign(
+                      r,
+                      {
+                        _sc_queries: Array.isArray(r._sc_queries)
+                          ? r._sc_queries.concat(rest)
+                          : [rest],
+                      },
+                      Array.isArray(tags) && tags.length > 0
+                        ? {
+                            _sc_tags: Array.isArray(r._sc_tags)
+                              ? r._sc_tags.concat(tags)
+                              : tags,
+                          }
+                        : undefined,
+                    ),
+                  );
+                },
                 caughtP(e => {
                   stats.fail({type: querySource, term: q, reason: e.message});
                   return [];
@@ -94,7 +129,9 @@ const listChannel = (envelope, {cfg, log, stats}) => {
       query,
     );
 
-  return env.flatMapQueriesAsync(retrieveChannel, querySource, envelope);
+  const videos = await flatmapP(retrieveChannel, queries);
+
+  return env.concatData(videos, envelope);
 };
 
 const plugin = p.liftManyA2([assertCredentials, listChannel]);

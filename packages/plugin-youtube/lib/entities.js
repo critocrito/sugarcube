@@ -113,6 +113,8 @@ export const ncubeVideo = item => {
         },
       ],
       _sc_data: item,
+      _sc_tags: [],
+      _sc_queries: [],
     },
     channelId != null
       ? {
