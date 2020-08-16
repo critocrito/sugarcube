@@ -172,13 +172,12 @@ const tweetNcube = t => {
   );
   const lfLocations = coordinatesEntities(t.coordinates || {});
   const language = t.lang != null ? t.lang : null;
-  if (!t.user.screen_name) console.log(t);
   return {
     _sc_id_fields: ["_sc_id"],
     _sc_content_fields: ["tweet"],
     _sc_id: t.id_str,
     _sc_href: `https://twitter.com/${t.user.screen_name}/status/${t.id_str}`,
-    _sc_description: t.text,
+    _sc_title: t.text,
     _sc_author: t.user.screen_name,
     _sc_author_id: t.user.id_str,
     _sc_pubdates: pubDates(t),
