@@ -22,6 +22,7 @@ class Units {
       await this.createDownloads(downloads, id, t);
       await this.createMedia(media, id, t);
       await this.createQueries(unit._sc_queries, id, t);
+      await this.createTags(unit._sc_tags, id, t);
       await this.appendToRun(unit._sc_markers, id, t);
 
       return existing;
@@ -45,7 +46,9 @@ class Units {
         }) => {
           const downloads = await this.listDownloads(id, this.db);
           const media = await this.listMedia(id, this.db);
+          // FIXME: Those three method require implementation
           const queries = await this.listQueries(id, this.db);
+          const tags = await this.listTags(id, this.db);
           const markers = await this.listMarkers(id, this.db);
 
           return {
@@ -56,6 +59,7 @@ class Units {
             _sc_media: media,
             _sc_downloads: downloads,
             _sc_queries: queries,
+            _sc_tags: tags,
             _sc_markers: markers,
             // filter null values map names to _sc naming scheme
             ...Object.keys(unit).reduce((memo, key) => {
@@ -175,6 +179,18 @@ class Units {
           unit: unitId,
         }),
       ),
+    );
+  }
+
+  async createTags(tags, unitId, t) {
+    const {createTaggedUnitQuery} = this.queries;
+
+    await Promise.all(
+      tags.map(async ({label}) => {
+        const queryTag = await this.queriesStore.showQueryTag(label, t);
+        if (queryTag)
+          t.none(createTaggedUnitQuery, {queryTag: queryTag.id, unit: unitId});
+      }),
     );
   }
 

@@ -23,6 +23,7 @@ class Units {
       this.createDownloadsSync(downloads, id);
       this.createMediaSync(media, id);
       this.createQueriesSync(unit._sc_queries, id);
+      this.createTagsSync(unit._sc_tags, id);
       this.appendToRunSync(unit._sc_markers, id);
 
       return existing;
@@ -50,6 +51,7 @@ class Units {
       const downloads = this.listDownloadsSync(id);
       const media = this.listMediaSync(id);
       const queries = this.listQueriesSync(id);
+      const tags = this.listTagsSync(id);
       const markers = this.listMarkersSync(id);
 
       units[i] = {
@@ -62,6 +64,7 @@ class Units {
         _sc_media: media,
         _sc_downloads: downloads,
         _sc_queries: queries,
+        _sc_tags: tags,
         _sc_markers: markers,
         // filter null values map names to _sc naming scheme
         ...Object.keys(unit).reduce((memo, key) => {
@@ -130,6 +133,13 @@ class Units {
   listQueriesSync(unitId) {
     const {listQueriesQuery} = this.queries;
     const stmt = this.db.prepare(listQueriesQuery);
+
+    return stmt.all({unitId});
+  }
+
+  listTagsSync(unitId) {
+    const {listTagsQuery} = this.queries;
+    const stmt = this.db.prepare(listTagsQuery);
 
     return stmt.all({unitId});
   }
@@ -225,7 +235,20 @@ class Units {
 
     for (const {type, term} of queries) {
       const query = this.queriesStore.selectOrInsertSync(type, term);
+
       stmt.run({query, unit: unitId});
+    }
+  }
+
+  createTagsSync(tags, unitId) {
+    const {createTaggedUnitQuery} = this.queries;
+
+    const stmt = this.db.prepare(createTaggedUnitQuery);
+
+    for (const {label} of tags) {
+      const queryTag = this.queriesStore.showQueryTagSync(label);
+
+      if (queryTag) stmt.run({queryTag: queryTag.id, unit: unitId});
     }
   }
 

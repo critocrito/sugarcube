@@ -13,18 +13,29 @@ class Queries {
     if (query) return query.id;
 
     const {lastInsertRowid} = stmt2.run({type, term});
+
     return lastInsertRowid;
   }
 
-  selectOrInsertQueryTagSync(label, description) {
-    const {createQueryTagQuery, showQueryTagQuery} = this.queries;
+  showQueryTagSync(label) {
+    const {showQueryTagQuery} = this.queries;
     const stmt = this.db.prepare(showQueryTagQuery);
-    const stmt2 = this.db.prepare(createQueryTagQuery);
 
     const queryTag = stmt.get({label});
+    if (queryTag) return queryTag;
+    return undefined;
+  }
+
+  selectOrInsertQueryTagSync(label, description) {
+    const {createQueryTagQuery} = this.queries;
+
+    const queryTag = this.showQueryTagSync(label);
+
     if (queryTag) return queryTag.id;
 
-    const {lastInsertRowid} = stmt2.run({label, description});
+    const stmt = this.db.prepare(createQueryTagQuery);
+
+    const {lastInsertRowid} = stmt.run({label, description});
     return lastInsertRowid;
   }
 

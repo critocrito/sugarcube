@@ -54,10 +54,18 @@ class Queries {
     return id || t.one(createQuery, {type, term}, q => q.id);
   }
 
+  async showQueryTag(label, t) {
+    const {showQueryTagQuery} = this.queries;
+    const queryTag = await t.oneOrNone(showQueryTagQuery, {label}, q => q);
+    if (queryTag) return queryTag;
+    return undefined;
+  }
+
   async selectOrInsertQueryTag(label, description, t) {
-    const {showQueryTagQuery, createQueryTagQuery} = this.queries;
-    const id = await t.oneOrNone(showQueryTagQuery, {label}, q => q && q.id);
-    return id || t.one(createQueryTagQuery, {label, description}, q => q.id);
+    const {createQueryTagQuery} = this.queries;
+    const queryTag = await this.showQueryTag(label, t);
+    if (queryTag) return queryTag.id;
+    return t.one(createQueryTagQuery, {label, description}, q => q.id);
   }
 
   async listAll() {
