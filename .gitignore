@@ -26,3 +26,4 @@ docs/instruments
 data
 sugarcube.db
 project/secrets.json
+lcov.info
