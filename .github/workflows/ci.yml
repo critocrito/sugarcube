@@ -31,7 +31,7 @@ jobs:
           - name: Test E2E
             task: "test:e2e"
 
-          - name: Test Coverage
+          - name: Coverage
             task: "coverage:report"
 
     steps:
@@ -68,7 +68,7 @@ jobs:
 
       # Coverage
       - name: Coveralls GitHub Action
-        if: matrix.make.name == "Test Coverage"
+        if: matrix.make.name == 'Coverage'
         uses: coverallsapp/github-action@v1.1.2
         with:
           path-to-lcov: "./lcov.info"
