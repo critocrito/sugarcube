@@ -6,6 +6,7 @@
   "workspaces": [
     "packages/*"
   ],
+  "engines" : { "node" : ">=12" },
   "scripts": {
     "build": "yarn clean && yarn compile && yarn lint && yarn test",
     "check": "eslint --print-config .eslintrc.json | eslint-config-prettier-check",

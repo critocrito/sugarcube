@@ -2,6 +2,7 @@
 path: "/tutorial"
 title: "SugarCube Tutorial"
 ---
+
 # Ultimately SugarCube
 
 Commands, that can be typed in a shell, have in this tutorial the `$` symbol
@@ -11,7 +12,6 @@ you only have to type `node --version`.
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
 
 - [Requirements](#requirements)
 - [Simply SugarCube](#simply-sugarcube)
@@ -36,21 +36,22 @@ you only have to type `node --version`.
 
 To run `sugarcube` you have to install [NodeJS](https://nodejs.org/en/). The
 easiest way to do this, is to use [nvm](https://github.com/creationix/nvm). Node Version Manager (nvm) is a script written to manage multiple active NodeJS versions.
-SugarCube works with the latest LTS release of NodeJS or newer. At the time of
-this writing the latest LTS release is v8.9.4 named Carbon.
+SugarCube works with the latest long term release of NodeJS or newer. At the time of
+this writing the latest long term release is 12.
 
 Follow the
 [installation instructions](https://github.com/creationix/nvm#install-script) to install nvm. Check in your terminal that 'node' has been installed by entering in the following command:
 
 ```
 $ node --version
-v8.9.4
+v12.18.2
 ```
+
 You will also need npm, which is a package manager for NodeJS packages. This will have also been installed when you installed nvm. Check by typing the following in your terminal window:
 
 ```
 $ npm --version
-3.10.8
+7.6.1
 ```
 
 ## Simply SugarCube
@@ -65,11 +66,13 @@ $ mkdir sugarcubetest
 ```
 
 Next enter into that directory by typing in 'cd', shorthand for change directory, into your terminal:
+
 ```
 $ cd sugarcubetest
 ```
 
 Lastly add a file to your new directory by asking your newly installed node package manager to get your node packages started through the 'init' command. Enter in the following:
+
 ```
 $ npm init -y
 ```
@@ -81,6 +84,7 @@ SugarCube. Test that this file is there by typing:
 ```
 $ ls
 ```
+
 This lists all the files in your directory. If your terminal window shows you this response then you are on the right track:
 
 ```
@@ -88,9 +92,8 @@ $ package.json
 ```
 
 Next on we install the `sugarcube` command line interface, the DuckDuckGo search
-plugin and the tap plugin.  The `ddg_search` plugin queries the search engine DuckDuckGo and the `tap_printf` plugin prints the results, queries and
+plugin and the tap plugin. The `ddg_search` plugin queries the search engine DuckDuckGo and the `tap_printf` plugin prints the results, queries and
 configuration to the screen. Type in the following command:
-
 
 ```
 $ npm install -S @sugarcube/cli @sugarcube/plugin-ddg @sugarcube/plugin-tap
@@ -105,7 +108,8 @@ Install the 'sugarcube' command by typing into your terminal:
 ```
 $ $(npm bin)/sugarcube -h
 ```
-Note that you will be entering in the dollar symbol ($) for this command. You should see the following in your terminal window:
+
+Note that you will be entering in the dollar symbol (\$) for this command. You should see the following in your terminal window:
 
 ```
 $ $(npm bin)/sugarcube -h
