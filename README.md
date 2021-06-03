@@ -12,7 +12,7 @@
 
 Sugarcube is a framework to fetch, transform and export data. Data processes are described using plugins, which are chained in sequence to model complex data processes.
 
-It is a tool designed to suport journalists, non-profits, academic researchers, human rights organisations and others with investigations using online, publicly-available sources (e.g.tweets, videos, public databases, websites, online databases).
+It is a tool designed to support journalists, non-profits, academic researchers, human rights organisations and others with investigations using online, publicly-available sources (e.g.tweets, videos, public databases, websites, online databases).
 
 [Learn how to use Sugarcube on your own project](https://sugarcubetools.net/docs/installation).
 
