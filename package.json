@@ -12,7 +12,7 @@
     "clean": "rimraf packages/**/_dist",
     "clean-mods": "lerna clean --yes",
     "compile": "lerna exec --parallel -- babel --root-mode upward lib -d _dist",
-    "coverage": "cross-env NODE_ENV=test nyc mocha -R progress -t 6000 -r test/helpers.js test/**/*.spec.js",
+    "coverage": "cross-env NODE_ENV=test nyc mocha -t 6000 -r test/helpers.js test/**/*.spec.js",
     "docs": "node ./scripts/make-docs.js",
     "fix": "yarn lint --fix",
     "lint": "eslint packages/**/lib/**/*.js test/**/*.js boilerplate-plugin/lib/**/*.js scripts/**/*.js",
@@ -21,7 +21,7 @@
     "setup": "yarn clean-mods && yarn install && lerna bootstrap && yarn compile",
     "test": "yarn test:mocha",
     "test:e2e": "find project/issues/*.json -type f -print0 | parallel -0 packages/cli/bin/sugarcube.js -c",
-    "test:mocha": "cross-env NODE_ENV=test mocha -c -R progress -t 6000 -r @babel/register -r test/helpers.js test/**/*.spec.js",
+    "test:mocha": "cross-env NODE_ENV=test mocha -c -t 6000 -r @babel/register -r test/helpers.js test/**/*.spec.js",
     "watch": "yarn compile -w --verbose"
   },
   "devDependencies": {
