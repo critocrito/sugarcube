@@ -16,9 +16,6 @@ jobs:
         node: [12, 14]
 
         make:
-          - name: Compile
-            task: "compile"
-
           - name: Lint
             task: "lint"
 
@@ -62,7 +59,7 @@ jobs:
 
       # Coverage
       - name: Coveralls GitHub Action
-        if: matrix.node-version == '14'
+        if: matrix.node-version == '14.x'
         uses: coverallsapp/github-action@v1.1.2
         with:
           github-token: ${{ github.token }}
