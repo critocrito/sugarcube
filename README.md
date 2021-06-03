@@ -4,7 +4,9 @@
   <img src="/logo.png" alt="Sugarcube - Data pipelines for human rights">
 </p>
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![Build Status](https://travis-ci.org/critocrito/sugarcube.svg?branch=master)](https://travis-ci.org/critocrito/sugarcube) [![Coverage Status](https://coveralls.io/repos/github/critocrito/sugarcube/badge.svg?branch=master)](https://coveralls.io/github/critocrito/sugarcube?branch=master)
+![GitHub](https://img.shields.io/github/license/critocrito/ncube?color=blue&style=flat-square)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/critocrito/sugarcube/Build%20Status?style=flat-square)
+[![Coverage Status](https://coveralls.io/repos/github/critocrito/sugarcube/badge.svg?branch=master)](https://coveralls.io/github/critocrito/sugarcube?branch=master)
 
 ## Synopsis
 
