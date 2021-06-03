@@ -22,6 +22,7 @@
     "release": "lerna publish --conventional-commits -m \"chore(release): Bumped to version %s.\"",
     "setup": "yarn clean-mods && yarn install && lerna bootstrap && yarn compile",
     "test": "yarn test:mocha",
+    "test:all": "run-p --aggregate-output --continue-on-error 'test:!(all)'",
     "test:e2e": "find project/issues/*.json -type f -print0 | parallel -0 packages/cli/bin/sugarcube.js -c",
     "test:mocha": "cross-env NODE_ENV=test mocha -c -t 6000 -r @babel/register -r test/helpers.js test/**/*.spec.js",
     "watch": "yarn compile -w --verbose"

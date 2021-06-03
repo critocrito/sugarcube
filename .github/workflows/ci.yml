@@ -26,10 +26,7 @@ jobs:
             task: "lint"
 
           - name: Test
-            task: "test:mocha"
-
-          - name: Test E2E
-            task: "test:e2e"
+            task: "test:all"
 
           - name: Coverage
             task: "coverage:report"
