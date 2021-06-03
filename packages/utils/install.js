@@ -26,7 +26,7 @@ if (process.env.SUGARCUBE_SKIP_APACHE_TIKA_DOWNLOAD) {
   logPolitely(
     'Skipping Apache Tika download. "SUGARCUBE_SKIP_APACHE_TIKA_DOWNLOAD" environment variable was found.',
   );
-  return;
+  process.exit(0);
 }
 if (
   process.env.NPM_CONFIG_SUGARCUBE_SKIP_APACHE_TIKA_DOWNLOAD ||
@@ -35,7 +35,7 @@ if (
   logPolitely(
     'Skipping Apache Tika download. "SUGARCUBE_SKIP_APACHE_TIKA_DOWNLOAD" was set in npm config.',
   );
-  return;
+  process.exit(0);
 }
 if (
   process.env.NPM_PACKAGE_CONFIG_SUGARCUBE_SKIP_APACHE_TIKA_DOWNLOAD ||
@@ -44,7 +44,7 @@ if (
   logPolitely(
     'Skipping Apache Tika download. "SUGARCUBE_SKIP_APACHE_TIKA_DOWNLOAD" was set in project config.',
   );
-  return;
+  process.exit(0);
 }
 
 const existsP = async location => {
