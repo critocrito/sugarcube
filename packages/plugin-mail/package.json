@@ -16,7 +16,7 @@
     "dot": "^1.1.2",
     "gpg": "^0.6.0",
     "lodash": "^4.17.4",
-    "nodemailer": "^4.4.2"
+    "nodemailer": "^6.4.16"
   },
   "keywords": [
     "data",
