@@ -19,7 +19,7 @@ jobs:
           - os: ubuntu-latest
             node: 12
             make:
-              name: Test Coverage
+              name: Coverage
 
         make:
           - name: Lint
