@@ -25,17 +25,18 @@ const isValidKeys = (test, obj) => {
 };
 
 describe("unit keys", () => {
-  property("strip _", unitArb, unit => {
-    const test = key => /^[^_]+/.test(key);
+  property("strip _", unitArb, (unit) => {
+    const test = (key) => /^[^_]+/.test(key);
     return isValidKeys(test, stripUnderscores(unit));
   });
 
-  property("prepend internal fields with a -", unitArb, unit => {
-    const test = key => (key.slice(1, 4) === "sc_" ? /^\$sc_/.test(key) : true);
+  property("prepend internal fields with a -", unitArb, (unit) => {
+    const test = (key) =>
+      key.slice(1, 4) === "sc_" ? /^\$sc_/.test(key) : true;
     return isValidKeys(test, stripUnderscores(unit));
   });
 
-  property("stripping underscores can be inversed", unitArb, unit =>
+  property("stripping underscores can be inversed", unitArb, (unit) =>
     isEqual(unstripify(stripUnderscores(unit)), unit),
   );
 

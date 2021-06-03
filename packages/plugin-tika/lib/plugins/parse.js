@@ -14,10 +14,10 @@ const parseFiles = (envelope, {log}) => {
 
   return flowP([
     flatmapP(unfold),
-    collectP(unit =>
+    collectP((unit) =>
       flowP([property("location"), extract, spreadP(entity(unit))], unit),
     ),
-    xs => env.concatData(xs, envelope),
+    (xs) => env.concatData(xs, envelope),
   ])(patterns);
 };
 

@@ -73,7 +73,7 @@ describe("query format parsing", () => {
   });
 
   ["featured", "videos", "playlists", "community", "channels", "about"].forEach(
-    segment =>
+    (segment) =>
       it(`can parse the channel id from a channel url with a special segment: ${segment}`, () => {
         const channelUrl = `https://www.youtube.com/channel/UC_QIfHvN9auy2CoOdSfMWDw/${segment}`;
         const channelId = "UC_QIfHvN9auy2CoOdSfMWDw";
@@ -113,7 +113,7 @@ describe("parse youtube video urls", () => {
     ];
     const expected = "https://www.youtube.com/watch?v=tcCBtSjKEzI";
 
-    const result = every(u => normalizeYoutubeVideoUrl(u) === expected, urls);
+    const result = every((u) => normalizeYoutubeVideoUrl(u) === expected, urls);
 
     result.should.equal(true);
   });
@@ -140,7 +140,10 @@ describe("parse youtube channel urls", () => {
 
     const expected = "https://www.youtube.com/channel/UCegnDJbvrOhvbLU3IzeIV8A";
 
-    const result = every(u => normalizeYoutubeChannelUrl(u) === expected, urls);
+    const result = every(
+      (u) => normalizeYoutubeChannelUrl(u) === expected,
+      urls,
+    );
 
     result.should.equal(true);
   });

@@ -59,12 +59,12 @@ const plugin = async (envelope, {log, cfg, stats}) => {
     log.debug(`Progress: ${cnt}/${total} units (${percent}%).`),
   );
 
-  await mapper(async unit => {
+  await mapper(async (unit) => {
     const videos = unit._sc_media
       .filter(({type}) => type === "video")
       .map(({term}) => term);
 
-    await collectP(async url => {
+    await collectP(async (url) => {
       stats.count("total");
 
       if (delaySeconds > 0) {
@@ -107,8 +107,7 @@ plugin.argv = {
   "media.youtubedl_parallel": {
     type: "number",
     nargs: 1,
-    desc:
-      "Specify the number of parallel youtubedl downloads. Can be between 1 and 8.",
+    desc: "Specify the number of parallel youtubedl downloads. Can be between 1 and 8.",
     default: 1,
   },
   "media.youtubedl_delay": {

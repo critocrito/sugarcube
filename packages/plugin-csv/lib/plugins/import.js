@@ -23,11 +23,11 @@ const importPlugin = (envelope, {cfg, log}) => {
   return flowP(
     [
       // The order of the merge matters, otherwise the id_fields are merged badly.
-      flatmapP(pattern => unfold(pattern).then(map(u => merge(u, entity)))),
-      tapP(fs => log.info(`Parsing data from ${fs.length} files.`)),
+      flatmapP((pattern) => unfold(pattern).then(map((u) => merge(u, entity)))),
+      tapP((fs) => log.info(`Parsing data from ${fs.length} files.`)),
       parseMany(delimiter),
-      tapP(xs => log.info(`Parsed ${xs.length} units.`)),
-      xs => env.concatData(xs, envelope),
+      tapP((xs) => log.info(`Parsed ${xs.length} units.`)),
+      (xs) => env.concatData(xs, envelope),
     ],
     patterns,
   );

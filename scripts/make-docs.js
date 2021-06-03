@@ -45,13 +45,13 @@ const deprecatedPlugins = [
   "workflow_pick",
 ];
 
-const readPackages = target => {
+const readPackages = (target) => {
   const listPackages = fs.readdirSync(target).reduce((memo, pkg) => {
     if (pkg.startsWith("plugin")) return memo.concat(pkg);
     return memo;
   }, []);
   return Promise.all(
-    listPackages.map(async pkg => {
+    listPackages.map(async (pkg) => {
       const [readme, packageJson] = await Promise.all([
         readFile(path.resolve(target, pkg, "README.md")),
         readFile(path.resolve(target, pkg, "package.json")),
@@ -82,7 +82,7 @@ const findSectionByNode = (tree, node) => {
   const end = findAfter(
     tree,
     node,
-    nextNode => nextNode.type === "heading" && nextNode.depth <= node.depth,
+    (nextNode) => nextNode.type === "heading" && nextNode.depth <= node.depth,
   );
   const section = findAllBetween(tree, node, end);
   return section.slice(1);
@@ -92,9 +92,7 @@ const generatePluginDocs = async () => {
   const packages = await readPackages("packages");
 
   const plugins = packages.reduce((memo, [readme, pkg]) => {
-    const tree = unified()
-      .use(markdown)
-      .parse(readme);
+    const tree = unified().use(markdown).parse(readme);
 
     let installation;
     let pluginHeaders;
@@ -108,7 +106,7 @@ const generatePluginDocs = async () => {
     const {version, author, homepage, keywords, bugs, license} = pkg;
 
     return pluginHeaders
-      .filter(node => node.type === "heading")
+      .filter((node) => node.type === "heading")
       .reduce((acc, node) => {
         const desc = findSectionByNode(tree, node);
         return acc.concat({
@@ -130,14 +128,12 @@ const generatePluginDocs = async () => {
 
   return Promise.all(
     plugins
-      .filter(plugin => !deprecatedPlugins.includes(plugin.name))
-      .map(async plugin => {
+      .filter((plugin) => !deprecatedPlugins.includes(plugin.name))
+      .map(async (plugin) => {
         const installationText = unified()
           .use(stringify)
           .stringify(plugin.installation);
-        const pluginText = unified()
-          .use(stringify)
-          .stringify(plugin.desc);
+        const pluginText = unified().use(stringify).stringify(plugin.desc);
 
         const pathName = `plugins/${plugin.name}`;
         const filePath = path.join("docs", `${pathName}.md`);
@@ -152,7 +148,7 @@ version: "${plugin.version}"
 bugs: "${plugin.bugs}"
 license: "${plugin.license}"
 homepage: "${plugin.homepage}"
-tags: [${plugin.keywords.map(k => `"${k}"`).join(",")}]
+tags: [${plugin.keywords.map((k) => `"${k}"`).join(",")}]
 ---
 # ${plugin.name} plugin
 
@@ -182,9 +178,7 @@ const generateInstrumentDocs = async () => {
   const packages = await readPackages("packages");
 
   const instruments = packages.reduce((memo, [readme, pkg]) => {
-    const tree = unified()
-      .use(markdown)
-      .parse(readme);
+    const tree = unified().use(markdown).parse(readme);
 
     let installation;
     let instrumentHeaders;
@@ -198,7 +192,7 @@ const generateInstrumentDocs = async () => {
     const {version, author, homepage, keywords, bugs, license} = pkg;
 
     return instrumentHeaders
-      .filter(node => node.type === "heading")
+      .filter((node) => node.type === "heading")
       .reduce((acc, node) => {
         const desc = findSectionByNode(tree, node);
         return acc.concat({
@@ -219,7 +213,7 @@ const generateInstrumentDocs = async () => {
   }, []);
 
   return Promise.all(
-    instruments.map(async instrument => {
+    instruments.map(async (instrument) => {
       const installationText = unified()
         .use(stringify)
         .stringify(instrument.installation);
@@ -240,7 +234,7 @@ version: "${instrument.version}"
 bugs: "${instrument.bugs}"
 license: "${instrument.license}"
 homepage: "${instrument.homepage}"
-tags: [${instrument.keywords.map(k => `"${k}"`).join(",")}]
+tags: [${instrument.keywords.map((k) => `"${k}"`).join(",")}]
 ---
 # ${instrument.name} instrument
 

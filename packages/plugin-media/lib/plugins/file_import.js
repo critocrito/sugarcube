@@ -51,10 +51,10 @@ const fileImportPlugin = async (envelope, {log, cfg, stats}) => {
     log.debug(`Progress: ${cnt}/${total} units (${percent}%).`),
   );
 
-  const data = await mapper(async unit => {
+  const data = await mapper(async (unit) => {
     logCounter();
 
-    const downloads = await collectP(async media => {
+    const downloads = await collectP(async (media) => {
       const {type, term, href} = media;
       const source = href || term;
       const idHash = media._sc_id_hash;
@@ -123,23 +123,20 @@ const fileImportPlugin = async (envelope, {log, cfg, stats}) => {
       stats.count("success");
       if (importExists) stats.count("new");
 
-      return Object.assign(
-        {},
-        {
-          location,
-          md5,
-          sha256,
-          type,
-          term,
-        },
-        href ? {href} : {},
-        keepOriginal ? {original: origLocation} : {},
-      );
+      return {
+        location,
+        md5,
+        sha256,
+        type,
+        term,
+        ...(href ? {href} : {}),
+        ...(keepOriginal ? {original: origLocation} : {}),
+      };
     }, unit._sc_media);
 
     return Object.assign(unit, {
       _sc_downloads: unit._sc_downloads.concat(
-        downloads.filter(d => d != null),
+        downloads.filter((d) => d != null),
       ),
     });
   }, envelope.data);

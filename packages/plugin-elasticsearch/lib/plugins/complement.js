@@ -10,7 +10,7 @@ const plugin = async (envelope, {cfg, log, stats}) => {
 
   log.info(`Using ${host}:${port}/${index}.`);
 
-  const ids = envelope.data.map(u => u._sc_id_hash);
+  const ids = envelope.data.map((u) => u._sc_id_hash);
 
   if (ids.length > 0) stats.count("total", ids.length);
 

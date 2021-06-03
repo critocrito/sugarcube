@@ -13,9 +13,11 @@ const fetchRevisions = (envelope, {log}) => {
   return flowP(
     [
       db.fetchRevisions,
-      tapP(rs => log.info(`Fetched ${size(rs)} revisions.`)),
-      collectP(r => db.fetchUnit(r.unit).then(u => d.concatOne(r, {unit: u}))),
-      rs => env.concatData(rs, envelope),
+      tapP((rs) => log.info(`Fetched ${size(rs)} revisions.`)),
+      collectP((r) =>
+        db.fetchUnit(r.unit).then((u) => d.concatOne(r, {unit: u})),
+      ),
+      (rs) => env.concatData(rs, envelope),
     ],
     queries,
   );

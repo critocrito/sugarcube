@@ -10,14 +10,14 @@ const plugin = (envelope, {log, cfg}) => {
   if (isEmpty(queries)) return envelope;
 
   const query = flow([
-    map(q => `((\\w+\\s*)?(\\w+\\s*)?${q}(\\s*\\w+)?(\\s*\\w+)?)`),
+    map((q) => `((\\w+\\s*)?(\\w+\\s*)?${q}(\\s*\\w+)?(\\s*\\w+)?)`),
     join("|"),
-    r => new RegExp(r, "gi"),
+    (r) => new RegExp(r, "gi"),
   ])(queries);
 
   log.info(`Matching: ${query}`);
 
-  return env.fmapData(unit => {
+  return env.fmapData((unit) => {
     if (!unit[field]) return unit;
 
     const matches = (unit[field] || "").match(query);

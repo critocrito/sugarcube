@@ -39,16 +39,17 @@ const mailFailedStats = async (envelope, {cfg, log, stats}) => {
 
   // Stats for each plugin.
   const plugins = Object.keys(report.plugins || {})
-    .filter(key => !/^(tap|mail|workflow)/.test(key))
-    .map(key => {
+    .filter((key) => !/^(tap|mail|workflow)/.test(key))
+    .map((key) => {
       const stat = report.plugins[key];
       const start = stat.start[0];
       const end = (stat.duration || []).reduce((memo, d) => memo + d, start);
-      return Object.assign({}, stat, {
+      return {
+        ...stat,
         name: key,
         total: (stat.total || []).reduce((memo, t) => memo + t, 0),
         duration: formatDistance(new Date(start), new Date(end)),
-      });
+      };
     })
     .sort((a, b) => {
       if (a.order > b.order) return 1;
@@ -58,9 +59,13 @@ const mailFailedStats = async (envelope, {cfg, log, stats}) => {
 
   // Create the actual email.
   const subject = `[${project}]: Report for ${report.name} (${marker}).`;
-  const body = dots.pipeline_stats(
-    Object.assign({}, {recipients, report, total, created, plugins}),
-  );
+  const body = dots.pipeline_stats({
+    recipients,
+    report,
+    total,
+    created,
+    plugins,
+  });
   const transporter = createTransporter(cfg.mail);
 
   log.info(`Mailing the report for ${report.name} (${marker}).`);
@@ -68,13 +73,13 @@ const mailFailedStats = async (envelope, {cfg, log, stats}) => {
   if (isDebug) log.info(["Email text:", "", body].join("\n"));
 
   await Promise.all(
-    recipients.map(recipient => {
+    recipients.map((recipient) => {
       log.info(`Mailing pipeline stats to ${recipient}.`);
 
       return flowP(
         [
-          to => mail(transporter, sender, to, body, subject, !noEncrypt),
-          tapP(info => {
+          (to) => mail(transporter, sender, to, body, subject, !noEncrypt),
+          tapP((info) => {
             if (isDebug)
               log.info(
                 ["Emailing the following:", "", info.message.toString()].join(
@@ -83,7 +88,7 @@ const mailFailedStats = async (envelope, {cfg, log, stats}) => {
               );
             log.info(`Accepted mail for: ${info.accepted.join(", ")}`);
           }),
-          caughtP(e => {
+          caughtP((e) => {
             log.warn(`Failed to send to ${recipient}.`);
             log.warn(e);
           }),

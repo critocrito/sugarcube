@@ -4,9 +4,9 @@ import {envelope as env} from "@sugarcube/core";
 
 import {safeExtract} from "../utils";
 
-const parseLinks = envelope =>
+const parseLinks = (envelope) =>
   env.fmapDataMediaAsync(
-    unit =>
+    (unit) =>
       flowP(
         [
           property("term"),

@@ -29,7 +29,7 @@ const plugin = async (envelope, {cfg, log, stats}) => {
   const queries =
     queriesByType.length === 0
       ? await db.queries.listAll()
-      : await flatmapP(async queryType => {
+      : await flatmapP(async (queryType) => {
           const qs = await db.queries.listByType(queryType);
 
           log.info(`Importing ${qs.length} queries of type '${queryType}'.`);

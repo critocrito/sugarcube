@@ -19,8 +19,8 @@ const fetchUnits = (envelope, {log, cfg}) => {
   return flowP(
     [
       db.fetchData,
-      tapP(rs => log.info(`Fetched ${size(rs)} units.`)),
-      rs => env.concatData(rs, envelope),
+      tapP((rs) => log.info(`Fetched ${size(rs)} units.`)),
+      (rs) => env.concatData(rs, envelope),
     ],
     queries,
   );

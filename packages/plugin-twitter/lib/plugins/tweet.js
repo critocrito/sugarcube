@@ -19,7 +19,7 @@ const tweetsPlugin = async (envelope, {log, cfg, stats}) => {
 
   const tweetIds = env
     .queriesByType(querySource, envelope)
-    .map(term => parseTweetId(term));
+    .map((term) => parseTweetId(term));
 
   const logCounter = counter(
     envelope.data.length,
@@ -30,7 +30,7 @@ const tweetsPlugin = async (envelope, {log, cfg, stats}) => {
 
   log.info(`Querying Twitter for ${tweetIds.length} tweets.`);
 
-  const fetchTweets = ids => {
+  const fetchTweets = (ids) => {
     log.info(`Fetching a chunk of ${ids.length} tweets.`);
     stats.count("total", ids.length);
 
@@ -44,7 +44,7 @@ const tweetsPlugin = async (envelope, {log, cfg, stats}) => {
           const fails = [];
           // Verify the response and bail otherwise.
           if (response == null) {
-            ids.forEach(id => {
+            ids.forEach((id) => {
               fails.push({
                 type: querySource,
                 term: id,
@@ -55,7 +55,7 @@ const tweetsPlugin = async (envelope, {log, cfg, stats}) => {
             return [results, fails];
           }
 
-          Object.keys(response).forEach(id => {
+          Object.keys(response).forEach((id) => {
             logCounter();
             if (response[id] == null) {
               fails.push({
@@ -84,8 +84,8 @@ const tweetsPlugin = async (envelope, {log, cfg, stats}) => {
           return results;
         },
         // Merge the query into the data unit.
-        results =>
-          results.map(r => {
+        (results) =>
+          results.map((r) => {
             const q = envelope.queries.find(({type, term}) => {
               const tweetId = decisions.canNcube() ? r._sc_id : r.tweet_id;
               return type === querySource && parseTweetId(term) === tweetId;
@@ -112,9 +112,11 @@ const tweetsPlugin = async (envelope, {log, cfg, stats}) => {
             );
           }),
         // Handle any API errors.
-        caughtP(e => {
+        caughtP((e) => {
           const reason = parseApiErrors(e);
-          ids.forEach(id => stats.fail({type: querySource, term: id, reason}));
+          ids.forEach((id) =>
+            stats.fail({type: querySource, term: id, reason}),
+          );
           return [];
         }),
       ],

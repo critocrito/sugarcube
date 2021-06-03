@@ -7,7 +7,7 @@ import {assertDb, unitExistsNot} from "../utils";
 const storeRelations = (envelope, {log}) =>
   db
     .storeRelations(env.filterData(unitExistsNot, envelope))
-    .then(relations => log.info(`Storing ${size(relations)} relations.`))
+    .then((relations) => log.info(`Storing ${size(relations)} relations.`))
     .then(() => envelope);
 
 const plugin = p.liftManyA2([assertDb, storeRelations]);

@@ -77,12 +77,12 @@ const plugin = async (envelope, {cfg, log, stats}) => {
   // ensure the download directory.
   await mkdirP(dataDir);
 
-  const data = await mapper(async unit => {
+  const data = await mapper(async (unit) => {
     // Avoid live broadcasts, otherwise youtubedl gets "stuck".
     if (unit.snippet != null && unit.snippet.liveBroadcastContent === "live")
       return unit;
 
-    const medias = await collectP(async media => {
+    const medias = await collectP(async (media) => {
       const {type, term, href} = media;
       const source = href || term;
       const idHash = media._sc_id_hash;
@@ -147,27 +147,22 @@ const plugin = async (envelope, {cfg, log, stats}) => {
         md5sum(location),
         sha256sum(location),
       ]);
-      unit._sc_downloads.push(
-        Object.assign(
-          {},
-          {
-            location,
-            md5,
-            sha256,
-            type,
-            term,
-            href,
-          },
-          href ? {href} : {},
-        ),
-      );
+      unit._sc_downloads.push({
+        location,
+        md5,
+        sha256,
+        type,
+        term,
+        href,
+        ...(href ? {href} : {}),
+      });
 
       return media;
     }, unit._sc_media);
 
     logCounter();
 
-    return Object.assign({}, unit, {_sc_media: medias});
+    return {...unit, _sc_media: medias};
   }, envelope.data);
 
   return env.envelope(data, envelope.queries);
@@ -197,8 +192,7 @@ plugin.argv = {
   "media.youtubedl_parallel": {
     type: "number",
     nargs: 1,
-    desc:
-      "Specify the number of parallel youtubedl downloads. Can be between 1 and 8.",
+    desc: "Specify the number of parallel youtubedl downloads. Can be between 1 and 8.",
     default: 1,
   },
   "media.youtubedl_force_download": {

@@ -15,7 +15,7 @@ const apiPages = (envelope, {log, cfg, stats}) => {
 
   log.debug(`Found ${size(queries)} queries.`);
 
-  const queryPage = async q => {
+  const queryPage = async (q) => {
     let data = [];
     try {
       data = await page(fetcher, q);
@@ -26,7 +26,7 @@ const apiPages = (envelope, {log, cfg, stats}) => {
   };
 
   return flowP(
-    [flatmapP(queryPage), rs => env.concatData(rs, envelope)],
+    [flatmapP(queryPage), (rs) => env.concatData(rs, envelope)],
     queries,
   );
 };

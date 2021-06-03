@@ -9,7 +9,7 @@ const querySource = "glob_pattern";
 const plugin = async (envelope, {log, stats}) => {
   const queries = env.queriesByType(querySource, envelope);
 
-  const data = await flatmapP(async query => {
+  const data = await flatmapP(async (query) => {
     const files = await unfold(query);
 
     if (files.length === 0) {
@@ -48,7 +48,10 @@ const plugin = async (envelope, {log, stats}) => {
     `Fetched a total of ${data.length} units from ${queries.length} queries.`,
   );
 
-  return env.concatData(data.filter(unit => unit != null), envelope);
+  return env.concatData(
+    data.filter((unit) => unit != null),
+    envelope,
+  );
 };
 
 plugin.argv = {};

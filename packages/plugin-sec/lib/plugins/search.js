@@ -26,7 +26,7 @@ const querySource = "sec_search";
 
 const search = curry((numResults, count, term) =>
   collectP2(
-    i => {
+    (i) => {
       const params = {
         sort: "Date",
         formType: "FormSD",
@@ -47,7 +47,7 @@ const search = curry((numResults, count, term) =>
   ),
 );
 
-const scrape = html => {
+const scrape = (html) => {
   const $ = cheerio.load(html);
   const results = $("#ifrm2 table:nth-child(2) tr:not(:first-child)").toArray();
 
@@ -89,13 +89,13 @@ const plugin = (envelope, {log, cfg}) => {
   const total = get("sec.results", cfg);
   const queries = env.queriesByType(querySource, envelope);
 
-  const doSearch = term => {
+  const doSearch = (term) => {
     log.info(`Searching the SEC for '${term}'`);
     return flowP(
       [
         flowP([search(pageCount, total), flatmapP2(scrape)]),
-        tapP(rs => log.info(`Fetched ${size(rs)} results.`)),
-        collectP2(unit =>
+        tapP((rs) => log.info(`Fetched ${size(rs)} results.`)),
+        collectP2((unit) =>
           merge(unit, {_sc_queries: [{type: "sec_search", term}]}),
         ),
       ],
@@ -103,7 +103,7 @@ const plugin = (envelope, {log, cfg}) => {
     );
   };
 
-  return flatmapP2(q => retryP(doSearch(q)), queries).then(rs =>
+  return flatmapP2((q) => retryP(doSearch(q)), queries).then((rs) =>
     env.concatData(rs, envelope),
   );
 };

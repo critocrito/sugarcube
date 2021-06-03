@@ -118,7 +118,7 @@ describe("parse twitter tweet urls", () => {
     const expected =
       "https://twitter.com/Ibrahim_waza/status/1073152537400934400";
 
-    const result = every(u => normalizeTwitterTweetUrl(u) === expected, urls);
+    const result = every((u) => normalizeTwitterTweetUrl(u) === expected, urls);
 
     result.should.equal(true);
   });
@@ -152,7 +152,7 @@ describe("parse twitter feed urls", () => {
 
     const expected = "https://twitter.com/WADHOSHA";
 
-    const result = every(u => normalizeTwitterUserUrl(u) === expected, urls);
+    const result = every((u) => normalizeTwitterUserUrl(u) === expected, urls);
 
     result.should.equal(true);
   });

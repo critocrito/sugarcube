@@ -1,7 +1,7 @@
 import {chunk, get} from "lodash/fp";
 import {envelope as env, runner} from "@sugarcube/core";
 
-const remainderPipeline = plugins => {
+const remainderPipeline = (plugins) => {
   const index = plugins.indexOf("workflow_multiplex");
   const endIndex = plugins.indexOf("workflow_multiplex_end");
   return endIndex === -1
@@ -37,21 +37,21 @@ const plugin = async (envelope, {cfg, log, cache, stats, plugins, events}) => {
       plugins,
       cache,
       stats,
-      config: Object.assign({}, cfg, {plugins: pipeline}),
+      config: {...cfg, plugins: pipeline},
       queries: queries.concat(staticQueries),
     });
     run.events.on("log", ({type, msg}) => {
       events.emit("log", {type, msg: `Batch ${batch}: ${msg}`});
     });
-    run.events.on("error", e => {
+    run.events.on("error", (e) => {
       log.error(`Batch ${batch}: ${e.message}`);
       if (cfg.debug) log.error(e);
       if (!continueOnError) abort = true;
     });
     run.events.on("run", () => log.info(`Starting batch ${batch}.`));
     run.events.on("end", () => log.info(`Finished batch ${batch}.`));
-    ["plugin_start", "plugin_end", "fail", "count", "duration"].forEach(name =>
-      run.events.on(name, (...args) => events.emit(name, ...args)),
+    ["plugin_start", "plugin_end", "fail", "count", "duration"].forEach(
+      (name) => run.events.on(name, (...args) => events.emit(name, ...args)),
     );
 
     return memo.then(async () => {
@@ -63,14 +63,13 @@ const plugin = async (envelope, {cfg, log, cache, stats, plugins, events}) => {
 
   log.info(`Finished all batches. Running the tail of the pipeline.`);
 
-  if (tailPipeline.length === 0)
-    return Object.assign({endEarly: true}, env.empty());
+  if (tailPipeline.length === 0) return {endEarly: true, ...env.empty()};
 
   const run = runner({
     plugins,
     cache,
     stats,
-    config: Object.assign({}, cfg, {plugins: tailPipeline}),
+    config: {...cfg, plugins: tailPipeline},
     queries: envelope.queries,
   });
   [
@@ -81,13 +80,13 @@ const plugin = async (envelope, {cfg, log, cache, stats, plugins, events}) => {
     "fail",
     "count",
     "duration",
-  ].forEach(name =>
+  ].forEach((name) =>
     run.events.on(name, (...args) => events.emit(name, ...args)),
   );
 
   await run();
 
-  return Object.assign({endEarly: true}, env.empty());
+  return {endEarly: true, ...env.empty()};
 };
 
 plugin.argv = {

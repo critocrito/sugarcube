@@ -17,11 +17,11 @@ const plugin = (envelope, {cfg, log}) => {
     )}`,
   );
 
-  return env.fmapData(unit => {
+  return env.fmapData((unit) => {
     const queries = envelope.queries.filter(
       ({type, term}) =>
         unit._sc_queries.find(
-          query => query.type === type && query.term === term,
+          (query) => query.type === type && query.term === term,
         ) != null,
     );
 

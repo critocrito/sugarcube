@@ -36,7 +36,7 @@ describe("deep concatenation", () => {
   // FIXME: This test fails, because concatManyWith doesn't generate
   // _sc_id_hash for all semantic sub lists in the unit. Prehashing every unit
   // fixes the test. Needs revision.
-  property("on equal data", dataArb, xs =>
+  property("on equal data", dataArb, (xs) =>
     isEqual(
       sort(concatManyWith(dataId, concatOne, data.hash(xs), data.hash(xs))),
       sort(concatManyWith(dataId, concatOne, data.hash(xs), [])),
@@ -69,22 +69,16 @@ describe("uid generation", () => {
       .createHash("sha1")
       .update(Math.floor(d / 1000).toString())
       .digest("hex");
-    const random = crypto
-      .createHash("sha1")
-      .update(seed)
-      .digest("hex");
-    return crypto
-      .createHmac("sha1", random)
-      .update(counter)
-      .digest("hex");
+    const random = crypto.createHash("sha1").update(seed).digest("hex");
+    return crypto.createHmac("sha1", random).update(counter).digest("hex");
   };
 
-  property("pure version", jsc.nestring, seed => {
+  property("pure version", jsc.nestring, (seed) => {
     const d = Date.now();
     return isEqual(id(seed, d), uid(seed, d));
   });
 
-  property("uses now as counter if not specified", jsc.nestring, seed => {
+  property("uses now as counter if not specified", jsc.nestring, (seed) => {
     const d = Date.now();
     return isEqual(id(seed, d), uid(seed));
   });

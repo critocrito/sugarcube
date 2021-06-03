@@ -53,7 +53,7 @@ const plugin = async (envelope, {log, cfg, stats}) => {
 
   const data = await flowP(
     [
-      mapper(async url => {
+      mapper(async (url) => {
         stats.count("total");
 
         let unit;
@@ -126,10 +126,10 @@ const plugin = async (envelope, {log, cfg, stats}) => {
           }, {}),
         };
       }),
-      async rs => {
+      async (rs) => {
         if (tmpdir != null) await cleanUp(tmpdir);
         if (dispose != null) await dispose();
-        return rs.filter(r => r !== null);
+        return rs.filter((r) => r !== null);
       },
     ],
     queries,

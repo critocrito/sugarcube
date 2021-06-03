@@ -33,7 +33,7 @@ const exportFailedStatsPlugin = (envelope, {log, cfg, stats}) => {
       resolve(envelope);
     });
 
-    failedStats.forEach(r => csv.write(r));
+    failedStats.forEach((r) => csv.write(r));
     csv.end();
   });
 };

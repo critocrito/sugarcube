@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import stringify from "csv-stringify";
 
-const instrument = cfg => {
+const instrument = (cfg) => {
   const dataDir = get("csv.data_dir", cfg);
   const delimiter = get("csv.delimiter", cfg);
   const label = get("csv.label", cfg);
@@ -11,7 +11,7 @@ const instrument = cfg => {
 
   const columns = ["type", "term", "reason", "plugin"];
 
-  let file = filename => {
+  let file = (filename) => {
     if (filename == null) return null;
     if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir);
     const flags = appendMode ? "a" : "w";
@@ -37,7 +37,7 @@ const instrument = cfg => {
     return file();
   };
 
-  let csvWriter = filename => {
+  let csvWriter = (filename) => {
     if (filename == null) return null;
     const writeStream = file(filename);
     const csv = stringify({header: false, columns, delimiter});

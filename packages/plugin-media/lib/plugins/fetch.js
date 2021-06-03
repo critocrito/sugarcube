@@ -21,7 +21,7 @@ const allowedTypes = ["video", "image", "document"];
 
 const plugin = async (envelope, {log, cfg, stats}) => {
   const dataDir = get("media.data_dir", cfg);
-  const getTypes = sToA(",", get("media.fetch_types", cfg)).filter(t =>
+  const getTypes = sToA(",", get("media.fetch_types", cfg)).filter((t) =>
     allowedTypes.includes(t),
   );
   const force = get("media.force", cfg);
@@ -39,8 +39,8 @@ const plugin = async (envelope, {log, cfg, stats}) => {
     log.debug(`Progress: ${cnt}/${total} units (${percent}%).`),
   );
 
-  return env.fmapDataAsync(async unit => {
-    const downloads = await collectP(async media => {
+  return env.fmapDataAsync(async (unit) => {
+    const downloads = await collectP(async (media) => {
       if (!includes(media.type, getTypes)) return null;
 
       stats.count("total");
@@ -79,7 +79,7 @@ const plugin = async (envelope, {log, cfg, stats}) => {
       try {
         const locations = [newLocation, oldLocation, oldLocation2];
         const locationsExists = await Promise.all(
-          locations.map(l => existsP(l)),
+          locations.map((l) => existsP(l)),
         );
         for (let i = 0; i < locationsExists.length; i += 1) {
           if (locationsExists[i]) {
@@ -140,24 +140,21 @@ const plugin = async (envelope, {log, cfg, stats}) => {
       stats.count("success");
       if (!locationExists) stats.count("new");
 
-      return Object.assign(
-        {},
-        {
-          location,
-          md5,
-          sha256,
-          type,
-          term,
-        },
-        href ? {href} : {},
-      );
+      return {
+        location,
+        md5,
+        sha256,
+        type,
+        term,
+        ...(href ? {href} : {}),
+      };
     }, unit._sc_media);
 
     logCounter();
 
     return Object.assign(unit, {
       _sc_downloads: unit._sc_downloads.concat(
-        downloads.filter(d => d != null),
+        downloads.filter((d) => d != null),
       ),
     });
   }, envelope);

@@ -22,15 +22,15 @@ const plugin = (envelope, {cfg, log, stats}) => {
 
   return Elastic.Do(
     function* indexUnits({bulk, queryExisting}) {
-      const ids = envelope.data.map(u => u._sc_id_hash);
+      const ids = envelope.data.map((u) => u._sc_id_hash);
       const existingIds = yield queryExisting(index, ids);
 
       const dataToIndex = env.filterData(
-        u => !existingIds.includes(u._sc_id_hash),
+        (u) => !existingIds.includes(u._sc_id_hash),
         envelope,
       );
       const dataToUpdate = env.filterData(
-        u => existingIds.includes(u._sc_id_hash),
+        (u) => existingIds.includes(u._sc_id_hash),
         envelope,
       );
 
@@ -77,7 +77,7 @@ const plugin = (envelope, {cfg, log, stats}) => {
       const errors = yield bulk(index, {index: toIndex, update: toUpdate});
 
       if (size(errors) > 0) {
-        errors.forEach(e =>
+        errors.forEach((e) =>
           stats.fail({type: "any_unit", term: e.id, reason: e.error}),
         );
       }

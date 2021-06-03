@@ -12,8 +12,8 @@ const fetchPage = (envelope, {cfg, log}) => {
   const dataDir = get("http.data_dir", cfg);
 
   return env.fmapDataAsync(
-    unit =>
-      collectP(media => {
+    (unit) =>
+      collectP((media) => {
         if (!includes(media.type, wgetTypes)) return media;
 
         const {type, term} = media;
@@ -24,7 +24,7 @@ const fetchPage = (envelope, {cfg, log}) => {
           [
             wget(cmd, location),
             () => unit._sc_downloads.push({location, type, term}),
-            caughtP(e =>
+            caughtP((e) =>
               // FIXME: Wget breaks a lot with error code 8.
               log.error(`Wget on ${term} failed with ${e}`),
             ),
@@ -33,7 +33,7 @@ const fetchPage = (envelope, {cfg, log}) => {
           ],
           term,
         );
-      }, unit._sc_media).then(ms => merge(unit, {_sc_media: ms})),
+      }, unit._sc_media).then((ms) => merge(unit, {_sc_media: ms})),
     envelope,
   );
 };

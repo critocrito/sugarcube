@@ -21,7 +21,7 @@ const importQueries = (envelope, {log, cfg, cache, stats}) => {
 
   log.info(`Fetching ${queries.length} sheet${queries.length > 1 ? "s" : ""}`);
 
-  const querySheet = async query => {
+  const querySheet = async (query) => {
     const [qs, t, history] = await SheetsDo(
       function* fetchQueries({
         getSheet,
@@ -60,7 +60,7 @@ const importQueries = (envelope, {log, cfg, cache, stats}) => {
           : rows[0].concat("last access");
         const lastAccessIndex = header.indexOf("last access");
         const rowsToMerge = [header].concat(
-          rows.slice(1).map(row =>
+          rows.slice(1).map((row) =>
             row
               .slice(0, lastAccessIndex)
               .concat(now)
@@ -90,12 +90,12 @@ const importQueries = (envelope, {log, cfg, cache, stats}) => {
   return flowP(
     [
       flatmapP(querySheet),
-      tapP(rs => {
+      tapP((rs) => {
         const count = rs.length;
         log.info(`Fetched a total of ${count} quer${count > 1 ? "ies" : "y"}.`);
         if (tokens != null) cache.update("sheets.tokens", merge(tokens));
       }),
-      rs => env.concatQueries(rs, envelope),
+      (rs) => env.concatQueries(rs, envelope),
     ],
     queries,
   );

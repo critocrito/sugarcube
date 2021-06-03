@@ -21,14 +21,14 @@ const plugin = async (envelope, {cfg, log, stats}) => {
   const files = await flowP(
     [
       env.queriesByType(querySourceGlob),
-      flatmapP(p => globP(...[p, {nodir: true}])),
-      map(file => JSON.parse(fs.readFileSync(file))),
+      flatmapP((p) => globP(...[p, {nodir: true}])),
+      map((file) => JSON.parse(fs.readFileSync(file))),
     ],
     envelope,
   );
   const queries = flow([
     env.queriesByType(querySourceQuery),
-    map(query => JSON.parse(query)),
+    map((query) => JSON.parse(query)),
   ])(envelope);
 
   log.debug(`Read ${size(files)} bodies from file.`);
@@ -45,7 +45,7 @@ const plugin = async (envelope, {cfg, log, stats}) => {
           body = merge(body, {
             _source: includeFields
               .concat(["_sc_*_hash"])
-              .map(f => f.replace(/^_sc/, "$sc")),
+              .map((f) => f.replace(/^_sc/, "$sc")),
           });
         const units = yield query(index, body, amount);
         log.debug(`Query: ${JSON.stringify(body)}`);

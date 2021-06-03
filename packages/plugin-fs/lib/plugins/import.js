@@ -12,7 +12,7 @@ const plugin = async (envelope, {cfg, log, stats}) => {
 
   const queries = env.queriesByType(querySource, envelope);
 
-  const data = await flatmapP(async query => {
+  const data = await flatmapP(async (query) => {
     const files = await unfold(query);
 
     if (files.length === 0) {
@@ -22,7 +22,7 @@ const plugin = async (envelope, {cfg, log, stats}) => {
 
     log.info(`Expanding glob pattern ${query} to ${files.length} files.`);
 
-    return collectP(async unit => {
+    return collectP(async (unit) => {
       const {location} = unit;
       const category = mimeCategory(location);
 
@@ -49,7 +49,8 @@ const plugin = async (envelope, {cfg, log, stats}) => {
       stats.count("total");
       stats.count("success");
 
-      return Object.assign({}, unit, {
+      return {
+        ...unit,
         _sc_queries: [{type: querySource, term: query}],
         _sc_media: [{type: category, term: location}],
         _sc_href: location,
@@ -59,11 +60,14 @@ const plugin = async (envelope, {cfg, log, stats}) => {
           if (unitData[key] == null) return memo;
           return Object.assign(memo, {[key]: unitData[key]});
         }, {}),
-      });
+      };
     }, files);
   }, queries);
 
-  return env.concatData(data.filter(unit => unit != null), envelope);
+  return env.concatData(
+    data.filter((unit) => unit != null),
+    envelope,
+  );
 };
 
 plugin.argv = {

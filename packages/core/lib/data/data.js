@@ -28,8 +28,8 @@ const listFields = [
 const hashUnitId = hashWithField("_sc_id_fields");
 const hashUnitContent = hashWithField("_sc_content_fields");
 
-const dataId = u => u._sc_id_hash || hashUnitId(u);
-const contentId = u => u._sc_content_hash || hashUnitContent(u);
+const dataId = (u) => u._sc_id_hash || hashUnitId(u);
+const contentId = (u) => u._sc_content_hash || hashUnitContent(u);
 
 /**
  * A Unit is an object containing a discrete piece of
@@ -161,7 +161,7 @@ const concatOne = (a, b) => {
  * @param {Unit} u A single unit of data.
  * @returns {Unit} The same unit as on input, but with hashes calculated.
  */
-const hashOne = u => {
+const hashOne = (u) => {
   const hashes = reduce(
     (memo, h) => merge(memo, {[h]: ls.hash(u[h])}),
     {_sc_id_hash: dataId(u), _sc_content_hash: contentId(u)},
@@ -257,7 +257,7 @@ const {fmapAsync} = ls;
  * fmapList('_sc_downloads', f, xs);
  */
 const fmapList = curry3("fmapList", (field, f, xs) =>
-  fmap(u => concatOne(u, {[field]: ls.fmap(f, u[field])}), xs),
+  fmap((u) => concatOne(u, {[field]: ls.fmap(f, u[field])}), xs),
 );
 
 /**
@@ -276,7 +276,7 @@ const fmapList = curry3("fmapList", (field, f, xs) =>
  */
 const fmapListAsync = curry3("fmapListAsync", (field, f, xs) =>
   fmapAsync(
-    u => ls.fmapAsync(f, u[field]).then(ys => concatOne(u, {[field]: ys})),
+    (u) => ls.fmapAsync(f, u[field]).then((ys) => concatOne(u, {[field]: ys})),
     xs,
   ),
 );
@@ -356,7 +356,7 @@ const {filter} = ls;
  * @param {Data} xs The list of units.
  * @returns {Data} A list of units with duplicates removed.
  */
-const uniq = xs => uniqBy(dataId, xs);
+const uniq = (xs) => uniqBy(dataId, xs);
 
 /**
  * Calculate hashes for every unit of data in a list.
@@ -365,7 +365,7 @@ const uniq = xs => uniqBy(dataId, xs);
  * @param {Data} xs A list of units.
  * @returns {Data} A list of units, with hashes calculated for every unit.
  */
-const hash = xs => fmap(hashOne, xs);
+const hash = (xs) => fmap(hashOne, xs);
 
 export default {
   listFields,

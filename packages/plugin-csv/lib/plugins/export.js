@@ -32,12 +32,12 @@ const namespacePairsToObj = curry((ns, pairs) =>
 // lodash provides already `toPairs` for objects. This creates pairs of index
 // positions and values for arrays, e.g.:
 // toAryPairs(['a', 'b']) => [[0, 'a'], [1, 'b']].
-const toAryPairs = xs => zip(range(0, size(xs)), xs);
+const toAryPairs = (xs) => zip(range(0, size(xs)), xs);
 
 // Create a flat version of a nested unit, e.g.:
 // flatten({a: {b: 23, c: {a: 42}}, b: [1, 2], c: 23}) =>
 //         {a_b: 23, a_c_a: 42, b_0: 1, b_1: 2, c: 23}
-const flatten = unit =>
+const flatten = (unit) =>
   reduce(
     (memo, [key, value]) => {
       const iter = flow([namespacePairsToObj(key), flatten]);
@@ -107,7 +107,7 @@ const exportPlugin = (val, {cfg, log}) => {
     csv.on("finish", () => resolve(val));
 
     // Avoid lodash forEach to have eager evaluation.
-    data.forEach(r => csv.write(merge(template, r)));
+    data.forEach((r) => csv.write(merge(template, r)));
     csv.end();
   });
 };

@@ -16,13 +16,13 @@ const apiFeed = (envelope, {cfg, log}) => {
 
   log.debug(`Found ${size(queries)} queries.`);
 
-  const query = id => {
+  const query = (id) => {
     log.info(`Querying the feed of ${id}.`);
     return flowP(
       [
         feed(limit, fetcher),
-        tapP(ms => log.info(`Fetched ${size(ms)} messages for ${id}.`)),
-        caughtP(err => {
+        tapP((ms) => log.info(`Fetched ${size(ms)} messages for ${id}.`)),
+        caughtP((err) => {
           if (err.statusCode === 404) {
             const msg = get("error.error.message", err);
             log.warn(msg);
@@ -35,7 +35,10 @@ const apiFeed = (envelope, {cfg, log}) => {
     );
   };
 
-  return flowP([flatmapP(query), rs => env.concatData(rs, envelope)], queries);
+  return flowP(
+    [flatmapP(query), (rs) => env.concatData(rs, envelope)],
+    queries,
+  );
 };
 
 const plugin = p.liftManyA2([assertAppCredentials, apiFeed]);
@@ -45,8 +48,7 @@ plugin.argv = {
     type: "number",
     default: 0,
     nargs: 1,
-    desc:
-      "Limit the number of feed messages. Setting it to 0 removes the limit.",
+    desc: "Limit the number of feed messages. Setting it to 0 removes the limit.",
   },
 };
 

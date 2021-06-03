@@ -19,7 +19,7 @@ const listChannel = async (envelope, {cfg, log, stats}) => {
 
   const queries = env
     .queriesByType(querySource, envelope)
-    .map(term => parseYoutubeChannel(term));
+    .map((term) => parseYoutubeChannel(term));
 
   let range;
 
@@ -37,11 +37,10 @@ const listChannel = async (envelope, {cfg, log, stats}) => {
         `published_before is before published_after. Did you mean to switch them around?`,
       );
     } else {
-      range = Object.assign(
-        {},
-        {publishedBefore: format(till)},
-        from ? {publishedAfter: format(from)} : {},
-      );
+      range = {
+        publishedBefore: format(till),
+        ...(from ? {publishedAfter: format(from)} : {}),
+      };
     }
   }
   if (range)
@@ -60,12 +59,12 @@ const listChannel = async (envelope, {cfg, log, stats}) => {
     ? videoChannel(key, pickBy(identity, range))
     : videoChannelPlaylist(key);
 
-  const retrieveChannel = query =>
+  const retrieveChannel = (query) =>
     flowP(
       [
         tapP(() => stats.count("total")),
         parseYoutubeChannel,
-        async q => {
+        async (q) => {
           let exists;
 
           try {
@@ -81,7 +80,7 @@ const listChannel = async (envelope, {cfg, log, stats}) => {
           return exists
             ? flowP([
                 op,
-                results => {
+                (results) => {
                   const sourceQuery = envelope.queries.find(
                     ({type, term}) =>
                       // The deprecated video data format uses r.id, the new Ncube
@@ -93,7 +92,7 @@ const listChannel = async (envelope, {cfg, log, stats}) => {
 
                   const {tags, ...rest} = sourceQuery;
 
-                  return results.map(r =>
+                  return results.map((r) =>
                     Object.assign(
                       r,
                       {
@@ -111,11 +110,11 @@ const listChannel = async (envelope, {cfg, log, stats}) => {
                     ),
                   );
                 },
-                caughtP(e => {
+                caughtP((e) => {
                   stats.fail({type: querySource, term: q, reason: e.message});
                   return [];
                 }),
-                tapP(ds => {
+                tapP((ds) => {
                   const total = size(ds);
                   log.info(`Received ${total} videos for ${query}.`);
                   stats.count("success");

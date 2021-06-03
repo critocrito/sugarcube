@@ -13,14 +13,14 @@ const fetchRelations = (envelope, {cfg, log}) => {
   return flowP(
     [
       db.fetchRelations,
-      tapP(rs => log.info(`Fetched ${size(rs)} relations.`)),
+      tapP((rs) => log.info(`Fetched ${size(rs)} relations.`)),
       whenP(
         () => get("mongodb.embed_units", cfg),
-        collectP(r =>
-          db.fetchData(r.units).then(units => d.concatOne(r, {units})),
+        collectP((r) =>
+          db.fetchData(r.units).then((units) => d.concatOne(r, {units})),
         ),
       ),
-      rs => env.concatData(rs, envelope),
+      (rs) => env.concatData(rs, envelope),
     ],
     queries,
   );

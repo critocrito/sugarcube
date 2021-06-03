@@ -12,7 +12,7 @@ const plugin = (envelope, {cfg, log, stats}) => {
   return mkdirP(dataDir)
     .then(() => {
       const diffStats = Object.keys(stats.get("diff"))
-        .map(key => [key, getOr([], "units", stats.get("diff")[key])])
+        .map((key) => [key, getOr([], "units", stats.get("diff")[key])])
         .filter(([, units]) => units.length > 0);
 
       if (diffStats.length === 0) return;
@@ -39,7 +39,7 @@ const plugin = (envelope, {cfg, log, stats}) => {
             return new Promise((resolve, reject) => {
               csv.on("error", reject);
               csv.on("finish", () => resolve(envelope));
-              units.forEach(r => csv.write(r));
+              units.forEach((r) => csv.write(r));
               csv.end();
             });
           }),

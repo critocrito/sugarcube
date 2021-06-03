@@ -19,22 +19,22 @@ const diffPlugin = (envelope, {cfg, log, stats}) => {
   return flowP(
     [
       // The order of the merge matters, otherwise the id_fields are merged badly.
-      flatmapP(pattern => unfold(pattern).then(map(u => merge(u, entity)))),
-      tapP(fs => log.info(`Diffing data from ${fs.length} files.`)),
+      flatmapP((pattern) => unfold(pattern).then(map((u) => merge(u, entity)))),
+      tapP((fs) => log.info(`Diffing data from ${fs.length} files.`)),
       parseMany(delimiter),
-      tapP(xs =>
+      tapP((xs) =>
         log.info(
           `Diffing ${xs.length} from CSV with ${envelope.data.length} from envelope.`,
         ),
       ),
-      xs => {
+      (xs) => {
         const toDiff = env.envelopeData(xs);
 
         const added = env.difference(envelope, toDiff);
         const removed = env.difference(toDiff, envelope);
         const shared = env.intersection(toDiff, envelope);
 
-        const strip = map(u =>
+        const strip = map((u) =>
           pick(u._sc_id_fields.concat(["_sc_id_hash"]), u),
         );
 

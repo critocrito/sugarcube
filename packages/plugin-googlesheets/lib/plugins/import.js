@@ -14,7 +14,7 @@ const importData = async (envelope, {log, cfg, cache, stats}) => {
   const sheetFields = getOr([], "google.sheet_fields", cfg);
   const idFields = get("google.id_fields", cfg);
   const queries = env.queriesByType(querySource, envelope);
-  const filters = queries.map(q => q.split(":"));
+  const filters = queries.map((q) => q.split(":"));
 
   const [units, tokens, history] = await SheetsDo(
     function* importUnits({getRows}) {

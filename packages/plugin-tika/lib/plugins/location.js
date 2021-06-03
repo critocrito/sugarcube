@@ -10,7 +10,7 @@ const plugin = (envelope, {log}) => {
   const fields = env.queriesByType(querySource, envelope);
 
   return env.fmapDataAsync(
-    unit =>
+    (unit) =>
       foldP(
         (memo, field) => {
           const value = get(field, unit);
@@ -20,7 +20,7 @@ const plugin = (envelope, {log}) => {
           }
           return flowP(
             [
-              tapP(url => log.debug(`Parse ${field}: ${url}.`)),
+              tapP((url) => log.debug(`Parse ${field}: ${url}.`)),
               safeExtract,
               ([text, meta]) =>
                 merge(memo, {

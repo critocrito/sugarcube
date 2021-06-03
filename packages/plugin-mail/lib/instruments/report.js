@@ -13,7 +13,7 @@ const dots = dot.process({
   templateSettings: {strip: false},
 });
 
-const instrument = cfg => {
+const instrument = (cfg) => {
   const noEncrypt = getOr(false, "mail.no_encrypt", cfg);
 
   return {
@@ -34,7 +34,7 @@ const instrument = cfg => {
         const report = [];
 
         if (plugins != null)
-          plugins.forEach(p => {
+          plugins.forEach((p) => {
             const plugin = pluginStats[p];
             const took = getOr(0, "durations.took", plugin);
             const counts = getOr({}, "counts", plugin);
@@ -47,11 +47,11 @@ const instrument = cfg => {
               name: p,
               took: humanDuration(took),
               counts: Object.keys(counts)
-                .map(c => `${c}=${counts[c]}`)
+                .map((c) => `${c}=${counts[c]}`)
                 .join(", "),
               durations: Object.keys(durations)
-                .filter(d => d !== "took")
-                .map(d => `${d}=${humanDuration(durations[d])}`)
+                .filter((d) => d !== "took")
+                .map((d) => `${d}=${humanDuration(durations[d])}`)
                 .join(", "),
               failures: failures.filter(({plugin: p2}) => p2 === p),
             });

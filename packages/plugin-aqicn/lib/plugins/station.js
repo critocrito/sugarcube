@@ -12,7 +12,7 @@ const plugin = (envelope, {log}) => {
   log.debug(`Found ${size(queries)} queries.`);
 
   return collectP(station, queries).then(
-    mapP(rs => e.concatData(rs, envelope)),
+    mapP((rs) => e.concatData(rs, envelope)),
   );
 };
 

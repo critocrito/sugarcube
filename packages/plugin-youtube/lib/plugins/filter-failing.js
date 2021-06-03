@@ -20,7 +20,7 @@ const checkAndFilterVideos = async (envelope, {cfg, log, stats}) => {
 
   const videos = await flatmapP(
     flowP([
-      async units => {
+      async (units) => {
         stats.count("total", units.length);
 
         const ids = units.reduce(
@@ -47,7 +47,7 @@ const checkAndFilterVideos = async (envelope, {cfg, log, stats}) => {
         }
 
         if (results.length !== units.length) {
-          units.forEach(unit => {
+          units.forEach((unit) => {
             unit._sc_media
               .filter(({type}) => type === "video")
               .forEach(({term}) => {

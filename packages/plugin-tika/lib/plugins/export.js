@@ -8,9 +8,10 @@ const plugin = (envelope, {cfg, log}) => {
   const dataDir = get("tika.data_dir", cfg);
 
   return mkdirP(dataDir).then(() =>
-    env.fmapDataAsync(unit => {
+    env.fmapDataAsync((unit) => {
       const medias = unit._sc_media.filter(
-        m => m.type !== "tika_location_text" || m.type !== "tika_location_meta",
+        (m) =>
+          m.type !== "tika_location_text" || m.type !== "tika_location_meta",
       );
       if (medias.length === 0) return unit;
 
@@ -37,7 +38,7 @@ const plugin = (envelope, {cfg, log}) => {
               type,
             }));
         }),
-      ).then(downloads =>
+      ).then((downloads) =>
         merge(unit, {
           _sc_downloads: unit._sc_downloads.concat(downloads),
         }),

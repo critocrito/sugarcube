@@ -48,12 +48,12 @@ const mailFailedStats = async (envelope, {cfg, log, stats}) => {
 
   const recipients = env.queriesByType(querySource, envelope);
   const subject = `[${project}]: Failed queries for ${name} (${marker}).`;
-  const body = dots.failed_stats(Object.assign({}, {recipients, failures}));
+  const body = dots.failed_stats({recipients, failures});
   const transporter = createTransporter(cfg.mail);
 
   log.info(`Mailing ${failures.length} failures.`);
 
-  const mailReport = async to => {
+  const mailReport = async (to) => {
     let text;
     let content;
     let attachments = [];

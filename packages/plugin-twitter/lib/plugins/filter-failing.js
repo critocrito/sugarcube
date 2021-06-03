@@ -25,75 +25,88 @@ const plugin = async (envelope, {log, cfg, stats}) => {
 
   log.info(`Checking ${envelope.data.length} tweets.`);
 
-  const twitterTweets = await flatmapP(async units => {
-    stats.count("total", units.length);
+  const twitterTweets = await flatmapP(
+    async (units) => {
+      stats.count("total", units.length);
 
-    const ids = flow([
-      reduce((memo, unit) => {
-        const id = getAll(["_sc_id", "tweet_id"], unit);
-        if (id == null) {
-          stats.fail({
-            type: "twitter_tweet",
-            term: unit._sc_id_hash,
-            reason: `Twitter id is invalid (_sc_id: ${get(
-              "_sc_id",
-              unit,
-            )}, tweet_id: ${get("tweet_id", unit)})`,
+      const ids = flow([
+        reduce((memo, unit) => {
+          const id = getAll(["_sc_id", "tweet_id"], unit);
+          if (id == null) {
+            stats.fail({
+              type: "twitter_tweet",
+              term: unit._sc_id_hash,
+              reason: `Twitter id is invalid (_sc_id: ${get(
+                "_sc_id",
+                unit,
+              )}, tweet_id: ${get("tweet_id", unit)})`,
+            });
+            return memo;
+          }
+          try {
+            return memo.concat(parseTweetId(id));
+          } catch (e) {
+            log.error(
+              `Failed to parse twitter id of unit ${unit._sc_id_hash}.`,
+            );
+            stats.fail({
+              type: "twitter_tweet",
+              term: unit._sc_id_hash,
+              reason: e.message,
+            });
+            return memo;
+          }
+        }, []),
+        compact,
+      ])(units);
+
+      const missing = [];
+
+      try {
+        const {id: response} = await tweets(cfg, ids);
+        if (response == null) {
+          ids.forEach((id) => {
+            stats.fail({
+              type: "twitter_tweet",
+              term: id,
+              reason: "No tweets fetched.",
+            });
           });
-          return memo;
+          return [];
         }
-        try {
-          return memo.concat(parseTweetId(id));
-        } catch (e) {
-          log.error(`Failed to parse twitter id of unit ${unit._sc_id_hash}.`);
-          stats.fail({
-            type: "twitter_tweet",
-            term: unit._sc_id_hash,
-            reason: e.message,
-          });
-          return memo;
-        }
-      }, []),
-      compact,
-    ])(units);
 
-    const missing = [];
+        Object.keys(response).forEach((id) => {
+          logCounter();
 
-    try {
-      const {id: response} = await tweets(cfg, ids);
-      if (response == null) {
-        ids.forEach(id => {
-          stats.fail({
-            type: "twitter_tweet",
-            term: id,
-            reason: "No tweets fetched.",
-          });
+          if (response[id] == null) {
+            const unit = units.find(({tweet_id: tweetId}) => tweetId === id);
+            stats.fail({
+              type: "twitter_tweet",
+              term: id,
+              reason: "Tweet does not exist.",
+            });
+            missing.push(unit);
+          } else {
+            stats.count("success");
+          }
         });
-        return [];
+      } catch (e) {
+        const reason = parseApiErrors(e);
+        ids.forEach((id) =>
+          stats.fail({type: "twitter_tweet", term: id, reason}),
+        );
       }
 
-      Object.keys(response).forEach(id => {
-        logCounter();
-
-        if (response[id] == null) {
-          const unit = units.find(({tweet_id: tweetId}) => tweetId === id);
-          stats.fail({
-            type: "twitter_tweet",
-            term: id,
-            reason: "Tweet does not exist.",
-          });
-          missing.push(unit);
-        } else {
-          stats.count("success");
-        }
-      });
-    } catch (e) {
-      const reason = parseApiErrors(e);
-      ids.forEach(id => stats.fail({type: "twitter_tweet", term: id, reason}));
-    }
-
-    return missing;
-  }, chunk(50, envelope.data.filter(({_sc_source: source}) => source === "twitter_tweets" || source === "twitter_feed")));
+      return missing;
+    },
+    chunk(
+      50,
+      envelope.data.filter(
+        ({_sc_source: source}) =>
+          source === "twitter_tweets" || source === "twitter_feed",
+      ),
+    ),
+  );
 
   stats.count("existing", envelope.data.length - twitterTweets.length);
   stats.count("missing", twitterTweets.length);

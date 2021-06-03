@@ -47,8 +47,8 @@ const plugin = async (envelope, {log, cfg, stats}) => {
     log.debug(`Progress: ${cnt}/${total} units (${percent}%).`),
   );
 
-  const data = await mapper(async unit => {
-    const medias = await collectP(async media => {
+  const data = await mapper(async (unit) => {
+    const medias = await collectP(async (media) => {
       const {type, term, href} = media;
       const source = href || term;
       const idHash = media._sc_id_hash;
@@ -108,26 +108,21 @@ const plugin = async (envelope, {log, cfg, stats}) => {
         md5sum(location),
         sha256sum(location),
       ]);
-      unit._sc_downloads.push(
-        Object.assign(
-          {},
-          {
-            location,
-            md5,
-            sha256,
-            type,
-            term,
-          },
-          href ? {href} : {},
-        ),
-      );
+      unit._sc_downloads.push({
+        location,
+        md5,
+        sha256,
+        type,
+        term,
+        ...(href ? {href} : {}),
+      });
 
       return media;
     }, unit._sc_media);
 
     logCounter();
 
-    return Object.assign({}, unit, {_sc_media: medias});
+    return {...unit, _sc_media: medias};
   }, envelope.data);
 
   await dispose();

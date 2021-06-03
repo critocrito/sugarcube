@@ -1,7 +1,7 @@
 import {snakeCase} from "lodash/fp";
 import StatsD from "hot-shots";
 
-const instrument = cfg => {
+const instrument = (cfg) => {
   const {statsd} = cfg;
   const name = snakeCase(cfg.name);
   const project = snakeCase(cfg.project);
@@ -11,9 +11,7 @@ const instrument = cfg => {
     telegraf: statsd.telegraf,
   });
 
-  const fmtMetric = ({type}) => {
-    return `sugarcube.${project}.${name}.${type}`;
-  };
+  const fmtMetric = ({type}) => `sugarcube.${project}.${name}.${type}`;
 
   return {
     fail: ({plugin}) => {

@@ -1,8 +1,6 @@
-const instrument = (/* cfg */) => {
-  return {
-    event: () => null,
-  };
-};
+const instrument = (/* cfg */) => ({
+  event: () => null,
+});
 
 instrument.desc = "A new instrument [event].";
 

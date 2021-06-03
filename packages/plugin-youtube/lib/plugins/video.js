@@ -18,7 +18,7 @@ const fetchVideos = async (envelope, {cfg, log, stats}) => {
 
   const queries = env
     .queriesByType(querySource, envelope)
-    .map(term => parseYoutubeVideo(term));
+    .map((term) => parseYoutubeVideo(term));
 
   const logCounter = counter(
     envelope.data.length,
@@ -31,7 +31,7 @@ const fetchVideos = async (envelope, {cfg, log, stats}) => {
 
   const videos = await flatmapP(
     flowP([
-      async qs => {
+      async (qs) => {
         stats.count("total", qs.length);
         log.info(`Fetch details for ${qs.length} videos.`);
 
@@ -62,7 +62,7 @@ const fetchVideos = async (envelope, {cfg, log, stats}) => {
         qs.forEach(logCounter);
 
         // Merge the query into the data unit.
-        return results.map(r => {
+        return results.map((r) => {
           const q = envelope.queries.find(({type, term}) => {
             const videoId = decisions.canNcube() ? r._sc_id : r.id;
             return type === querySource && parseYoutubeVideo(term) === videoId;

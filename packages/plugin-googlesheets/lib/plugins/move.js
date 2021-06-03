@@ -26,7 +26,7 @@ const moveData = async (envelope, {log, cfg, cache, stats}) => {
     get("google.selection_list", cfg),
   );
   const queries = env.queriesByType(querySource, envelope);
-  const filters = queries.map(q => q.split(":"));
+  const filters = queries.map((q) => q.split(":"));
 
   if (copyFromSheet && !copyFromSpreadsheet) {
     throw new Error("Missing configuration: google.copy_from_spreadsheet");
@@ -92,10 +92,11 @@ const moveData = async (envelope, {log, cfg, cache, stats}) => {
 
       // Clean existing sheet.
       const idHashIndex = rowsToMove[0].indexOf("_sc_id_hash");
-      const idsToMove = tail(dataToMove).map(r => r[idHashIndex]);
+      const idsToMove = tail(dataToMove).map((r) => r[idHashIndex]);
       const indexesToDelete = tail(rowsToMove).reduce(
         (memo, [idHash], index) => {
-          if (idsToMove.find(i => i === idHash)) return memo.concat(index + 1);
+          if (idsToMove.find((i) => i === idHash))
+            return memo.concat(index + 1);
           return memo;
         },
         [],

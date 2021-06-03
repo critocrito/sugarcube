@@ -13,7 +13,7 @@ const {sToA} = utils;
 const accessAsync = pify(fs.access);
 const unlinkAsync = pify(fs.unlink);
 
-const cleanUp = async location => {
+const cleanUp = async (location) => {
   try {
     await accessAsync(location);
     await unlinkAsync(location);
@@ -21,7 +21,7 @@ const cleanUp = async location => {
   } catch (e) {}
 };
 
-const downloadExists = async location => {
+const downloadExists = async (location) => {
   try {
     await accessAsync(location);
   } catch (e) {
@@ -36,8 +36,8 @@ const curlGet = async (envelope, {log, cfg, stats}) => {
   const dataDir = get("http.data_dir", cfg);
   const getTypes = sToA(",", get("http.get_types", cfg));
 
-  return env.fmapDataAsync(async unit => {
-    const downloads = await collectP(async media => {
+  return env.fmapDataAsync(async (unit) => {
+    const downloads = await collectP(async (media) => {
       if (!includes(media.type, getTypes)) return null;
 
       stats.count("total");
@@ -73,7 +73,7 @@ const curlGet = async (envelope, {log, cfg, stats}) => {
       try {
         const locations = [location, oldLocation, oldLocation2];
         const locationsExists = await Promise.all(
-          locations.map(l => downloadExists(l)),
+          locations.map((l) => downloadExists(l)),
         );
         for (let i = 0; i < locationsExists.length; i += 1) {
           if (locationsExists[i]) {
@@ -111,22 +111,19 @@ const curlGet = async (envelope, {log, cfg, stats}) => {
 
       log.info(`Fetched ${source} to ${location}.`);
 
-      return Object.assign(
-        {},
-        {
-          location,
-          md5,
-          sha256,
-          type,
-          term,
-        },
-        href ? {href} : {},
-      );
+      return {
+        location,
+        md5,
+        sha256,
+        type,
+        term,
+        ...(href ? {href} : {}),
+      };
     }, unit._sc_media);
 
     return Object.assign(unit, {
       _sc_downloads: unit._sc_downloads.concat(
-        downloads.filter(d => d != null),
+        downloads.filter((d) => d != null),
       ),
     });
   }, envelope);

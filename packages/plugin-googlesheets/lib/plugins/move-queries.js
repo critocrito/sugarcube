@@ -39,7 +39,7 @@ const moveQueries = async (envelope, {log, cfg, cache, stats}) => {
     throw new Error("Missing configuration: google.copy_from_sheet");
   }
 
-  const moveQuerySheet = async query => {
+  const moveQuerySheet = async (query) => {
     const [, t, history] = await SheetsDo(
       function* moveUnits({
         getOrCreateSheet,
@@ -56,17 +56,17 @@ const moveQueries = async (envelope, {log, cfg, cache, stats}) => {
 
         const rowsToMove = [allQueryRows[0]].concat(
           tail(allQueryRows)
-            .map(r => {
+            .map((r) => {
               if (r[allQueryTypeIndex] != null) return r;
               // eslint-disable-next-line no-param-reassign
               r[allQueryTypeIndex] = defaultType;
               return r;
             })
-            .filter(r => {
+            .filter((r) => {
               // Only move queries that are in the pipeline.
               if (
                 envelope.queries.find(
-                  q =>
+                  (q) =>
                     q.type === r[allQueryTypeIndex].trim() &&
                     q.term === r[allQueryTermIndex].trim(),
                 ) == null
@@ -102,8 +102,9 @@ const moveQueries = async (envelope, {log, cfg, cache, stats}) => {
 
         log.info(`Moving ${rowsToMove.length - 1} queries to ${targetUrl}.`);
         log.info(
-          `Merging ${rowsToMove.length - 1} queries into ${existingRows.length -
-            1} queries.`,
+          `Merging ${rowsToMove.length - 1} queries into ${
+            existingRows.length - 1
+          } queries.`,
         );
         stats.count("total", rowsToMove.length);
         stats.count("existing", existingRows.length);
@@ -131,7 +132,7 @@ const moveQueries = async (envelope, {log, cfg, cache, stats}) => {
         const termIndex = rowsToMove[0].indexOf("term");
         const indexesToDelete = tail(rowsToMove).reduce((memo, row) => {
           const index = allQueryRows.findIndex(
-            r =>
+            (r) =>
               r[allQueryTypeIndex] === row[typeIndex] &&
               r[allQueryTermIndex] === row[termIndex],
           );

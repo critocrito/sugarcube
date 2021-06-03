@@ -28,9 +28,9 @@ const createLogger = (level, colorize) => {
   return logger;
 };
 
-const humanDuration = s => formatDistance(new Date(0), new Date(s));
+const humanDuration = (s) => formatDistance(new Date(0), new Date(s));
 
-const instrument = cfg => {
+const instrument = (cfg) => {
   const debug = getOr(false, "debug", cfg);
   const colors = getOr(true, "logger.colors", cfg);
   const logger = createLogger(debug ? "debug" : "info", colors);
@@ -56,17 +56,17 @@ const instrument = cfg => {
     );
 
     if (plugins != null)
-      plugins.forEach(p => {
+      plugins.forEach((p) => {
         const plugin = pluginStats[p];
         const took = getOr(0, "durations.took", plugin);
         const counts = getOr({}, "counts", plugin);
         const durations = getOr({}, "durations", plugin);
         const logCounts = Object.keys(counts)
-          .map(c => `${c}=${counts[c]}`)
+          .map((c) => `${c}=${counts[c]}`)
           .join(", ");
         const logDurations = Object.keys(durations)
-          .filter(d => d !== "took")
-          .map(d => `${d}=${humanDuration(durations[d])}`)
+          .filter((d) => d !== "took")
+          .map((d) => `${d}=${humanDuration(durations[d])}`)
           .join(", ");
         logger.info(`Plugin ${p} took ${humanDuration(took)}`);
 

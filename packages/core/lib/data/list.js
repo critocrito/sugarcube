@@ -6,7 +6,7 @@ import {hashKeys} from "../crypto";
 
 const hashListId = hashKeys(["type", "term"]);
 
-const listId = l => l._sc_id_hash || hashListId(l);
+const listId = (l) => l._sc_id_hash || hashListId(l);
 
 // A single List
 // Setoid
@@ -32,15 +32,15 @@ const fmapAsync = (g, xs) => collectP(g, xs);
 
 // Applicative
 const pure = arrayify;
-const apply = (fs, xs) => map(x => reduce((memo, f) => f(memo), x, fs), xs);
+const apply = (fs, xs) => map((x) => reduce((memo, f) => f(memo), x, fs), xs);
 
 // Combinators
 const filter = (g, xs) => xs.filter(g);
-const uniq = xs => uniqBy(listId, xs);
+const uniq = (xs) => uniqBy(listId, xs);
 
 // Hashing
-const hashOne = h => concatOne(h, {_sc_id_hash: listId(h)});
-const hash = xs => fmap(hashOne, xs);
+const hashOne = (h) => concatOne(h, {_sc_id_hash: listId(h)});
+const hash = (xs) => fmap(hashOne, xs);
 
 export default {
   listId,

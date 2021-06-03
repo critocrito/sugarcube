@@ -11,7 +11,7 @@ class Units {
   }
 
   async create(unit) {
-    return this.db.tx(async t => {
+    return this.db.tx(async (t) => {
       const {id, existing} = await this.selectOrInsertUnit(unit, t);
       const downloads = qs.concat(
         await this.listDownloads(id, t),
@@ -94,7 +94,7 @@ class Units {
   ) {
     const {showQuery, createQuery} = this.queries;
 
-    const unit = await t.oneOrNone(showQuery, {idHash}, q => q && q.id);
+    const unit = await t.oneOrNone(showQuery, {idHash}, (q) => q && q.id);
     if (unit != null) return {id: unit, existing: true};
 
     const createdAt = get("source", dates)
@@ -131,9 +131,9 @@ class Units {
     const markerId = await t.oneOrNone(
       showMarkerQuery,
       {marker},
-      q => q && q.id,
+      (q) => q && q.id,
     );
-    return markerId || t.one(createMarkerQuery, {marker}, q => q && q.id);
+    return markerId || t.one(createMarkerQuery, {marker}, (q) => q && q.id);
   }
 
   listDownloads(unitId, t) {
@@ -209,7 +209,7 @@ class Units {
     const {createRunQuery} = this.queries;
 
     await Promise.all(
-      markers.map(async marker => {
+      markers.map(async (marker) => {
         const markerId = await this.selectOrInsertMarker(marker, t);
         await t.none(createRunQuery, {marker: markerId, unit: unitId});
       }),
@@ -220,13 +220,11 @@ class Units {
   async listRelations(query, unitId, t) {
     const relations = await t.manyOrNone(query, {unitId});
 
-    return relations.map(({id_hash: idHash, data, ...relation}) => {
-      return {
-        _sc_id_hash: idHash,
-        ...data,
-        ...relation,
-      };
-    });
+    return relations.map(({id_hash: idHash, data, ...relation}) => ({
+      _sc_id_hash: idHash,
+      ...data,
+      ...relation,
+    }));
   }
 }
 

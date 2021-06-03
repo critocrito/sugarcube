@@ -6,11 +6,11 @@ const querySource = "workflow_merge";
 const plugin = (envelope, {log}) => {
   const queries = env.queriesByType(querySource, envelope);
 
-  const xs = queries.map(q => (isString(q) ? JSON.parse(q) : q));
+  const xs = queries.map((q) => (isString(q) ? JSON.parse(q) : q));
 
-  xs.forEach(x => log.info(`Merging ${JSON.stringify(x)} into data.`));
+  xs.forEach((x) => log.info(`Merging ${JSON.stringify(x)} into data.`));
 
-  return env.fmapData(unit => mergeAll([unit].concat(xs)), envelope);
+  return env.fmapData((unit) => mergeAll([unit].concat(xs)), envelope);
 };
 
 plugin.argv = {};

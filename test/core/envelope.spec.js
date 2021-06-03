@@ -38,17 +38,17 @@ const {dataId} = data;
 const isTrue = isEqual(true);
 
 describe("envelope interface", () => {
-  property("reflexivity of identity equality", envelopeArb, a =>
+  property("reflexivity of identity equality", envelopeArb, (a) =>
     isTrue(equals(a, clone(a))),
   );
 
   property(
     "symmetry of identical equality",
     envelopeArb,
-    a => equals(a, clone(a)) && equals(clone(a), a),
+    (a) => equals(a, clone(a)) && equals(clone(a), a),
   );
 
-  property("transitivity of identity equality", envelopeArb, a => {
+  property("transitivity of identity equality", envelopeArb, (a) => {
     const b = clone(a);
     const c = clone(a);
     return equals(a, b) && equals(b, c) && equals(a, c);
@@ -66,22 +66,24 @@ describe("envelope interface", () => {
     },
   );
 
-  property("right identity of a Monoid", envelopeArb, a =>
+  property("right identity of a Monoid", envelopeArb, (a) =>
     equals(concat(a, empty()), a),
   );
 
-  property("left identity of a Monoid", envelopeArb, a =>
+  property("left identity of a Monoid", envelopeArb, (a) =>
     equals(a, concat(a, empty())),
   );
 
-  property("identity of a Functor", envelopeArb, a =>
+  property("identity of a Functor", envelopeArb, (a) =>
     equals(fmap(identity, identity, a), a),
   );
 
-  property("identity of a Functor asynchronously", envelopeArb, a =>
-    fmapAsync(x => Promise.resolve(x), x => Promise.resolve(x), a).then(
-      equals(a),
-    ),
+  property("identity of a Functor asynchronously", envelopeArb, (a) =>
+    fmapAsync(
+      (x) => Promise.resolve(x),
+      (x) => Promise.resolve(x),
+      a,
+    ).then(equals(a)),
   );
 
   property(
@@ -93,7 +95,11 @@ describe("envelope interface", () => {
       const f = merge(x);
       const g = merge(y);
       return equals(
-        fmap(z => f(g(z)), z => f(g(z)), a),
+        fmap(
+          (z) => f(g(z)),
+          (z) => f(g(z)),
+          a,
+        ),
         fmap(f, f, fmap(g, g, a)),
       );
     },
@@ -108,7 +114,11 @@ describe("envelope interface", () => {
       const f = merge(x);
       const g = merge(y);
       return equals(
-        await fmapAsync(z => f(g(z)), z => f(g(z)), a),
+        await fmapAsync(
+          (z) => f(g(z)),
+          (z) => f(g(z)),
+          a,
+        ),
         await fmapAsync(f, f, fmap(g, g, a)),
       );
     },
@@ -120,12 +130,12 @@ describe("envelope interface", () => {
     );
 
     property("produce intersections", envelopeArb, envelopeArb, (a, b) => {
-      const intersectionData = a.data.filter(u => {
-        if (b.data.find(v => dataId(u) === dataId(v))) return true;
+      const intersectionData = a.data.filter((u) => {
+        if (b.data.find((v) => dataId(u) === dataId(v))) return true;
         return false;
       });
-      const intersectionQueries = a.queries.filter(q => {
-        if (b.queries.find(v => q.type === v.type && q.term === v.term))
+      const intersectionQueries = a.queries.filter((q) => {
+        if (b.queries.find((v) => q.type === v.type && q.term === v.term))
           return true;
         return false;
       });
@@ -136,12 +146,12 @@ describe("envelope interface", () => {
     });
 
     property("produce left complements", envelopeArb, envelopeArb, (a, b) => {
-      const complementData = a.data.filter(u => {
-        if (b.data.find(v => dataId(u) === dataId(v))) return false;
+      const complementData = a.data.filter((u) => {
+        if (b.data.find((v) => dataId(u) === dataId(v))) return false;
         return true;
       });
-      const complementQueries = a.queries.filter(q => {
-        if (b.queries.find(v => q.type === v.type && q.term === v.term))
+      const complementQueries = a.queries.filter((q) => {
+        if (b.queries.find((v) => q.type === v.type && q.term === v.term))
           return false;
         return true;
       });
@@ -151,7 +161,9 @@ describe("envelope interface", () => {
       );
     });
 
-    property("union identity", envelopeArb, a => equals(union(a, empty()), a));
+    property("union identity", envelopeArb, (a) =>
+      equals(union(a, empty()), a),
+    );
 
     property(
       "is associative for unions",
@@ -219,7 +231,7 @@ describe("envelope interface", () => {
       },
     );
 
-    property("intersection domination", envelopeArb, a =>
+    property("intersection domination", envelopeArb, (a) =>
       equals(intersection(a, empty()), empty()),
     );
 
@@ -300,15 +312,15 @@ describe("envelope interface", () => {
         ),
     );
 
-    property("sixth notable identity of complements", envelopeArb, a =>
+    property("sixth notable identity of complements", envelopeArb, (a) =>
       equals(difference(a, a), empty()),
     );
 
-    property("seventh notable identity of complements", envelopeArb, a =>
+    property("seventh notable identity of complements", envelopeArb, (a) =>
       equals(difference(empty(), a), empty()),
     );
 
-    property("eigth notable identity of complements", envelopeArb, a =>
+    property("eigth notable identity of complements", envelopeArb, (a) =>
       equals(difference(a, empty()), a),
     );
   });
@@ -316,9 +328,9 @@ describe("envelope interface", () => {
   // I construct objects from symbols to avoid equality issues that arise from
   // unicode in isMatch.
   describe("fmap and fmapAsync", () => {
-    property("maps a function over a list of units", envelopeArb, a => {
+    property("maps a function over a list of units", envelopeArb, (a) => {
       const obj = {[Symbol("key")]: Symbol("value")};
-      const f = y => merge(y, obj);
+      const f = (y) => merge(y, obj);
       const b = fmap(f, f, a);
       return every(isMatch(obj), loConcat(b.data, b.queries));
     });
@@ -326,9 +338,9 @@ describe("envelope interface", () => {
     property(
       "overloaded fmapAsync to allow two type signatures",
       envelopeArb,
-      async a => {
+      async (a) => {
         const obj = {[Symbol("key")]: Symbol("value")};
-        const f = y => merge(y, obj);
+        const f = (y) => merge(y, obj);
         const p = flow([f, of]);
         return equals(await fmapAsync(f, f, a), await fmapAsync(p, p, a));
       },
@@ -337,30 +349,34 @@ describe("envelope interface", () => {
     property(
       "produces the same results synchronously and asynchronously",
       envelopeArb,
-      async a => {
+      async (a) => {
         const obj = {[Symbol("key")]: Symbol("value")};
-        const f = y => merge(y, obj);
+        const f = (y) => merge(y, obj);
         return equals(fmap(f, f, a), await fmapAsync(f, f, a));
       },
     );
 
-    property("has a specialized version for data", envelopeArb, async a => {
+    property("has a specialized version for data", envelopeArb, async (a) => {
       const obj = {[Symbol("key")]: Symbol("value")};
-      const f = y => merge(y, obj);
+      const f = (y) => merge(y, obj);
       const b = fmap(f, identity, a);
 
       return every(equals(b), [fmapData(f, a), await fmapDataAsync(f, a)]);
     });
 
-    property("has a specialized version for queries", envelopeArb, async a => {
-      const obj = {[Symbol("key")]: Symbol("value")};
-      const f = y => merge(y, obj);
-      const b = fmap(identity, f, a);
-      return every(equals(b), [
-        fmapQueries(f, a),
-        await fmapQueriesAsync(f, a),
-      ]);
-    });
+    property(
+      "has a specialized version for queries",
+      envelopeArb,
+      async (a) => {
+        const obj = {[Symbol("key")]: Symbol("value")};
+        const f = (y) => merge(y, obj);
+        const b = fmap(identity, f, a);
+        return every(equals(b), [
+          fmapQueries(f, a),
+          await fmapQueriesAsync(f, a),
+        ]);
+      },
+    );
 
     property(
       "works with synchronous and asynchronous mappers",
@@ -368,8 +384,8 @@ describe("envelope interface", () => {
       jsc.bool,
       envelopeArb,
       async (isF, isG, e) => {
-        const f = isF ? a => a : a => Promise.resolve(a);
-        const g = isG ? a => a : a => Promise.resolve(a);
+        const f = isF ? (a) => a : (a) => Promise.resolve(a);
+        const g = isG ? (a) => a : (a) => Promise.resolve(a);
 
         const results = await fmap(f, g, e);
 
@@ -379,10 +395,10 @@ describe("envelope interface", () => {
   });
 
   describe("fmapDataList and fmapDataListAsync", () => {
-    property("can map over sub lists of units of data", envelopeArb, a => {
+    property("can map over sub lists of units of data", envelopeArb, (a) => {
       const obj = {[Symbol("key")]: Symbol("value")};
       const f = flow([
-        fmapDataDownloads(y => merge(y, obj)),
+        fmapDataDownloads((y) => merge(y, obj)),
         loProperty("data"),
         flatMap(loProperty("_sc_downloads")),
         every(isMatch(obj)),
@@ -394,9 +410,9 @@ describe("envelope interface", () => {
     property(
       "produces the same results synchronously and asynchronously",
       envelopeArb,
-      async a => {
+      async (a) => {
         const obj = {[Symbol("key")]: Symbol("value")};
-        const f = y => merge(y, obj);
+        const f = (y) => merge(y, obj);
         return equals(
           fmapDataDownloads(f, a),
           await fmapDataDownloadsAsync(f, a),

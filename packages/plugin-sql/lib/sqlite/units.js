@@ -10,7 +10,7 @@ class Units {
   }
 
   async create(u) {
-    const insertUnit = this.db.transaction(unit => {
+    const insertUnit = this.db.transaction((unit) => {
       const {id, existing} = this.selectOrInsertUnitSync(unit);
 
       const downloads = qs.concat(
@@ -166,13 +166,11 @@ class Units {
 
     const relations = stmt.all({unitId});
 
-    return relations.map(({id_hash: idHash, data: rest, ...relation}) => {
-      return {
-        _sc_id_hash: idHash,
-        ...JSON.parse(rest),
-        ...relation,
-      };
-    });
+    return relations.map(({id_hash: idHash, data: rest, ...relation}) => ({
+      _sc_id_hash: idHash,
+      ...JSON.parse(rest),
+      ...relation,
+    }));
   }
 
   selectOrInsertMarkerSync(marker) {

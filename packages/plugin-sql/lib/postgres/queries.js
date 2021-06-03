@@ -30,9 +30,9 @@ class Queries {
     const errors = [];
 
     await Promise.all(
-      queries.map(async query => {
+      queries.map(async (query) => {
         try {
-          await this.db.tx(async t => {
+          await this.db.tx(async (t) => {
             await insertQuery(query, t);
           });
         } catch (e) {
@@ -50,13 +50,13 @@ class Queries {
 
   async selectOrInsert(type, term, t) {
     const {showQuery, createQuery} = this.queries;
-    const id = await t.oneOrNone(showQuery, {type, term}, q => q && q.id);
-    return id || t.one(createQuery, {type, term}, q => q.id);
+    const id = await t.oneOrNone(showQuery, {type, term}, (q) => q && q.id);
+    return id || t.one(createQuery, {type, term}, (q) => q.id);
   }
 
   async showQueryTag(label, t) {
     const {showQueryTagQuery} = this.queries;
-    const queryTag = await t.oneOrNone(showQueryTagQuery, {label}, q => q);
+    const queryTag = await t.oneOrNone(showQueryTagQuery, {label}, (q) => q);
     if (queryTag) return queryTag;
     return undefined;
   }
@@ -65,7 +65,7 @@ class Queries {
     const {createQueryTagQuery} = this.queries;
     const queryTag = await this.showQueryTag(label, t);
     if (queryTag) return queryTag.id;
-    return t.one(createQueryTagQuery, {label, description}, q => q.id);
+    return t.one(createQueryTagQuery, {label, description}, (q) => q.id);
   }
 
   async listAll() {
@@ -74,7 +74,7 @@ class Queries {
     if (queries == null) return [];
 
     return Promise.all(
-      queries.map(async query => {
+      queries.map(async (query) => {
         const tags = await this.db.manyOrNone(showQueryTagForQueryQuery, {
           query: query.id,
         });
@@ -92,7 +92,7 @@ class Queries {
     if (queries == null) return [];
 
     return Promise.all(
-      queries.map(async query => {
+      queries.map(async (query) => {
         const tags = await this.db.manyOrNone(showQueryTagForQueryQuery, {
           query: query.id,
         });

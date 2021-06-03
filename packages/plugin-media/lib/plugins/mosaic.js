@@ -41,8 +41,8 @@ const plugin = async (envelope, {log, cfg, stats}) => {
     log.debug(`Progress: ${cnt}/${total} units (${percent}%).`),
   );
 
-  const data = await mapper(async unit => {
-    const downloads = await collectP(async download => {
+  const data = await mapper(async (unit) => {
+    const downloads = await collectP(async (download) => {
       const {type, term, href, location} = download;
 
       if (type !== "video") return download;
@@ -72,7 +72,9 @@ const plugin = async (envelope, {log, cfg, stats}) => {
 
       try {
         const destinations = [newDest, oldDest];
-        const destExists = await Promise.all(destinations.map(d => existsP(d)));
+        const destExists = await Promise.all(
+          destinations.map((d) => existsP(d)),
+        );
 
         for (let i = 0; i < destExists.length; i += 1) {
           if (destExists[i]) {
@@ -90,7 +92,7 @@ const plugin = async (envelope, {log, cfg, stats}) => {
         log.info(`Mosaic of ${location} exists at ${dest}. Skipping`);
         stats.count("existing");
 
-        return Object.assign({}, download, {mosaic: dest});
+        return {...download, mosaic: dest};
       }
 
       if (mosaicExists && forceGeneration)
@@ -122,12 +124,12 @@ const plugin = async (envelope, {log, cfg, stats}) => {
       stats.count("success");
       if (!mosaicExists) stats.count("new");
 
-      return Object.assign({}, download, {mosaic: dest});
+      return {...download, mosaic: dest};
     }, unit._sc_downloads);
 
     logCounter();
 
-    return Object.assign({}, unit, {_sc_downloads: downloads});
+    return {...unit, _sc_downloads: downloads};
   }, envelope.data);
 
   return env.envelope(data, envelope.queries);

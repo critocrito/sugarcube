@@ -20,7 +20,7 @@ const plugin = (envelope, {cfg, log}) => {
     csv.on("error", reject);
     csv.on("finish", () => resolve(envelope));
 
-    queries.forEach(r => csv.write(r));
+    queries.forEach((r) => csv.write(r));
     csv.end();
   });
 };

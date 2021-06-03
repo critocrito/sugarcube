@@ -44,11 +44,11 @@ export const envelope = curry2("envelope", (data, queries) => ({
 /**
  * Like `envelope`, but only data has to be provided. Queries are empty.
  */
-export const envelopeData = data => ({data, queries: ls.empty()});
+export const envelopeData = (data) => ({data, queries: ls.empty()});
 /**
  * Like `envelope`, but only queries have to be provided. Data is empty.
  */
-export const envelopeQueries = queries => ({data: ds.empty(), queries});
+export const envelopeQueries = (queries) => ({data: ds.empty(), queries});
 
 /**
  * Test two Envelopes for equality. Two envelopes are regarded as equals if
@@ -252,7 +252,9 @@ export const fmapAsync = curry3("fmapAsync", (f, g, e) =>
  * Similar to `fmapAsync`, but only with a single function to map over `data`.
  */
 export const fmapDataAsync = curry2("fmapDataAsync", (f, e) =>
-  ds.fmapAsync(f, e.data || ds.empty()).then(data => envelope(data, e.queries)),
+  ds
+    .fmapAsync(f, e.data || ds.empty())
+    .then((data) => envelope(data, e.queries)),
 );
 /**
  * Similar to `fmapAsync`, but only with a single function to map over `data`.
@@ -265,7 +267,7 @@ export const fmapDataList = curry3("fmapDataList", (iteratee, f, e) =>
   envelope(iteratee(f, e.data), e.queries),
 );
 export const fmapDataListAsync = curry3("fmapDataListAsync", (iteratee, f, e) =>
-  iteratee(f, e.data).then(data => envelope(data, e.queries)),
+  iteratee(f, e.data).then((data) => envelope(data, e.queries)),
 );
 
 export const fmapDataDownloads = fmapDataList(ds.fmapDownloads);
@@ -308,9 +310,9 @@ export const filterQueries = curry2("filterQueries", (p, e) =>
   envelope(e.data, ls.filter(p, e.queries)),
 );
 
-export const uniq = e => envelope(ds.uniq(e.data), ls.uniq(e.queries));
-export const uniqData = e => envelope(ds.uniq(e.data), e.queries);
-export const uniqQueries = e => envelope(e.data, ls.uniq(e.queries));
+export const uniq = (e) => envelope(ds.uniq(e.data), ls.uniq(e.queries));
+export const uniqData = (e) => envelope(ds.uniq(e.data), e.queries);
+export const uniqQueries = (e) => envelope(e.data, ls.uniq(e.queries));
 
 export const queriesByType = curry2("queriesByType", (type, e) => {
   const pred = flow([property("type"), isEqual(type)]);
@@ -321,10 +323,10 @@ export const flatMapQueriesAsync = curry3(
   "flatMapQueriesAsync",
   async (f, source, e) => {
     const qs = filterQueries(({type}) => type === source, e).queries;
-    const result = await flatmapP(async q => {
+    const result = await flatmapP(async (q) => {
       const data = await f(q.term);
       if (data == null || data.length === 0) return [];
-      return ds.fmap(b => ds.concatOne({_sc_queries: [q]}, b), data);
+      return ds.fmap((b) => ds.concatOne({_sc_queries: [q]}, b), data);
     }, qs);
     return concatData(result, e);
   },
