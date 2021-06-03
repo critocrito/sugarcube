@@ -6,7 +6,9 @@
   "workspaces": [
     "packages/*"
   ],
-  "engines" : { "node" : ">=12" },
+  "engines": {
+    "node": ">=12"
+  },
   "scripts": {
     "build": "yarn clean && yarn compile && yarn lint && yarn test",
     "check": "eslint --print-config .eslintrc.json | eslint-config-prettier-check",
@@ -26,7 +28,8 @@
     "test:all": "run-p --aggregate-output --continue-on-error 'test:!(all)'",
     "test:e2e": "find project/issues/*.json -type f -print0 | parallel -0 packages/cli/bin/sugarcube.js -c",
     "test:mocha": "cross-env NODE_ENV=test mocha -c -t 6000 -r @babel/register -r test/helpers.js test/**/*.spec.js",
-    "watch": "yarn compile -w --verbose"
+    "watch": "yarn compile -w --verbose",
+    "prepare": "husky install"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.3",
@@ -50,10 +53,10 @@
     "eslint-plugin-lodash-fp": "^2.2.0-a1",
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-promise": "^5.1.0",
-    "husky": "^2.4.1",
+    "husky": "^6.0.0",
     "jsverify": "^0.8.4",
     "lerna": "^4.0.0",
-    "lint-staged": "^8.2.1",
+    "lint-staged": "^11.0.0",
     "lodash": "^4.17.11",
     "mdast-util-to-string": "^1.0.6",
     "mocha": "^8.4.0",
@@ -73,5 +76,10 @@
     "unist-util-find-all-after": "^1.0.4",
     "unist-util-find-all-between": "^1.0.4",
     "validate-commit-msg": "^2.14.0"
+  },
+  "lint-staged": {
+    "{*.json,*rc}": "prettier --parser json --write",
+    "**/package.json": "prettier-package-json --write",
+    "{*.js}": "eslint --fix"
   }
 }
