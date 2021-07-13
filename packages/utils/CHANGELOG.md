@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.42.1](https://github.com/critocrito/sugarcube/tree/master/packages/utils/compare/v0.42.0...v0.42.1) (2021-07-13)
+
+
+### Bug Fixes
+
+* **plugin-tika:** no return outside function in install script ([5985d4f](https://github.com/critocrito/sugarcube/tree/master/packages/utils/commit/5985d4f39aeb62ed37b567233d087a4ca03ff972))
+
+
+
+
+
 # [0.42.0](https://github.com/critocrito/sugarcube/tree/master/packages/utils/compare/v0.41.0...v0.42.0) (2020-08-16)
 
 **Note:** Version bump only for package @sugarcube/utils

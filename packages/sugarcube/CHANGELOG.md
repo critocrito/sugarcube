@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.42.1](https://github.com/critocrito/sugarcube/tree/master/packages/sugarcube/compare/v0.42.0...v0.42.1) (2021-07-13)
+
+**Note:** Version bump only for package @sugarcube/sugarcube
+
+
+
+
+
 # [0.42.0](https://github.com/critocrito/sugarcube/tree/master/packages/sugarcube/compare/v0.41.0...v0.42.0) (2020-08-16)
 
 **Note:** Version bump only for package @sugarcube/sugarcube
