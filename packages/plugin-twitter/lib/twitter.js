@@ -24,7 +24,7 @@ import {
 } from "./entities";
 
 // The requests within a 15 minutes window in milliseconds.
-const rateLimit = requests => ((15 * 60) / requests) * 1000;
+const rateLimit = (requests) => ((15 * 60) / requests) * 1000;
 
 // FIXME: Refactor to uncouple everything from the logger.
 const apiErrors = curry((log, user, e) => {
@@ -39,7 +39,7 @@ const apiErrors = curry((log, user, e) => {
   throw e;
 });
 
-export const parseApiErrors = e => {
+export const parseApiErrors = (e) => {
   if (e[0] && e[0].message != null) return e[0].message;
   if (e[0]) return JSON.stringify(e[0]);
   if (e.message != null) return e.message;
@@ -94,7 +94,7 @@ export const followers = (cfg, log, users) => {
       return flowP(
         [
           op,
-          tapP(rs => log.info(`Fetched ${size(rs)} followers of ${user}.`)),
+          tapP((rs) => log.info(`Fetched ${size(rs)} followers of ${user}.`)),
           caughtP(apiErrors(log, user)),
           flow([followersTransform, concat(memo)]),
         ],
@@ -125,7 +125,7 @@ export const friends = (cfg, log, users) => {
       return flowP(
         [
           op,
-          tapP(rs => log.info(`Fetched ${size(rs)} friends of ${user}.`)),
+          tapP((rs) => log.info(`Fetched ${size(rs)} friends of ${user}.`)),
           caughtP(apiErrors(log, user)),
           flow([friendsTransform, concat(memo)]),
         ],
@@ -162,7 +162,7 @@ export const search = curry((cfg, log, queries) => {
       return flowP(
         [
           op,
-          tapP(rs =>
+          tapP((rs) =>
             log.info(
               `Fetched ${size(rs.statuses)} tweets for the term ${query}`,
             ),

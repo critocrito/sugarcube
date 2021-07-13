@@ -82,15 +82,15 @@ export const download = async (from, to) => {
   return new Promise((resolve, reject) => {
     const dest = fs.createWriteStream(to);
 
-    resp.body.on("error", e => reject(e));
-    dest.on("error", e => reject(e));
+    resp.body.on("error", (e) => reject(e));
+    dest.on("error", (e) => reject(e));
     dest.on("finish", () => resolve());
 
     resp.body.pipe(dest);
   });
 };
 
-export const guessFileType = async location => {
+export const guessFileType = async (location) => {
   const read = fs.createReadStream(location);
   const {fileType: ft} = await fileType.stream(read);
   read.destroy();
