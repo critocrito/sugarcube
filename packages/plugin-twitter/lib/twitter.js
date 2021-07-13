@@ -52,6 +52,7 @@ export const tweets = curry((cfg, tweetIds) => {
   const params = {
     id: tweetIds.join(","),
     map: true,
+    tweet_mode: "extended",
   };
   return flowP([op], params);
 });
