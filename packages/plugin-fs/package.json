@@ -12,7 +12,7 @@
     "@sugarcube/core": "^0.42.1",
     "@sugarcube/utils": "^0.42.1",
     "dashp": "^0.10.1",
-    "file-type": "^10.11.0",
+    "file-type": "^16.5.4",
     "glob": "^7.1.2",
     "lodash": "^4.17.4",
     "read-chunk": "^3.2.0"
